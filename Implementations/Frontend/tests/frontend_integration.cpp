@@ -119,6 +119,16 @@ void typedCorpus(const fs::path &directory){phase="production Source corpus thro
 void refusals(const fs::path &directory){Context context;auto in=input(directory,"pure-add.frog");phase="malformed/unsupported public boundary";
     in.bytes="{";pair(context,in,FROG_FRONTEND_REJECTED);in=input(directory,"pure-add.frog");in.sourceVersion="unsupported-version";pair(context,in,FROG_FRONTEND_UNSUPPORTED);
     in=input(directory,"pure-add.frog");in.format="frog.document.future";in.sourceVersion="2";in.bytes=R"({"format":"frog.document.future","draft_revision":2,"diagram":{"nodes":[],"edges":[]},"frontPanel":{"widgets":[]}})";pair(context,in,FROG_FRONTEND_UNSUPPORTED);
+    phase="ordinary invalid wire identifies its authored endpoint";
+    auto invalidWire=input(directory,"pure-add.frog");auto invalidDiagram=parse(invalidWire.bytes);
+    auto &firstEdge=field(field(invalidDiagram,"diagram"),"edges").array.front();
+    field(firstEdge,"to").object["port"]=cj::string("not-an-add-port");invalidWire.bytes=cj::encode(invalidDiagram);
+    const auto rejectedWire=pair(context,invalidWire,FROG_FRONTEND_REJECTED);
+    const auto wireDiagnostics=parse(rejectedWire.diagnostics);
+    need(std::any_of(wireDiagnostics.array.begin(),wireDiagnostics.array.end(),[&](const auto &entry) {
+        return str(entry,"code")=="IR_ENDPOINT" && str(field(entry,"source"),"uri")==invalidWire.uri &&
+            str(field(entry,"source"),"pointer")=="/diagram/edges/0/to/port";
+    }),"The ordinary wire refusal lost the exact authored endpoint");
     phase="hidden region remains validated";in=input(directory,"event-values.frog");auto source=parse(in.bytes);auto &regions=field(field(field(source,"diagram"),"nodes").array.at(1),"regions");const auto index=regions.array.size()-1;
     auto &edges=field(field(regions.array.back(),"diagram"),"edges");need(!edges.array.empty(),"Identified hidden-region negative has no actual edge");field(edges.array.front(),"to").object["node"]=cj::string("deliberately-absent-hidden-node");in.bytes=cj::encode(source);
     const auto d=pair(context,in,FROG_FRONTEND_REJECTED);const auto diagnostics=parse(d.diagnostics);const auto prefix="/diagram/nodes/1/regions/"+std::to_string(index)+"/diagram";

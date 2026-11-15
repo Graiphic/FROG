@@ -1,7 +1,26 @@
 #include "frog_native_engine/ApplicationControlMemberContract.hpp"
+#include "frog_native_engine/WidgetCatalog.hpp"
 #include <algorithm>
 
 namespace frog::native_engine {
+std::string_view applicationControlReferenceWidgetBase(std::string_view classId) noexcept {
+    if(classId=="frog.control.color_box" || classId=="frog.control.timestamp")return "frog.widgets.numeric_control";
+    if(classId=="frog.control.dropdown_string")return "frog.widgets.string_control";
+    if(classId=="frog.control.error_cluster")return "frog.widgets.cluster_control";
+    return classId;
+}
+
+bool applicationControlValueSignalingAvailable(std::string_view classId) noexcept {
+    if(classId=="frog.control")return true;
+    const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId));
+    return definition && definition->terminal.direction!=WidgetTerminalDirection::None;
+}
+
+bool applicationControlHasReferenceInput(const ApplicationControlNode &node) noexcept {
+    return node.kind!=ApplicationControlKind::Reference &&
+        (node.kind!=ApplicationControlKind::Property || node.target.kind==ApplicationControlTargetKind::Unbound);
+}
+
 std::string applicationControlParameterPortId(std::string_view id,ApplicationControlPortDirection direction) {
     return "parameter:"+std::string(id)+(direction==ApplicationControlPortDirection::Input?":in":":out");
 }

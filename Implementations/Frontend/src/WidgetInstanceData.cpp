@@ -333,6 +333,9 @@ void applyArrayElementWidgetValue(WidgetInstance &target, const WidgetInstance &
     } else if(target.waveformGraph && value.waveformGraph &&
         (value.waveformGraph->preservedSource || graph::validate(value.waveformGraph->initialData).empty())) {
         target.waveformGraph->initialData=value.waveformGraph->initialData;
+        // The projected samples and exact typed source are one persisted value.
+        // Keep the receiving datatype/design; the entry guard proves its type.
+        target.waveformGraph->typedInitialData=value.waveformGraph->typedInitialData;
         target.waveformGraph->current.reset();
         // A historical, unsupported Graph is opaque data, not an empty dataset.
         // Its ordinary full-widget codec can retain the exact source; the new
@@ -505,14 +508,14 @@ std::vector<RingItem> defaultEnumItems() {
 const std::vector<RingItem> &ringItems(const WidgetInstance &widget) noexcept {
     static const std::vector<RingItem> defaultRing = defaultRingItems();
     static const std::vector<RingItem> defaultEnum = defaultEnumItems();
-    if (!widget.ringItems.empty() || isStringDropdownWidget(widget)) {
+    if (!widget.ringItems.empty() || isStringDropdownWidget(widget) || isListboxWidget(widget)) {
         return widget.ringItems;
     }
     return isEnumWidget(widget) ? defaultEnum : defaultRing;
 }
 
 std::string ringSelectedItemLabel(const WidgetInstance &widget) {
-    if (!isRingWidget(widget) && !isEnumWidget(widget) && !isStringDropdownWidget(widget)) {
+    if (!isRingWidget(widget) && !isEnumWidget(widget) && !isStringDropdownWidget(widget) && !isListboxWidget(widget)) {
         return {};
     }
 
@@ -530,7 +533,7 @@ std::string ringSelectedItemLabel(const WidgetInstance &widget) {
 }
 
 std::string ringSelectedItemId(const WidgetInstance &widget) {
-    if (!isRingWidget(widget) && !isEnumWidget(widget) && !isStringDropdownWidget(widget)) {
+    if (!isRingWidget(widget) && !isEnumWidget(widget) && !isStringDropdownWidget(widget) && !isListboxWidget(widget)) {
         return {};
     }
 
@@ -555,9 +558,12 @@ std::size_t ringSelectedItemIndex(const WidgetInstance &widget) noexcept {
 
 bool setRingItems(WidgetInstance &widget, std::vector<RingItem> items) {
     const bool dropdown = isStringDropdownWidget(widget);
-    if (!isRingWidget(widget) && !isEnumWidget(widget) && !dropdown) {
+    if (!isRingWidget(widget) && !isEnumWidget(widget) && !dropdown && !isListboxWidget(widget)) {
         return false;
     }
+    if (isListboxWidget(widget) && (items.size() > 65536 ||
+        std::any_of(items.begin(),items.end(),[](const auto &item) { return item.value>UINT16_MAX; }) ||
+        !choiceItemValuesAreUnique(items))) return false;
 
     for (std::size_t index = 0; index < items.size(); ++index) {
         if (!dropdown && items[index].label.empty()) {
@@ -662,7 +668,7 @@ bool setRingAllowUndefinedValues(WidgetInstance &widget, bool allow) {
 }
 
 bool setRingSelectedValue(WidgetInstance &widget, std::uint32_t value) {
-    if (!isRingWidget(widget) && !isEnumWidget(widget)) {
+    if (!isRingWidget(widget) && !isEnumWidget(widget) && !isListboxWidget(widget)) {
         return false;
     }
 
@@ -671,8 +677,8 @@ bool setRingSelectedValue(WidgetInstance &widget, std::uint32_t value) {
         const auto found = std::find_if(
             items.begin(),
             items.end(),
-            [value](const RingItem &item) {
-                return !item.disabled && item.value == value;
+            [value,&widget](const RingItem &item) {
+                return !item.disabled && item.value == value && (item.visible || !isListboxWidget(widget));
             });
         if (found == items.end()) {
             return false;
@@ -942,6 +948,10 @@ WidgetInstance makeWidgetData(
         widget.ringItems = defaultRingItems();
         widget.numericValue = 0U;
         widget.initialValue = "0";
+    } else if (isListboxWidget(widget)) {
+        widget.ringItems = defaultRingItems();
+        widget.numericValue = 0U;
+        widget.initialValue = "0";
     } else if (entry.classId == "frog.widgets.array_control" ||
                entry.classId == "frog.widgets.array_indicator") {
         widget.arrayContainer = ArrayContainerState{};
@@ -972,7 +982,7 @@ WidgetInstance makeWidgetData(
 namespace data_operations {
 bool supported(const WidgetInstance &w) {
     if(w.xyGraph && w.xyGraph->preservedSource)return false;
-    return (w.classId==kCollectionWidgetClass&&bool(w.collection)) || isNumericWidget(w) || isBooleanWidget(w) || isButtonWidget(w) || isStringWidget(w) || isPathWidget(w) ||
+    return isListboxWidget(w) || (w.classId==kCollectionWidgetClass&&bool(w.collection)) || isNumericWidget(w) || isBooleanWidget(w) || isButtonWidget(w) || isStringWidget(w) || isPathWidget(w) ||
         isEnumWidget(w) || isRingWidget(w) || isArrayWidget(w) || isClusterWidget(w) || w.valueType == "variant" || isXYGraphWidget(w) || isWaveformGraphWidget(w) || isReferenceWidget(w);
 }
 

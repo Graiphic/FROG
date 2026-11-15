@@ -44,6 +44,7 @@ set(FROG_FRONTEND_PRODUCTION_SOURCES
     src/CanonicalStructuredExecutionIr.cpp
     src/CanonicalTimestampNative.cpp
     src/CanonicalVariantAnalysisNative.cpp
+    src/ClassDefinition.cpp
     src/CollectionAuthoringState.cpp
     src/CollectionBinding.cpp
     src/CollectionModelSemantic.cpp
@@ -60,6 +61,7 @@ set(FROG_FRONTEND_PRODUCTION_SOURCES
     src/DraftInterfaceInspection.cpp
     src/DraftSemanticPreparation.cpp
     src/DraftSubFrogExecutionProjection.cpp
+    src/PolymorphicFrog.cpp
     src/DraftTypeDefinitionResolution.cpp
     src/EllipticBindingSemantics.cpp
     src/EllipticParabolicBindingSemantics.cpp

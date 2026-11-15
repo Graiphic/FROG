@@ -33,20 +33,28 @@ inline constexpr std::array<std::uint8_t, 8> kPackedF64ArrayMagic{
 inline constexpr std::uint32_t kMaximumCollectionSize = 1'000'000U;
 inline constexpr std::uint32_t kMaximumStringSize = 16U * 1024U * 1024U;
 inline constexpr std::size_t kMaximumTypedEnvelopeSize = 32U * 1024U * 1024U;
+// Optional byte limits for an intake that distinguishes an artifact's
+// ordinary encoding from the exact packed real cell stream. The on-wire
+// representation and the generic codec limits remain the same.
+struct ArtifactEncodingLimits {
+    std::size_t ordinaryBytes=SIZE_MAX;
+    std::size_t packedNumericCellBytes=0;
+};
 
 class Writer final {
 public:
-    explicit Writer(bool typed = false, bool packed = false, const RuntimeValueOwner *arrayOwner = nullptr)
-        : typed_(typed || packed), packed_(packed), arrayOwner_(arrayOwner) {}
+    explicit Writer(bool typed = false, bool packed = false, const RuntimeValueOwner *arrayOwner = nullptr,
+        ArtifactEncodingLimits limits = {})
+        : typed_(typed || packed), packed_(packed), arrayOwner_(arrayOwner), limits_(limits) {}
     void bytes(std::span<const std::uint8_t> value) {
-        if (!valid_ || (typed_ && !arrayDepth_ && value.size() > kMaximumTypedEnvelopeSize - (data_.size()-arrayEnvelopeBytes_))) { valid_ = false; return; }
+        if (!allowBytes(value.size())) return;
         data_.insert(data_.end(), value.begin(), value.end());
     }
 
     template <typename Unsigned>
     void unsignedInteger(Unsigned value) {
         static_assert(std::is_unsigned_v<Unsigned>);
-        if (!valid_ || (typed_ && !arrayDepth_ && sizeof(Unsigned) > kMaximumTypedEnvelopeSize - (data_.size()-arrayEnvelopeBytes_))) { valid_ = false; return; }
+        if (!allowBytes(sizeof(Unsigned))) return;
         for (std::size_t index = 0; index < sizeof(Unsigned); ++index) {
             data_.push_back(static_cast<std::uint8_t>(value & 0xffU));
             value >>= 8U;
@@ -153,9 +161,12 @@ public:
             if(tag==8) {
                 const auto &a=*runtimeArray(value);valueType(a.elementType());unsignedInteger(static_cast<std::uint32_t>(a.shape().size()));
                 for(const auto extent:a.shape())unsignedInteger(extent);
-                unsignedInteger(static_cast<std::uint32_t>(a.elements().size()));
+                unsignedInteger(static_cast<std::uint32_t>(a.elementCount()));
                 const auto begin=data_.size(),outerNodes=valueNodes_,outerBytes=valueBytes_;++arrayDepth_;
-                for(const auto &v:a.elements()){valueNodes_=0;valueBytes_=0;runtimeValue(v,depth+1);}
+                if(a.packedCells()) {
+                    if(a.elementCount()&&depth==32)valid_=false;
+                    else writePackedArrayCells(a);
+                }else for(const auto &v:a.elements()){valueNodes_=0;valueBytes_=0;runtimeValue(v,depth+1);}
                 --arrayDepth_;valueNodes_=outerNodes;valueBytes_=outerBytes;
                 if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
             }else if(tag==9 || tag==14) {
@@ -194,9 +205,40 @@ public:
     }
 
 private:
+    bool allowBytes(std::size_t bytes) {
+        if(!valid_ || bytes>limits_.ordinaryBytes-(data_.size()-packedNumericBytes_) ||
+           (typed_&&!arrayDepth_&&bytes>kMaximumTypedEnvelopeSize-(data_.size()-arrayEnvelopeBytes_))) {
+            valid_=false;return false;
+        }
+        return true;
+    }
+    void writePackedArrayCells(const RuntimeIpeValue &array) {
+        if(!valid_)return;
+        constexpr std::size_t cellBytes=1+sizeof(double);
+        const auto count=array.elementCount(),begin=data_.size();
+        if(count>(data_.max_size()-begin)/cellBytes){valid_=false;return;}
+        const auto bytes=count*cellBytes;
+        const auto exempt=limits_.packedNumericCellBytes!=0;
+        if(exempt ? bytes>limits_.packedNumericCellBytes-packedNumericBytes_ : !allowBytes(bytes)) {valid_=false;return;}
+        data_.resize(begin+bytes);
+        auto *destination=data_.data()+begin;
+        const auto write=[&](std::uint8_t tag,std::uint64_t bits) {
+            *destination++=tag;
+            for(unsigned shift=0;shift<64;shift+=8)*destination++=static_cast<std::uint8_t>(bits>>shift);
+        };
+        if(array.packedI32()) {
+            for(const auto cell:array.i32Elements())write(2U,static_cast<std::uint64_t>(std::int64_t(cell)));
+        }else if(array.packedF32()) {
+            const auto *cells=array.f32Data();
+            for(std::size_t i=0;i<count;++i)write(4U,std::bit_cast<std::uint64_t>(double(cells[i])));
+        }else for(const auto cell:array.f64Elements())write(4U,std::bit_cast<std::uint64_t>(cell));
+        if(exempt)packedNumericBytes_+=bytes;
+    }
     std::vector<std::uint8_t> data_;
     bool typed_ = false, packed_ = false, valid_ = true;
     const RuntimeValueOwner *arrayOwner_ = nullptr;
+    ArtifactEncodingLimits limits_;
+    std::size_t packedNumericBytes_=0;
     std::size_t valueNodes_ = 0, valueBytes_ = 0;
     std::size_t arrayEnvelopeBytes_ = 0;
     unsigned arrayDepth_ = 0;
@@ -405,11 +447,46 @@ public:
                 // forged huge count before attempting its vector allocation.
                 if(!reserve(size))return false;
                 try {
-                std::vector<RuntimeValue> elements;elements.reserve(size);
-                for(std::uint32_t i=0;i<size;++i){valueNodes_=0;valueBytes_=0;RuntimeValue v;if(!runtimeValue(v,depth+1))return false;elements.push_back(std::move(v));}
+                if(rank==1&&element.canonicalName=="i32") {
+                    constexpr std::size_t signedWireSize=1+sizeof(std::int64_t);
+                    if(size&&(depth==32||size>(data_.size()-cursor_)/signedWireSize))
+                        return fail("Invalid signed I32 Array depth or payload length.");
+                    auto next=cursor_;
+                    complete=readRuntimePackedI32Array(element,size,*arrayOwner_,[&](std::uint32_t)->std::optional<std::int64_t>{
+                        if(data_[next++]!=2U)return {};
+                        std::uint64_t bits=0;
+                        for(unsigned shift=0;shift<64;shift+=8)bits|=std::uint64_t(data_[next++])<<shift;
+                        return std::bit_cast<std::int64_t>(bits);
+                    });
+                    if(!complete)return fail("Invalid signed I32 Array element or type descriptor.");
+                    cursor_=next;
+                }else if(rank==1&&(element.canonicalName=="f32"||element.canonicalName=="f64")) {
+                    constexpr std::size_t realWireSize=1+sizeof(std::uint64_t);
+                    if(size&&(depth==32||size>(data_.size()-cursor_)/realWireSize))
+                        return fail("Invalid real IPE Array depth or payload length.");
+                    // Commit cursor movement only when the complete packed value is valid.
+                    // Legacy F32 carriers with IEEE exceptional values use the generic reader.
+                    auto next=cursor_;
+                    bool legacyF32=false;
+                    const bool single=element.canonicalName=="f32";
+                    complete=readRuntimePackedRealArray(element,size,*arrayOwner_,[&](std::uint32_t)->std::optional<double>{
+                        if(data_[next++]!=4U)return {};
+                        std::uint64_t bits=0;
+                        for(unsigned shift=0;shift<64;shift+=8)bits|=std::uint64_t(data_[next++])<<shift;
+                        const auto cell=std::bit_cast<double>(bits);
+                        legacyF32=single&&!std::isfinite(cell);
+                        return cell;
+                    });
+                    if(complete)cursor_=next;
+                    else if(!legacyF32)return fail("Invalid real IPE Array element or type descriptor.");
+                }
+                if(!complete) {
+                    std::vector<RuntimeValue> elements;elements.reserve(size);
+                    for(std::uint32_t i=0;i<size;++i){valueNodes_=0;valueBytes_=0;RuntimeValue v;if(!runtimeValue(v,depth+1))return false;elements.push_back(std::move(v));}
+                    complete=makeRuntimeArray(std::move(element),std::move(shape),std::move(elements),*arrayOwner_);
+                }
                 --arrayDepth_;valueNodes_=outerNodes;valueBytes_=outerBytes;
                 if(!arrayDepth_)arrayEnvelopeBytes_+=cursor_-begin;
-                complete=makeRuntimeArray(std::move(element),std::move(shape),std::move(elements),*arrayOwner_);
                 }catch(const std::bad_alloc &){return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
                 catch(const std::length_error &){return fail("Not enough memory to complete this operation; no partial Array value was produced.");}
             }else if(tag==9 || tag==14) {
@@ -487,7 +564,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
 } // namespace codec_detail
 
 [[nodiscard]] inline std::vector<std::uint8_t> encodeProgramArtifact(
-    const ProgramArtifact &artifact) {
+    const ProgramArtifact &artifact,codec_detail::ArtifactEncodingLimits limits) {
     const bool typed = artifact.schemaVersion == kTypedArtifactSchemaVersion;
     const bool packed = artifact.schemaVersion == kPackedF64ArrayArtifactSchemaVersion;
     const bool owned = typed || packed;
@@ -504,7 +581,7 @@ inline Diagnostic codecDiagnostic(std::string message) {
             if (!std::holds_alternative<std::monostate>(binding.initialValue) &&
                 !runtimeValueValidForOwner(binding.initialValue, binding.valueType, *artifact.valueOwner)) return {};
     }
-    codec_detail::Writer writer(typed,packed,owned ? &*artifact.valueOwner : nullptr);
+    codec_detail::Writer writer(typed,packed,owned ? &*artifact.valueOwner : nullptr,limits);
     writer.bytes(packed ? codec_detail::kPackedF64ArrayMagic : typed ? codec_detail::kTypedMagic : codec_detail::kMagic);
     writer.unsignedInteger(artifact.protocol.major);
     writer.unsignedInteger(artifact.protocol.minor);
@@ -578,6 +655,10 @@ inline Diagnostic codecDiagnostic(std::string message) {
         writer.stableId(identity.portId);
     }
     return std::move(writer).finish();
+}
+
+[[nodiscard]] inline std::vector<std::uint8_t> encodeProgramArtifact(const ProgramArtifact &artifact) {
+    return encodeProgramArtifact(artifact,{});
 }
 
 [[nodiscard]] inline ArtifactDecodeResult decodeProgramArtifact(

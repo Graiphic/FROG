@@ -432,6 +432,11 @@ NativeCallValidation nativeCallValidate(const NativeCallConfiguration &config, c
     if (config.symbol.find('\0') != config.symbol.npos) add("symbol_nul", "The exact export name cannot contain a NUL byte.");
     if (!config.library.specifyPathOnDiagram && config.library.value.empty()) add("library_missing", "Select a library before execution.", {}, Category::Incomplete);
     if (config.library.value.find('\0') != config.library.value.npos) add("library_nul", "A library path cannot contain a NUL byte.");
+    const auto &digest = config.library.expectedSha256;
+    if (!digest.empty() && (digest.size() != 64 || digest.find_first_not_of("0123456789abcdef") != digest.npos))
+        add("library_identity_invalid", "The pinned DLL identity must be a lowercase SHA-256 digest.");
+    if (!digest.empty() && (config.library.specifyPathOnDiagram || config.library.mode != NativeCallPathMode::DocumentRelative))
+        add("library_identity_path", "A pinned DLL requires a static document-relative path.");
     if (config.variadic) add("variadic_unavailable", "Variadic native signatures have no supported marshalling profile.", {}, Category::Unavailable);
     if (!std::isfinite(config.presentation.requestedWidth) || config.presentation.requestedWidth < 0) add("presentation_width", "Node width must be finite and nonnegative.");
     if (config.nextIdentity == 0) add("identity_counter", "The next parameter identity must be positive.");
@@ -759,6 +764,7 @@ source::JsonValue nativeCallToJson(const NativeCallConfiguration &config) {
     auto value = object(); value.object["schema_version"] = integer(config.schemaVersion);
     auto library = object(); library.object["mode"] = enumeration(config.library.mode); library.object["value"] = string(config.library.value);
     library.object["specify_path_on_diagram"] = boolean(config.library.specifyPathOnDiagram);
+    if (!config.library.expectedSha256.empty()) library.object["expected_sha256"] = string(config.library.expectedSha256);
     library.object["dynamic_relative_base"] = enumeration(config.library.dynamicRelativeBase); value.object["library"] = std::move(library);
     value.object["symbol"] = string(config.symbol); value.object["calling_convention"] = enumeration(config.callingConvention);
     value.object["thread"] = enumeration(config.thread); value.object["error_checking"] = enumeration(config.errorChecking);
@@ -802,6 +808,8 @@ std::optional<NativeCallConfiguration> nativeCallFromJson(const source::JsonValu
     if (!library || library->type != Json::Type::Object || !readEnum(*library, "mode", config.library.mode) ||
         !readString(*library, "value", config.library.value) || !readBool(*library, "specify_path_on_diagram", config.library.specifyPathOnDiagram) ||
         !readEnum(*library, "dynamic_relative_base", config.library.dynamicRelativeBase)) return fail("library");
+    if (library->member("expected_sha256") && !readString(*library, "expected_sha256", config.library.expectedSha256))
+        return fail("library.expected_sha256");
     if (!readString(json, "symbol", config.symbol) || !readEnum(json, "calling_convention", config.callingConvention) ||
         !readEnum(json, "thread", config.thread) || !readEnum(json, "error_checking", config.errorChecking) ||
         !readInteger(json, "next_identity", config.nextIdentity) || !readBool(json, "variadic", config.variadic)) return fail("function");

@@ -1,0 +1,21 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-15",
+  "frontend": {
+    "software": "0.2.0-local",
+    "api": 3,
+    "content_sha256": "07f113de037a902bdb96771890fa282bd35457b99373647db6d5b99be8781e40"
+  },
+  "qualification": {
+    "basis": "Source publication captured independently of ongoing Studio compilation and T386. Prior finite tests keep their own source and binary identities.",
+    "standalone_public_build": "NOT RERUN for this source checkpoint",
+    "publication_tool_checks": "Exact pin, source closure, source export integrity and dependency checks recorded in the private canonical publication report."
+  },
+  "limits": [
+    "Source checkpoint, not a tagged binary release or a standalone binary distribution",
+    "No new Studio/Runtime rebuild or global CTest by the publication task",
+    "Ongoing T386 failures and timeouts are not converted to successes",
+    "No new clean-machine or cross-platform qualification",
+    "Studio source pin is preserved exactly; no automatic consumer upgrade is claimed"
+  ]
+}

@@ -14,8 +14,8 @@ using namespace numeric_tree_math;
 namespace {
 #include "../snapshot/generated/partial-differential-runtime.generated.inc"
 
-struct Failure : std::runtime_error { std::string code; Failure(std::string c, std::string m) : std::runtime_error(std::move(m)), code(std::move(c)) {} };
-[[noreturn]] void fail(std::string code, std::string message) { throw Failure(std::move(code), std::move(message)); }
+struct Failure : std::runtime_error { std::string code; Failure(std::string c, const std::string &m) : std::runtime_error(m), code(std::move(c)) {} };
+[[noreturn]] void fail(std::string code, const std::string &message) { throw Failure(std::move(code), message); }
 std::string_view strip(std::string_view id) { if (id.starts_with("frog.studio.")) id.remove_prefix(12); return id; }
 const FunctionBindingDefinition* definition(std::string_view id) {
     static const auto definitions = partialDifferentialRuntimeDefinitions(); id = strip(id);

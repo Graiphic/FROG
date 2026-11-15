@@ -16,6 +16,10 @@ void attachChoices(TypeRef &type, const WidgetInstance &widget, ChoiceKind kind)
         type.choices.push_back({item.id,item.label,item.value,item.disabled,item.visible});
 }
 TypeParseResult leafType(const WidgetInstance &widget) {
+    if (isListboxWidget(widget)) {
+        if (widget.valueType!="u16") return {{}, "This Listbox terminal exposes value.selected_value as U16.", false};
+        return parseType("u16");
+    }
     if(isWaveformGraphWidget(widget)) {
         if(!widget.waveformGraph)return {{},"Waveform Graph has no typed state.",false};
         const auto &type=widget.waveformGraph->datatype;

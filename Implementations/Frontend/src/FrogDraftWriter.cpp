@@ -28,6 +28,7 @@
 #include "FrogDocumentApplicationControlSerialization.hpp"
 #include "FrogDocumentIdeSerialization.hpp"
 #include "FrogDocumentArrayStorage.hpp"
+#include "FrogDocumentZstdCodec.hpp"
 #include "FrogDocumentEventStructureSerialization.hpp"
 #include "FrogDocumentForLoopSerialization.hpp"
 #include "FrogDocumentStructureSerializationHelpers.hpp"
@@ -96,7 +97,8 @@ std::uint32_t storedPayloadStateRevision(std::string_view text) {
         return value.find("initial_value")!=value.npos ||
             value.find(kFrogWidgetValueDraftFormat)!=value.npos ||
             value.find("numeric-elements-json-le32-v1")!=value.npos ||
-            value.find("numeric-cell-text-le32-v1")!=value.npos;
+            value.find("numeric-cell-text-le32-v1")!=value.npos ||
+            value.find(document_internal::numericWordArrayProfile)!=value.npos;
     };
     if(!candidate(text))return 0;
     std::uint32_t required=0;
@@ -282,6 +284,7 @@ bool hasWidgetPropertyOverrides(const WidgetInstance &widget) noexcept {
         widget.pathBrowseStartPath.has_value() ||
         widget.enumDomainId.has_value() ||
         widget.stringDropdown ||
+        isListboxWidget(widget) ||
         ((isRingWidget(widget) || isEnumWidget(widget)) && !widget.ringItems.empty()) ||
         widget.ringAllowUndefinedValues.has_value();
 }
@@ -974,32 +977,28 @@ void appendDiagramNode(
             appendIndent(output, indent + 2);
             output << "},\n";
             appendIndent(output, indent + 2);
-            for(const auto &payload:node.numericArrayValues)
+            const auto observePayload = [&](std::string_view payload) {
                 storageMode.requiredStateRevision=(std::max)(storageMode.requiredStateRevision,storedPayloadStateRevision(payload));
-            if (storageMode.mode == FrogArrayStorageMode::Readable) {
-                output << "\"values\": [";
+            };
+            if (node.numericArrayValues.hasNumericPages())
+                node.numericArrayValues.visitNumericSpellings([&](std::size_t,std::string_view text) {observePayload(text);});
+            else node.numericArrayValues.visitStoredValues(observePayload);
+            const bool compactableArray = node.type == "frog.studio.numeric.numeric_array_constant" ||
+                node.type == "numeric.numeric_array_constant" || node.type == "frog.studio.array.array_constant" ||
+                node.type == "array.array_constant" || node.type.starts_with("frog.studio.array.other_constants.");
+            const auto compact = document_internal::encodeDiagramArrayStorage(node.numericArrayValues,
+                storageMode, compactableArray && document_internal::compactNumericArrayType(node.valueType), node.valueType);
+            output << "\"values\": ";
+            if (compact) output << *compact;
+            else {
+                output << '[';
                 for (std::size_t index = 0; index < node.numericArrayValues.size(); ++index) {
                     if (index != 0U) output << ", ";
                     appendJsonString(output, node.numericArrayValues[index]);
                 }
-                output << "],\n";
-            } else {
-            std::ostringstream readable;
-            readable << '[';
-            for (std::size_t index = 0; index < node.numericArrayValues.size(); ++index) {
-                if (index != 0U) readable << ", ";
-                appendJsonString(readable, node.numericArrayValues[index]);
+                output << ']';
             }
-            readable << ']';
-            const auto readableText = readable.str();
-            const bool compactableArray = node.type == "frog.studio.numeric.numeric_array_constant" ||
-                node.type == "numeric.numeric_array_constant" || node.type == "frog.studio.array.array_constant" ||
-                node.type == "array.array_constant" || node.type.starts_with("frog.studio.array.other_constants.");
-            const auto compact = compactableArray && document_internal::compactNumericArrayType(node.valueType)
-                ? document_internal::encodeArrayStorage(node.numericArrayValues, storageMode,
-                    "numeric-cell-text-le32-v1", readableText.size()) : std::nullopt;
-            output << "\"values\": " << (compact ? *compact : readableText) << ",\n";
-            }
+            output << ",\n";
             appendJsonBooleanField(output, indent + 2, "element_label_visible", node.numericArrayElementLabelVisible, false);
             appendIndent(output, indent + 1);
             output << "},\n";
@@ -1108,6 +1107,21 @@ void appendDiagramNode(
         appendJsonField(output, indent + 2, "document_path", node.callDocumentPath);
         appendJsonField(output, indent + 2, "document_title", node.callDocumentTitle);
         appendJsonField(output, indent + 2, "icon_svg", node.callIconSvgText);
+        if (node.kind == "frog_call" && node.polymorphicFrogSelection) {
+            const auto &selection = *node.polymorphicFrogSelection;
+            appendIndent(output, indent + 2);
+            output << "\"polymorphic\": {\n";
+            if (selection.manualMemberId)
+                appendJsonField(output, indent + 3, "manual_member_id", *selection.manualMemberId,
+                    selection.showSelector.has_value() || selection.lastAutomaticMemberId.has_value());
+            if (selection.showSelector)
+                appendJsonBooleanField(output, indent + 3, "show_selector", *selection.showSelector,
+                    selection.lastAutomaticMemberId.has_value());
+            if (selection.lastAutomaticMemberId)
+                appendJsonField(output, indent + 3, "last_automatic_member_id", *selection.lastAutomaticMemberId, false);
+            appendIndent(output, indent + 2);
+            output << "},\n";
+        }
         appendIndent(output, indent + 2);
         output << "\"ports\": [";
         if (!node.callPorts.empty()) {
@@ -2317,6 +2331,18 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
         appendString("interaction.path.existence_mode", pathBrowseExistenceMode(widget));
         appendString("interaction.path.start_path", pathBrowseStartPath(widget));
     }
+    if (isListboxWidget(widget)) {
+        appendString("selection.mode","single");
+        appendString("value.selected_id",ringSelectedItemId(widget));
+        appendUnsigned("value.selected_value",static_cast<std::uint32_t>(widget.numericValue.value_or(0.0)));
+        appendRingItems();
+        if (widget.listboxColors) {
+            for (std::size_t i=0;i<kListboxColorProperties.size();++i) {
+                if (const auto color=(*widget.listboxColors)[i])
+                    appendString(kListboxColorProperties[i],formatRgbHex(*color));
+            }
+        }
+    }
     if (isRingWidget(widget) || isEnumWidget(widget)) {
         if (isEnumWidget(widget)) {
             appendString("data_type.representation", enumRepresentationValueType(widget));
@@ -2491,7 +2517,7 @@ void appendWidgetState(std::ostringstream &output, const WidgetInstance &widget,
     } else if (widget.numericValue.has_value()) {
         appendCommaIfNeeded();
         appendIndent(output, indent + 1);
-        if (isRingWidget(widget) || isEnumWidget(widget) || isStringDropdownWidget(widget)) {
+        if (isRingWidget(widget) || isEnumWidget(widget) || isStringDropdownWidget(widget) || isListboxWidget(widget)) {
             output << "\"value.selected_value\": " <<
                 static_cast<std::uint32_t>((std::max)(0.0, widget.numericValue.value()));
         } else if (isNumericWidget(widget) && std::isfinite(widget.numericValue.value())) {
@@ -3087,14 +3113,11 @@ std::string serializeFrogDraft(
     output << "{\n";
     appendJsonField(output, 1, "format", kFrogDraftDocumentFormat);
     const auto revisionFieldBegin=static_cast<std::size_t>(output.tellp());
-    appendJsonIntegerField(output, 1, "draft_revision", storageMode.mode == FrogArrayStorageMode::Readable
-        ? kCurrentFrogDraftRevision : kFrogArrayStorageDraftRevision);
+    appendJsonIntegerField(output, 1, "draft_revision", kFrogArrayStorageDraftRevision);
     const auto revisionFieldEnd=static_cast<std::size_t>(output.tellp());
-    if (storageMode.mode != FrogArrayStorageMode::Readable) {
-        output << "  \"storage\": {\"version\": 1, \"array_mode\": ";
-        appendJsonString(output, document_internal::arrayStorageModeToken(storageMode.mode));
-        output << "},\n";
-    }
+    output << "  \"storage\": {\"version\": 1, \"array_mode\": ";
+    appendJsonString(output, document_internal::arrayStorageModeToken(storageMode.mode));
+    output << "},\n";
     appendJsonField(output, 1, "language", "FROG");
     appendJsonField(output, 1, "title", documentTitle);
     if (properties.defaultTextPointSize) {
@@ -3215,7 +3238,7 @@ std::string serializeFrogDraft(
         {}, storageMode);
     output << "}\n";
     auto document=output.str();
-    if(storageMode.requiredStateRevision) {
+    if(storageMode.requiredStateRevision > kFrogArrayStorageDraftRevision) {
         std::ostringstream revisionField;
         appendJsonIntegerField(revisionField,1,"draft_revision",storageMode.requiredStateRevision);
         document.replace(revisionFieldBegin,revisionFieldEnd-revisionFieldBegin,revisionField.str());
@@ -3234,6 +3257,7 @@ std::string serializeFrogDraftData(const FrogDraftData &document) {
         document.interfaceMapVisualTransforms,document.fileIconSvgText,document.diagramNodes,
         document.diagramZoomPercent,document.diagramViewportOrigin,document.diagramEdges,
         document.diagramWireFragments,document.interfaceBindingMapProfileId,document.properties,
-        document.editorWindows,false,document.declaredInterface?&*document.declaredInterface:nullptr);
+        document.editorWindows,false,document.declaredInterface?&*document.declaredInterface:nullptr,
+        document_internal::compressDocumentZstdChunk);
 }
 } // namespace frog::native_engine

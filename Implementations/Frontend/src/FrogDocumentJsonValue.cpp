@@ -745,6 +745,10 @@ void deserializeStructureProperties(
             return clampTimedLoopVisibleRowCount(static_cast<std::uint32_t>((std::max)(
                 1.0, jsonNumberField(nodeValue, name).value_or(fallback))), maximum);
         };
+        const auto *terminals = objectField(nodeValue, "structure_terminals");
+        const auto *condition = terminals ? objectField(*terminals, "condition") : nullptr;
+        node.whileLoopStopIfTrue = condition &&
+            jsonStringField(*condition, "role").value_or("") == "stop_if_true";
         node.timedLoopIterationNormalizedX = position("timed_loop_iteration_normalized_x", 0.08);
         node.timedLoopIterationNormalizedY = position("timed_loop_iteration_normalized_y", 0.90);
         node.timedLoopConditionNormalizedX = position("timed_loop_condition_normalized_x", 0.92);
@@ -780,8 +784,11 @@ void deserializeStructureProperties(
                                     std::span<const DiagramStructureShelfFieldSpec>
                                         legacyOrder) {
             auto stored = jsonStringArrayField(nodeValue, name);
-            if (!stored.empty()) {
+            const auto *fieldList = objectField(nodeValue, name);
+            if (fieldList && fieldList->type == JsonValue::Type::Array &&
+                (fieldList->array.empty() || !stored.empty())) {
                 target = std::move(stored);
+                return;
             } else if (legacyCount) {
                 target.clear();
                 for (const auto &field : legacyOrder) {

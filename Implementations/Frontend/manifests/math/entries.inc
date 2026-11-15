@@ -106,8 +106,8 @@ FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.gamma.log_factorial", "Ln
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.gamma.log_complete", "Ln Gamma", "functions/math/gamma/05_Ln Gamma.svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation)
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.gamma.regularized_upper", "GammaC", "functions/math/gamma/06_GammaC.svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation)
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.gamma.digamma", "Digamma", "functions/math/gamma/07_digamma (psi).svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation)
-FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.gamma.regularized_lower", "Gamma â€” Regularized Incomplete", "functions/math/gamma/01_Gamma.svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
-FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.beta.regularized_lower", "Beta â€” Regularized Incomplete", "functions/math/gamma/03_Beta.svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
+FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.gamma.regularized_lower", "Gamma — Regularized Incomplete", "functions/math/gamma/01_Gamma.svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
+FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.beta.regularized_lower", "Beta — Regularized Incomplete", "functions/math/gamma/03_Beta.svg", "", "mathematics.elementary.gamma_functions", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
 
 // Fixed hypergeometric signatures retain x first and one stable value output.
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.hypergeometric.gauss", "Gauss", "functions/math/hypergeometric/01_Gauss.svg", "", "mathematics.elementary.hypergeometric_functions", FunctionCatalogEntryKind::Operation)
@@ -115,9 +115,9 @@ FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.hypergeometric.kummer_m",
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.hypergeometric.tricomi_u", "Tricomi", "functions/math/hypergeometric/03_Tricomi.svg", "", "mathematics.elementary.hypergeometric_functions", FunctionCatalogEntryKind::Operation)
 
 // Two visible incomplete defaults; four explicit persisted scalar instances.
-FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.elliptic.first_kind.complete_k", "Elliptic 1 â€” Complete K", "functions/math/elliptic/01_Elliptic 1.svg", "", "mathematics.elementary.elliptic_integrals", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
+FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.elliptic.first_kind.complete_k", "Elliptic 1 — Complete K", "functions/math/elliptic/01_Elliptic 1.svg", "", "mathematics.elementary.elliptic_integrals", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.elliptic.first_kind.incomplete_f", "Elliptic 1", "functions/math/elliptic/01_Elliptic 1.svg", "", "mathematics.elementary.elliptic_integrals", FunctionCatalogEntryKind::Operation)
-FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.elliptic.second_kind.complete_e", "Elliptic 2 â€” Complete E", "functions/math/elliptic/02_Elliptic 2.svg", "", "mathematics.elementary.elliptic_integrals", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
+FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.elliptic.second_kind.complete_e", "Elliptic 2 — Complete E", "functions/math/elliptic/02_Elliptic 2.svg", "", "mathematics.elementary.elliptic_integrals", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
 FROG_FUNCTION_ENTRY(FunctionFamily::Mathematics, "math.elliptic.second_kind.incomplete_e", "Elliptic 2", "functions/math/elliptic/02_Elliptic 2.svg", "", "mathematics.elementary.elliptic_integrals", FunctionCatalogEntryKind::Operation)
 
 // Six fixed real integral functions; source SVG filenames are byte-exact.

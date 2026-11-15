@@ -1267,4 +1267,4 @@ See the repository-level license information for the licensing terms governing t
 
 ## Studio reconciliation — 14 October 2026
 
-For `.frog` files actually saved by Graiphic Studio, also read the [authoring document profile v1](Studio%20authoring%20document%20profile%20v1.md). It documents revisions 2..7 and links a separate structural schema. Do not reinterpret `format: frog.document.draft` as `spec_version` source or confuse a loaded editing model with admitted execution.
+For `.frog` files saved by Graiphic Studio, see the [authoring document profile](Studio%20authoring%20document%20profile%20v1.md) and its structural schema. The profile distinguishes historical input, ordinary writer revisions and recovery copies. See the [coverage matrix](../docs/studio-source-compatibility.md) for the separate reading, editing and execution claims.

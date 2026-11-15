@@ -35,12 +35,6 @@ TypeRef pointType() { return TypeRef::cluster({"x","y"},{primitive("f64"),primit
 TypeRef sizeType() { return TypeRef::cluster({"width","height"},{primitive("f64"),primitive("f64")}); }
 TypeRef rectType() { return TypeRef::cluster({"x","y","width","height"},
     {primitive("f64"),primitive("f64"),primitive("f64"),primitive("f64")}); }
-std::string_view referenceWidgetBase(std::string_view id) {
-    if(id=="frog.control.color_box" || id=="frog.control.timestamp")return "frog.widgets.numeric_control";
-    if(id=="frog.control.dropdown_string")return "frog.widgets.string_control";
-    if(id=="frog.control.error_cluster")return "frog.widgets.cluster_control";
-    return id;
-}
 std::string memberDisplayName(const ApplicationControlMemberDescriptor &member) {
     std::string label;
     for(const auto &part:member.menuPath){if(!label.empty())label+='.';label+=part;}
@@ -122,7 +116,7 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
     property("identity.object_id","Object ID","Identity",primitive("string"));
     property("identity.class","Class","Identity",primitive("string"));
     property("identity.owner","Owner","Identity",TypeRef::reference("frog.object"));
-    const auto *definition=findWidgetDefinitionByClassId(referenceWidgetBase(classId));
+    const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId));
     const bool control=definition || classId=="frog.control";
     if(!control) {
         if(classId=="frog.program") {
@@ -141,7 +135,7 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
     const auto cap=[&](WidgetCapability c){return definition && widgetDefinitionHasCapability(*definition,c);};
     const TypeRef dataType=valueType.known()?valueType:primitive("variant");
     property("identity.role","Role","Identity",primitive("string"));
-    const bool hasValue=!definition || definition->terminal.direction!=WidgetTerminalDirection::None;
+    const bool hasValue=applicationControlValueSignalingAvailable(classId);
     if(hasValue) {
         property("value","Value","Value",dataType,true,true);
         property("default_value","Default Value","Value",dataType,true,true);
@@ -320,7 +314,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
     const WidgetInstance *presentation) {
     auto result=baseApplicationControlMembers(classId,valueType);
     if(result.empty())return result;
-    const auto *definition=findWidgetDefinitionByClassId(referenceWidgetBase(classId));
+    const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId));
     const bool control=definition || classId=="frog.control";
     const bool text=classId=="frog.text.label" || classId=="frog.text.caption" || classId=="frog.text.boolean";
     const auto property=[&](std::string id,std::string label,TypeRef type,bool read=true,
@@ -422,7 +416,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
         unavailable("enable_hyperlinks","Enable Hyperlinks",primitive("bool"),"Hyperlink rendering is not registered for this text part.");
     }
     const bool stringClass=definition && definition->family==WidgetFamily::StringPath &&
-        referenceWidgetBase(classId).find("string")!=std::string_view::npos;
+        applicationControlReferenceWidgetBase(classId).find("string")!=std::string_view::npos;
     if(stringClass) {
         method("string.append_string","Append String",true,{{"text","String",primitive("string")}});
         method("string.byte_offset_from_point","Byte Offset from Point",true,{{"point","Point",pointType()}},primitive("i32"));
@@ -448,7 +442,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
         unavailable("numeric.maximum","Maximum",numeric.known()?numeric:primitive("variant"),"Named Numeric limits are not exposed by the current provider.");
         unavailable("numeric.increment","Increment",numeric.known()?numeric:primitive("variant"),"Named Numeric increments are not exposed by the current provider.");
     }
-    if(definition && referenceWidgetBase(classId).find("path")!=std::string_view::npos) {
+    if(definition && applicationControlReferenceWidgetBase(classId).find("path")!=std::string_view::npos) {
         property("path.browse_button_visible","Browse Button Visible",primitive("bool"),true,true);
         method("path.browse_for_path","Browse for Path",false);
         unavailable("path.browse_mode","Mode",primitive("string"),"A public per-control browse-mode configuration is unavailable.");
@@ -900,7 +894,7 @@ std::string applicationControlClassLabel(std::string_view classId,const TypeRef 
     if(binding::isErrorCluster(value))return "Error";
     if(value.kind==binding::TypeKind::Primitive && value.name=="timestamp")return "Timestamp";
     if(value.kind==binding::TypeKind::Primitive && value.name=="variant")return "Variant";
-    if(const auto *definition=findWidgetDefinitionByClassId(referenceWidgetBase(classId))) {
+    if(const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId))) {
         if(widgetDefinitionHasCapability(*definition,WidgetCapability::ArrayContainer))return "Array";
         if(widgetDefinitionHasCapability(*definition,WidgetCapability::ClusterContainer))return "Cluster";
         switch(definition->family) {
@@ -935,10 +929,6 @@ std::string applicationControlClassLabel(std::string_view classId,const TypeRef 
     if(classId=="frog.front_panel")return "Front Panel";
     if(classId=="frog.control")return "Control";
     return "Object";
-}
-bool applicationControlHasReferenceInput(const ApplicationControlNode &node) noexcept {
-    return node.kind!=ApplicationControlKind::Reference &&
-        (node.kind!=ApplicationControlKind::Property || node.target.kind==ApplicationControlTargetKind::Unbound);
 }
 std::vector<ApplicationControlPort> applicationControlPorts(const ApplicationControlNode &node,const TypeRef &wired,const WidgetInstance *presentation) {
     const auto ref=effectiveReference(node,wired);

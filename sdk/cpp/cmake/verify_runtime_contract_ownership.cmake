@@ -22,6 +22,28 @@ get_filename_component(normalized_scan_root "${SCAN_ROOT}" ABSOLUTE)
 get_filename_component(normalized_contract_header "${CANONICAL_CONTRACT_HEADER}" ABSOLUTE)
 file(TO_CMAKE_PATH "${normalized_scan_root}" normalized_scan_root)
 file(TO_CMAKE_PATH "${normalized_contract_header}" normalized_contract_header)
+
+# A caller may declare distinct private Diagnostic owners without introducing
+# private paths into this public checker. Validate the complete bounded policy
+# before inventory/prefetch; an invalid declaration never becomes a partial scan.
+set(diagnostic_owner_arguments)
+if(DEFINED FROG_OWNERSHIP_DIAGNOSTIC_OWNERS_FILE)
+    if(FROG_OWNERSHIP_DIAGNOSTIC_OWNERS_FILE STREQUAL "")
+        message(FATAL_ERROR "Declared Diagnostic ownership policy is invalid: an explicit file is required.")
+    endif()
+    get_filename_component(normalized_diagnostic_owners
+        "${FROG_OWNERSHIP_DIAGNOSTIC_OWNERS_FILE}" ABSOLUTE BASE_DIR "${normalized_scan_root}")
+    file(TO_CMAKE_PATH "${normalized_diagnostic_owners}" normalized_diagnostic_owners)
+    execute_process(COMMAND "${FROG_OWNERSHIP_PYTHON_EXECUTABLE}" -B -X utf8
+        "${CMAKE_CURRENT_LIST_DIR}/runtime_contract_ownership_rules.py" diagnostic-policy
+        --scan-root "${normalized_scan_root}" --policy "${normalized_diagnostic_owners}"
+        RESULT_VARIABLE diagnostic_policy_result ERROR_VARIABLE diagnostic_policy_error)
+    if(NOT "${diagnostic_policy_result}" STREQUAL "0")
+        message(FATAL_ERROR "Declared Diagnostic ownership policy is invalid: ${diagnostic_policy_error}")
+    endif()
+    list(APPEND diagnostic_owner_arguments --policy "${normalized_diagnostic_owners}")
+endif()
+
 # The helper may warm OS/Cloud IO with bounded original-file readers. Its
 # inventory contains no content and CMake still READs and validates originals.
 # Optional private diagnostics change neither inventory nor ownership checks.
@@ -215,15 +237,25 @@ foreach(inventory_record IN LISTS inventory_records)
                 "${source_text}")
             if(duplicate_definition)
                 if(contract_type STREQUAL "Diagnostic")
-                    # Only the qualified bridge declaration is a different
-                    # public contract. Every other type in this file is read
-                    # and checked normally, including Runtime Diagnostic.
+                    # The bridge and explicitly declared private owners must
+                    # prove their exact namespace scope. Every other type in
+                    # this file remains checked, including Runtime Diagnostic.
                     execute_process(COMMAND "${FROG_OWNERSHIP_PYTHON_EXECUTABLE}" -B -X utf8
                         "${CMAKE_CURRENT_LIST_DIR}/runtime_contract_ownership_rules.py" bridge-diagnostic
                         --scan-root "${normalized_scan_root}" --source "${source_file}"
                         RESULT_VARIABLE bridge_result ERROR_VARIABLE bridge_error)
                     if("${bridge_result}" STREQUAL "0")
                         continue()
+                    endif()
+                    if(diagnostic_owner_arguments)
+                        execute_process(COMMAND "${FROG_OWNERSHIP_PYTHON_EXECUTABLE}" -B -X utf8
+                            "${CMAKE_CURRENT_LIST_DIR}/runtime_contract_ownership_rules.py" declared-diagnostic
+                            --scan-root "${normalized_scan_root}" --source "${source_file}"
+                            ${diagnostic_owner_arguments}
+                            RESULT_VARIABLE declared_diagnostic_result ERROR_VARIABLE declared_diagnostic_error)
+                        if("${declared_diagnostic_result}" STREQUAL "0")
+                            continue()
+                        endif()
                     endif()
                 endif()
                 list(APPEND violations

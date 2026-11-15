@@ -14,7 +14,10 @@ namespace frog::native_engine {
         else if(source.kind==TypeKind::Map&&source.children.size()==2) {
             auto pair=TypeRef::cluster({"key","value"},{source.children[0],source.children[1]});
             pair.fieldNames={"key","value"};source=std::move(pair);
-        }else if(source.kind==TypeKind::Set&&source.children.size()==1)source=source.children.front();
+        }else if(source.kind==TypeKind::Set&&source.children.size()==1) {
+            auto element=source.children.front();
+            source=std::move(element);
+        }
         else return invalid("Atomic indexed input requires a Map or Set.");
     }else if(policy==DiagramTunnelIndexingPolicy::LeadingDimension) {
         if(output) {
@@ -24,7 +27,12 @@ namespace frog::native_engine {
             }else source=TypeRef::array(std::move(source),1);
         }else {
             if(source.kind!=TypeKind::Array)return invalid("Leading-dimension indexed input requires an Array.");
-            if(source.rank==1)source=source.children.front();
+            if(source.rank==1) {
+                // Detach before replacing the parent: assigning directly from
+                // its child invalidates the remaining child schema members.
+                auto element=source.children.front();
+                source=std::move(element);
+            }
             else {--source.rank;source.extent.reset();}
         }
     }else return invalid("The tunnel indexing policy is unknown.");

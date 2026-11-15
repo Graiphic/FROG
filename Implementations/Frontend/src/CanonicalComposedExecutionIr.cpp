@@ -6,6 +6,7 @@
 #include "CanonicalComparisonTree.hpp"
 #include "frog_native_engine/CanonicalNumericScalarPalette.hpp"
 #include "CanonicalJsonSupport.hpp"
+#include "FrogDocumentArrayStorage.hpp"
 #include "frog_native_engine/TimedLoopConfiguration.hpp"
 #include "frog_native_engine/DiagramStructureShelfCatalog.hpp"
 #include "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
@@ -97,6 +98,21 @@ struct RawNode {const Json *raw;std::string path,region,owner;};
 struct RawEdge {const Json *raw;std::string path,region,owner;};
 struct Builder {
     const FrogSourceDocument &source;const CanonicalIrReadOptions &options;Draft out;
+    std::size_t remainingPackedLiteralBytes=document_internal::maximumDecodedNumericWordsBytes;
+    void checkPackedLiteral(const Json &literal,const binding::TypeRef &schema,const std::string &path,unsigned depth=0) {
+        if(depth>32)fail("IR_CONSTANT_SCHEMA","The literal exceeds its complete schema nesting limit.",path);
+        if(schema.kind==binding::TypeKind::Array&&literal.member(document_internal::composedNumericArrayField)) {
+            DiagramArrayValues cells;
+            std::vector<std::pair<std::size_t,double>> spellings;
+            std::string error;
+            if(!document_internal::decodeComposedPackedNumericArray(literal,schema,cells,spellings,remainingPackedLiteralBytes,error))
+                fail("IR_CONSTANT_PACKED_ARRAY",std::move(error),path);
+        }else if(schema.kind==binding::TypeKind::Cluster&&schema.fieldIds.size()==schema.children.size()) {
+            for(std::size_t i=0;i<schema.fieldIds.size();++i)
+                if(const auto *field=literal.member(schema.fieldIds[i]))
+                    checkPackedLiteral(*field,schema.children[i],path+"/"+schema.fieldIds[i],depth+1);
+        }
+    }
     std::map<std::string,RawNode> rawNodes;
     std::vector<RawEdge> rawEdges;
     std::map<std::string,std::size_t> nodeIndex;
@@ -174,11 +190,28 @@ struct Builder {
         return pid;
     }
     bool numericImplicitReceiver(const CanonicalIrNode &target,const std::string &pid,
+        const binding::TypeRef &sourceType,const binding::TypeRef &targetType,
         bool *declaredNumericArray=nullptr)const {
         if(declaredNumericArray)*declaredNumericArray=false;
         if(target.family=="widget_value")return target.role=="indicator"&&pid=="value";
-        // Structure boundary/state conversions require their own contract;
-        // admitting a plain scalar must not widen a Case/tunnel/Feedback rule.
+        if(target.family=="structure") {
+            // This Builder is selected only by the explicit Studio composed
+            // Source profile. Public Source 0.1 retains its separate exact
+            // corridor; its truncate-to-zero rule is not CoercionV1.
+            // Preserve exact integer count producers. Only a real authored
+            // Studio For admits a finite-service F32/F64 -> I64 support node,
+            // in the incoming edge's region before the For is entered.
+            if(target.kind!="for_loop"||target.authoredKind!="frog.studio.structures.for_loop"||pid!="count"||
+               (!binding::fullTypeEqual(sourceType,binding::TypeRef::primitive("f32"))&&
+                !binding::fullTypeEqual(sourceType,binding::TypeRef::primitive("f64")))||
+               !binding::fullTypeEqual(targetType,binding::TypeRef::primitive("i64")))return false;
+            const auto *definition=findFunctionBindingDefinition("structures.for_loop");
+            const auto *declared=definition?findFunctionBindingPort(*definition,pid):nullptr;
+            return declared&&declared->direction==FunctionPortDirection::Input&&declared->defaultValueType=="i64"&&
+                declared->connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit;
+        }
+        // All other structure boundaries/state and Feedback retain their own
+        // exact contracts; this admission does not widen their scalar rules.
         if(target.family!="primitive"||target.feedback)return false;
         const FunctionCatalogEntry *catalog=findFunctionCatalogEntryByDiagramNodeType(target.authoredKind);
         if(!catalog)catalog=findFunctionCatalogEntry(target.authoredKind);
@@ -316,6 +349,9 @@ struct Builder {
                 if(n.ports.size()!=1||n.ports[0].input||n.ports[0].typeRef!=n.valueType)fail("IR_CONSTANT_SCHEMA","A constant must retain its exact single producer port.",p);
                 if(n.fullTypeJson.empty())n.fullTypeJson=n.ports[0].fullTypeJson;
                 if(!exact(parse(n.fullTypeJson),parse(n.ports[0].fullTypeJson)))fail("IR_CONSTANT_SCHEMA","The literal and its actual producer port must preserve the same complete nominal schema.",p);
+                const auto schema=canonicalObjectReferenceReadType(parse(n.fullTypeJson));
+                if(!schema)fail("IR_CONSTANT_SCHEMA","The complete literal schema is invalid.",p);
+                checkPackedLiteral(*literal,*schema,p+"/value");
             } else if(n.family=="widget_value") {
                 n.kind=n.family;n.widgetId=text(v.member("widget"),p);
                 const auto w=widgets.find(n.widgetId);if(w==widgets.end())fail("IR_WIDGET_MISMATCH","Terminal refers to no actual widget.",p);
@@ -916,7 +952,7 @@ struct Builder {
             // semantic label/value order, as the editor's binding contract does.
             const bool same=originalA.typeRef==originalB.typeRef&&typeA&&typeB&&*typeA==*typeB;
             bool declaredNumericArray=false;
-            const bool receiver=!same&&typeA&&typeB&&numericImplicitReceiver(nb,bp,&declaredNumericArray)&&
+            const bool receiver=!same&&typeA&&typeB&&numericImplicitReceiver(nb,bp,*typeA,*typeB,&declaredNumericArray)&&
                 binding::connect(*typeA,*typeB,binding::ConnectionPolicy::NumericImplicit).status==binding::ResolutionStatus::Coercion;
             const bool scalarCoercion=receiver&&canonicalNumericScalarCoercionSupported(*typeA,*typeB);
             // Reuse the existing finite typed conversion operators only for
@@ -1076,8 +1112,9 @@ void Builder::structures() {
             const auto &config=objectAt(v.member("studio_timed_loop"),p+"/studio_timed_loop");
             fields(config,{"profile","schedule","options"},p);
             if(text(config.member("profile"),p)!=timed_loop::profile)fail("IR_TIMED_LOOP_PROFILE","Unknown Timed Loop semantic profile.",p);
+            DiagramTimedLoopSchedule timing;
             try {
-                (void)timed_loop::readSchedule(timed_loop::member(config,"schedule"));
+                timing=timed_loop::readSchedule(timed_loop::member(config,"schedule"));
                 (void)timed_loop::readOptions(timed_loop::member(config,"options"));
             }catch(const std::exception &e){fail("IR_TIMED_LOOP_CONFIGURATION",e.what(),p);}
             for(const auto &port:n.ports)if(port.id.starts_with("timed.")) {
@@ -1087,7 +1124,7 @@ void Builder::structures() {
                     const auto *spec=diagramStructureShelfFieldById(role.fields,field.substr(0,field.find('#')));
                     if(!spec||port.input!=(role.direction=="input"))fail("IR_TIMED_LOOP_PORT","Unknown timing field or direction.",p+":"+port.id);
                     const auto actual=canonicalObjectReferenceReadType(parse(port.fullTypeJson));
-                    const auto expected=binding::parseType(spec->valueType);
+                    const auto expected=binding::parseType(timedLoopFieldValueType(timing.timingSource,role.role,*spec));
                     if(!actual||!expected.valid()||actual->canonical()!=expected.type.canonical())fail("IR_TIMED_LOOP_PORT_TYPE","Timing terminal lost its exact declared type.",p+":"+port.id);
                     known=true;break;
                 }

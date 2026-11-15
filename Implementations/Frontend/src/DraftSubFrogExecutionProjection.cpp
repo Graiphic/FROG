@@ -80,6 +80,7 @@ struct Projection {
     DraftSubFrogExecutionProjection &out;
     std::map<std::string,Frozen> frozen;
     std::map<std::string,DraftSubFrogFrozenSource> frozenTypes;
+    std::map<std::string,DraftSubFrogFrozenSource> frozenFamilies;
     std::size_t bytes=0,invocations=0;
     std::set<std::string> reserved;
     std::string rootKey;
@@ -100,7 +101,7 @@ struct Projection {
         }
         if(source.state!=DraftDependencyState::Present||!source.bytes)
             refuse("subfrog.source.unavailable",uri,"/diagram",source.message.empty()?"The referenced source is unavailable.":source.message,{},false,DocumentDiagnosticDomain::Dependency);
-        if(frozen.size()>=maximumPrograms||source.bytes->size()>maximumClosureBytes-bytes)
+        if(frozen.size()+frozenFamilies.size()>=maximumPrograms||source.bytes->size()>maximumClosureBytes-bytes)
             refuse("subfrog.dependency.limit",uri,"/diagram","The frozen dependency closure exceeds1024 programs or64MiB.");
         if(source.bytes->empty())refuse("subfrog.source.invalid",uri,"/","A frozen source requires its exact current bytes.");
         bytes+=source.bytes->size();
@@ -173,7 +174,7 @@ struct Projection {
         return it->second;
     }
     Frozen &load(const std::string &key) {return frozen.at(key);}
-    std::string resolve(std::string_view reference,std::string_view owner,
+    DraftDependencyResult fetch(std::string_view reference,std::string_view owner,
         const std::string &uri,const std::string &at,const std::string &callsite={}) {
         if(reference.empty()||reference.size()>8192||reference.find('\0')!=reference.npos)
             refuse("subfrog.dependency.path_invalid",uri,at,"The authored dependency reference is empty, overlong or contains NUL.",callsite,false,DocumentDiagnosticDomain::Dependency);
@@ -186,6 +187,11 @@ struct Projection {
                 uri,at,result.message.empty()?"The source reference cannot be resolved by its host.":result.message,
                 callsite,false,control?DocumentDiagnosticDomain::Control:DocumentDiagnosticDomain::Dependency);
         }
+        return result;
+    }
+    std::string resolve(std::string_view reference,std::string_view owner,
+        const std::string &uri,const std::string &at,const std::string &callsite={}) {
+        auto result=fetch(reference,owner,uri,at,callsite);
         const auto key=result.canonicalUri;
         try {retain(std::move(result));}
         catch(Refusal &failure) {failure.diagnostic.callsiteId=callsite;throw;}
@@ -203,7 +209,9 @@ struct Projection {
             (declaredType&&(declaredType->type!=Json::Type::String||declaredType->string!="frog.studio.frog_call")))
             refuse("subfrog.interface.invalid",source.source.source.canonicalUri,atNode,"The authored call owner differs from its actual model.",callsite);
         const auto &payload=object(node.member("call"),source.source.source.canonicalUri,atNode+"/call",callsite);
-        fields(payload,{"document_path","document_title","icon_svg","ports"},source.source.source.canonicalUri,atNode+"/call",callsite);
+        fields(payload,{"document_path","document_title","icon_svg","ports","polymorphic"},source.source.source.canonicalUri,atNode+"/call",callsite);
+        if ((payload.member("polymorphic") != nullptr) != call.polymorphicFrogSelection.has_value())
+            refuse("polymorphic.selection.invalid",source.source.source.canonicalUri,atNode+"/call/polymorphic","The authored polymorphic selection differs from the call.",callsite);
         if(text(payload.member("document_path"))!=call.callDocumentPath)
             refuse("subfrog.interface.stale",source.source.source.canonicalUri,atNode+"/call/document_path","The current call path differs from its exact source payload.",callsite);
         const auto *ports=payload.member("ports");
@@ -218,7 +226,91 @@ struct Projection {
                 text(raw.member("value_type"))!=port.valueType||(direction!="input"&&direction!="output")||(direction=="input")!=port.input||
                 (policy!="required"&&policy!="recommended"&&policy!="optional")||policy!=port.connectionRequirement)
                 refuse("subfrog.interface.invalid",source.source.source.canonicalUri,p,"A call port is malformed, duplicated, normalized or inconsistent with its source identity.",callsite);
+            if (call.polymorphicFrogSelection &&
+                (port.id!=port.interfaceMapSlotId || text(raw.member("interface_map_slot"))!=port.id))
+                refuse("polymorphic.interface.slot_invalid",source.source.source.canonicalUri,p,"A polymorphic port must identify its connector slot.",callsite);
         }
+    }
+
+    std::string resolveFamilyCall(DiagramNode &call, const FrogDraftData &document,
+        const Frozen &caller, const std::string &pointer, const std::vector<std::string> &ancestry) {
+        const auto &uri=caller.source.source.canonicalUri;
+        const auto path=pointer+"/call/document_path";
+        auto source=fetch(call.callDocumentPath,uri,uri,path,call.id);
+        const auto familyUri=source.canonicalUri;
+        if (const auto old=frozenFamilies.find(familyUri);old!=frozenFamilies.end()) {
+            if (old->second.source.sha256!=source.sha256)
+                refuse("subfrog.source.changed",familyUri,"/","The family changed during dependency capture.",call.id,false,DocumentDiagnosticDomain::Dependency);
+        } else {
+            if (frozenFamilies.size()+frozen.size()>=maximumPrograms || source.bytes->size()>maximumClosureBytes-bytes)
+                refuse("subfrog.dependency.limit",familyUri,"/","The family exceeds the frozen dependency budget.",call.id);
+            bytes+=source.bytes->size();
+            frozenFamilies.emplace(familyUri,DraftSubFrogFrozenSource{source,{}});
+        }
+        std::string error;
+        const auto family=readPolymorphicFrog(*source.bytes,&error);
+        if (!family)
+            refuse("polymorphic.family.invalid",familyUri,"/",error,call.id,false,DocumentDiagnosticDomain::Dependency);
+        for (const auto &issue:validatePolymorphicFrog(*family))
+            refuse(issue.code,familyUri,"/members",issue.message,call.id);
+
+        std::set<std::string> uniqueMembers;
+        std::vector<std::string> memberUris;
+        std::vector<std::optional<PolymorphicFrogInterface>> signatures;
+        for (std::size_t i=0;i<family->members.size();++i) {
+            const auto &member=family->members[i];
+            const auto memberPath="/members/"+std::to_string(i)+"/document_path";
+            auto memberSource=fetch(member.documentPath,familyUri,familyUri,memberPath,call.id);
+            const auto &memberUri=memberSource.canonicalUri;
+            if (memberUri==familyUri || std::find(ancestry.begin(),ancestry.end(),memberUri)!=ancestry.end())
+                refuse("polymorphic.member.cycle",familyUri,memberPath,"A member recursively references this family or caller.",call.id,false,DocumentDiagnosticDomain::Dependency);
+            if (!uniqueMembers.insert(memberUri).second)
+                refuse("polymorphic.member.duplicate",familyUri,memberPath,"Two entries resolve to the same member document.",call.id);
+            if (memberSource.bytes->find(kPolymorphicFrogFormat)!=std::string::npos && isPolymorphicFrog(*memberSource.bytes))
+                refuse("polymorphic.member.family",familyUri,memberPath,"Only ordinary FROG documents can be instances.",call.id);
+            memberUris.push_back(memberUri);
+            signatures.push_back(inspectPolymorphicFrogInterface(retain(std::move(memberSource)).active));
+        }
+
+        binding::TypeResolver resolver(document.diagramNodes,document.diagramEdges,document.widgets);
+        std::map<std::string,binding::TypeRef> inputs;
+        std::vector<std::string> wiredSlots;
+        for (const auto &edge:document.diagramEdges) {
+            if (edge.from.nodeId==call.id) wiredSlots.push_back(edge.from.portId);
+            if (edge.to.nodeId!=call.id) continue;
+            wiredSlots.push_back(edge.to.portId);
+            const auto actual=resolver.resolveSource(edge);
+            auto type=actual.resolution.accepted() && actual.complete ? actual.resolution.type : binding::TypeRef{};
+            if (!inputs.emplace(edge.to.portId,std::move(type)).second)
+                refuse("subfrog.interface.invalid",uri,pointer+"/call/ports","An input has multiple actual producers.",call.id);
+        }
+        const auto resolution=resolvePolymorphicFrog(*family,*call.polymorphicFrogSelection,signatures,inputs,wiredSlots);
+        if (!resolution.issues.empty()) {
+            const auto &issue=resolution.issues.front();
+            const auto member=std::find_if(family->members.begin(),family->members.end(),
+                [&](const auto &entry){return entry.id==issue.memberId;});
+            const auto issuePath=member==family->members.end()?pointer+"/call/polymorphic":
+                "/members/"+std::to_string(member-family->members.begin());
+            refuse(issue.code,member==family->members.end()?uri:familyUri,issuePath,issue.message,call.id);
+        }
+        const auto index=*resolution.memberIndex;
+        const auto &signature=*signatures[index];
+        std::vector<DiagramCallPort> ports;
+        for (const auto &[slot,port]:signature.slots) {
+            const auto existing=std::find_if(call.callPorts.begin(),call.callPorts.end(),
+                [&](const auto &entry){return entry.id==slot;});
+            DiagramCallPort concrete;
+            if (existing!=call.callPorts.end()) concrete=*existing;
+            concrete.id=concrete.interfaceMapSlotId=slot;
+            concrete.sourcePortId=port.publicId;
+            concrete.label=port.label;
+            concrete.valueType=port.type.canonical();
+            concrete.input=port.input;
+            concrete.connectionRequirement=port.requirement;
+            ports.push_back(std::move(concrete));
+        }
+        call.callPorts=std::move(ports);
+        return memberUris[index];
     }
     void budget(const FrogDraftData &doc,const Frozen &source,const std::string &callsite) {
         if(doc.diagramNodes.size()>maximumNodes||doc.diagramEdges.size()>maximumEdges||doc.widgets.objects().size()>maximumNodes||invocations>maximumPrograms)
@@ -241,7 +333,9 @@ struct Projection {
                 if(!initialized)refuse("subfrog.projection.state_unavailable",source.source.source.canonicalUri,at(source,node),
                     "An uninitialized callee shift register needs its explicit instance sharing/lifetime contract.",callsite,true);
             }
-            if(node.applicationControl||node.nativeCall||t=="frog.studio.structures.event_structure"||
+            // NativeCall keeps the authored node's source identity below.
+            // Admission and path resolution still belong to the scalar host.
+            if(node.applicationControl||t=="frog.studio.structures.event_structure"||
                 t=="frog.studio.error.build_cluster"||t=="frog.studio.error.translate_code"||t=="frog.studio.error.write_current_call_chain"||
                 t=="frog.studio.path.current_frog_path"||t=="frog.studio.path.default_directory"||
                 t=="frog.studio.path.temporary_directory"||t=="frog.studio.path.application_directory"||
@@ -275,13 +369,48 @@ struct Projection {
                 found==source.index.edges.end()?"/diagram":found->second,{},callPath,found==source.index.edges.end()});
         }
         std::vector<std::string> calls;
-        for(const auto &node:result.document.diagramNodes)if(node.kind=="frog_call")calls.push_back(node.id);
+        const bool hasFamilies=std::any_of(result.document.diagramNodes.begin(),result.document.diagramNodes.end(),
+            [](const auto &node){return node.polymorphicFrogSelection.has_value();});
+        if (hasFamilies) {
+            // Resolve actual producer calls before their consumers, even when
+            // their authoring order differs from their dataflow order.
+            budget(result.document,source,{});
+            std::map<std::string,std::vector<std::string_view>> upstream;
+            std::map<std::string_view,const DiagramNode *> authoredNodes;
+            for (const auto &edge:result.document.diagramEdges) upstream[edge.to.nodeId].push_back(edge.from.nodeId);
+            for (const auto &node:source.active.diagramNodes) authoredNodes.emplace(node.id,&node);
+            std::set<std::string_view> visited;
+            const auto visit=[&](auto &self,std::string_view id) -> void {
+                const auto node=authoredNodes.find(id);
+                if (node==authoredNodes.end()) return;
+                if (!visited.insert(id).second) return;
+                if (const auto links=upstream.find(std::string(id));links!=upstream.end())
+                    for (const auto producer:links->second) self(self,producer);
+                if (node->second->kind=="frog_call") calls.emplace_back(id);
+            };
+            for (auto &node:result.document.diagramNodes) {
+                if (node.kind=="frog_call") visit(visit,node.id);
+                // Preserve slot identity while removing any saved type guess
+                // from the evidence graph. A concrete projection installs it.
+                if (node.polymorphicFrogSelection)
+                    for (auto &port:node.callPorts) port.valueType="unknown";
+            }
+        } else {
+            for (const auto &node:result.document.diagramNodes) if (node.kind=="frog_call") calls.push_back(node.id);
+        }
         for(const auto &callId:calls) {
             const auto where=std::find_if(result.document.diagramNodes.begin(),result.document.diagramNodes.end(),[&](const auto &n){return n.id==callId;});
             if(where==result.document.diagramNodes.end())continue;
-            const auto call=*where;const auto pointer=at(source,call);auto site=callPath;frame(site,call.id);
+            auto call=*where;const auto pointer=at(source,call);auto site=callPath;frame(site,call.id);
+            if (call.polymorphicFrogSelection) {
+                const auto original=std::find_if(source.active.diagramNodes.begin(),source.active.diagramNodes.end(),
+                    [&](const auto &node){return node.id==callId;});
+                if (original!=source.active.diagramNodes.end()) call.callPorts=original->callPorts;
+            }
             callPayload(source,call,callId);
-            const auto resolution=resolve(call.callDocumentPath,source.source.source.canonicalUri,source.source.source.canonicalUri,pointer+"/call/document_path",callId);
+            const auto resolution=call.polymorphicFrogSelection?
+                resolveFamilyCall(call,result.document,source,pointer,ancestry):
+                resolve(call.callDocumentPath,source.source.source.canonicalUri,source.source.source.canonicalUri,pointer+"/call/document_path",callId);
             auto &callee=load(resolution);
             if(std::find(ancestry.begin(),ancestry.end(),callee.identity)!=ancestry.end())
                 refuse("subfrog.dependency.cycle",source.source.source.canonicalUri,pointer+"/call/document_path","Recursive call dependencies require an explicit call-stack contract and are not statically expanded.",callId,true);
@@ -311,7 +440,7 @@ struct Projection {
                 const auto port=std::find_if(call.callPorts.begin(),call.callPorts.end(),[&](const auto &p){return p.sourcePortId==declared.id;});
                 if(port!=call.callPorts.end()&&port->valueType!=declared.parsedType.type.canonical())
                     refuse("subfrog.interface.type_mismatch",source.source.source.canonicalUri,pointer+"/call/ports","The call connector type differs from the frozen callee declaration.",callId);
-                if(port==call.callPorts.end()||port->id!=declared.id||port->input!=declared.input||
+                if(port==call.callPorts.end()||(!call.polymorphicFrogSelection&&port->id!=declared.id)||port->input!=declared.input||
                     (declared.input&&port->connectionRequirement!=declared.connection)||
                     std::count_if(call.callPorts.begin(),call.callPorts.end(),[&](const auto &p){return p.sourcePortId==declared.id;})!=1)
                     refuse("subfrog.interface.stale",source.source.source.canonicalUri,pointer+"/call/ports","A call connector contradicts the exact source ID, direction, type or input policy.",callId);
@@ -479,6 +608,16 @@ struct Projection {
             }
             DiagramNode wrapper=call;wrapper.kind="primitive";wrapper.type=std::string(kSequenceStructureType);
             wrapper.callDocumentPath.clear();wrapper.callDocumentTitle.clear();wrapper.callIconSvgText.clear();wrapper.callPorts.clear();
+            wrapper.polymorphicFrogSelection.reset();
+            wrapper.polymorphicFrogSelectorCaption.clear();
+            wrapper.polymorphicFrogSelectorShown=false;
+            // The synthetic sequence has no authored documentation. The
+            // original call retains its help; the execution node uses only
+            // the selected member's concrete bindings.
+            wrapper.documentationSummary.clear();
+            wrapper.documentationUrl.clear();
+            wrapper.instanceDescription.reset();
+            wrapper.instanceTip.reset();
             wrapper.sequenceSemanticProfile="stacked_sequence";wrapper.sequenceFrames={{"body","",240.0,""}};wrapper.sequenceSelectedFrameId="body";wrapper.caseStructureTunnels.clear();
             for(const auto &b:boundaries) {
                 DiagramCaseStructureTunnel tunnel;tunnel.id=b.tunnel;tunnel.valueType=b.type.canonical();tunnel.outputFromStructure=!b.declared->input;
@@ -529,11 +668,12 @@ std::optional<std::string> prepareExecutionStorageSource(std::string_view bytes,
     }
     const auto canonicalBefore=cj::encode(*root);
     FrogArrayStorageMode mode=FrogArrayStorageMode::Readable;
+    bool keptPackedArrays=false;
     if(!document_internal::readArrayStorageMode(*root,mode,reason)||
-       !document_internal::inflateArrayStorage(*root,reason,rev>=kFrogArrayStorageDraftRevision))return fail(reason);
+       !document_internal::inflateExecutionArrayStorage(*root,reason,rev>=kFrogArrayStorageDraftRevision,keptPackedArrays))return fail(reason);
     if(!storage&&rev!=kFrogArrayStorageDraftRevision&&cj::encode(*root)==canonicalBefore)return std::string(bytes);
     root->object.erase("storage");
-    if(rev==kFrogArrayStorageDraftRevision) {auto &next=root->object.at("draft_revision");next.string="2";}
+    if(rev==kFrogArrayStorageDraftRevision&&!keptPackedArrays) {auto &next=root->object.at("draft_revision");next.string="2";}
     return cj::encode(*root);
 }
 
@@ -569,6 +709,9 @@ DraftSubFrogExecutionProjection projectDraftSubFrogExecution(const DraftSubFrogE
         }
         for(const auto &[key,entry]:projection.frozenTypes) {
             out.frozenSources.push_back(entry);frame(digest,key);frame(digest,entry.source.sha256);frame(digest,entry.source.identity);frame(digest,entry.source.version);frame(digest,entry.typeDefinitionSchemaFingerprint);
+        }
+        for(const auto &[key,entry]:projection.frozenFamilies) {
+            out.frozenSources.push_back(entry);frame(digest,key);frame(digest,entry.source.sha256);frame(digest,entry.source.identity);frame(digest,entry.source.version);
         }
         for(const auto &identity:out.identities) {
             frame(digest,identity.projectedId);frame(digest,identity.sourceUri);frame(digest,identity.sourcePointer);frame(digest,identity.callPath);

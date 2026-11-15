@@ -75,7 +75,7 @@ class FrogWidgetDataView {
     const SceneObject *(*lookup_)(const void*,std::string_view) = nullptr;
 public:
     FrogWidgetDataView() = default;
-    FrogWidgetDataView(std::span<const SceneObject> objects, std::span<const SceneObjectGroup> groups={}, double gridPitch=8.0, Size size={}, const void *context=nullptr, const SceneObject *(*lookup)(const void*,std::string_view)=nullptr,FrogWidgetPresentation presentation={}) : objects_(objects),groups_(groups),gridPitch_(gridPitch),size_(size),presentation_(std::move(presentation)),lookupContext_(context),lookup_(lookup) {}
+    FrogWidgetDataView(std::span<const SceneObject> objects, std::span<const SceneObjectGroup> groups={}, double gridPitch=8.0, Size size={}, const void *context=nullptr, const SceneObject *(*lookup)(const void*,std::string_view)=nullptr,FrogWidgetPresentation presentation={}) : objects_(objects),groups_(groups),gridPitch_(gridPitch),size_(size),presentation_(presentation),lookupContext_(context),lookup_(lookup) {}
     [[nodiscard]] const std::optional<std::uint32_t>& ideFrontPanelBackgroundRgb() const noexcept {return presentation_.frontBackground;}
     [[nodiscard]] const std::optional<std::uint32_t>& ideFrontPanelGridRgb() const noexcept {return presentation_.frontGrid;}
     [[nodiscard]] const std::optional<std::uint32_t>& ideDiagramBackgroundRgb() const noexcept {return presentation_.diagramBackground;}

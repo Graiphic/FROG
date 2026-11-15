@@ -1,4 +1,5 @@
 #include "FrogDocumentArrayStorage.hpp"
+#include "FrogDocumentJsonValue.hpp"
 #include "frog_native_engine/ContextPathIdentity.hpp"
 #include "frog_native_engine/ApplicationControlSchema.hpp"
 #include "frog_native_engine/ArrayCapacity.hpp"
@@ -146,6 +147,52 @@ void authoredRootFields(const Json &root) {
         fail("/conditional_compilation",error,"migration.conditional_symbols_invalid",Domain::Semantics);
 }
 void authoredWidgetFields(const Json &widget,const std::string &at) { fields(widget,{"id","classId","role","valueType","label","bounds","props","runtime","state","typography","geometry","binding","studio_application_control","studio_tab","studio_tab_parent_id","studio_tab_page_id","hidden","locked"},at); }
+
+// Front Panel groups edit selection and movement. Validate their authored
+// identities before dropping this presentation metadata from execution.
+void authoredPanelGroups(const Json &panel) {
+    const auto *groups = panel.member("groups");
+    if (!groups) return;
+    const auto &entries = arrayAt(groups, "/frontPanel/groups");
+    const auto &widgets = arrayAt(panel.member("widgets"), "/frontPanel/widgets");
+    if (entries.size() > 1024 || widgets.size() > 1024)
+        fail("/frontPanel/groups", "Front Panel groups exceed the widget budget.", "migration.composed_resource_limit", Domain::Control);
+    std::set<std::string> widgetIds, groupIds, assigned;
+    for (const auto &widget : widgets)
+        widgetIds.insert(text(widget.member("id"), "/frontPanel/widgets/id"));
+    for (std::size_t i = 0; i < entries.size(); ++i) {
+        const auto path = "/frontPanel/groups/" + std::to_string(i);
+        const auto &group = objectAt(&entries[i], path);
+        fields(group, {"id", "object_ids"}, path);
+        const auto id = text(group.member("id"), path + "/id");
+        const auto &members = arrayAt(group.member("object_ids"), path + "/object_ids");
+        if (!groupIds.insert(id).second || members.size() < 2 || members.size() > widgets.size())
+            fail(path, "Invalid Front Panel group identity or size.", "migration.composed_group_invalid", Domain::Structure);
+        for (const auto &member : members) {
+            const auto name = text(&member, path + "/object_ids");
+            if (!widgetIds.contains(name) || !assigned.insert(name).second)
+                fail(path, "A grouped widget is missing or occurs in more than one group.", "migration.composed_group_invalid", Domain::Structure);
+        }
+    }
+}
+bool supportLabelAnnotation(const Json &widget,const std::string &at) {
+    if(text(widget.member("classId"),at+"/classId")!="frog.widgets.label" ||
+       text(widget.member("role"),at+"/role")!="support" ||
+       text(widget.member("valueType"),at+"/valueType")!="support_text")return false;
+    // The existing Label/Support owner is presentation, not a Runtime value.
+    // Its complete authoring record stays in preserved_authoring_source.
+    for(const auto key:{"binding","state","type_definition","studio_application_control","studio_tab"})
+        if(widget.member(key))fail(at+"/"+key,"A Support Label annotation cannot carry an executable value or binding.",
+            "migration.composed_source_invalid",Domain::Semantics);
+    const auto &props=widgetProperties(widget,at);
+    static_cast<void>(text(props.member("text.value"),at+"/props/text.value",true));
+    if(props.member("data.default"))fail(at+"/props/data.default","A Support Label annotation has no Runtime default value.",
+        "migration.composed_source_invalid",Domain::Semantics);
+    const auto decoded=deserializeArrayElementWidget(encode(widget));
+    if(!decoded || !isLabelWidget(*decoded) || decoded->role!="support" || decoded->valueType!="support_text")
+        fail(at,"The exact Support Label annotation has no matching common model owner.","migration.composed_source_invalid",Domain::Integrity);
+    return true;
+}
 // A writer revision is only a format declaration. Route the actual supported
 // Reference widget configuration, and reuse the same exact check when the
 // composed adapter receives its hash-bound widget/schema witness.
@@ -696,12 +743,15 @@ struct Adapter {
             const auto &configuration=objectAt(raw.member("array_constant"),at+"/array_constant");
             fields(configuration,{"rank","shape","first_indices","visible_counts","one_dimensional_vertical","cell_size","values","element_label_visible"},at+"/array_constant");
             if(ordinal(configuration.member("rank"),at)!=value.type.rank)fail(at,"The saved Array rank differs from its resolved output.", "migration.composed_source_invalid", Domain::Semantics);
-            const auto &values=arrayAt(configuration.member("values"),at+"/array_constant/values");
-            if(values.size()>kMaximumArrayElements)fail(at,"This local typed Array exceeds4294967295 elements.","migration.composed_resource_limit", Domain::Control);
-            if(!arrayAllocationFitsBudget(values.size(),sizeof(Json),0,kMaximumFrogJsonTreeBytes))fail(at,"Array preparation representation budget exceeded: elements="+std::to_string(values.size())+", bytes_per_value="+std::to_string(sizeof(Json))+", budget_bytes="+std::to_string(kMaximumFrogJsonTreeBytes)+".","migration.array.representation_budget", Domain::Control);
+            const auto *savedValues=configuration.member("values");
+            const bool packed=document_internal::isPackedExecutionArrayEnvelope(configuration,value.type.canonical());
+            const auto valueCount=packed?ordinal(savedValues->member("count"),at+"/array_constant/values/count"):
+                arrayAt(savedValues,at+"/array_constant/values").size();
+            if(valueCount>kMaximumArrayElements)fail(at,"This local typed Array exceeds4294967295 elements.","migration.composed_resource_limit", Domain::Control);
+            if(!packed&&!arrayAllocationFitsBudget(valueCount,sizeof(Json),0,kMaximumFrogJsonTreeBytes))fail(at,"Array preparation representation budget exceeded: elements="+std::to_string(valueCount)+", bytes_per_value="+std::to_string(sizeof(Json))+", budget_bytes="+std::to_string(kMaximumFrogJsonTreeBytes)+".","migration.array.representation_budget", Domain::Control);
             Json shape=array(),elements=array();std::size_t count=1;
             const auto &savedShape=arrayAt(configuration.member("shape"),at+"/array_constant/shape");
-            if(savedShape.empty()&&value.type.rank==1){shape.array.push_back(number(values.size()));count=values.size();}
+            if(savedShape.empty()&&value.type.rank==1){shape.array.push_back(number(valueCount));count=valueCount;}
             else {
                 if(savedShape.size()!=value.type.rank)fail(at,"Array extents must be explicit for every dimension.", "migration.composed_source_invalid", Domain::Integrity);
                 std::vector<std::uint32_t> extents;
@@ -710,7 +760,7 @@ struct Adapter {
                 if(!cardinality)fail(at,"The Array exceeds4294967295 elements.","migration.composed_resource_limit", Domain::Control);
                 count=*cardinality;
             }
-            if(count!=values.size())fail(at,"Array shape and stored cell count differ; no implicit trimming or padding is performed.", "migration.composed_source_invalid", Domain::Semantics);
+            if(count!=valueCount)fail(at,"Array shape and stored cell count differ; no implicit trimming or padding is performed.", "migration.composed_source_invalid", Domain::Semantics);
             const auto &element=value.type.children.front();
             std::optional<WidgetInstance> prototype;
             if(const auto *storedPrototype=raw.member("array_element_template")) {
@@ -720,8 +770,13 @@ struct Adapter {
                 if(!schema.valid()||!canonicalObjectReferenceFullTypeEqual(schema.type,element))
                     fail(at,"The stored Array prototype differs from the complete resolved element schema.", "migration.composed_source_invalid", Domain::Semantics);
             }
+            if(packed) {
+                value.value=object();
+                value.value.object.emplace("shape",std::move(shape));
+                value.value.object.emplace(document_internal::composedNumericArrayField,*savedValues);
+            }else {
             elements.array.reserve(count);
-            for(const auto &cell:values) {
+            for(const auto &cell:savedValues->array) {
                 const auto lexical=text(&cell,at+"/array_constant/values",true);
                 auto parsed=source::parseJson(lexical,nullptr,source::JsonNumberPolicy::PreserveLexeme);
                 if(parsed&&parsed->type==Json::Type::Object&&parsed->member("array_cell_value")) {
@@ -732,6 +787,14 @@ struct Adapter {
                     std::string why;auto exactValue=typedWidgetSourceValue(*materialized,&why);
                     if(!exactValue)fail(at,"The actual Array cell has no valid typed Source value: "+why, "migration.composed_source_invalid", Domain::Semantics);
                     elements.array.push_back(std::move(*exactValue));
+                } else if(element.kind==binding::TypeKind::Primitive&&element.name=="bool") {
+                    // These are the existing exact authored Boolean spellings
+                    // from the scalar draft adapter, not public JSON coercion.
+                    if(lexical=="true"||lexical=="TRUE"||lexical=="1")elements.array.push_back(boolean(true));
+                    else if(lexical=="false"||lexical=="FALSE"||lexical=="0")elements.array.push_back(boolean(false));
+                    else fail(at+"/array_constant/values/"+std::to_string(elements.array.size()),
+                        "The authored Boolean Array cell is not one of the existing exact Boolean spellings.",
+                        "migration.composed_source_invalid", Domain::Semantics);
                 } else if(element.kind==binding::TypeKind::Primitive&&(element.name=="c32"||element.name=="c64")) {
                     const auto complex=composedComplexLexeme(lexical,element.name);
                     if(!complex)fail(at,"A complex Array cell lost an exact finite component.", "migration.composed_source_invalid", Domain::Semantics);elements.array.push_back(*complex);
@@ -741,6 +804,7 @@ struct Adapter {
             value.value=object();
             value.value.object.emplace("shape",std::move(shape));
             value.value.object.emplace("elements",std::move(elements));
+            }
         } else if(type=="numeric.enum_constant") {
             value.type=enumType(raw,at);value.value=*raw.member("enum_constant")->member("selected_value");
         } else if(type=="numeric.ring_constant") {
@@ -872,6 +936,14 @@ struct Adapter {
         const bool enumClass=klass=="frog.widgets.enum_control"||klass=="frog.widgets.enum_indicator"||
             klass=="frog.studio.widgets.tab_control"||klass=="frog.studio.widgets.tab_indicator";
         const bool ringClass=klass=="frog.widgets.ring_control"||klass=="frog.widgets.ring_indicator";
+        const bool listboxClass=klass=="frog.widgets.listbox_control"||klass=="frog.widgets.listbox_indicator";
+        if(listboxClass) {
+            const auto *mode=props.member("selection.mode");
+            if(depth!=0 || declared!="u16" || (mode && (mode->type!=Json::Type::String || mode->string!="single")))
+                fail(path,"The native Listbox profile requires a root widget with single selection and a U16 selected value.",
+                    "migration.listbox_profile_unavailable",Domain::FrontendCapability);
+            return binding::TypeRef::primitive("u16");
+        }
         const auto *dropdown=props.member("display.string.dropdown");
         const bool dropdownClass=stringClass&&dropdown&&dropdown->type==Json::Type::Boolean&&dropdown->boolean;
         if(enumClass||ringClass||dropdownClass||(attested&&(attested->kind==binding::TypeKind::Enum||attested->choiceKind!=binding::ChoiceKind::None))) {
@@ -950,6 +1022,10 @@ struct Adapter {
             if(content.size()>1'000'000||!canonicalStringUtf8Valid(content))fail(path,"Widget String value exceeds the exact UTF-8 transport budget.", "migration.composed_source_invalid", Domain::Control);return string(content);
         }
         const auto &state=objectAt(widget.member("state"),path+"/state");const auto *raw=state.member("value");
+        const auto klass=text(widget.member("classId"),path+"/classId");
+        if(klass=="frog.widgets.listbox_control" || klass=="frog.widgets.listbox_indicator") {
+            if(const auto *selected=state.member("value.selected_value"))raw=selected;
+        }
         if(const auto *lexical=state.member("initial_value")) {
             const auto literal=text(lexical,path+"/state/initial_value");
             const auto value=(schema.name=="c32"||schema.name=="c64")?composedComplexLexeme(literal,schema.name):source::parseJson(literal,nullptr,source::JsonNumberPolicy::PreserveLexeme);
@@ -985,12 +1061,13 @@ struct Adapter {
         }
     }
     Json panel() {
-        const auto &raw=objectAt(root.member("frontPanel"),"/frontPanel");fields(raw,{"canvas","grid","widgets"},"/frontPanel");
+        const auto &raw=objectAt(root.member("frontPanel"),"/frontPanel");fields(raw,{"canvas","grid","widgets","groups"},"/frontPanel");
+        authoredPanelGroups(raw);
         Json result=object(),list=array();if(const auto *canvas=raw.member("canvas"))result.object.emplace("canvas",*canvas);
         const auto &widgets=arrayAt(raw.member("widgets"),"/frontPanel/widgets");
         if(widgets.size()>1024)fail("/frontPanel","The existing widget budget was exceeded.", "migration.composed_source_invalid", Domain::Control);
         for(std::size_t i=0;i<widgets.size();++i) {
-            const auto at="/frontPanel/widgets/"+std::to_string(i),target="/front_panel/widgets/"+std::to_string(i);const auto &authored=objectAt(&widgets[i],at);
+            const auto at="/frontPanel/widgets/"+std::to_string(i),target="/front_panel/widgets/"+std::to_string(list.array.size());const auto &authored=objectAt(&widgets[i],at);
             const auto normalization=normalizeCanonicalDraftWidget(authored,at,&resolved);
             for(const auto &d:normalization.diagnostics)if(d.blocking)fail(d.path,d.message,d.code,d.domain);
             const auto &widget=normalization.current?*normalization.current:authored;
@@ -998,8 +1075,9 @@ struct Adapter {
             if(const auto *locked=widget.member("locked");locked&&locked->type!=Json::Type::Boolean)
                 fail(at+"/locked","The retained authoring lock must be an explicit Boolean.","migration.composed_widget_flag_invalid", Domain::Integrity);
             const auto id=text(widget.member("id"),at+"/id"),role=text(widget.member("role"),at+"/role");
+            identifyWidgetTree(widget,at); // Annotation IDs remain real, unique root identities.
+            if(supportLabelAnnotation(widget,at))continue;
             if(role!="control"&&role!="indicator")fail(at,"The actual widget role must remain control or indicator.", "migration.composed_source_invalid", Domain::Semantics);
-            identifyWidgetTree(widget,at);
             const auto witness=std::find_if(resolved.widgets.begin(),resolved.widgets.end(),[&](const auto &w){return w.widgetId==id;});
             if(witness==resolved.widgets.end()||std::count_if(resolved.widgets.begin(),resolved.widgets.end(),[&](const auto &w){return w.widgetId==id;})!=1)
                 fail(at,"A widget needs one hash-bound current/default projection from the common private value codec.","migration.composed_widget_resolution_required", Domain::Semantics);
@@ -1933,7 +2011,18 @@ struct Adapter {
             } else if(kind=="structure") {
                 const auto type=text(node.member("structure_type"),at+"/structure_type");
                 if(type!="while_loop"&&type!="timed_loop"&&type!="for_loop"&&type!="case"&&type!="event_structure"&&type!="in_place_element_structure"&&type!="sequence_structure")fail(at,"This structure family has no composed native contract.","migration.composed_structure_unavailable", structureDomain(node));
-                item.object.emplace("structure_type",string(type));item.object.emplace("studio_authored_type",*node.member("type"));
+                item.object.emplace("structure_type",string(type));
+                if(const auto *authoredType=node.member("type")) {
+                    item.object.emplace("studio_authored_type",string(text(authoredType,at+"/type")));
+                } else {
+                    // The draft reader already derives the palette node identity
+                    // from the canonical structure family in older documents.
+                    const auto canonicalType=document_internal::nodeTypeForCanonicalStructure(type);
+                    if(canonicalType.empty())
+                        fail(at+"/type","The structure has no canonical node identity.",
+                            "migration.composed_structure_unavailable",Domain::Compatibility);
+                    item.object.emplace("studio_authored_type",string(std::string(canonicalType)));
+                }
                 if(type=="timed_loop") {
                     try {
                         const auto schedule=timed_loop::readSchedule(objectAt(node.member("timed_loop_schedule"),at+"/timed_loop_schedule"));
@@ -2186,7 +2275,8 @@ bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolve
             // Route the existing composed widget families, not arbitrary
             // unsupported scalars. Full schemas, values and ports remain
             // validated by that adapter and by native/UI admission.
-            if(klass->string=="frog.widgets.ring_control"||klass->string=="frog.widgets.ring_indicator"||
+            if(klass->string=="frog.widgets.listbox_control"||klass->string=="frog.widgets.listbox_indicator"||
+               klass->string=="frog.widgets.ring_control"||klass->string=="frog.widgets.ring_indicator"||
                klass->string=="frog.widgets.variant_control"||klass->string=="frog.widgets.variant_indicator"||
                klass->string=="frog.widgets.enum_control"||klass->string=="frog.widgets.enum_indicator"||
                (klass->string=="frog.widgets.string_control"&&declared->string=="string")||
@@ -2208,7 +2298,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         const auto &root=objectAt(&*parsed,"/");authoredRootFields(root);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","Sub-FROG projection requires identified private Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&!(revision==8&&typeDefinitionsValidated))
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&!(revision==8&&typeDefinitionsValidated))
             fail("/draft_revision","This revision needs the existing exact-source Type Definition resolution handoff.","migration.composed_type_definition_resolution_required", Domain::Dependency);
         if(const auto *metadata=root.member("metadata"))objectAt(metadata,"/metadata");
         if(const auto *policy=root.member("execution_policy"))
@@ -2262,7 +2352,8 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
                 fields(edges[e],{"id","from","to","bends","label"},path+"/edges/"+std::to_string(e));
         };
         visit(visit,diagram,"/diagram",0);
-        const auto &panel=objectAt(root.member("frontPanel"),"/frontPanel");fields(panel,{"canvas","grid","widgets"},"/frontPanel");
+        const auto &panel=objectAt(root.member("frontPanel"),"/frontPanel");fields(panel,{"canvas","grid","widgets","groups"},"/frontPanel");
+        authoredPanelGroups(panel);
         const auto &widgets=arrayAt(panel.member("widgets"),"/frontPanel/widgets");
         if(widgets.size()>1024)fail("/frontPanel/widgets","The existing widget budget was exceeded.","migration.composed_resource_limit", Domain::Control);
         std::set<std::string> ownedLinkPaths;
@@ -2343,6 +2434,11 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
             authoredWidgetFields(widget,at);adapter.identifyWidgetTree(widget,at);
             const auto id=text(widget.member("id"),at+"/id");const auto *live=authored.canvas.widgetById(id);
             if(!live)fail(at,"The exact authored widget has no matching model identity.", "migration.composed_source_invalid", Domain::Integrity);
+            if(supportLabelAnnotation(widget,at)) {
+                if(!isLabelWidget(*live) || live->role!="support" || live->valueType!="support_text" || live->typeDefinition)
+                    fail(at,"The Support Label annotation differs from its exact current model owner.","migration.composed_source_invalid",Domain::Integrity);
+                continue; // No typed widget evidence or executable terminal is invented.
+            }
             const auto schema=binding::widgetType(*live);
             if(!schema.valid()||!schema.type.known())fail(at,"The actual widget's complete type is unresolved.", "migration.composed_source_invalid", Domain::Semantics);
             adapter.widgetTypes.emplace(id,schema.type);
@@ -2369,6 +2465,15 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
                 // Only this owner/key is deferred to the projector's complete
                 // declaration, signature, binding and dependency validation.
                 node.object.erase("call");
+                if(const auto *doc=node.member("doc")) {
+                    const auto docPath=entry.path+"/doc";
+                    fields(*doc,{"summary","url","instance_description","tip"},docPath);
+                    for(const auto &[key,value]:doc->object)
+                        static_cast<void>(text(&value,pointer(docPath,key),true));
+                    // Help belongs to the authored call, not the executable
+                    // sequence that will replace it during projection.
+                    node.object.erase("doc");
+                }
             }
             adapter.nodeFields(node,entry.path);
             if(const auto *regions=node.member("regions"))for(std::size_t r=0;r<arrayAt(regions,entry.path+"/regions").size();++r)
@@ -2391,7 +2496,7 @@ CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string
         authoredRootFields(root);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","This adapter requires identified Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=4&&revision!=5&&revision!=6&&revision!=7)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto *metadata=root.member("metadata");
         if(metadata&&metadata->type!=Json::Type::Object)
             fail("/metadata","File metadata must be an object.","migration.metadata_invalid", Domain::Integrity);

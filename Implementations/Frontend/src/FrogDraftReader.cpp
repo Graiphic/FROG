@@ -1185,7 +1185,16 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
                 static_cast<void>(setPathBrowseStartPath(widget, path.value()));
             }
         }
-        if (isRingWidget(widget) || isEnumWidget(widget) || isStringDropdownWidget(widget)) {
+        if (isListboxWidget(widget)) {
+            for (std::size_t i=0;i<kListboxColorProperties.size();++i) {
+                const auto color=jsonStringField(*props,kListboxColorProperties[i]);
+                if (const auto rgb=color?parseRgbHex(*color):std::nullopt) {
+                    if (!widget.listboxColors) widget.listboxColors.emplace();
+                    (*widget.listboxColors)[i]=*rgb;
+                }
+            }
+        }
+        if (isRingWidget(widget) || isEnumWidget(widget) || isStringDropdownWidget(widget) || isListboxWidget(widget)) {
             if (isEnumWidget(widget)) {
                 if (const auto representation = jsonStringField(*props, "representation.kind")) {
                     static_cast<void>(setEnumRepresentationKind(widget, representation.value()));
@@ -1376,7 +1385,7 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
                 static_cast<void>(setWidgetStringBodyFillColor(widget, rgb.value()));
             }
         }
-        if (widget.valueType == "variant" || isPictureWidget(widget) || isWaveformGraphWidget(widget)) {
+        if (widget.valueType == "variant" || isPictureWidget(widget) || isWaveformGraphWidget(widget) || isXYGraphWidget(widget)) {
             if (const auto fillColor = jsonStringField(*props, "style.surface.fill_color"))
                 widget.surfaceFillRgb = parseRgbHex(fillColor.value());
             if (const auto strokeColor = jsonStringField(*props, "style.surface.stroke_color"))
@@ -1415,12 +1424,12 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
             }
         }
         if (const auto selectedValue = jsonUnsignedField(*props, "value.selected_value")) {
-            if (isRingWidget(widget) || isEnumWidget(widget)) {
+            if (isRingWidget(widget) || isEnumWidget(widget) || isListboxWidget(widget)) {
                 static_cast<void>(setRingSelectedValue(widget, selectedValue.value()));
             }
         } else if (const auto booleanValue = jsonBooleanField(*props, "value")) {
             static_cast<void>(setWidgetBooleanValue(widget, booleanValue.value()));
-        } else if ((isRingWidget(widget) || isEnumWidget(widget)) &&
+        } else if ((isRingWidget(widget) || isEnumWidget(widget) || isListboxWidget(widget)) &&
                    jsonUnsignedField(*props, "value").has_value()) {
             static_cast<void>(setRingSelectedValue(
                 widget,
@@ -1478,10 +1487,10 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
             widget.numericMaximum = maximum.value();
         }
         if (const auto selectedValue = jsonUnsignedField(*state, "value.selected_value")) {
-            if (isRingWidget(widget) || isEnumWidget(widget)) {
+            if (isRingWidget(widget) || isEnumWidget(widget) || isListboxWidget(widget)) {
                 static_cast<void>(setRingSelectedValue(widget, selectedValue.value()));
             }
-        } else if ((isRingWidget(widget) || isEnumWidget(widget)) &&
+        } else if ((isRingWidget(widget) || isEnumWidget(widget) || isListboxWidget(widget)) &&
                    jsonUnsignedField(*state, "value").has_value()) {
             static_cast<void>(setRingSelectedValue(
                 widget,
@@ -2349,12 +2358,14 @@ std::optional<FrogDraftData> readFrogDraftData(
         if (!authority) return std::nullopt;
         document.publicSourceAuthority = std::make_shared<const FrogSourceDocument>(std::move(*authority));
     }
+    std::size_t remainingDiagramArrayBytes = kMaximumFrogDocumentBytes;
+    auto remainingDiagramNumericWords = document_internal::maximumDecodedNumericWordsBytes;
     if (!publicSource) {
         std::string storageError;
         const bool allowCompact = jsonUnsignedField(*root, "draft_revision").value_or(0U) >= kFrogArrayStorageDraftRevision;
         if ((!allowCompact && objectField(*root, "storage")) ||
             !document_internal::readArrayStorageMode(*root, document.properties.arrayStorageMode, storageError) ||
-            !document_internal::inflateArrayStorage(*root, storageError, allowCompact)) {
+            !document_internal::inflateArrayStorage(*root, storageError, allowCompact, true, &remainingDiagramArrayBytes)) {
             if (error) *error = storageError.empty() ? "FROG storage options require private draft_revision 3." : storageError;
             return std::nullopt;
         }
@@ -3307,7 +3318,19 @@ std::optional<FrogDraftData> readFrogDraftData(
                             node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 18.0,
                             node.arrayElementTemplate ? 4096.0 : 180.0);
                     }
-                    node.numericArrayValues = jsonStringArrayField(*arrayConstant, "values");
+                    const auto *values = objectField(*arrayConstant, "values");
+                    if (!publicSource && values && values->type == JsonValue::Type::Object) {
+                        std::string storageError;
+                        if (!document_internal::decodeDiagramArrayStorage(*arrayConstant, node.numericArrayValues,
+                                node.valueType, remainingDiagramArrayBytes, storageError, &remainingDiagramNumericWords)) {
+                            if (error) *error = std::move(storageError);
+                            return std::nullopt;
+                        }
+                    } else {
+                        node.numericArrayValues = jsonStringArrayField(*arrayConstant, "values");
+                        if (!node.arrayElementTemplate && document_internal::compactNumericArrayType(node.valueType))
+                            static_cast<void>(node.numericArrayValues.resizeNumeric(node.numericArrayValues.size(), node.valueType));
+                    }
                     node.numericArrayElementLabelVisible = jsonBooleanField(
                         *arrayConstant, "element_label_visible").value_or(false);
                 }
@@ -3408,6 +3431,24 @@ std::optional<FrogDraftData> readFrogDraftData(
                         loadedFrogCall = true;
                         node.callDocumentPath =
                             jsonStringField(*call, "document_path").value_or({});
+                        if (const auto *selection = call->member("polymorphic");
+                            node.kind == "frog_call" && selection) {
+                            const auto *manual = selection->member("manual_member_id");
+                            const auto *visible = selection->member("show_selector");
+                            const auto *lastAutomatic = selection->member("last_automatic_member_id");
+                            if (selection->type != JsonValue::Type::Object ||
+                                selection->object.size() != std::size_t(manual != nullptr) + std::size_t(visible != nullptr) + std::size_t(lastAutomatic != nullptr) ||
+                                (manual && (manual->type != JsonValue::Type::String || manual->string.empty())) ||
+                                (lastAutomatic && (lastAutomatic->type != JsonValue::Type::String || lastAutomatic->string.empty())) ||
+                                (visible && visible->type != JsonValue::Type::Boolean)) {
+                                if (error) *error = "Invalid polymorphic FROG call selection.";
+                                return std::nullopt;
+                            }
+                            node.polymorphicFrogSelection.emplace();
+                            if (manual) node.polymorphicFrogSelection->manualMemberId = manual->string;
+                            if (visible) node.polymorphicFrogSelection->showSelector = visible->boolean;
+                            if (lastAutomatic) node.polymorphicFrogSelection->lastAutomaticMemberId = lastAutomatic->string;
+                        }
                         node.callDocumentTitle =
                             jsonStringField(*call, "document_title").value_or({});
                         node.callIconSvgText =
@@ -3656,7 +3697,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                     const auto *storedArray = objectField(nodeValue, "array_constant");
                     const auto *storedValues = storedArray ? objectField(*storedArray, "values") : nullptr;
                     const bool hasStoredCellValues = storedValues != nullptr &&
-                        storedValues->type == JsonValue::Type::Array;
+                        (storedValues->type == JsonValue::Type::Array || storedValues->type == JsonValue::Type::Object);
                     if (!hasStoredCellValues && node.text.empty() && !node.numericArrayValues.empty()) {
                         node.text = node.numericArrayValues.front();
                     }
@@ -3891,11 +3932,14 @@ std::optional<FrogDraftData> readFrogDraftData(
             if(error)*error="Invalid compact Array cell value in Diagram node '"+node.id+"'.";
             return std::nullopt;
         }
-        for(const auto &cell:node.numericArrayValues) {
-            if(!validateNewArrayCellValue(node.arrayElementTemplate ? &*node.arrayElementTemplate : nullptr,cell)) {
-                if(error)*error="Invalid compact Array cell value in Diagram node '"+node.id+"'.";
-                return std::nullopt;
-            }
+        bool validCells = true;
+        node.numericArrayValues.visitStoredValues([&](const std::string &cell) {
+            if (validCells) validCells = validateNewArrayCellValue(
+                node.arrayElementTemplate ? &*node.arrayElementTemplate : nullptr, cell);
+        });
+        if (!validCells) {
+            if(error)*error="Invalid compact Array cell value in Diagram node '"+node.id+"'.";
+            return std::nullopt;
         }
     }
     document.nextWidgetSerial = (std::max)(1, maxSerial + 1);

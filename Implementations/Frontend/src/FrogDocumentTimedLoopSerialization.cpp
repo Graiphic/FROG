@@ -6,6 +6,7 @@
 #include "frog_native_engine/DiagramStructureShelfCatalog.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
 
+#include <algorithm>
 #include <sstream>
 
 namespace frog::native_engine::document_internal {
@@ -15,6 +16,7 @@ void appendTimingNode(
     std::ostringstream &out,
     int level,
     DiagramTimedLoopTimingNodeRole timingRole,
+    std::string_view source,
     bool comma) {
     const auto &spec = diagramTimedLoopTimingNodeSpec(timingRole);
     appendIndent(out, level); out << '"' << spec.id << "\": { \"role\": \""
@@ -24,7 +26,7 @@ void appendTimingNode(
     for (std::size_t index = 0; index < fields.size(); ++index) {
         appendIndent(out, level + 1); out << "{ \"id\": "; appendJsonString(out, fields[index].id);
         out << ", \"label\": "; appendJsonString(out, fields[index].label);
-        out << ", \"type\": "; appendJsonString(out, fields[index].valueType);
+        out << ", \"type\": "; appendJsonString(out, timedLoopFieldValueType(source,timingRole,fields[index]));
         out << " }" << (index + 1U < fields.size() ? "," : "") << '\n';
     }
     appendIndent(out, level); out << "] }" << (comma ? "," : "") << '\n';
@@ -58,18 +60,14 @@ std::string serializeTimedLoopStructureProperties(
     number("timed_loop_iteration_normalized_y", clampWhileLoopTerminalNormalizedPosition(node.timedLoopIterationNormalizedY));
     number("timed_loop_condition_normalized_x", clampWhileLoopTerminalNormalizedPosition(node.timedLoopConditionNormalizedX));
     number("timed_loop_condition_normalized_y", clampWhileLoopTerminalNormalizedPosition(node.timedLoopConditionNormalizedY));
-    number("timed_loop_initial_visible_row_count", clampTimedLoopVisibleRowCount(
-        node.timedLoopInitialVisibleRowCount, diagramTimedLoopMaximumVisibleRows(
-            DiagramTimedLoopTimingNodeRole::Initial)));
-    number("timed_loop_feedback_visible_row_count", clampTimedLoopVisibleRowCount(
-        node.timedLoopFeedbackVisibleRowCount, diagramTimedLoopMaximumVisibleRows(
-            DiagramTimedLoopTimingNodeRole::Feedback)));
-    number("timed_loop_update_visible_row_count", clampTimedLoopVisibleRowCount(
-        node.timedLoopUpdateVisibleRowCount, diagramTimedLoopMaximumVisibleRows(
-            DiagramTimedLoopTimingNodeRole::Update)));
-    number("timed_loop_result_visible_row_count", clampTimedLoopVisibleRowCount(
-        node.timedLoopResultVisibleRowCount, diagramTimedLoopMaximumVisibleRows(
-            DiagramTimedLoopTimingNodeRole::Result)));
+    number("timed_loop_initial_visible_row_count", (std::min)(node.timedLoopInitialFields.size(),
+        static_cast<std::size_t>(diagramTimedLoopMaximumVisibleRows(DiagramTimedLoopTimingNodeRole::Initial))));
+    number("timed_loop_feedback_visible_row_count", (std::min)(node.timedLoopFeedbackFields.size(),
+        static_cast<std::size_t>(diagramTimedLoopMaximumVisibleRows(DiagramTimedLoopTimingNodeRole::Feedback))));
+    number("timed_loop_update_visible_row_count", (std::min)(node.timedLoopUpdateFields.size(),
+        static_cast<std::size_t>(diagramTimedLoopMaximumVisibleRows(DiagramTimedLoopTimingNodeRole::Update))));
+    number("timed_loop_result_visible_row_count", (std::min)(node.timedLoopResultFields.size(),
+        static_cast<std::size_t>(diagramTimedLoopMaximumVisibleRows(DiagramTimedLoopTimingNodeRole::Result))));
     stringArray("timed_loop_initial_fields", node.timedLoopInitialFields);
     stringArray("timed_loop_feedback_fields", node.timedLoopFeedbackFields);
     stringArray("timed_loop_update_fields", node.timedLoopUpdateFields);
@@ -94,6 +92,8 @@ std::string serializeTimedLoopStructureProperties(
     number("period", node.timedLoopSchedule.period); number("offset", node.timedLoopSchedule.offset);
     number("deadline", node.timedLoopSchedule.deadline); number("timeout", node.timedLoopSchedule.timeout);
     number("priority", node.timedLoopSchedule.priority); number("processor", node.timedLoopSchedule.processor);
+    if(node.timedLoopSchedule.absoluteStartMilliseconds)
+        number("absolute_start_ms",*node.timedLoopSchedule.absoluteStartMilliseconds);
     appendIndent(out, level + 1); out << "\"late_iteration_policy\": { \"missed_periods\": ";
     appendJsonString(out, node.timedLoopSchedule.missedPeriods); out << ", \"phase\": ";
     appendJsonString(out, node.timedLoopSchedule.phasePolicy); out << " }\n";
@@ -101,13 +101,14 @@ std::string serializeTimedLoopStructureProperties(
     appendIndent(out, level); out << "\"studio_timed_loop_options\": ";
     appendJsonValue(out,timed_loop::optionsJson(node.timedLoopOptions));out << ",\n";
     appendIndent(out, level); out << "\"timing_nodes\": {\n";
-    appendTimingNode(out, level + 1, DiagramTimedLoopTimingNodeRole::Initial, true);
-    appendTimingNode(out, level + 1, DiagramTimedLoopTimingNodeRole::Feedback, true);
-    appendTimingNode(out, level + 1, DiagramTimedLoopTimingNodeRole::Update, true);
-    appendTimingNode(out, level + 1, DiagramTimedLoopTimingNodeRole::Result, false);
+    for (const auto role : {DiagramTimedLoopTimingNodeRole::Initial, DiagramTimedLoopTimingNodeRole::Feedback,
+            DiagramTimedLoopTimingNodeRole::Update, DiagramTimedLoopTimingNodeRole::Result})
+        appendTimingNode(out, level + 1, role, node.timedLoopSchedule.timingSource,
+            role != DiagramTimedLoopTimingNodeRole::Result);
     appendIndent(out, level); out << "},\n";
     appendIndent(out, level); out << "\"structure_terminals\": {\n";
-    appendIndent(out, level + 1); out << "\"condition\": { \"type\": \"bool\", \"outer_visible\": false, \"exposed_in_body\": true, \"read_only\": false, \"body_port\": \"condition\", \"role\": \"continue_while_true\" },\n";
+    appendIndent(out, level + 1); out << "\"condition\": { \"type\": \"bool\", \"outer_visible\": false, \"exposed_in_body\": true, \"read_only\": false, \"body_port\": \"condition\", \"role\": \""
+        << (node.whileLoopStopIfTrue ? "stop_if_true" : "continue_while_true") << "\" },\n";
     appendIndent(out, level + 1); out << "\"index\": { \"type\": \"i64\", \"outer_visible\": false, \"exposed_in_body\": true, \"read_only\": true, \"body_port\": \"iteration\", \"role\": \"index\" }\n";
     appendIndent(out, level); out << "},\n";
     appendIndent(out, level); out << "\"regions\": [\n";

@@ -46,7 +46,7 @@ namespace native_call_detail {
 // Existing native packing budget, shared by Legacy and scalar5. Not a new
 // per-program payload or process-memory claim.
 inline constexpr std::size_t allocationBudget=64*1024*1024;
-struct Fault:std::runtime_error { int code; Fault(int c,std::string m):std::runtime_error(std::move(m)),code(c){} };
+struct Fault:std::runtime_error { int code; Fault(int c,const std::string &m):std::runtime_error(m),code(c){} };
 using CanonicalNumber=std::variant<std::int64_t,std::uint64_t,double>;
 CanonicalNumber decodeCanonicalNumber(const source::JsonValue &,bool unsignedInteger,bool signedInteger);
 bool scalarType(NativeCallNumericType) noexcept;

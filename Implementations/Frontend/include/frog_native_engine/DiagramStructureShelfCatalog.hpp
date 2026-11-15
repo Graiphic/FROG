@@ -70,6 +70,31 @@ inline constexpr std::array<DiagramStructureShelfFieldSpec, 8>
         { "late_policy", "Late Policy", "string" }
     } };
 
+inline constexpr std::string_view kTimedLoopSystemClock="internal_1khz";
+inline constexpr std::string_view kTimedLoopResetClock="internal_1khz_reset";
+inline constexpr std::string_view kTimedLoopAbsoluteClock="internal_1khz_absolute";
+
+[[nodiscard]] constexpr bool timedLoopAbsoluteField(
+    DiagramTimedLoopTimingNodeRole role,std::string_view field) noexcept {
+    switch (role) {
+    case DiagramTimedLoopTimingNodeRole::Initial:
+    case DiagramTimedLoopTimingNodeRole::Update: return field=="offset";
+    case DiagramTimedLoopTimingNodeRole::Feedback:
+        return field=="expected_start" || field=="actual_start" || field=="expected_end" ||
+            field=="actual_end" || field=="offset";
+    case DiagramTimedLoopTimingNodeRole::Result:
+        return field=="expected_end" || field=="actual_end" || field=="global_end";
+    }
+    return false;
+}
+
+[[nodiscard]] constexpr std::string_view timedLoopFieldValueType(
+    std::string_view source,DiagramTimedLoopTimingNodeRole role,
+    const DiagramStructureShelfFieldSpec &field) noexcept {
+    return source==kTimedLoopAbsoluteClock && timedLoopAbsoluteField(role,field.id) ?
+        std::string_view{"timestamp"} : field.valueType;
+}
+
 inline constexpr std::array<DiagramStructureShelfFieldSpec, 14>
     kDiagramTimedLoopFeedbackFields{ {
         { "error", "Error", kErrorClusterType },

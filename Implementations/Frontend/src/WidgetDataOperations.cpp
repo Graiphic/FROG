@@ -128,7 +128,7 @@ void intrinsic(WidgetInstance &widget) {
         widget.waveformGraph->current.reset();
     } else if (isBooleanWidget(widget) || isButtonWidget(widget)) {
         static_cast<void>(setWidgetBooleanValue(widget, false));
-    } else if (isEnumWidget(widget) || isRingWidget(widget)) {
+    } else if (isEnumWidget(widget) || isRingWidget(widget) || isListboxWidget(widget)) {
         const auto item = std::find_if(widget.ringItems.begin(), widget.ringItems.end(), [](const auto &v) { return !v.disabled; });
         widget.numericValue = item == widget.ringItems.end() ? 0.0 : double(item->value);
         widget.initialValue = isEnumWidget(widget) && item != widget.ringItems.end() ? item->id : formatNumericValue(*widget.numericValue);
@@ -164,7 +164,7 @@ bool materialize(WidgetInstance &widget, const ArrayElementValue *value) {
         double number=0; const auto &text=value->displayValue;
         const auto result=std::from_chars(text.data(),text.data()+text.size(),number);
         if (result.ec!=std::errc{} || result.ptr!=text.data()+text.size() || !std::isfinite(number)) return true;
-        if (isEnumWidget(widget) || isRingWidget(widget)) {
+        if (isEnumWidget(widget) || isRingWidget(widget) || isListboxWidget(widget)) {
             if (number>=0 && number<=UINT32_MAX && std::floor(number)==number) static_cast<void>(setRingSelectedValue(widget,static_cast<std::uint32_t>(number)));
         } else static_cast<void>(setWidgetNumericValue(widget,number));
     }

@@ -5,7 +5,7 @@
 #include <utility>
 
 namespace frog::native_engine::generated::widgets {
-inline constexpr std::array<WidgetDefinition, 24> definitions{{
+inline constexpr std::array<WidgetDefinition, 26> definitions{{
     WidgetDefinition{ "frog.studio.widgets.tab_control", WidgetFamily::Enum, WidgetRole::Control,
         static_cast<WidgetRoleMask>(0U | widgetRoleMask(WidgetRole::Control) | widgetRoleMask(WidgetRole::Indicator)),
         static_cast<WidgetCapabilityMask>(0U | widgetCapabilityMask(WidgetCapability::Label) | widgetCapabilityMask(WidgetCapability::EnabledState) | widgetCapabilityMask(WidgetCapability::RoleConversion) | widgetCapabilityMask(WidgetCapability::Font) | widgetCapabilityMask(WidgetCapability::Color) | widgetCapabilityMask(WidgetCapability::PublicInterfaceBinding) | widgetCapabilityMask(WidgetCapability::EditableValue)),
@@ -71,6 +71,16 @@ inline constexpr std::array<WidgetDefinition, 24> definitions{{
         static_cast<WidgetCapabilityMask>(0U | widgetCapabilityMask(WidgetCapability::Label) | widgetCapabilityMask(WidgetCapability::EnabledState) | widgetCapabilityMask(WidgetCapability::RoleConversion) | widgetCapabilityMask(WidgetCapability::Font) | widgetCapabilityMask(WidgetCapability::Color) | widgetCapabilityMask(WidgetCapability::PublicInterfaceBinding) | widgetCapabilityMask(WidgetCapability::ArrayElement) | widgetCapabilityMask(WidgetCapability::DataType) | widgetCapabilityMask(WidgetCapability::DisplayFormat) | widgetCapabilityMask(WidgetCapability::Items)),
         static_cast<WidgetPropertyPageMask>(0U | widgetPropertyPageMask(WidgetPropertyPage::Appearance) | widgetPropertyPageMask(WidgetPropertyPage::DataType) | widgetPropertyPageMask(WidgetPropertyPage::DisplayFormat) | widgetPropertyPageMask(WidgetPropertyPage::EditItems)),
         WidgetTerminalSchema{ WidgetTerminalDirection::Input, "enum_item_id" }, WidgetBindingPolicy::PublicOutput, WidgetDefaults{ true, true } },
+    WidgetDefinition{ "frog.widgets.listbox_control", WidgetFamily::DataContainers, WidgetRole::Control,
+        static_cast<WidgetRoleMask>(0U | widgetRoleMask(WidgetRole::Control) | widgetRoleMask(WidgetRole::Indicator)),
+        static_cast<WidgetCapabilityMask>(0U | widgetCapabilityMask(WidgetCapability::Label) | widgetCapabilityMask(WidgetCapability::EnabledState) | widgetCapabilityMask(WidgetCapability::RoleConversion) | widgetCapabilityMask(WidgetCapability::Font) | widgetCapabilityMask(WidgetCapability::Color) | widgetCapabilityMask(WidgetCapability::PublicInterfaceBinding) | widgetCapabilityMask(WidgetCapability::Items) | widgetCapabilityMask(WidgetCapability::EditableValue)),
+        static_cast<WidgetPropertyPageMask>(0U | widgetPropertyPageMask(WidgetPropertyPage::Appearance) | widgetPropertyPageMask(WidgetPropertyPage::EditItems)),
+        WidgetTerminalSchema{ WidgetTerminalDirection::Output, "u16" }, WidgetBindingPolicy::PublicInput, WidgetDefaults{ true, true } },
+    WidgetDefinition{ "frog.widgets.listbox_indicator", WidgetFamily::DataContainers, WidgetRole::Indicator,
+        static_cast<WidgetRoleMask>(0U | widgetRoleMask(WidgetRole::Control) | widgetRoleMask(WidgetRole::Indicator)),
+        static_cast<WidgetCapabilityMask>(0U | widgetCapabilityMask(WidgetCapability::Label) | widgetCapabilityMask(WidgetCapability::EnabledState) | widgetCapabilityMask(WidgetCapability::RoleConversion) | widgetCapabilityMask(WidgetCapability::Font) | widgetCapabilityMask(WidgetCapability::Color) | widgetCapabilityMask(WidgetCapability::PublicInterfaceBinding) | widgetCapabilityMask(WidgetCapability::Items)),
+        static_cast<WidgetPropertyPageMask>(0U | widgetPropertyPageMask(WidgetPropertyPage::Appearance) | widgetPropertyPageMask(WidgetPropertyPage::EditItems)),
+        WidgetTerminalSchema{ WidgetTerminalDirection::Input, "u16" }, WidgetBindingPolicy::PublicOutput, WidgetDefaults{ true, true } },
     WidgetDefinition{ "frog.widgets.ring_control", WidgetFamily::Ring, WidgetRole::Control,
         static_cast<WidgetRoleMask>(0U | widgetRoleMask(WidgetRole::Control) | widgetRoleMask(WidgetRole::Indicator)),
         static_cast<WidgetCapabilityMask>(0U | widgetCapabilityMask(WidgetCapability::Label) | widgetCapabilityMask(WidgetCapability::EnabledState) | widgetCapabilityMask(WidgetCapability::RoleConversion) | widgetCapabilityMask(WidgetCapability::Font) | widgetCapabilityMask(WidgetCapability::Color) | widgetCapabilityMask(WidgetCapability::PublicInterfaceBinding) | widgetCapabilityMask(WidgetCapability::ArrayElement) | widgetCapabilityMask(WidgetCapability::DataType) | widgetCapabilityMask(WidgetCapability::DisplayFormat) | widgetCapabilityMask(WidgetCapability::Items) | widgetCapabilityMask(WidgetCapability::EditableValue) | widgetCapabilityMask(WidgetCapability::DataEntry)),
@@ -199,12 +209,21 @@ inline const std::vector<WidgetCatalogEntry> &catalogEntries() noexcept {
         { WidgetFamily::DataContainers, "Variant", "frog.widgets.variant_control", "indicator", "variant",
           "", "", "",
           "", "", "", Size{ 140, 70 }, WidgetAuthoringPreset::None },
+        { WidgetFamily::DataContainers, "Tab Control", "frog.studio.widgets.tab_control", "control", "u32",
+          "Examples/20_tab_page_selection/main.frog", "Examples/20_tab_page_selection/ui/tab_panel.wfrog", "Libraries/Realizations/Default/tab.default.wfrog",
+          "asset:tab_shell_svg", "", "Libraries/Realizations/Default/assets/tab/templates/tab_shell.svg", Size{ 480, 320 }, WidgetAuthoringPreset::None },
         { WidgetFamily::DataContainers, "Error Cluster Control", "frog.widgets.cluster_control", "control", "cluster<status:bool,code:i32,source:string>",
           "Examples/44_cluster_widget_roundtrip/main.frog", "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog", "Libraries/Realizations/Default/cluster.default.wfrog",
           "asset:cluster_shell_svg", "", "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg", Size{ 168, 112 }, WidgetAuthoringPreset::None },
         { WidgetFamily::DataContainers, "Error Cluster Indicator", "frog.widgets.cluster_indicator", "indicator", "cluster<status:bool,code:i32,source:string>",
           "Examples/44_cluster_widget_roundtrip/main.frog", "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog", "Libraries/Realizations/Default/cluster.default.wfrog",
           "asset:cluster_shell_svg", "", "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg", Size{ 168, 112 }, WidgetAuthoringPreset::None },
+        { WidgetFamily::DataContainers, "Listbox Control", "frog.widgets.listbox_control", "control", "u16",
+          "Examples/22_listbox_selection_roundtrip/main.frog", "Examples/22_listbox_selection_roundtrip/ui/listbox_panel.wfrog", "Libraries/Realizations/Default/listbox.default.wfrog",
+          "asset:listbox_shell_svg", "", "Libraries/Realizations/Default/assets/listbox/templates/listbox_shell.svg", Size{ 262, 244 }, WidgetAuthoringPreset::None },
+        { WidgetFamily::DataContainers, "Listbox Indicator", "frog.widgets.listbox_indicator", "indicator", "u16",
+          "Examples/22_listbox_selection_roundtrip/main.frog", "Examples/22_listbox_selection_roundtrip/ui/listbox_panel.wfrog", "Libraries/Realizations/Default/listbox.default.wfrog",
+          "asset:listbox_shell_svg", "", "Libraries/Realizations/Default/assets/listbox/templates/listbox_shell.svg", Size{ 262, 244 }, WidgetAuthoringPreset::None },
         { WidgetFamily::Visualization, "Picture Display", "frog.widgets.picture_indicator", "indicator", "frog.array<u32,rank=2>",
           "Examples/16_picture_logo_jpeg/main.frog", "Examples/16_picture_logo_jpeg/ui/picture_panel.wfrog", "Libraries/Realizations/Default/picture.default.wfrog",
           "asset:picture_rectangular_svg", "", "Libraries/Realizations/Default/assets/picture/templates/picture_rectangular.svg", Size{ 240, 160 }, WidgetAuthoringPreset::None },
@@ -217,9 +236,6 @@ inline const std::vector<WidgetCatalogEntry> &catalogEntries() noexcept {
         { WidgetFamily::Label, "Label", "frog.widgets.label", "support", "support_text",
           "Examples/17_label_typography_board/main.frog", "Examples/17_label_typography_board/ui/label_panel.wfrog", "Libraries/Realizations/Default/label.default.wfrog",
           "asset:label_rectangular_svg", "", "Libraries/Realizations/Default/assets/label/templates/label_rectangular.svg", Size{ 72, 20 }, WidgetAuthoringPreset::None },
-        { WidgetFamily::DataContainers, "Tab Control", "frog.studio.widgets.tab_control", "control", "u32",
-          "Examples/20_tab_page_selection/main.frog", "Examples/20_tab_page_selection/ui/tab_panel.wfrog", "Libraries/Realizations/Default/tab.default.wfrog",
-          "asset:tab_shell_svg", "", "Libraries/Realizations/Default/assets/tab/templates/tab_shell.svg", Size{ 480, 320 }, WidgetAuthoringPreset::None },
     };
     return entries;
 }

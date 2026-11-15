@@ -38,7 +38,13 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftWidgetResolut
     };
     for(const auto &object:document.canvas.objects())if(object.widget) {
         if(!widgetIds.empty()&&std::find(widgetIds.begin(),widgetIds.end(),object.id)==widgetIds.end())continue;
-        const auto &current=*object.widget;const auto type=binding::widgetType(current);
+        const auto &current=*object.widget;
+        // Exact existing Support labels are retained authoring annotations.
+        // Raw admission still validates their identity/fields; a widget_value
+        // terminal cannot acquire type evidence from this non-value owner.
+        if(isLabelWidget(current) && current.classId=="frog.widgets.label" &&
+            current.role=="support" && current.valueType=="support_text")continue;
+        const auto type=binding::widgetType(current);
         if(!type.valid()||!type.type.known()) {diagnostic(object.id,"value","The current widget has no complete schema.");continue;}
         const auto defaults=data_operations::defaultValue(current);const auto defaultType=binding::widgetType(defaults);
         if(defaults.instanceId!=current.instanceId||!defaultType.valid()||!canonicalObjectReferenceFullTypeEqual(type.type,defaultType.type)) {

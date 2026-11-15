@@ -305,12 +305,12 @@ struct Intake {
         std::set<std::string> sourceIds;for(const auto &node:nodes)sourceIds.insert(node.sourceNodeId);
         if(sourceIds.size()!=sourceNodes.size())fail("IR_SOURCE_NODE_COVERAGE","A source node has multiple IR participants or was erased.","/unit/objects");
     }
-    const CanonicalIrPort &port(const CanonicalIrEndpoint &endpoint,bool input)const {
+    const CanonicalIrPort &port(const CanonicalIrEndpoint &endpoint,bool input,std::string_view sourceEndpoint)const {
         const auto found=nodeIndex.find(endpoint.objectId);
-        if(found==nodeIndex.end())fail("IR_ENDPOINT","Connection object does not exist.",endpoint.objectId);
+        if(found==nodeIndex.end())fail("IR_ENDPOINT","Connection object does not exist.",std::string(sourceEndpoint)+"/node");
         const auto &node=nodes[found->second];
         const auto p=std::find_if(node.ports.begin(),node.ports.end(),[&](const auto &p){return p.id==endpoint.portId;});
-        if(p==node.ports.end() || p->input!=input)fail("IR_ENDPOINT","Connection does not reach an actual port with the correct direction.",endpoint.objectId);
+        if(p==node.ports.end() || p->input!=input)fail("IR_ENDPOINT","Connection does not reach an actual port with the correct direction.",std::string(sourceEndpoint)+"/port");
         return *p;
     }
     void readEdges(const Json &unit) {
@@ -332,7 +332,7 @@ struct Intake {
                 const auto &value=object(record.member(side),edge.id);fields(value,{"object_id","port_id"},edge.id);
                 endpoint.objectId=id(value.member("object_id"),edge.id,limits().maximumIrIdBytes);
                 endpoint.portId=id(value.member("port_id"),edge.id,limits().maximumSourceIdBytes);
-                port(endpoint,std::string_view(side)=="to");
+                port(endpoint,std::string_view(side)=="to",original->second.pointer+"/"+side);
                 const auto &sourceEnd=object(original->second.value->member(side),edge.id);fields(sourceEnd,{"node","port"},edge.id);
                 if(text(sourceEnd.member("node"),edge.id)!=nodes[nodeIndex.at(endpoint.objectId)].sourceNodeId || text(sourceEnd.member("port"),edge.id)!=endpoint.portId)
                     fail("IR_SOURCE_EDGE_MISMATCH","IR connection changed an actual source terminal association.",edge.id);

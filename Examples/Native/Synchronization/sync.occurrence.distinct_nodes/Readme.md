@@ -1,10 +1,10 @@
-# Occurrence: two distinct Generate nodes
+# Occurrence : deux nœuds Generate distincts
 
-Occurrence: two distinct Generate nodes
+Occurrence : deux nœuds Generate distincts
 
-Set A never signals B. Wait A checks the previous signal; Wait B immediately tests its own unsignaled occurrence. Reference indicators show two distinct live identities without using printed addresses as an oracle.
+Set A ne signale jamais B. Wait A consulte le signal précédent ; Wait B teste immédiatement sa propre occurrence non signalée. Les indicateurs de références montrent deux identités vivantes différentes sans imprimer d'adresse comme oracle.
 
-Occurrence: two distinct Generate nodes
+Occurrence : deux nœuds Generate distincts
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

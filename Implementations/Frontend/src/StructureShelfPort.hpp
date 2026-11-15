@@ -31,7 +31,8 @@ inline std::optional<StructureShelfPort> structureShelfPort(const DiagramNode &n
     }
     if(n.type=="frog.studio.structures.timed_loop")for(const auto &s:kDiagramTimedLoopTimingNodes)
         if(port.starts_with(s.portPrefix))if(const auto *field=diagramStructureShelfFieldById(s.fields,port.substr(s.portPrefix.size())))
-            return StructureShelfPort{s.direction=="input"?FunctionPortDirection::Input:FunctionPortDirection::Output,field->valueType};
+            return StructureShelfPort{s.direction=="input"?FunctionPortDirection::Input:FunctionPortDirection::Output,
+                timedLoopFieldValueType(n.timedLoopSchedule.timingSource,s.role,*field)};
     return {};
 }
 }

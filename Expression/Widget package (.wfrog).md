@@ -959,6 +959,29 @@ A composite class remains portable only if its public class law is published exp
 A runtime must not be forced to infer the public contract of the composite only from hidden internal composition.
 </p>
 
+<h3>20.3 Studio native-parts profile</h3>
+
+<p>
+The local Studio profile <code>frog.widget.composite.native-parts@1</code> uses
+<code>wfrog_version: "0.1"</code> and <code>package_kind: "widget_composite_library"</code>.
+It declares one exported composite class, a closed list of imported native
+realizations, positioned child widgets and one exposed binding per child.
+Each child names its stable class, role, type and exact realization asset.
+The profile supports a Boolean Text Button with a <code>Value Change</code>
+event, a DBL Numeric Indicator and a Boolean LED with typed <code>Value</code>
+inputs. Logic is authored in the FROG diagram.
+</p>
+
+<p>
+Studio expands this profile to native widgets with one shared Front Panel
+group. The editable draft retains the package identity, version and content
+SHA-256. Its diagram uses existing native terminals and event subscriptions.
+The <a href="../Conformance/widget-composite-mesure/README.md">Mesure author guide</a>
+describes the JSON fields, bounds, supported mechanics, installation path and
+editable example. Other widget packages continue to use their own existing
+profiles.
+</p>
+
 <hr/>
 
 <h2 id="realization-resources">21. Realization Resources</h2>

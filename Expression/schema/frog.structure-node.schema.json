@@ -1124,7 +1124,7 @@
       },
       "additionalProperties": true
     },
-    "whileLoopTerminals": {
+    "loopTerminals": {
       "type": "object",
       "required": [
         "condition",
@@ -1155,7 +1155,10 @@
                   "const": false
                 },
                 "role": {
-                  "const": "continue_while_true"
+                  "enum": [
+                    "continue_while_true",
+                    "stop_if_true"
+                  ]
                 },
                 "body_port": {
                   "const": "condition"
@@ -1200,26 +1203,26 @@
       },
       "additionalProperties": true
     },
-    "timedLoopTerminals": {
+    "whileLoopTerminals": {
       "allOf": [
         {
-          "$ref": "#/$defs/whileLoopTerminals"
+          "$ref": "#/$defs/loopTerminals"
         },
         {
           "properties": {
             "condition": {
               "properties": {
                 "role": {
-                  "enum": [
-                    "stop_if_true",
-                    "continue_while_true"
-                  ]
+                  "const": "continue_while_true"
                 }
               }
             }
           }
         }
       ]
+    },
+    "timedLoopTerminals": {
+      "$ref": "#/$defs/loopTerminals"
     },
     "timedLoopSchedule": {
       "type": "object",
@@ -1244,6 +1247,12 @@
         "offset": {
           "type": "integer",
           "minimum": 0
+        },
+        "absolute_start_ms": {
+          "description": "Optional UTC start in whole milliseconds from the canonical 1904 Timestamp epoch for the absolute 1 kHz source.",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9223372036854775807
         },
         "deadline": {
           "type": "integer",
@@ -1662,22 +1671,22 @@
         },
         "timed_loop_initial_visible_row_count": {
           "type": "integer",
-          "minimum": 1,
+          "minimum": 0,
           "maximum": 8
         },
         "timed_loop_feedback_visible_row_count": {
           "type": "integer",
-          "minimum": 1,
+          "minimum": 0,
           "maximum": 14
         },
         "timed_loop_update_visible_row_count": {
           "type": "integer",
-          "minimum": 1,
+          "minimum": 0,
           "maximum": 7
         },
         "timed_loop_result_visible_row_count": {
           "type": "integer",
-          "minimum": 1,
+          "minimum": 0,
           "maximum": 7
         },
         "timed_loop_background_rgb": {

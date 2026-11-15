@@ -1,5 +1,6 @@
 #include "frog_native_engine/CalculusNodeBinding.hpp"
 #include "frog_native_engine/CanonicalNumericFixedConstants.hpp"
+#include "frog_native_engine/CanonicalNumericAggregate.hpp"
 #include "frog_native_engine/DiagramBindingResolver.hpp"
 #include "frog_native_engine/DiagramTunnelIdentity.hpp"
 #include "frog_native_engine/SequenceStructure.hpp"
@@ -1539,12 +1540,18 @@ BindingResult TypeResolver::resolveImpl(const DiagramNode &node, std::string_vie
         auto result=input(node,port);
         if (!result.resolution.accepted() || !result.resolution.type.known()) return result;
         const auto &type=result.resolution.type;
-        if (!type.integer())
-            return {{ResolutionStatus::Incompatible,{},"binding.for_count_type",
-                "For count requires an exact primitive integer input; no floating conversion is inferred."},false,{}};
         // Only this intrinsic input preserves its producer's integer width.
         // Runtime admission controls supported widths; count_value/iteration remain i64.
-        return result;
+        if(type.integer())return result;
+        const auto receiver=TypeRef::primitive("i64");
+        if(canonicalNumericScalarCoercionSupported(type,receiver)) {
+            // The Studio author's NumericImplicit contract uses CoercionV1.
+            // Keep the real producer intact; FIR materializes this conversion.
+            result.resolution=connect(type,receiver,ConnectionPolicy::NumericImplicit);
+            return result;
+        }
+        return {{ResolutionStatus::Incompatible,{},"binding.for_count_type",
+            "For count requires an exact primitive integer or a supported real scalar coerced to I64."},false,{}};
     }
     if (node.type == "frog.studio.structures.for_loop" && port == "condition") {
         return node.forLoopConditionalTerminal ? fromParsed(parseType("bool")) : fromParsed({{}, {}, false});
@@ -2208,12 +2215,15 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
         return sourceResult.resolution;
     }
     if (found != nodesById_.end() && found->second->type=="frog.studio.structures.for_loop" && target.portId=="count") {
-        // Candidate connection admission must use the same integer constraint
-        // as count resolution, before the legacy NumericImplicit fallback.
+        // Candidate admission follows the same Studio count receiver as the
+        // connected port: exact integer width, or supported scalar to I64.
         if (!sourceResult.resolution.type.known()) return sourceResult.resolution;
-        if (!sourceResult.resolution.type.integer()) return {ResolutionStatus::Incompatible,{},
-            "binding.for_count_type","For count requires an exact primitive integer input; no floating conversion is inferred."};
-        return sourceResult.resolution;
+        if(sourceResult.resolution.type.integer())return sourceResult.resolution;
+        const auto receiver=TypeRef::primitive("i64");
+        if(canonicalNumericScalarCoercionSupported(sourceResult.resolution.type,receiver))
+            return connect(sourceResult.resolution.type,receiver,ConnectionPolicy::NumericImplicit);
+        return {ResolutionStatus::Incompatible,{},"binding.for_count_type",
+            "For count requires an exact primitive integer or a supported real scalar coerced to I64."};
     }
     if (found != nodesById_.end() && isCase(*found->second) && target.portId == "selector")
         return constrain(sourceResult.resolution.type, caseBindingDefinition().selectorConstraint);

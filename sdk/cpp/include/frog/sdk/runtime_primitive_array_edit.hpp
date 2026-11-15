@@ -2,6 +2,8 @@
 #include "frog/sdk/runtime_compound_value.hpp"
 #include <bit>
 
+namespace frog::runtime::numeric_aggregate { struct PreparedIncrementArrayWriter; }
+
 namespace frog::sdk::runtime {
 // Optional typed editing/view API: keep its template/code dependencies out of
 // ordinary generic Array consumers. The data allocation/receipt is unchanged.
@@ -45,6 +47,7 @@ public:
 // Cancellation discards the draft. Seal checks finite payloads once and gives
 // readers only const views; the mutable spans must not outlive this draft.
 class RuntimePrimitiveArrayEdit final {
+    friend struct frog::runtime::numeric_aggregate::PreparedIncrementArrayWriter;
     using Storage=RuntimeIpeValue::AppendStorage;
     std::shared_ptr<RuntimePrimitiveArrayPool::State> pool_;
     std::shared_ptr<const RuntimeIpeValue::AppendMetadata> metadata_;
@@ -86,6 +89,12 @@ public:
         for(const auto x:std::span<const float>(draft_->singles.get(),draft_->singleCapacity))invalid32|=(std::bit_cast<std::uint32_t>(x)&UINT32_C(0x7f800000))==UINT32_C(0x7f800000);
         for(const auto x:draft_->numbers)invalid64|=(std::bit_cast<std::uint64_t>(x)&UINT64_C(0x7ff0000000000000))==UINT64_C(0x7ff0000000000000);
         if(invalid32||invalid64)return {};
+        return sealWrittenFinite();
+    }
+private:
+    // Only the Increment producer, which validates every stored lane in its
+    // write loop, can use this after completing the entire admitted draft.
+    FROG_ARRAY_EDIT_NOINLINE std::optional<RuntimeValue> sealWrittenFinite() {
         draft_->finitePrefix.store(length_,std::memory_order_release);
         const std::weak_ptr<RuntimePrimitiveArrayPool::State> weak=pool_;
         std::shared_ptr<Storage> storage(draft_.release(),[weak](Storage *value)noexcept{

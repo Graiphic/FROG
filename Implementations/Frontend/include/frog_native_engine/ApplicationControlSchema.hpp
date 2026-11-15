@@ -22,9 +22,6 @@ struct ApplicationControlDiagnostic { std::string code, rowId, message; };
     std::string_view classId,const binding::TypeRef &valueType,std::string_view memberId,
     const WidgetInstance *presentation=nullptr);
 [[nodiscard]] binding::TypeRef applicationControlReferenceType(const ApplicationControlNode &);
-// An implicit Property target owns resolution even if its identity is missing.
-// Disconnecting is the only transition that restores its input terminal.
-[[nodiscard]] bool applicationControlHasReferenceInput(const ApplicationControlNode &) noexcept;
 [[nodiscard]] std::string applicationControlReferenceClass(const WidgetInstance &);
 // Read-only provenance follows stable references/fields; it never reads an
 // indexed Array cell or guesses identity from a current value or a position.
@@ -38,5 +35,4 @@ struct ApplicationControlDiagnostic { std::string code, rowId, message; };
 [[nodiscard]] std::vector<ApplicationControlDiagnostic> validateApplicationControlNode(
     const ApplicationControlNode &,const binding::TypeRef &wiredReferenceType={},
     const WidgetInstance *presentation=nullptr);
-[[nodiscard]] std::string applicationControlPropertyPortId(std::string_view rowId);
 }

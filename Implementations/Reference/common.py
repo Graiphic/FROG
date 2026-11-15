@@ -122,6 +122,11 @@ def load_json_file(path: Path, *, max_bytes: Optional[int] = None) -> Tuple[str,
             message=f"Unable to read source file: {path}",
         ) from exc
 
+    return text, parse_json_text(text, path)
+
+
+def parse_json_text(text: str, label: str | Path) -> dict[str, Any]:
+    """Parse already captured UTF-8 text with the same rules as file intake."""
     try:
         document = json.loads(
             text,
@@ -139,7 +144,7 @@ def load_json_file(path: Path, *, max_bytes: Optional[int] = None) -> Tuple[str,
         raise FrogPipelineError(
             stage="load",
             error_code="invalid_json",
-            message=f"Invalid JSON in source file: {path}",
+            message=f"Invalid JSON in source file: {label}",
             diagnostics=[
                 {
                     "severity": "error",
@@ -159,7 +164,7 @@ def load_json_file(path: Path, *, max_bytes: Optional[int] = None) -> Tuple[str,
             message="A .frog document must decode to a JSON object.",
         )
 
-    return text, document
+    return document
 
 
 def _unique_json_members(pairs: List[Tuple[str, Any]]) -> Dict[str, Any]:

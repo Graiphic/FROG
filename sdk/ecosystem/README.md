@@ -3,8 +3,9 @@
 This directory contains executable **contract intake**, the public Frontend API
 3 declarations, and schemas for its result documents. The local production
 implementation lives in `Implementations/Frontend`; compilation and qualification
-are recorded separately. Package codecs, installation, bridge hosting, a Store
-and target execution remain outside these Python consumers.
+are recorded separately. The Python consumers also assemble and inspect the
+stored ZIP distribution profile. Installation, bridge hosting, Store and target
+execution use their own hosts.
 
 Studio and the API/CLI use the same extracted production C++ source-to-FIR
 generator. These Python consumers do not generate FIR and do not replace it.
@@ -68,6 +69,48 @@ inventory entries. Each declared file is at most 256 MiB and their declared tota
 at most 1 GiB. Duplicate JSON members/identities, isolated Unicode surrogates,
 unsafe paths, unknown fields/versions and contradictory content modes are refused.
 These constraints do not implement ZIP extraction or verify declared payload bytes.
+
+## Assemble and inspect a distribution ZIP
+
+```text
+python -B -m sdk.ecosystem.builder path/to/manifest.json --payload-root path/to/payload --output path/to/library.bfrog
+python -B -m sdk.ecosystem.manager path/to/library.bfrog --archive
+```
+
+The archive contains a root UTF-8 `manifest.json` and exactly the regular files
+declared in it. It uses single-volume classic ZIP with stored members, matching
+local headers and no extra fields or data descriptors. The reader checks the
+ZIP byte budget (1 GiB + 16 MiB), central directory (8 MiB), count (4097
+including the manifest), manifest and payload limits above, and path depth (32).
+Paths must use NFC and may not contain Windows device names, 8.3 aliases or
+case-insensitive collisions. Each file must match its declared size and SHA-256.
+The builder preserves the manifest bytes and orders payload entries by path,
+so identical inputs yield identical archives. Output is committed without
+overwriting an existing file, using a hard link on the destination volume.
+
+These commands do not install, compile, run, or grant trust or rights. The
+builder packages already available artifacts. Hosts can use `stage_archive`
+to get a verified temporary directory for a subsequent transaction. The
+staging directory is removed on cancellation, failure or context exit.
+Signature verification and native installation remain integration work.
+
+## Resolve a library closure offline
+
+```text
+python -B -m sdk.ecosystem.manager resolve-library toolkit.bfrog --origin local:team --phase run --candidate local:team dependency.bfrog
+```
+
+Supply each candidate with its approved origin. The resolver reads and verifies
+the local archives, follows the manifest's exact dependency versions, and emits a
+deterministic JSON receipt on stdout. The receipt retains phases, required
+locations, installation scopes, verified manifest digests and target inventories.
+Use `--expect-lock lock.json` to require the same closure and content. Separate
+invocations can select different versions from the same cache.
+
+This offline SDK operation does not acquire packages or probe a machine. The
+declared origin must come from the caller's policy. It does not attest publisher
+identity. Studio's project locks, target admission and activation remain with the
+native integration.
 
 New contract code follows this repository's Apache-2.0 license. Local acceptance
 does not authorize publication of private implementation files.

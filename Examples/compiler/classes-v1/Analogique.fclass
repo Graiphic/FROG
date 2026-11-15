@@ -1,0 +1,19 @@
+{
+  "format": "frog.class",
+  "version": 1,
+  "id": "analog",
+  "name": "Capteur analogique",
+  "revision": 1,
+  "parent": {"id": "sensor", "path": "Capteur.fclass", "revision": 1},
+  "fields": [{"id": "calibration", "label": "Calibration", "type": "i64", "default": -3}],
+  "methods": [{
+    "id": "measure-analog", "name": "Mesurer",
+    "implementation": {"id": "analog.measure", "path": "Mesurer Analogique.frog", "revision": 1},
+    "visibility": "public", "dispatch": "dynamic",
+    "overrides": {"class_id": "sensor", "method_id": "measure"},
+    "ports": [
+      {"slot": "receiver", "port_id": "analog.self", "direction": "input", "kind": "object", "type": null},
+      {"slot": "result", "port_id": "analog.reading", "direction": "output", "kind": "data", "type": "i64"}
+    ]
+  }]
+}

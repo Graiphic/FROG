@@ -1,0 +1,119 @@
+# FROG importers
+
+These Apache-2.0 tools produce editable FROG documents. The common Frontend
+owns validation and FIR derivation. Studio uses these same scripts.
+The examples below use PowerShell and absolute tool paths where appropriate.
+Install the [pinned ONNX dependencies](requirements-onnx.txt) into the Python
+environment used to run the ONNX importer.
+
+```powershell
+python -m pip install -r requirements-onnx.txt
+python Import-OnnxGraph.py model.onnx --frontend frog-frontend.exe --output new-onnx-folder
+python Import-QmhExpressionCheck.py --source expression.c --clang clang-cl.exe --frontend frog-frontend.exe --output new-qmh-folder
+python Import-CNativeCall.py --source forward.c --library sample.dll --entry forward --symbol sample --clang clang-cl.exe --readobj llvm-readobj.exe --frontend frog-frontend.exe --capture-library-identity --output new-dll-folder
+python Import-QmhWin32Panel.py --source calculator.c --clang clang-cl.exe --frontend frog-frontend.exe --output new-panel-folder
+```
+
+- ONNX admits IR 9 and ai.onnx opset 18, scalar Boolean And, Or and Not,
+  and inline scalar Boolean initializers within the documented bounds.
+  Open `model.frog`. Its mapping and the captured input accompany it.
+- The bounded QMH profile admits the exact `checked` and `fail` AST, including
+  the sibling header. Open `checked-editable.frog` for Studio editing.
+  The directory also contains the established Source and its Frontend receipts.
+- The DLL profile accepts one direct C wrapper with one to four scalars by
+  value, a scalar return, Windows x64 cdecl and a named, non-forwarded export.
+  The DLL must have no PE imports or delay imports. The caller declares
+  `--sha256` or selects `--capture-library-identity` to pin the selected file.
+  Keep the copied DLL with the generated document. Import inspects the file
+  without loading or executing it.
+- The Win32 profile preserves the matching calculator panel as editable widgets.
+  The mapping records each imported field and the native behavior still
+  unbound. Open `qmh-front-panel.frog`.
+
+Each destination must be new. Refusals include the responsible phase or source
+location where available. Clang runs in syntax-only mode. For C sources using
+Windows or C runtime headers, install the compatible Microsoft SDK/toolset.
+Repeat `--include` for explicit include directories when needed.
+
+See [NOTICE](NOTICE) for dependency versions and licenses.
+
+## Import a CMake C project
+
+The C Project importer reads an existing Ninja or Ninja Multi-Config build.
+It requires both **compile_commands.json** and the **CMake File API
+codemodel-v2** reply from that build directory. The codemodel determines
+the selected target's sources and CMake dependencies; the compilation
+database determines how each source is parsed. The importer does not
+configure CMake, run a build command, or execute the input project.
+
+For the redistributable fixture, run the following preparation explicitly.
+On Windows use an x64 developer prompt with Ninja and the same x64 Clang
+toolchain as the build. On a platform using the GNU Clang driver, select
+the corresponding Clang binary.
+
+```powershell
+$build = Join-Path (Get-Location) c-project-build
+New-Item -ItemType Directory -Force (Join-Path $build '.cmake/api/v1/query') | Out-Null
+New-Item -ItemType File -Force (Join-Path $build '.cmake/api/v1/query/codemodel-v2') | Out-Null
+cmake -S fixtures/c-project -B $build -G 'Ninja Multi-Config' '-DCMAKE_C_COMPILER=clang-cl' '-DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+cmake --build $build --config Debug --target reference
+cmake --build $build --config Release --target reference
+& (Join-Path $build 'Debug/reference.exe')
+& (Join-Path $build 'Release/reference.exe')
+```
+
+In Studio, select **File → Import → C Project…**, choose the build's
+**compile_commands.json**, and enter target **calculation**, configuration
+**Debug** or **Release**, and entry function **compute**. For a single-config
+build, enter the configuration name in the codemodel, or leave it empty
+when the configuration has no name.
+
+The equivalent standalone command is:
+
+```powershell
+python Import-CProject.py --source c-project-build/compile_commands.json --target calculation --configuration Debug --entry compute --clang 'C:/Program Files/LLVM/bin/clang-cl.exe' --frontend path/to/frog-frontend.exe --output imported-debug
+```
+
+Open **main.frog**. Double-click an imported call to inspect its child.
+The four child documents must be kept with the caller. Use the normal
+Studio Save command for edits; if you relocate the project as a whole,
+keep its relative layout. The **import-map.json** records the target,
+configuration, database digest, and C function locations. The initial
+**main.fir.json** and source maps are import evidence; export FIR again
+after editing if you need the current revision.
+
+The fixture inputs 0, 5, 29 and 4294967295 produce 24, 39, 111 and 21 in
+Debug, and 36, 51, 123 and 33 in Release. The generated header is created
+by the explicit CMake preparation. The two local functions named
+**adjust** retain distinct identities.
+
+The initial profile covers x86-64 Clang/clang-cl C targets (executables,
+static and object libraries), up to 64 translation units and 48 reachable
+functions. Translated functions use one or two U32 inputs and a single U32
+return expression made of direct calls and unsigned addition, subtraction,
+multiplication, or supported constants/conversions. Runtime linking,
+function pointers, recursive calls, general statements and other scalar
+types are outside this profile. A DLL import is refused here; the separate
+scalar NativeCall importer remains available with its declared DLL input.
+Import refuses unsupported compile settings, unresolved reachable symbols
+and missing headers without producing an executable partial document.
+For missing generated headers, run the project's own preparation
+explicitly, then retry.
+
+## Fixtures
+
+Run `python fixtures/and_or.py new-fixture-folder` to generate the supported
+And → Or model and an And → Xor refusal case. `fixtures/expression.c` and its
+header exercise the bounded expression profile. `fixtures/panel.c` exercises
+the layout profile with 27 editable widgets and an independent test layout.
+Use it for syntax inspection only. To build the scalar DLL
+fixture, run these commands from a scratch directory using the two source
+files under `fixtures/`.
+
+```powershell
+clang-cl /nologo /TC /std:c17 /W4 /WX /O2 /c /GS- /Zl /clang:--target=x86_64-pc-windows-msvc sample.c /Fosample.obj
+lld-link /dll /noentry /nodefaultlib /machine:x64 /Brepro /out:sample.dll sample.obj
+```
+
+The scalar fixture returns `a + 2*b` modulo 2³². The caller is
+`fixtures/forward.c`.

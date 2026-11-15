@@ -3,6 +3,41 @@
   "version": 1,
   "sources": [
     {
+      "path": "include/frog_native_engine/CompositeWidgetPackage.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/CompositeWidgetPackage.hpp",
+      "ownership": "created",
+      "sha256": "3ecaf0495657b2bf291601156ffd8649fdafadc76c3545db087ad7b37cbe32e0",
+      "bytes": 8648
+    },
+    {
+      "path": "src/ClassDefinition.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/ClassDefinition.cpp",
+      "ownership": "created",
+      "sha256": "488eef08dcaac19d38849ae0327fa2b3e6490100f21580c0ec8ba352b4b386ca",
+      "bytes": 36415
+    },
+    {
+      "path": "include/frog_native_engine/ClassDefinition.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ClassDefinition.hpp",
+      "ownership": "created",
+      "sha256": "2bc54de35312c1b96dbb460959c159c6b80e0516554f61e917a067abdf0f4672",
+      "bytes": 7441
+    },
+    {
+      "path": "src/PolymorphicFrog.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/PolymorphicFrog.cpp",
+      "ownership": "created",
+      "sha256": "cebfb09f149c892cda837b93541c1c5858f392594750671b22ba9a55d12565da",
+      "bytes": 13123
+    },
+    {
+      "path": "include/frog_native_engine/PolymorphicFrog.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/PolymorphicFrog.hpp",
+      "ownership": "created",
+      "sha256": "85a8c23910c7613f6ef7226f83a160ba5b2748dedaceaa4089dab507db822497",
+      "bytes": 2993
+    },
+    {
       "upstream": "FROG/sdk/cpp/include/frog/sdk/collection_order.hpp",
       "path": "snapshot/sdk/include/frog/sdk/collection_order.hpp",
       "sha256": "4ee910370cdff71f249e42371a5b346e527302f8f51075c0bf0131722cc10c82",
@@ -19,8 +54,8 @@
     {
       "upstream": "FROG/sdk/cpp/include/frog/sdk/runtime_contract.hpp",
       "path": "snapshot/sdk/include/frog/sdk/runtime_contract.hpp",
-      "sha256": "4f6175f7dd2559115f656d596207a832ddef41b858b6a589a62b8f720a51969c",
-      "bytes": 33812,
+      "sha256": "abd7f94e77af3aa1cb099a3a4333fc890c1f968d09c230d658111a434a068272",
+      "bytes": 33826,
       "ownership": "snapshot"
     },
     {
@@ -131,8 +166,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/build-nmake-verify/generated/WidgetCatalog.generated.hpp",
       "path": "snapshot/generated/WidgetCatalog.generated.hpp",
-      "sha256": "1c2dbf3d70927a8f1e0ebba49207b0b5c396bf426f50a301bb0e26ff6bc8b28c",
-      "bytes": 38955,
+      "sha256": "fceb295b3ffd63a1a7f77205a291a2cb50c527f9b7bd2605c75d9b51074c1e62",
+      "bytes": 41837,
       "ownership": "snapshot"
     },
     {
@@ -817,8 +852,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/manifests/math/entries.inc",
       "path": "manifests/math/entries.inc",
-      "sha256": "23cde4e98dd421ededd210609ee97281d70577ec49eb46d829ef7d30d096b2c6",
-      "bytes": 109305,
+      "sha256": "43a2ebe035af7481ee079b8933384cba03d05ee6977108ef81f944667dea026b",
+      "bytes": 109285,
       "ownership": "snapshot"
     },
     {
@@ -6000,6 +6035,13 @@
       "sha256": "2d745f56dfc0c699c4d9512def5b1935ead649a073182a6c3f6b74801a743c27",
       "bytes": 3752,
       "integration": "T306 exact Optimization Source/FIR metadata; numerical implementation owned by Runtime"
+    },
+    {
+      "path": "include/frog_native_engine/DiagramArrayValues.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/DiagramArrayValues.hpp",
+      "ownership": "created",
+      "sha256": "b36450f34615df3312d5473557df632218651c67a9c3101be9d2faebcb1248a1",
+      "bytes": 12144
     }
   ],
   "repository_baselines": {

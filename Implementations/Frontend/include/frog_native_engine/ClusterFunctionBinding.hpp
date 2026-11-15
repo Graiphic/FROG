@@ -27,8 +27,9 @@ inline double clusterFunctionRowPitch(const DiagramNode &node) {
     if(isClusterArrayStrip(node.type))return kClusterArrayStripRowHeight;
     if(isClusterByName(node.type)&&std::isfinite(node.clusterFunctionMeasuredRowPitch)&&node.clusterFunctionMeasuredRowPitch>0)
         return node.clusterFunctionMeasuredRowPitch;
+    // Preserve the named artwork's fallback until typography is measured.
     // Positional records have no text rows; share the authored Array strip pitch.
-    return kClusterArrayStripRowHeight;
+    return isClusterByName(node.type)?24.0:kClusterArrayStripRowHeight;
 }
 
 inline unsigned clusterFunctionCount(const DiagramNode &node) {

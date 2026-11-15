@@ -1,6 +1,7 @@
 #pragma once
 #include "frog_native_engine/NativeProgramOptions.hpp"
 #include "frog_native_engine/SharedBuffer.hpp"
+#include "frog_native_engine/DiagramArrayValues.hpp"
 
 #include "frog_native_engine/DiagramShapeCatalog.hpp"
 #include "frog_native_engine/DiagramExecutionContract.hpp"
@@ -10,6 +11,7 @@
 #include "frog_native_engine/FrogDocumentWidgetValues.hpp"
 #include "frog_native_engine/FrogJson.hpp"
 #include "frog_native_engine/FrogDraftInterface.hpp"
+#include "frog_native_engine/PolymorphicFrog.hpp"
 #include "frog_native_engine/HeapOptional.hpp"
 #include "frog_native_engine/ContainedWidgetPath.hpp"
 #include "frog_native_engine/ApplicationControlTypes.hpp"
@@ -69,6 +71,7 @@ struct DiagramCallPort {
     std::string connectionRequirement = "recommended";
     double normalizedX = 0.0;
     double normalizedY = 0.5;
+    bool operator==(const DiagramCallPort &) const = default;
 };
 
 // A Case Structure tunnel is a typed, movable passage through the structure
@@ -207,6 +210,8 @@ struct DiagramTimedLoopSchedule {
     std::int64_t processor = -1;
     std::string missedPeriods = "discard";
     std::string phasePolicy = "maintain";
+    // Whole milliseconds from the canonical Timestamp epoch. Empty starts now.
+    std::optional<std::int64_t> absoluteStartMilliseconds;
     bool operator==(const DiagramTimedLoopSchedule &) const = default;
 };
 
@@ -402,7 +407,7 @@ struct DiagramNode {
     double numericArrayCellWidth = 48.0;
     double numericArrayElementGap = 0.0;
     double numericArrayCellHeight = 20.0;
-    SharedBuffer<std::string> numericArrayValues;
+    DiagramArrayValues numericArrayValues;
     bool numericArrayElementLabelVisible = false;
     bool hidden = false;
     bool locked = false;
@@ -558,6 +563,11 @@ struct DiagramNode {
     std::optional<std::uint32_t> conditionalDisableVeilRgb;
     int conditionalDisableVeilOpacityPercent = 30;
     std::string callDocumentPath;
+    std::optional<PolymorphicFrogSelection> polymorphicFrogSelection;
+    // Derived presentation for the native editor. The reader and writer
+    // persist the selection and family reference independently.
+    std::string polymorphicFrogSelectorCaption;
+    bool polymorphicFrogSelectorShown = false;
     std::vector<DiagramInPlacePair> inPlacePairs;
     std::string inPlaceSemanticProfile = "frog.studio.ipe@1";
     std::uint64_t inPlaceNextPairSerial = 0;
@@ -816,7 +826,7 @@ enum class FrogArrayStorageMode : std::uint8_t { Readable, Automatic, CompactSta
 
 struct FrogSourceProperties {
     // Private Studio draft persistence only; never a runtime type or value.
-    FrogArrayStorageMode arrayStorageMode = FrogArrayStorageMode::Readable;
+    FrogArrayStorageMode arrayStorageMode = FrogArrayStorageMode::Automatic;
     // Authoring typography inherited by newly created objects and literals.
     // Absent defaults identify legacy files and retain the host preference;
     // reading them must not invent an authored size or change global state.

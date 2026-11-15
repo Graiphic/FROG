@@ -4,6 +4,11 @@
 #include <span>
 
 namespace frog::native_engine {
+[[nodiscard]] std::string_view applicationControlReferenceWidgetBase(std::string_view classId) noexcept;
+[[nodiscard]] bool applicationControlValueSignalingAvailable(std::string_view classId) noexcept;
+// An implicit Property target owns resolution even if its identity is missing.
+[[nodiscard]] bool applicationControlHasReferenceInput(const ApplicationControlNode &) noexcept;
+[[nodiscard]] std::string applicationControlPropertyPortId(std::string_view rowId);
 [[nodiscard]] std::string applicationControlParameterPortId(
     std::string_view parameterId,ApplicationControlPortDirection);
 // Accepting a supplied descriptor never registers it as a production member.

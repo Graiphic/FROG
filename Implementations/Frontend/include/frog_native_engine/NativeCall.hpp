@@ -111,6 +111,7 @@ struct NativeCallLibrary {
     std::string value;
     bool specifyPathOnDiagram = false;
     NativeCallPathMode dynamicRelativeBase = NativeCallPathMode::DocumentRelative;
+    std::string expectedSha256;
     bool operator==(const NativeCallLibrary &) const = default;
 };
 

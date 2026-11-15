@@ -26,6 +26,119 @@ int main() {
     require(array && runtimeValueValidForOwner(*array,arrayType,ieeeOwner),"Owned XY IEEE Array was rejected");
     auto foreignOwner=ieeeOwner;++foreignOwner.epoch;
     require(!runtimeValueValidForOwner(*array,arrayType,foreignOwner),"IEEE transport weakened Array ownership");
+    {
+        const auto type=valueTypeFromCanonicalName("i32");
+        const std::array<std::int64_t,4> cells{INT32_MIN,-7,0,INT32_MAX};
+        const auto packed=readRuntimePackedI32Array(type,static_cast<std::uint32_t>(cells.size()),ieeeOwner,
+            [&](std::uint32_t i){return std::optional{cells[i]};});
+        require(packed.has_value(),"Direct I32 Array construction failed");
+        require(!readRuntimePackedI32Array(type,1,ieeeOwner,[](std::uint32_t){
+            return std::optional{std::int64_t(INT32_MAX)+1};
+        }),"Out-of-range integer entered an I32 Array");
+        validation_metrics::Counts counters;
+        auto *previousMetrics=validation_metrics::active;
+        validation_metrics::active=&counters;
+        codec_detail::Writer writer(true,false,&ieeeOwner);
+        writer.runtimeValue(*packed);
+        const auto bytes=std::move(writer).finish();
+        codec_detail::Writer legacy(true,false,&ieeeOwner);
+        legacy.enumeration(std::uint8_t{8});
+        legacy.valueType(type);
+        legacy.unsignedInteger(std::uint32_t{1});
+        legacy.unsignedInteger(static_cast<std::uint32_t>(cells.size()));
+        legacy.unsignedInteger(static_cast<std::uint32_t>(cells.size()));
+        for(const auto cell:cells)legacy.runtimeValue(RuntimeValue{cell});
+        require(bytes==std::move(legacy).finish(),"Packed I32 changed the historical tag8 bytes");
+        codec_detail::Reader reader(bytes);
+        require(reader.typed(true),"Typed I32 Array reader initialization failed");
+        reader.arrayOwner(ieeeOwner);
+        RuntimeValue roundtrip;
+        require(reader.runtimeValue(roundtrip)&&reader.finished(),"Packed I32 Array could not be read");
+        const auto *decoded=runtimeArray(roundtrip);
+        require(decoded&&decoded->packedI32()&&decoded->elementType()==type&&
+            std::equal(cells.begin(),cells.end(),decoded->i32Elements().begin(),decoded->i32Elements().end()),
+            "Packed I32 Array lost signed cell bits");
+        const std::array<RuntimeValue,1> tail{RuntimeValue{std::int64_t{-99}}};
+        const auto extended=appendRuntimePrimitiveArray(*decoded,tail,ieeeOwner,4096,nullptr);
+        require(extended&&runtimeArray(*extended)->i32Elements().back()==-99&&decoded->i32Elements().back()==INT32_MAX,
+            "Extending an I32 Array changed its immutable prefix or lost the new value");
+        validation_metrics::active=previousMetrics;
+        require(counters.materializations==0,"I32 transport or append opened the generic cell view");
+    }
+    for(const auto name: {"f32","f64"}) {
+        const auto type=valueTypeFromCanonicalName(name);
+        const std::array<double,4> cells{-0.0,1.25,-8.0,0.0};
+        const auto packed=readRuntimePackedRealArray(type,static_cast<std::uint32_t>(cells.size()),ieeeOwner,
+            [&](std::uint32_t i){return std::optional{cells[i]};});
+        require(packed.has_value(),"Direct packed Array construction failed");
+        validation_metrics::Counts counters;
+        {
+            auto *previousMetrics=validation_metrics::active;
+            validation_metrics::active=&counters;
+            codec_detail::Writer writer(true,false,&ieeeOwner);
+            writer.runtimeValue(*packed);
+            const auto bytes=std::move(writer).finish();
+
+            codec_detail::Writer legacy(true,false,&ieeeOwner);
+            legacy.enumeration(std::uint8_t{8});
+            legacy.valueType(type);
+            legacy.unsignedInteger(std::uint32_t{1});
+            legacy.unsignedInteger(static_cast<std::uint32_t>(cells.size()));
+            legacy.unsignedInteger(static_cast<std::uint32_t>(cells.size()));
+            for(const auto cell:cells)legacy.runtimeValue(RuntimeValue{cell});
+            require(bytes==std::move(legacy).finish(),"Packed real Array changed the historical tag8 wire format");
+            const auto cellBytes=cells.size()*9;
+            const auto ordinaryBytes=bytes.size()-cellBytes;
+            codec_detail::Writer bounded(true,false,&ieeeOwner,{ordinaryBytes,cellBytes});
+            bounded.runtimeValue(*packed);
+            require(std::move(bounded).finish()==bytes,"Separate packed Array budget changed or truncated accepted bytes");
+            for(const auto &limits:{codec_detail::ArtifactEncodingLimits{ordinaryBytes-1,cellBytes},
+                                   codec_detail::ArtifactEncodingLimits{ordinaryBytes,cellBytes-1}}){
+                codec_detail::Writer rejected(true,false,&ieeeOwner,limits);
+                rejected.runtimeValue(*packed);
+                require(std::move(rejected).finish().empty(),"Truncated budget produced a partial packed artifact");
+            }
+
+            codec_detail::Reader reader(bytes);
+            require(reader.typed(true),"Typed Array reader initialization failed");
+            reader.arrayOwner(ieeeOwner);
+            RuntimeValue roundtrip;
+            require(reader.runtimeValue(roundtrip)&&reader.finished(),"Packed real Array could not be read");
+            const auto *decoded=runtimeArray(roundtrip);
+            require(decoded&&decoded->packedNumeric()&&decoded->finiteNumericElements()&&decoded->elementType()==type&&
+                decoded->elementCount()==cells.size(),"Packed real Array roundtrip lost its receipt or count");
+            for(std::size_t i=0;i<cells.size();++i) {
+                const auto actual=decoded->packedF32()?double(decoded->f32Data()[i]):decoded->f64Elements()[i];
+                require(std::bit_cast<std::uint64_t>(actual)==std::bit_cast<std::uint64_t>(cells[i]),"Packed real Array lost IEEE bits");
+            }
+
+            auto corrupted=bytes;
+            corrupted[corrupted.size()-9]=3;
+            codec_detail::Reader malformed(corrupted);
+            require(malformed.typed(true),"Malformed real Array test could not initialize");
+            malformed.arrayOwner(ieeeOwner);
+            require(!malformed.runtimeValue(roundtrip),"Real Array accepted an integer tag as a double");
+            validation_metrics::active=previousMetrics;
+        }
+        require(counters.materializations==0,"The real Array transport opened the generic cell view");
+    }
+    for(const auto name: {"f32","f64"}) {
+        const auto type=valueTypeFromCanonicalName(name);
+        const auto quietNaN=std::bit_cast<double>(std::uint64_t{0x7ff8000000000025});
+        const auto ieee=makeRuntimeArray(type,{3},{RuntimeValue{quietNaN},RuntimeValue{inf},RuntimeValue{-inf}},ieeeOwner);
+        require(ieee.has_value(),"Exceptional real Array construction failed");
+        codec_detail::Writer writer(true,false,&ieeeOwner);
+        writer.runtimeValue(*ieee);
+        const auto bytes=std::move(writer).finish();
+        codec_detail::Reader reader(bytes);
+        require(reader.typed(true),"Exceptional Array reader initialization failed");
+        reader.arrayOwner(ieeeOwner);
+        RuntimeValue roundtrip;
+        require(reader.runtimeValue(roundtrip)&&reader.finished(),"Exceptional Array transport failed");
+        const auto *actual=runtimeArray(roundtrip);
+        require(actual && !actual->finiteNumericElements() && actual->packedF64()==(type.bitWidth==64),"Exceptional Array acquired the wrong storage policy");
+        require(std::bit_cast<std::uint64_t>(std::get<double>(actual->elements()[0]))==std::bit_cast<std::uint64_t>(quietNaN),"Exceptional Array changed the NaN payload");
+    }
     for(const auto name:{"c32","c64"}) {
         const auto type=valueTypeFromCanonicalName(name);const auto value=makeRuntimeComplex(type,nan,-inf);
         const auto parts=value?readRuntimeComplex(*value,type):std::nullopt;

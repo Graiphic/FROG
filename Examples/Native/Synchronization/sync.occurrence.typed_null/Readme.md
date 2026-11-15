@@ -1,10 +1,10 @@
-# occurrence: correctly typed null reference
+# occurrence : référence nulle correctement typée
 
-occurrence: correctly typed null reference
+occurrence : référence nulle correctement typée
 
-The constant carries the exact nominal class and no live handle. An invalid reference must never create an infinite wait. timed_out=True. Semaphore and Rendezvous also return their local error; Occurrence has no error terminals.
+La constante porte la classe nominale exacte ; elle ne contient aucun handle vivant. Une référence invalide ne doit jamais créer une attente infinie. timed_out=True. Semaphore et Rendezvous renvoient également leur erreur locale ; Occurrence n'a pas de terminaux d'erreur.
 
-occurrence: correctly typed null reference
+occurrence : référence nulle correctement typée
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

@@ -191,10 +191,6 @@ std::optional<ConnectivityNodeConfiguration> savedConnectivityConfigurationForCa
     else if (id == "connectivity.python.node") config.kind = ConnectivityNodeKind::Python;
     else if (id.ends_with(".static_vi_reference")) config.kind = ConnectivityNodeKind::StaticReference;
     else if (id.ends_with(".automation_open")) config.kind = ConnectivityNodeKind::AutomationOpen;
-    else if (id == "connectivity.input_device.acquire_input_data" || id == "connectivity.input_device.close_input_device" ||
-        id == "connectivity.registry.read_value_simple" || id == "connectivity.registry.write_value_simple" ||
-        id == "connectivity.activex.close_reference")
-        config.kind = ConnectivityNodeKind::Polymorphic;
     else if (id.ends_with(".to_more_generic_class") || id.ends_with(".to_more_specific_class") ||
         id.ends_with(".variant_to_data") || id.ends_with(".to_variant"))
         config.kind = ConnectivityNodeKind::TypeConversion;

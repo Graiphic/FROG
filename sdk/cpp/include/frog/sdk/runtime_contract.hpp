@@ -583,7 +583,7 @@ struct SessionEvent {
     }
 
     std::size_t arrayPayload = 0;
-    const auto checkArray = [&](const RuntimeValue &value, const ValueType &type, NodeId node, PortId port) {
+    const auto checkArray = [&](const RuntimeValue &value, const ValueType &type, const NodeId &node, const PortId &port) {
         const auto *array=std::get_if<RuntimeF64Array>(&value);
         if(!array)return;
         if(!packed) { add("contract.array.schema_invalid", "Packed Array values require local artifact schema3.",node,port); return; }

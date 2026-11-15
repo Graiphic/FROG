@@ -2,14 +2,17 @@
 #include "FrogDocumentEncoding.hpp"
 #include "FrogDocumentJsonValue.hpp"
 #include "FrogDocumentZstdCodec.hpp"
+#include "frog_native_engine/ArrayCapacity.hpp"
 #include "frog_native_engine/BindingType.hpp"
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <charconv>
 #include <cmath>
 #include <iomanip>
 #include <limits>
 #include <sstream>
+#include <type_traits>
 #include <vector>
 
 namespace frog::native_engine::document_internal {
@@ -46,20 +49,65 @@ bool validUtf8(std::string_view text) {
     return true;
 }
 std::string checksum(std::span<const std::uint8_t> bytes) {
+    static constexpr auto table = [] {
+        std::array<std::uint32_t, 256> values{};
+        for (std::uint32_t i = 0; i < values.size(); ++i) {
+            auto entry = i;
+            for (int bit = 0; bit < 8; ++bit)
+                entry = (entry >> 1U) ^ (0xedb88320U & (0U - (entry & 1U)));
+            values[i] = entry;
+        }
+        return values;
+    }();
     std::uint32_t crc = 0xffffffffU;
-    for (const auto byte : bytes) {
-        crc ^= byte;
-        for (int bit = 0; bit < 8; ++bit)
-            crc = (crc >> 1U) ^ (0xedb88320U & (0U - (crc & 1U)));
-    }
+    for (const auto byte : bytes) crc = (crc >> 8U) ^ table[(crc ^ byte) & 0xffU];
     std::ostringstream out;
     out << std::hex << std::setfill('0') << std::setw(8) << (crc ^ 0xffffffffU);
     return out.str();
 }
+bool exactU32(const Json *number,std::uint32_t &out) {
+    if(!number||number->type!=Json::Type::Number)return false;
+    const auto end=number->string.data()+number->string.size();
+    const auto parsed=std::from_chars(number->string.data(),end,out);
+    return parsed.ec==std::errc{}&&parsed.ptr==end;
+}
 bool u32(const Json &object, std::string_view key, std::uint32_t &out) {
-    const auto result = jsonUnsignedField(object, key);
-    if (!result) return false;
-    out = *result;
+    return exactU32(object.member(key),out);
+}
+std::string_view numericElementType(const binding::TypeParseResult &parsed) {
+    const auto *value = &parsed.type;
+    if (value->kind == binding::TypeKind::Array && value->children.size() == 1U)
+        value = &value->children.front();
+    if (!parsed.valid() || value->kind != binding::TypeKind::Primitive || !value->numeric()) return {};
+    return value->name;
+}
+template<std::size_t Width> auto littleEndian(std::uint64_t value) {
+    std::array<std::uint8_t, Width> bytes{};
+    for (std::size_t i=0;i<Width;++i) bytes[i]=static_cast<std::uint8_t>(value>>(i*8U));
+    return bytes;
+}
+bool readChunk(const Json &chunk,std::size_t expected,std::vector<std::uint8_t> &raw,std::string &error) {
+    const auto fail = [&](std::string reason) {error="FROG array storage: "+std::move(reason);return false;};
+    std::uint32_t decoded=0;
+    if (!u32(chunk,"decoded_bytes",decoded) || decoded!=expected) return fail("invalid chunk decoded size.");
+    const auto data=jsonStringField(chunk,"data");
+    if (!data || data->size()>(chunkBytes+1024U)*2U) return fail("invalid base64 chunk size.");
+    auto encoded=base64Decode(*data);
+    if (base64Encode(encoded)!=*data) return fail("invalid base64 encoding.");
+    const auto codec=jsonStringField(chunk,"codec").value_or("");
+    if (codec=="raw") {
+        if (encoded.size()!=decoded) return fail("raw chunk size mismatch.");
+        raw=std::move(encoded);
+    } else if (codec=="zstd") {
+        raw.resize(decoded);
+        switch (decodeDocumentZstdChunk(encoded,raw)) {
+        case DocumentZstdDecodeResult::InvalidFrameSize: return fail("invalid Zstandard frame size.");
+        case DocumentZstdDecodeResult::DecoderUnavailable: return fail("could not allocate the bounded Zstandard decoder.");
+        case DocumentZstdDecodeResult::CorruptChunk: return fail("corrupt Zstandard chunk.");
+        case DocumentZstdDecodeResult::Ok: break;
+        }
+    } else return fail("unsupported codec '"+codec+"'.");
+    if (checksum(raw)!=jsonStringField(chunk,"crc32").value_or("")) return fail("chunk CRC32 mismatch.");
     return true;
 }
 bool decode(const Json &envelope, Json &result, std::string &error,
@@ -161,43 +209,26 @@ std::string_view arrayStorageModeToken(FrogArrayStorageMode mode) noexcept {
     }
 }
 bool compactNumericArrayType(std::string_view type) {
-    const auto parsed = binding::parseType(type);
-    const auto *value = &parsed.type;
-    if (value->kind == binding::TypeKind::Array && value->children.size() == 1U) value = &value->children.front();
-    return parsed.valid() && value->kind == binding::TypeKind::Primitive && value->numeric();
+    return !numericElementType(binding::parseType(type)).empty();
 }
-template<class Cell> std::optional<std::string> encodeCells(std::size_t count,Cell cellAt,
-    ArrayStorageWriteContext &context, std::string_view profile, std::size_t readableBytes) {
-    const auto mode = context.mode;
-    if (mode == FrogArrayStorageMode::Readable || count == 0) return std::nullopt;
-    if (count > context.remainingCells) return std::nullopt;
-    std::size_t byteCount = 0;
-    for (std::size_t index=0;index<count;++index) {
-        const auto cell=cellAt(index);
-        if((index&16383U)==0)source::pollJsonReadCheckpoint();
-        if (!validUtf8(cell) || cell.size() > kMaximumFrogJsonStringBytes || cell.size() + 4U > kMaximumFrogDocumentBytes - byteCount)
-            return std::nullopt; // Keep unsupported authoring data readable.
-        byteCount += cell.size() + 4U;
-    }
-    if (byteCount > context.remainingBytes) return std::nullopt;
-    if (mode == FrogArrayStorageMode::Automatic && readableBytes < 4096U) return std::nullopt;
-    // Preserve the byte stream and its fixed chunk boundaries without staging
-    // a second complete copy of all cell lengths and payloads.
+template<class Emit> std::string encodeChunks(std::size_t count, std::size_t byteCount,
+    std::string_view profile, std::string_view scalar, FrogDocumentCompressFn compress, Emit emit) {
     std::vector<std::uint8_t> bytes;
     bytes.reserve((std::min)(chunkBytes, byteCount));
     std::ostringstream out;
-    out << "{\"encoding\":\"" << profile << "\",\"count\":" << count
-        << ",\"decoded_bytes\":" << byteCount << ",\"chunks\":[";
+    out << "{\"encoding\":\"" << profile << "\",\"count\":" << count << ",\"decoded_bytes\":" << byteCount;
+    if (!scalar.empty()) out << ",\"element_type\":\"" << scalar << '"';
+    out << ",\"chunks\":[";
     bool firstChunk = true;
     const auto flush = [&] {
         const auto raw = std::span<const std::uint8_t>(bytes);
         std::vector<std::uint8_t> compressed;
-        const bool useCompressed = context.compress && context.compress(raw, compressed);
-        if (!useCompressed) compressed.assign(raw.begin(), raw.end());
+        const bool useCompressed = compress && compress(raw, compressed);
         if (!firstChunk) out << ',';
         firstChunk = false;
         out << "{\"codec\":\"" << (useCompressed ? "zstd" : "raw") << "\",\"decoded_bytes\":" << raw.size()
-            << ",\"crc32\":\"" << checksum(raw) << "\",\"data\":\"" << base64Encode(compressed) << "\"}";
+            << ",\"crc32\":\"" << checksum(raw) << "\",\"data\":\""
+            << base64Encode(useCompressed ? compressed : bytes) << "\"}";
         bytes.clear();
     };
     const auto append = [&](std::span<const std::uint8_t> source) {
@@ -208,28 +239,265 @@ template<class Cell> std::optional<std::string> encodeCells(std::size_t count,Ce
             if (bytes.size() == chunkBytes) flush();
         }
     };
-    for (std::size_t index=0;index<count;++index) {
-        const auto cell=cellAt(index);
-        if((index&16383U)==0)source::pollJsonReadCheckpoint();
-        std::array<std::uint8_t, 4> length{};
-        const auto size = static_cast<std::uint32_t>(cell.size());
-        for (unsigned int byte = 0; byte < length.size(); ++byte)
-            length[byte] = static_cast<std::uint8_t>(size >> (byte * 8U));
-        append(length);
-        append({reinterpret_cast<const std::uint8_t *>(cell.data()), cell.size()});
-    }
+    emit(append);
     if (!bytes.empty()) flush();
     out << "]}";
-    auto encoded = out.str();
-    if (mode == FrogArrayStorageMode::Automatic && encoded.size() >= readableBytes) return std::nullopt;
+    return std::move(out).str();
+}
+template<class Cell> std::optional<std::string> encodeCells(std::size_t count,Cell cellAt,
+    ArrayStorageWriteContext &context, std::string_view profile, std::size_t readableBytes,
+    bool required = false) {
+    const auto mode = context.mode;
+    if (mode == FrogArrayStorageMode::Readable || count == 0) return std::nullopt;
+    if (count > (required ? kMaximumArrayElements : context.remainingCells)) return std::nullopt;
+    if (!required && mode == FrogArrayStorageMode::Automatic && readableBytes < 4096U) return std::nullopt;
+    std::size_t byteCount = 0;
+    for (std::size_t index=0;index<count;++index) {
+        const auto cell=cellAt(index);
+        if ((index&16383U)==0) source::pollJsonReadCheckpoint();
+        if (!validUtf8(cell) || cell.size() > kMaximumFrogJsonStringBytes || cell.size() + 4U > context.remainingBytes - byteCount)
+            return std::nullopt;
+        byteCount += cell.size() + 4U;
+    }
+    auto encoded = encodeChunks(count,byteCount,profile,{},context.compress,[&](const auto &append) {
+        for (std::size_t index=0;index<count;++index) {
+            if ((index&16383U)==0) source::pollJsonReadCheckpoint();
+            const auto cell=cellAt(index);
+            append(littleEndian<4>(cell.size()));
+            append({reinterpret_cast<const std::uint8_t *>(cell.data()),cell.size()});
+        }
+    });
+    if (!required && mode == FrogArrayStorageMode::Automatic && encoded.size() >= readableBytes) return std::nullopt;
     context.remainingBytes -= byteCount;
-    context.remainingCells -= count;
+    if (!required) context.remainingCells -= count;
+    return encoded;
+}
+std::optional<std::string> encodeNumericWords(const DiagramArrayValues &cells,
+    std::string_view scalar, ArrayStorageWriteContext &context) {
+    const auto width=DiagramArrayValues::numericWordBytes(scalar);
+    if (!width || !cells.hasNumericWords(scalar)) return std::nullopt;
+    if (!arrayAllocationFitsBudget(cells.size(),width,0,context.remainingNumericWordsBytes))
+        throw std::runtime_error("FROG array storage: numeric words exceed the aggregate decoded byte budget.");
+    std::size_t byteCount=cells.size()*width;
+    cells.visitNumericSpellings([&](std::size_t,std::string_view spelling) {
+        if (spelling.size()>kMaximumFrogJsonStringBytes || !validUtf8(spelling) ||
+            spelling.size()+8U>context.remainingNumericWordsBytes-byteCount)
+            throw std::runtime_error("FROG array storage: numeric spelling exceeds the compact byte budget or contains invalid text.");
+        byteCount+=spelling.size()+8U;
+    });
+    auto encoded=encodeChunks(cells.size(),byteCount,numericWordArrayProfile,scalar,context.compress,[&](const auto &append) {
+        static constexpr std::array<std::uint8_t,chunkBytes> zeros{};
+        cells.visitNumericWords([&](std::size_t count,auto narrow,auto wide) {
+            source::pollJsonReadCheckpoint();
+            if (narrow.empty() && wide.empty()) append(std::span(zeros).first(count*width));
+            else if constexpr (std::endian::native==std::endian::little) {
+                const auto *data=narrow.empty() ? reinterpret_cast<const std::uint8_t *>(wide.data()) :
+                    reinterpret_cast<const std::uint8_t *>(narrow.data());
+                append(std::span(data,count*width));
+            } else if (!narrow.empty()) {
+                for (auto word:narrow.first(count)) append(littleEndian<4>(word));
+            } else {
+                for (auto word:wide.first(count)) append(littleEndian<8>(word));
+            }
+        });
+        cells.visitNumericSpellings([&](std::size_t index,std::string_view spelling) {
+            source::pollJsonReadCheckpoint();
+            append(littleEndian<4>(index));
+            append(littleEndian<4>(spelling.size()));
+            append({reinterpret_cast<const std::uint8_t *>(spelling.data()),spelling.size()});
+        });
+    });
+    context.remainingNumericWordsBytes-=byteCount;
     return encoded;
 }
 std::optional<std::string> encodeArrayStorage(std::span<const std::string> cells,
     ArrayStorageWriteContext &context,std::string_view profile,std::size_t readableBytes) {
     return encodeCells(cells.size(),[&](std::size_t i){return std::string_view{cells[i]};},context,profile,readableBytes);
 }
+std::optional<std::string> encodeDiagramArrayStorage(const DiagramArrayValues &cells,
+    ArrayStorageWriteContext &context, bool compactable, std::string_view type) {
+    const auto count = cells.size();
+    constexpr std::size_t largeArrayCells = 4096;
+    const bool required = compactable && count != 0 && context.mode != FrogArrayStorageMode::Readable &&
+        (count >= largeArrayCells || count > context.readableCells ||
+            context.mode == FrogArrayStorageMode::CompactStandalone);
+    if (required) {
+        const auto parsed=binding::parseType(type);
+        if (auto encoded=encodeNumericWords(cells,numericElementType(parsed),context)) return encoded;
+        auto encoded = encodeCells(count, [&](std::size_t index) { return cells[index]; }, context,
+            textProfile, 0, true);
+        if (!encoded)
+            throw std::runtime_error("FROG array storage: numeric cells exceed the compact byte budget or contain invalid text.");
+        return encoded;
+    }
+    if (count > context.readableCells)
+        throw std::runtime_error("FROG array storage: readable cells exceed the document JSON value budget.");
+    context.readableCells -= count;
+    return std::nullopt;
+}
+
+bool decodeDiagramArrayStorage(const Json &configuration, DiagramArrayValues &out,
+    std::string_view type, std::size_t &remainingBytes, std::string &error,
+    std::size_t *remainingNumericWordsBytes) {
+    const auto fail = [&](std::string_view reason) {
+        error = "FROG array storage: " + std::string(reason);
+        return false;
+    };
+    const auto *envelope = objectField(configuration, "values");
+    if (!envelope || envelope->type != Json::Type::Object) return fail("invalid numeric Array envelope.");
+    const auto profile = jsonStringField(*envelope, "encoding").value_or("");
+    if (profile == elementsProfile) return fail("encoding does not match the array value field.");
+    const bool words = profile == numericWordArrayProfile;
+    if (!words && profile != textProfile) return fail("unsupported encoding '" + profile + "'.");
+    const auto parsedType = binding::parseType(type);
+    const auto elementType = numericElementType(parsedType);
+    if (elementType.empty()) return fail("encoding does not match the Array element type.");
+    const auto width = words ? DiagramArrayValues::numericWordBytes(elementType) : 4U;
+    if (words && (!width || jsonStringField(*envelope,"element_type").value_or("")!=elementType))
+        return fail("encoding does not match the exact Array element type.");
+    auto &budget = words && remainingNumericWordsBytes ? *remainingNumericWordsBytes : remainingBytes;
+    std::uint32_t count = 0, byteCount = 0;
+    if (!u32(*envelope, "count", count) || !u32(*envelope, "decoded_bytes", byteCount) ||
+        !count || byteCount > budget || byteCount < std::uint64_t(count) * width)
+        return fail("invalid count or decoded size exceeds the document resource budget.");
+    const auto *rawShape=configuration.member("shape");
+    std::uint32_t rank=0;
+    if(!u32(configuration,"rank",rank)||!rank||rank>16||
+       (rawShape&&(rawShape->type!=Json::Type::Array||rawShape->array.size()>rank)))
+        return fail("numeric Array rank is invalid.");
+    std::vector<std::uint32_t> shape;
+    if(rawShape)for(const auto &extent:rawShape->array) {
+        std::uint32_t size=0;
+        if(!exactU32(&extent,size))return fail("numeric Array has an invalid extent.");
+        shape.push_back(size);
+    }
+    if((!shape.empty()&&(shape.size()!=rank||checkedArrayElementCount(shape)!=count))||
+       (shape.empty()&&rank!=1))return fail("numeric Array shape and count disagree.");
+
+    const auto *chunks = objectField(*envelope, "chunks");
+    if (!chunks || chunks->type != Json::Type::Array ||
+        chunks->array.size() != (std::uint64_t(byteCount) + chunkBytes - 1) / chunkBytes)
+        return fail("invalid chunk count.");
+    DiagramArrayValues prepared;
+    const bool typed = prepared.resizeNumeric(count, elementType);
+    if (!typed && count > kMaximumFrogJsonValueCount)
+        return fail("the numeric representation exceeds the text cell budget.");
+    std::vector<std::string> textCells;
+    if (!typed) textCells.reserve(count);
+    std::uint32_t index = 0, length = 0;
+    unsigned lengthBytes = 0;
+    std::size_t bytesRead = 0;
+    std::string cell;
+    std::vector<std::uint8_t> raw;
+    const auto wordsBytes=static_cast<std::size_t>(count)*width;
+    std::array<std::uint8_t,8> spellingHeader{};
+    std::optional<std::uint32_t> previousSpelling;
+    for (const auto &chunk : chunks->array) {
+        source::pollJsonReadCheckpoint();
+        if (!readChunk(chunk,(std::min)(chunkBytes,std::size_t(byteCount)-bytesRead),raw,error)) return false;
+        std::size_t cursor = 0;
+        if (words && bytesRead < wordsBytes) {
+            cursor=(std::min)(raw.size(),wordsBytes-bytesRead);
+            if (!prepared.loadNumericWords(bytesRead/width,std::span(raw).first(cursor)))
+                return fail("invalid numeric word block.");
+        }
+        bytesRead += raw.size();
+        while (cursor < raw.size()) {
+            if (!words && index == count) return fail("trailing bytes after the last cell.");
+            const auto headerSize=words ? 8U : 4U;
+            while (lengthBytes < headerSize && cursor < raw.size()) spellingHeader[lengthBytes++]=raw[cursor++];
+            if (lengthBytes != headerSize) break;
+            if (words) {
+                index=0;
+                for (unsigned byte=0;byte<4;++byte) index|=std::uint32_t(spellingHeader[byte])<<(byte*8U);
+                if (index>=count || (previousSpelling && index<=*previousSpelling))
+                    return fail("invalid or unordered numeric spelling index.");
+            }
+            for (unsigned byte=0;byte<4;++byte) length|=std::uint32_t(spellingHeader[headerSize-4U+byte])<<(byte*8U);
+            if (length > kMaximumFrogJsonStringBytes) return fail("invalid cell length.");
+            const auto take = (std::min)(std::size_t(length) - cell.size(), raw.size() - cursor);
+            cell.append(reinterpret_cast<const char *>(raw.data() + cursor), take);
+            cursor += take;
+            if (cell.size() != length) break;
+            if (!validUtf8(cell)) return fail("invalid UTF-8 cell text.");
+            if (words) {
+                if (!prepared.loadNumericSpelling(index,std::move(cell))) return fail("numeric spelling conflicts with its word.");
+                previousSpelling=index;
+            } else if (typed) {
+                if (cell != "0") prepared.replaceAt(index, std::move(cell));
+            } else textCells.push_back(std::move(cell));
+            if (!words) ++index;
+            cell.clear();
+            length = 0;
+            lengthBytes = 0;
+        }
+    }
+    if ((!words && index != count) || lengthBytes != 0) return fail("truncated cell data.");
+    if (!typed) prepared = std::move(textCells);
+    budget -= byteCount;
+    out.swap(prepared);
+    return true;
+}
+bool isPackedExecutionArrayEnvelope(const Json &configuration,std::string_view type) {
+    const auto *payload=configuration.member("values");
+    std::uint32_t rank=0;
+    if(!payload||jsonStringField(*payload,"encoding")!=numericWordArrayProfile||!u32(configuration,"rank",rank)||rank!=1)
+        return false;
+    const auto schema=binding::parseType(type);
+    const auto element=numericElementType(schema);
+    return (element=="i32"||element=="f32"||element=="f64")&&
+        (schema.type.kind==binding::TypeKind::Primitive||schema.type.rank==1);
+}
+
+bool decodeComposedPackedNumericArray(const Json &value,const binding::TypeRef &type,
+    DiagramArrayValues &cells,std::vector<std::pair<std::size_t,double>> &spellings,
+    std::size_t &remainingWords,std::string &error) {
+    const auto *shape=value.member("shape"),*payload=value.member(composedNumericArrayField);
+    const auto fail=[&](std::string reason){error=std::move(reason);return false;};
+    const auto element=type.children.size()==1&&type.children[0].kind==binding::TypeKind::Primitive?
+        std::string_view(type.children[0].name):std::string_view{};
+    if(!payload||!shape||shape->type!=Json::Type::Array||shape->array.size()!=1||
+       type.kind!=binding::TypeKind::Array||type.rank!=1||value.object.size()!=2)
+        return fail("Packed numeric literals require one explicit extent and an exact I32, F32 or F64 Array schema.");
+    Json configuration;
+    configuration.type=Json::Type::Object;
+    Json rank;rank.type=Json::Type::Number;rank.number=1;rank.string="1";
+    configuration.object={{"rank",std::move(rank)},{"shape",*shape},{"values",*payload}};
+    if(!isPackedExecutionArrayEnvelope(configuration,type.canonical()))return fail("Invalid packed numeric Array encoding.");
+    auto unusedTextBudget=kMaximumFrogDocumentBytes;
+    if(!decodeDiagramArrayStorage(configuration,cells,type.canonical(),unusedTextBudget,error,&remainingWords))return false;
+    const auto parse=[]<class T>(std::string_view token)->std::optional<double>{
+        T result{};
+        const auto end=token.data()+token.size();
+        const auto parsed=std::from_chars(token.data(),end,result);
+        if(parsed.ec!=std::errc{}||parsed.ptr!=end)return {};
+        if constexpr(std::is_floating_point_v<T>)if(!std::isfinite(result))return {};
+        return static_cast<double>(result);
+    };
+    const bool single=element=="f32",integer=element=="i32";
+    bool finite=true;
+    if(!integer)cells.visitNumericWords([&](std::size_t count,auto narrow,auto wide){
+        source::pollJsonReadCheckpoint();
+        if(!finite)return;
+        for(std::size_t i=0;i<count;++i) {
+            if(single ? (!narrow.empty()&&!std::isfinite(std::bit_cast<float>(narrow[i]))) :
+                (!wide.empty()&&!std::isfinite(std::bit_cast<double>(wide[i])))) {finite=false;break;}
+        }
+    });
+    if(!finite)return fail("A packed Array literal contains a non-finite cell.");
+    cells.visitNumericSpellings([&](std::size_t index,std::string_view spelling){
+        if(!finite)return;
+        source::pollJsonReadCheckpoint();
+        auto token=source::parseJson(spelling,nullptr,source::JsonNumberPolicy::PreserveLexeme);
+        const auto number=token&&(token->type==Json::Type::Number||token->type==Json::Type::String)?
+            (integer?parse.template operator()<std::int32_t>(token->string):
+                single?parse.template operator()<float>(token->string):parse.template operator()<double>(token->string)):std::nullopt;
+        if(!number) {error="Packed Array cell "+std::to_string(index)+" is outside its exact numeric representation.";finite=false;return;}
+        spellings.emplace_back(index,*number);
+    });
+    return finite;
+}
+
 std::size_t boundedDocumentJsonValueCount(const Json &root){return valueCount(root);}
 bool compactDraftArrayProvenance(Json &root,std::string &error) {
     ArrayStorageWriteContext context;context.mode=FrogArrayStorageMode::CompactStandalone;context.compress=compressDocumentZstdChunk;
@@ -259,17 +527,19 @@ bool compactDraftArrayProvenance(Json &root,std::string &error) {
     if(changed) {
         auto revision=source::parseJson("3");const auto *previous=root.member("draft_revision");
         if(!previous||(previous->type==Json::Type::Number&&previous->string=="2"))root.object.insert_or_assign("draft_revision",std::move(*revision));
-        // The declaration describes the existing encoding, not a new storage
-        // mode selected by the user. Readable remains their persisted choice.
+        // The derived encoding must retain the source document's storage policy.
         if(!root.member("storage")) {
-            auto storage=source::parseJson("{\"version\":1,\"array_mode\":\"readable\"}");root.object.emplace("storage",std::move(*storage));
+            auto storage=source::parseJson("{\"version\":1,\"array_mode\":\"automatic\"}");root.object.emplace("storage",std::move(*storage));
         }
     }
     return changed;
 }
 bool readArrayStorageMode(const Json &root, FrogArrayStorageMode &mode, std::string &error) {
     const auto *storage = objectField(root, "storage");
-    if (!storage) return true;
+    if (!storage) {
+        mode = FrogArrayStorageMode::Automatic;
+        return true;
+    }
     const auto value = jsonStringField(*storage, "array_mode").value_or("");
     if (jsonUnsignedField(*storage, "version") != 1U) { error = "Unsupported FROG storage version."; return false; }
     if (value == "readable") mode = FrogArrayStorageMode::Readable;
@@ -278,8 +548,11 @@ bool readArrayStorageMode(const Json &root, FrogArrayStorageMode &mode, std::str
     else { error = "Unsupported FROG array storage mode '" + value + "'."; return false; }
     return true;
 }
-bool inflateArrayStorage(Json &root, std::string &error, bool allowCompact) {
+static bool inflateArrayStorageImpl(Json &root, std::string &error, bool allowCompact, bool preserveDiagramCells,
+    std::size_t *remainingDecodedBytes, bool *keptPackedArrays) {
+    if(keptPackedArrays)*keptPackedArrays=false;
     std::size_t remainingBytes = kMaximumFrogDocumentBytes;
+    std::size_t remainingWords = maximumDecodedNumericWordsBytes;
     const auto existing=valueCount(root);
     if(existing>kMaximumFrogJsonValueCount){error="FROG array storage: aggregate JSON value budget exceeded.";return false;}
     std::size_t remainingCells = kMaximumFrogJsonValueCount-existing;
@@ -287,11 +560,54 @@ bool inflateArrayStorage(Json &root, std::string &error, bool allowCompact) {
     while (!pending.empty()) {
         auto *value = pending.back(); pending.pop_back();
         if (value->type == Json::Type::Object) {
+            Json *retainedConfiguration=nullptr;
+            if (!preserveDiagramCells) {
+                const auto *configuration=objectField(*value,"array_constant");
+                const auto *envelope=configuration ? objectField(*configuration,"values") : nullptr;
+                if (envelope && envelope->type==Json::Type::Object &&
+                    jsonStringField(*envelope,"encoding")==numericWordArrayProfile) {
+                    if (!allowCompact) {error="FROG compact arrays require private draft_revision 3.";return false;}
+                    const auto type=jsonStringField(*value,"value_type").value_or("");
+                    if(keptPackedArrays&&isPackedExecutionArrayEnvelope(*configuration,type)) {
+                        *keptPackedArrays=true;
+                        retainedConfiguration=&value->object.at("array_constant");
+                    } else {
+                    const auto count=jsonUnsignedField(*envelope,"count");
+                    const auto available=remainingCells+valueCount(*envelope)-1U;
+                    if (count && *count>available) {error=executionArrayStorageBudgetError;return false;}
+                    DiagramArrayValues cells;
+                    if (!decodeDiagramArrayStorage(*configuration,cells,type,remainingBytes,error,&remainingWords)) return false;
+                    Json decoded;
+                    decoded.type=Json::Type::Array;
+                    decoded.array.reserve(cells.size());
+                    std::size_t i=0;
+                    for (auto cell:cells) {
+                        if ((i++&16383U)==0) source::pollJsonReadCheckpoint();
+                        Json entry;
+                        entry.type=Json::Type::String;
+                        entry.string=std::move(cell);
+                        decoded.array.push_back(std::move(entry));
+                    }
+                    remainingCells=available-cells.size();
+                    value->object.at("array_constant").object.at("values")=std::move(decoded);
+                    }
+                }
+            }
             for (auto &[key, child] : value->object) {
+                if(&child==retainedConfiguration)continue;
                 const bool arrayField = (key == "values" && objectField(*value, "rank") && objectField(*value, "shape")) ||
                     (key == "elements" && objectField(*value, "dimensions.rank"));
                 if (arrayField && child.type == Json::Type::Object) {
                     if (!allowCompact) { error = "FROG compact arrays require private draft_revision 3."; return false; }
+                    if (preserveDiagramCells && key == "values") continue;
+                    std::uint32_t count = 0;
+                    std::uint32_t bytes = 0;
+                    if (key == "values" && u32(child, "count", count) && count > kMaximumFrogJsonValueCount &&
+                        u32(child, "decoded_bytes", bytes) && std::uint64_t(count) * 4 <= bytes &&
+                        bytes <= remainingBytes && jsonStringField(child, "encoding") == textProfile) {
+                        error = executionArrayStorageBudgetError;
+                        return false;
+                    }
                     Json decoded;
                     // Replacement removes the encoded envelope's descendants;
                     // retain one slot for the new decoded Array container.
@@ -306,6 +622,13 @@ bool inflateArrayStorage(Json &root, std::string &error, bool allowCompact) {
         } else if (value->type == Json::Type::Array)
             for (auto &child : value->array) pending.push_back(&child);
     }
+    if (remainingDecodedBytes) *remainingDecodedBytes = remainingBytes;
     return true;
+}
+bool inflateArrayStorage(Json &root,std::string &error,bool allowCompact,bool preserveDiagramCells,std::size_t *remainingDecodedBytes) {
+    return inflateArrayStorageImpl(root,error,allowCompact,preserveDiagramCells,remainingDecodedBytes,nullptr);
+}
+bool inflateExecutionArrayStorage(Json &root,std::string &error,bool allowCompact,bool &keptPackedArrays) {
+    return inflateArrayStorageImpl(root,error,allowCompact,false,nullptr,&keptPackedArrays);
 }
 } // namespace frog::native_engine::document_internal

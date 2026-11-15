@@ -13,6 +13,7 @@
 #include "frog_native_engine/graph/XYGraph.hpp"
 
 #include <cstdint>
+#include <array>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -83,8 +84,10 @@ inline std::size_t sharedBufferElementHeapBytes(const ArrayElementValue &value) 
     auto bytes=value.indices.capacity()>maximum/sizeof(std::uint32_t)
         ? maximum:value.indices.capacity()*sizeof(std::uint32_t);
     const auto data=reinterpret_cast<std::uintptr_t>(value.displayValue.data());
-    const auto object=reinterpret_cast<std::uintptr_t>(&value.displayValue);
-    if(data<object || data-object>=sizeof(value.displayValue)) {
+    const auto *textObject=std::addressof(value.displayValue);
+    const auto objectBegin=reinterpret_cast<std::uintptr_t>(textObject);
+    const auto objectEnd=reinterpret_cast<std::uintptr_t>(textObject+1);
+    if(data<objectBegin || data>=objectEnd) {
         const auto text=value.displayValue.capacity()+1U;
         bytes=text>maximum-bytes?maximum:bytes+text;
     }
@@ -381,6 +384,13 @@ struct WidgetInstance {
     // flag when materializing already validated IEEE result cells.
     bool runtimeIeeeDisplay = false;
 
+    // Optional colors for the published Listbox parts, in RGB model order.
+    enum class ListboxColor : std::size_t {
+        Background, Border, Text, SelectionFace, SelectionMark, ScrollTrack, ScrollThumb, Count
+    };
+    using ListboxColors = std::array<std::optional<std::uint32_t>, static_cast<std::size_t>(ListboxColor::Count)>;
+    HeapOptional<ListboxColors> listboxColors;
+
 };
 
 // Shared source-data initializer; placement-only normalization stays in Studio.
@@ -392,6 +402,13 @@ struct WidgetInstance {
     Rect bounds);
 
 [[nodiscard]] bool isBooleanWidget(const WidgetInstance &widget) noexcept;
+[[nodiscard]] constexpr bool isListboxWidget(const WidgetInstance &widget) noexcept {
+    return widget.classId == "frog.widgets.listbox_control" || widget.classId == "frog.widgets.listbox_indicator";
+}
+inline constexpr std::array<std::string_view, 7> kListboxColorProperties{
+    "listbox-background", "listbox-border", "listbox-item-text", "listbox-selection-background",
+    "listbox-selection-mark", "listbox-scroll-track", "listbox-scroll-thumb"
+};
 [[nodiscard]] bool isWaveformGraphWidget(const WidgetInstance &widget) noexcept;
 [[nodiscard]] bool isXYGraphWidget(const WidgetInstance &widget) noexcept;
 [[nodiscard]] bool setBooleanWidgetIndicatorRole(WidgetInstance &widget, bool indicator);

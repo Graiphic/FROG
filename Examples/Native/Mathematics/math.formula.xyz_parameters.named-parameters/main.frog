@@ -1,6 +1,7 @@
 {
   "format": "frog.document.draft",
-  "draft_revision": 2,
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
   "language": "FROG",
   "title": "Sample three coordinates with parameters",
   "metadata": {
@@ -351,7 +352,7 @@
     "zoom_percent": 100,
     "viewport_origin": {
       "x": 60,
-      "y": -40
+      "y": -124
     },
     "nodes": [
       {
@@ -365,7 +366,7 @@
         "label_vertical_arrangement": "none",
         "label_offset": {
           "x": 0,
-          "y": 0
+          "y": 111
         },
         "label_size": {
           "width": 24,
@@ -443,7 +444,7 @@
         "group": "",
         "layout": {
           "x": 80,
-          "y": 185,
+          "y": 722,
           "width": 190,
           "height": 110
         }
@@ -493,7 +494,7 @@
         "group": "",
         "layout": {
           "x": 80,
-          "y": 270,
+          "y": 572,
           "width": 190,
           "height": 110
         }
@@ -543,7 +544,7 @@
         "group": "",
         "layout": {
           "x": 80,
-          "y": 355,
+          "y": 272,
           "width": 190,
           "height": 110
         }
@@ -593,7 +594,7 @@
         "group": "",
         "layout": {
           "x": 80,
-          "y": 440,
+          "y": 422,
           "width": 190,
           "height": 110
         }
@@ -627,8 +628,8 @@
         "locked": false,
         "group": "",
         "layout": {
-          "x": 80,
-          "y": 525,
+          "x": 200,
+          "y": 76,
           "width": 190,
           "height": 32
         }
@@ -661,8 +662,8 @@
         "layout": {
           "x": 700,
           "y": 160,
-          "width": 48,
-          "height": 24
+          "width": 66.3,
+          "height": 29.75
         }
       },
       {
@@ -693,8 +694,8 @@
         "layout": {
           "x": 700,
           "y": 240,
-          "width": 48,
-          "height": 24
+          "width": 66.3,
+          "height": 29.75
         }
       },
       {
@@ -725,8 +726,8 @@
         "layout": {
           "x": 700,
           "y": 320,
-          "width": 48,
-          "height": 24
+          "width": 66.3,
+          "height": 29.75
         }
       },
       {
@@ -757,15 +758,15 @@
         "layout": {
           "x": 700,
           "y": 400,
-          "width": 48,
-          "height": 24
+          "width": 66.3,
+          "height": 29.75
         }
       },
       {
         "id": "example-explanation",
         "kind": "comment",
         "comment_auto_size": false,
-        "text": "Sample three coordinates with parameters\nNamed a=2,b=3,c=5 scale and offset three coordinate formulas. The points remain in t1-fastest order, with no conversion to nominal Matrix.\nInputs -> operation -> indicators. Expected result: output-x_values (array<f64>) = [0,2,0,2]\noutput-y_values (array<f64>) = [30,30,60,60]\noutput-z_values (array<f64>) = [15,16,25,26]\noutput-error (i32) = 0\n",
+        "text": "Sample three coordinates with parameters\nNamed a=2,b=3,c=5 scale and offset three coordinate formulas. The points remain in t1-fastest order, with no conversion to nominal Matrix.\nEntrées -> opération -> indicateurs. Résultat attendu : output-x_values (array<f64>) = [0,2,0,2]\noutput-y_values (array<f64>) = [30,30,60,60]\noutput-z_values (array<f64>) = [15,16,25,26]\noutput-error (i32) = 0\n",
         "vertical_arrangement": "none",
         "font": {
           "family": "",
@@ -779,7 +780,7 @@
         "group": "",
         "layout": {
           "x": 80,
-          "y": -20,
+          "y": -104,
           "width": 780,
           "height": 140
         }
@@ -795,7 +796,13 @@
         "to": {
           "node": "operation",
           "port": "formulas"
-        }
+        },
+        "bends": [
+          {
+            "x": 358,
+            "y": 215
+          }
+        ]
       },
       {
         "id": "wire-1",
@@ -806,7 +813,13 @@
         "to": {
           "node": "operation",
           "port": "parameters"
-        }
+        },
+        "bends": [
+          {
+            "x": 342,
+            "y": 200
+          }
+        ]
       },
       {
         "id": "wire-2",
@@ -817,7 +830,13 @@
         "to": {
           "node": "operation",
           "port": "start"
-        }
+        },
+        "bends": [
+          {
+            "x": 310,
+            "y": 169
+          }
+        ]
       },
       {
         "id": "wire-3",
@@ -828,7 +847,13 @@
         "to": {
           "node": "operation",
           "port": "end"
-        }
+        },
+        "bends": [
+          {
+            "x": 326,
+            "y": 184
+          }
+        ]
       },
       {
         "id": "wire-4",
@@ -839,7 +864,17 @@
         "to": {
           "node": "operation",
           "port": "points"
-        }
+        },
+        "bends": [
+          {
+            "x": 474,
+            "y": 92
+          },
+          {
+            "x": 474,
+            "y": 143
+          }
+        ]
       },
       {
         "id": "wire-5",
@@ -850,7 +885,21 @@
         "to": {
           "node": "output-x_values-terminal",
           "port": "value"
-        }
+        },
+        "bends": [
+          {
+            "x": 490,
+            "y": 158
+          },
+          {
+            "x": 698,
+            "y": 158
+          },
+          {
+            "x": 698,
+            "y": 175
+          }
+        ]
       },
       {
         "id": "wire-6",
@@ -861,7 +910,17 @@
         "to": {
           "node": "output-y_values-terminal",
           "port": "value"
-        }
+        },
+        "bends": [
+          {
+            "x": 693,
+            "y": 169
+          },
+          {
+            "x": 693,
+            "y": 255
+          }
+        ]
       },
       {
         "id": "wire-7",
@@ -872,7 +931,17 @@
         "to": {
           "node": "output-z_values-terminal",
           "port": "value"
-        }
+        },
+        "bends": [
+          {
+            "x": 690,
+            "y": 192
+          },
+          {
+            "x": 690,
+            "y": 335
+          }
+        ]
       },
       {
         "id": "wire-8",

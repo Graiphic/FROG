@@ -6,7 +6,7 @@
 namespace frog::native_engine {
 // The host owns reference resolution and all I/O. The Frontend passes the exact
 // authored spelling and source location; it never probes a filesystem or CWD.
-enum class DraftDependencyKind { Source = 1, TypeDefinition = 2 };
+enum class DraftDependencyKind { Source = 1, TypeDefinition = 2, ClassDefinition = 3 };
 struct DraftDependencyRequest {
     DraftDependencyKind kind = DraftDependencyKind::Source;
     std::string ownerUri;

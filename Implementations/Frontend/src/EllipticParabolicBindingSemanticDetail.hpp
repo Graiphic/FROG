@@ -18,7 +18,7 @@ TypeRef realTree(const TypeRef &type) {
     for (auto &child : result.children) child = realTree(child);
     return result;
 }
-EllipticParabolicTypeResult rejected(ResolutionStatus status, std::string code, std::string message) {
+EllipticParabolicTypeResult rejected(ResolutionStatus status, const std::string &code, std::string message) {
     return {{status, {}, "math.elliptic_parabolic." + code, std::move(message)}, false};
 }
 

@@ -1,0 +1,17 @@
+FROG Importers
+Copyright Graiphic
+
+The Graiphic importer code and authored fixtures are licensed under Apache-2.0.
+Third-party software retains its own notices and licenses.
+
+CPython 3.13.13: Python Software Foundation License and incorporated software
+notices. The Windows embedded distribution includes LICENSE.txt.
+ONNX 1.20.1: Apache-2.0, including third-party notices in the wheel.
+NumPy 2.2.6: BSD-3-Clause and licenses for binary components in the wheel.
+protobuf 6.33.6: BSD-3-Clause.
+ml_dtypes 0.5.4: Apache-2.0.
+typing_extensions 4.15.0: Python Software Foundation License.
+LLVM 22.1.7 (clang-cl and llvm-readobj): Apache-2.0 WITH LLVM-exception.
+The distribution retains the original Python and wheel license files and the
+LLVM license. Microsoft development headers and libraries are provided by
+separately installed Microsoft components under their own terms.

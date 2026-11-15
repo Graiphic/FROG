@@ -343,6 +343,9 @@ static bool applyWidgetRole(WidgetInstance &widget, WidgetRole role) {
             "Ring Control",
             "Ring Indicator");
     case WidgetFamily::DataContainers:
+        if (isListboxWidget(widget)) return applyRoleVariant(widget, role,
+            "frog.widgets.listbox_control", "frog.widgets.listbox_indicator",
+            "Listbox Control", "Listbox Indicator");
         if (widget.valueType == "variant" || widget.classId == kReferenceWidgetClass || widget.classId=="frog.studio.widgets.collection") {
             const auto next = widgetRoleName(role);
             if (widget.role == next) return false;

@@ -820,3 +820,12 @@ sdk/ecosystem/src/BridgeProtocol.cpp -text
 sdk/ecosystem/tests/test_frontend_documents.py -text
 sdk/ecosystem/tests/validate_frontend_results.py -text
 Conformance/studio-save-open/*.frog -text
+
+# Exact dependency input bytes — 2026-11-15
+Implementations/Frontend/include/frog_native_engine/ClassDefinition.hpp -text
+Implementations/Frontend/include/frog_native_engine/CompositeWidgetPackage.hpp -text
+Implementations/Frontend/include/frog_native_engine/DiagramArrayValues.hpp -text
+Implementations/Frontend/include/frog_native_engine/PolymorphicFrog.hpp -text
+Implementations/Frontend/src/ClassDefinition.cpp -text
+Implementations/Frontend/src/PolymorphicFrog.cpp -text
+Implementations/Frontend/tests/class_definition_smoke.cpp -text

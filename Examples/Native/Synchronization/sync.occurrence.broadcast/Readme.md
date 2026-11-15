@@ -1,10 +1,10 @@
-# Occurrence: one signal wakes three waits
+# Occurrence : un signal réveille trois attentes
 
-Occurrence: one signal wakes three waits
+Occurrence : un signal réveille trois attentes
 
-Three independent Wait operations share the reference from the same Generate. ignore_previous=False allows Set to be observed regardless of branch interleaving. All three timed_out outputs are False. This is a shared signal, not a queue of three messages.
+Trois Wait indépendants partagent la référence du même Generate. ignore_previous=False permet d'observer le Set quelle que soit l'interversion des branches. Les trois timed_out valent False. Il s'agit d'un signal partagé, pas d'une file de trois messages.
 
-Occurrence: one signal wakes three waits
+Occurrence : un signal réveille trois attentes
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

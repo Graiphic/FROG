@@ -1,0 +1,19 @@
+{
+  "format": "frog.class",
+  "version": 1,
+  "id": "digital",
+  "name": "Capteur numérique",
+  "revision": 1,
+  "parent": {"id": "sensor", "path": "Capteur.fclass", "revision": 1},
+  "fields": [{"id": "resolution", "label": "Résolution", "type": "u32", "default": 8}],
+  "methods": [{
+    "id": "measure-digital", "name": "Mesurer",
+    "implementation": {"id": "digital.measure", "path": "Mesurer Numérique.frog", "revision": 1},
+    "visibility": "public", "dispatch": "dynamic",
+    "overrides": {"class_id": "sensor", "method_id": "measure"},
+    "ports": [
+      {"slot": "receiver", "port_id": "digital.self", "direction": "input", "kind": "object", "type": null},
+      {"slot": "result", "port_id": "digital.reading", "direction": "output", "kind": "data", "type": "i64"}
+    ]
+  }]
+}

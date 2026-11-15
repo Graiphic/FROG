@@ -1,8 +1,8 @@
 """Narrow ownership exceptions; discovery and original CMake reads stay unchanged.
 
 The Frontend snapshot must occupy its declared path and match both its source
-origin and canonical SDK owner. Only the bridge owner's qualified Diagnostic
-definition is distinct from the Runtime contract; no file is exempted wholesale.
+origin and canonical SDK owner. Qualified Diagnostic declarations can belong to
+the bridge or an explicitly declared private owner; no file is exempted wholesale.
 """
 import argparse
 import hashlib
@@ -19,6 +19,9 @@ SNAPSHOT = "Implementations/Frontend/snapshot/sdk/include/frog/sdk/runtime_contr
 ORIGIN = "Implementations/Frontend/source-origin.json"
 CANONICAL = "sdk/cpp/include/frog/sdk/runtime_contract.hpp"
 BRIDGE = "sdk/ecosystem/include/frog/bridge.hpp"
+DIAGNOSTIC_POLICY_FORMAT = "frog.runtime-contract.diagnostic-owners"
+DIAGNOSTIC_POLICY_BYTES = 64 * 1024
+DIAGNOSTIC_POLICY_OWNERS = 64
 DECLARATION = re.compile(r"(struct|class)[ \t\r\n]+Diagnostic[ \t\r\n]*\{")
 # Preserve offsets while ignoring comments and ordinary/raw string literals.
 TOKENS = re.compile(
@@ -94,15 +97,12 @@ def snapshot(root, source, canonical):
                 "Runtime snapshot/canonical bytes differ from declared provenance: " + str(path))
 
 
-def bridge_diagnostic(root, source):
-    require(same_path(source, root / BRIDGE), "not the public bridge Diagnostic owner")
-    no_redirect(root, BRIDGE)
-    text = read(source).decode("utf-8-sig")
+def diagnostic_scope(text, namespace):
     # This lexical proof does not run a preprocessor. Fail closed rather than
     # infer namespace ownership through conditionals or macro-generated scopes.
     directives = re.findall(r"^[ \t]*#[ \t]*([A-Za-z_]\w*)", text, re.MULTILINE)
     require(all(directive in ("include", "pragma") for directive in directives),
-            "bridge namespace ownership requires unambiguous nonconditional declarations")
+            "Diagnostic namespace ownership requires unambiguous nonconditional declarations")
     tokens = [(m.group(), m.start()) for m in TOKENS.finditer(text)
               if m.group() not in ("",) and not m.group().lstrip().startswith(("#", "//", "/*")) and
               not ('"' in m.group() or "'" in m.group())]
@@ -115,35 +115,120 @@ def bridge_diagnostic(root, source):
         names, j = [], i + 1
         while j < len(tokens) and (re.fullmatch(r"[A-Za-z_]\w*", tokens[j][0]) or tokens[j][0] == "::"):
             names.append(tokens[j][0]); j += 1
+        require(j >= len(tokens) or tokens[j][0] != "=",
+                "Diagnostic namespace ownership cannot infer namespace aliases")
         if j < len(tokens) and tokens[j][0] == "{" and "=" not in names:
             braces[j] = tuple(name for name in names if name != "::") or ("<anonymous>",)
     for i, (token, offset) in enumerate(tokens):
+        if token in ("struct", "class"):
+            # A qualified, inherited or final definition cannot borrow the
+            # permission of another plain Diagnostic declaration in the file.
+            j, names = i + 1, []
+            if j < len(tokens) and tokens[j][0] == "::":
+                j += 1
+            if j < len(tokens) and re.fullmatch(r"[A-Za-z_]\w*", tokens[j][0]):
+                names.append(tokens[j][0]); j += 1
+                while j + 1 < len(tokens) and tokens[j][0] == "::" and re.fullmatch(r"[A-Za-z_]\w*", tokens[j+1][0]):
+                    names.append(tokens[j+1][0]); j += 2
+            if names and names[-1] == "Diagnostic" and j < len(tokens) and tokens[j][0] in ("{", ":", "final"):
+                require(j == i + 2 and tokens[j][0] == "{",
+                        "Diagnostic definition requires a plain declaration at its exact namespace scope")
         if token in ("struct", "class") and i + 2 < len(tokens) and tokens[i+1][0] == "Diagnostic" and tokens[i+2][0] == "{":
-            if tuple(name for scope in scopes for name in scope) == ("frog", "bridge"):
+            if tuple(name for scope in scopes for name in scope) == namespace:
                 allowed.add(offset)
         if token == "{":
             scopes.append(braces.get(i, ("<body>",)))
         elif token == "}":
-            require(scopes, "unbalanced bridge declaration scopes")
+            require(scopes, "unbalanced Diagnostic declaration scopes")
             scopes.pop()
-    require(not scopes, "unbalanced bridge declaration scopes")
+    require(not scopes, "unbalanced Diagnostic declaration scopes")
     matches = list(DECLARATION.finditer(text))
     require(matches and all(match.start() in allowed for match in matches),
-            "Diagnostic definition is outside frog::bridge namespace scope")
+            "Diagnostic definition is outside " + "::".join(namespace) + " namespace scope")
+
+
+def bridge_diagnostic(root, source):
+    require(same_path(source, root / BRIDGE), "not the public bridge Diagnostic owner")
+    no_redirect(root, BRIDGE)
+    diagnostic_scope(read(source).decode("utf-8-sig"), ("frog", "bridge"))
+
+
+def relative_policy_path(value):
+    require(isinstance(value, str) and 0 < len(value.encode("utf-8")) <= 1024 and
+            not any(character in value for character in ("\\", ":", "\x00")) and
+            all(ord(character) >= 32 and ord(character) != 127 for character in value) and
+            all(part not in ("", ".", "..") for part in value.split("/")),
+            "Diagnostic owner path must be an exact bounded relative POSIX source path")
+    return value
+
+
+def diagnostic_policy(root, policy):
+    root, policy = Path(os.path.abspath(root)), Path(os.path.abspath(policy))
+    try:
+        relative = policy.relative_to(root).as_posix()
+    except ValueError:
+        raise ValueError("Diagnostic ownership policy must be inside scan root") from None
+    no_redirect(root, relative_policy_path(relative))
+    require(stat.S_ISREG(os.stat(io_path(policy)).st_mode), "Diagnostic ownership policy must be a regular file")
+    data = json.loads(read(policy, DIAGNOSTIC_POLICY_BYTES).decode("utf-8-sig"), object_pairs_hook=unique)
+    require(isinstance(data, dict) and set(data) == {"format", "version", "owners"} and
+            data["format"] == DIAGNOSTIC_POLICY_FORMAT and type(data["version"]) is int and data["version"] == 1 and
+            isinstance(data["owners"], list) and len(data["owners"]) <= DIAGNOSTIC_POLICY_OWNERS,
+            "unsupported Diagnostic ownership policy schema")
+    owners, seen_paths, seen_namespaces = {}, set(), set()
+    for entry in data["owners"]:
+        require(isinstance(entry, dict) and set(entry) == {"path", "namespace"}, "malformed Diagnostic owner declaration")
+        path = relative_policy_path(entry["path"])
+        qualified = entry["namespace"]
+        require(isinstance(qualified, str) and 0 < len(qualified.encode("utf-8")) <= 1024 and
+                re.fullmatch(r"[A-Za-z_]\w*(?:::[A-Za-z_]\w*)+", qualified, re.ASCII),
+                "Diagnostic owner namespace must be an exact qualified namespace")
+        namespace = tuple(qualified.split("::"))
+        require(namespace[:3] != ("frog", "sdk", "runtime"), "SDK Runtime namespace cannot be a declared Diagnostic owner")
+        require(namespace != ("frog", "bridge") or path == BRIDGE,
+                "the public bridge Diagnostic retains its fixed owner path")
+        require(path.casefold() not in seen_paths, "duplicate Diagnostic owner path: " + path)
+        require(namespace not in seen_namespaces, "duplicate Diagnostic owner namespace: " + qualified)
+        seen_paths.add(path.casefold()); seen_namespaces.add(namespace)
+        no_redirect(root, path)
+        source = root / path
+        require(stat.S_ISREG(os.stat(io_path(source)).st_mode), "Diagnostic owner must be a regular source file")
+        diagnostic_scope(read(source).decode("utf-8-sig"), namespace)
+        owners[path] = namespace
+    return owners
+
+
+def declared_diagnostic(root, source, policy):
+    owners = diagnostic_policy(root, policy)
+    try:
+        relative = Path(os.path.abspath(source)).relative_to(Path(os.path.abspath(root))).as_posix()
+    except ValueError:
+        raise ValueError("Diagnostic source is outside scan root") from None
+    require(relative in owners, "not an exact declared Diagnostic owner path")
+    no_redirect(root, relative)
+    diagnostic_scope(read(source).decode("utf-8-sig"), owners[relative])
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("mode", choices=("snapshot", "bridge-diagnostic"))
+    parser.add_argument("mode", choices=("snapshot", "bridge-diagnostic", "diagnostic-policy", "declared-diagnostic"))
     parser.add_argument("--scan-root", type=Path, required=True)
-    parser.add_argument("--source", type=Path, required=True)
+    parser.add_argument("--source", type=Path)
     parser.add_argument("--canonical-header", type=Path)
+    parser.add_argument("--policy", type=Path)
     args = parser.parse_args()
     if args.mode == "snapshot":
-        require(args.canonical_header is not None, "explicit canonical owner required")
+        require(args.source is not None and args.canonical_header is not None, "explicit source and canonical owner required")
         snapshot(args.scan_root, args.source, args.canonical_header)
-    else:
+    elif args.mode == "bridge-diagnostic":
+        require(args.source is not None, "explicit bridge source required")
         bridge_diagnostic(args.scan_root, args.source)
+    elif args.mode == "diagnostic-policy":
+        require(args.policy is not None, "explicit Diagnostic ownership policy required")
+        diagnostic_policy(args.scan_root, args.policy)
+    else:
+        require(args.source is not None and args.policy is not None, "explicit source and Diagnostic ownership policy required")
+        declared_diagnostic(args.scan_root, args.source, args.policy)
     return 0
 
 

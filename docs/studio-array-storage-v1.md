@@ -49,15 +49,14 @@ document decoder's budget. Empty arrays remain readable.
 There is one authoritative representation per array value field. No full readable
 copy accompanies the binary payload. Metadata surrounding that field stays JSON.
 
-The binary representation intentionally preserves **authoring text**, rather than
-quantizing it through a host floating point number. This preserves 64-bit integer
-text, signed zero, long floating point text, empty and partially edited cells.
-It is not an IEEE numeric buffer for a runtime. Runtime implementations must use
-the authored type's own value interpretation and diagnostics.
+All representations preserve **authoring text**. Typed pages store canonical
+numeric values as bits and retain exact text separately for noncanonical or
+incomplete cells. A runtime must still use the authored type's own value
+interpretation and diagnostics.
 
 ## Binary record profiles
 
-Both profiles concatenate records in their existing serialized order. Each record
+The original two profiles concatenate records in serialized order. Each record
 is a four-byte **unsigned little-endian** UTF-8 byte length, followed by that many
 bytes. Records may cross chunk boundaries. There is no alignment padding, byte
 order mark, terminator or platform-dependent C++ layout.
@@ -66,10 +65,19 @@ order mark, terminator or platform-dependent C++ layout.
 | --- | --- | --- |
 | `numeric-cell-text-le32-v1` | Diagram `array_constant.values` | Exact UTF-8 cell string. Shape and row order keep their existing authoring meaning. |
 | `numeric-elements-json-le32-v1` | Array widget `props.elements` | UTF-8 JSON for one existing numeric element record, retaining its `indices`, numeric `value`, `defined` and `enabled` flags. Missing cells are not synthesized. |
+| `numeric-cell-bits-le-v1` | Paged numeric diagram `array_constant.values` | `count` fixed-width little-endian words in row order, then optional text exception records. |
 
 The field is replaced by an object with `encoding`, `count`, `decoded_bytes` and
-`chunks`. `count` is the number of records; `decoded_bytes` includes all length
-prefixes and record bytes. These bounded integers fit exactly in binary64.
+`chunks`. `decoded_bytes` includes all lengths and data. These bounded integers
+fit exactly in binary64. In the word profile, `element_type` must match the
+node's exact element type. I8/I16/I32 and U8/U16/U32 use 32-bit words (signed
+values are sign extended); I64/U64 use 64-bit words. F32/F64 use IEEE 754 bits,
+including the sign of zero. Type-domain validation remains at the existing
+authoring/Run boundaries. Each exception is LE32 index, LE32 UTF-8 byte length,
+then that many bytes. Exceptions must name distinct zero placeholders in
+strictly increasing order. Their exact text is restored on Open. Shape, rank
+and count are checked together. Readers supporting only the legacy encoding
+reject the new profile explicitly; Readable remains available on export.
 
 Decoded bytes are split at fixed 65536-byte offsets. Every chunk except the last
 has 65536 decoded bytes. Each chunk declares `codec`, `decoded_bytes`, `crc32` and
@@ -87,16 +95,20 @@ Unknown encoding/codec, noncanonical base64, inconsistent counts, truncated
 records, trailing bytes, bad UTF-8, corrupt frames or checksum mismatch reject
 the load with a storage diagnostic. They must never become empty arrays or zeros.
 Readers bound the frame window, chunk size, decoded bytes and cell count before
-allocating. The current Studio decoder has a 64 MiB aggregate decoded payload
-budget and a 250000-record budget, in addition to the existing JSON/file limits.
+allocating. The word profile has a separate aggregate 128 MiB decoded budget
+for numeric words and their exceptions. The original formats retain their
+64 MiB aggregate decoded budget. Neither budget enlarges the JSON tree budget
+or the 64 MiB encoded document limit.
 Record profiles must match their value field. Numeric element indices and Boolean
 flags are checked before projection; invalid records cannot be silently skipped.
 
 ## Present limits and future ecosystem work
 
-Loading currently expands values into Studio's existing editing model. This
-reduces file size; it does **not** implement lazy loading, typed runtime buffers or
-a guaranteed reduction in working memory. The monofile is rewritten when saved.
+The word profile opens directly into Studio's existing numeric pages with
+implicit zero pages. This does not implement lazy loading from disk. The
+compatibility projection for Run still expands a bounded JSON view; successful
+Save/Open of a large array does not qualify that size for Run. The monofile is
+rewritten when saved.
 Independent deterministic chunks keep unchanged chunk contents stable, but the
 initial implementation recompresses them rather than retaining a lazy block cache.
 

@@ -87,6 +87,11 @@ public:
     bool packedF64()const noexcept{return appendStorage_&&appendStorage_->packed;}
     bool packedF32()const noexcept{return appendStorage_&&appendStorage_->single;}
     bool packedNumeric()const noexcept{return packedF64()||packedF32();}
+    bool packedI32()const noexcept{return appendStorage_&&appendStorage_->integer;}
+    bool packedCells()const noexcept{return packedNumeric()||packedI32();}
+    std::span<const std::int32_t> i32Elements()const noexcept {
+        return packedI32()?std::span<const std::int32_t>(appendStorage_->integers.data(),prefixSize_):std::span<const std::int32_t>{};
+    }
     bool finiteNumericElements()const noexcept{return packedNumeric()&&prefixSize_<=appendStorage_->finitePrefix.load(std::memory_order_acquire);}
     const float *f32Data()const noexcept{return packedF32()?appendStorage_->singles.get():nullptr;}
     std::span<const double> f64Elements()const noexcept{return packedF64()?std::span<const double>(appendStorage_->numbers.data(),prefixSize_):std::span<const double>{};}
@@ -95,7 +100,7 @@ public:
     // Every returned prefix stays immutable; failures propagate to the checked
     // operation boundary rather than returning a fabricated empty Array.
     std::span<const RuntimeValue> elements()const {
-        if(!packedNumeric())return elementView_;
+        if(!packedCells())return elementView_;
         std::lock_guard lock(appendStorage_->mutex);
         if(!appendStorage_->genericReady.load(std::memory_order_relaxed)) {
             std::vector<RuntimeValue> slots(appendStorage_->capacity());
@@ -103,7 +108,10 @@ public:
             appendStorage_->genericReady.store(true,std::memory_order_release);
             if(validation_metrics::active)++validation_metrics::active->materializations;
         }
-        for(auto i=appendStorage_->genericUsed;i<prefixSize_;++i)appendStorage_->slots[i]=packedF32()?double(appendStorage_->singles[i]):appendStorage_->numbers[i];
+        for(auto i=appendStorage_->genericUsed;i<prefixSize_;++i) {
+            if(packedI32())appendStorage_->slots[i]=std::int64_t(appendStorage_->integers[i]);
+            else appendStorage_->slots[i]=packedF32()?double(appendStorage_->singles[i]):appendStorage_->numbers[i];
+        }
         if(validation_metrics::active)validation_metrics::active->materializedElements+=prefixSize_>appendStorage_->genericUsed?prefixSize_-appendStorage_->genericUsed:0;
         appendStorage_->genericUsed=(std::max)(appendStorage_->genericUsed,prefixSize_);
         return {appendStorage_->slots.data(),prefixSize_};
@@ -119,19 +127,21 @@ public:
     std::size_t arrayStorageCapacity()const noexcept{return appendStorage_?appendStorage_->capacity():values_.capacity();}
     std::size_t arrayStorageBytes()const noexcept {
         if(!appendStorage_)return values_.capacity()*sizeof(RuntimeValue);
-        const auto genericCapacity=!packedNumeric()||appendStorage_->genericReady.load(std::memory_order_acquire)?
+        const auto genericCapacity=!packedCells()||appendStorage_->genericReady.load(std::memory_order_acquire)?
             appendStorage_->slots.capacity():0;
-        return appendStorage_->numbers.capacity()*sizeof(double)+appendStorage_->singleCapacity*sizeof(float)+genericCapacity*sizeof(RuntimeValue);
+        return appendStorage_->numbers.capacity()*sizeof(double)+appendStorage_->singleCapacity*sizeof(float)+
+            appendStorage_->integers.capacity()*sizeof(std::int32_t)+genericCapacity*sizeof(RuntimeValue);
     }
     // Budget the optional generic compatibility view before it can be asked
     // for. Its later materialization cannot increase a retained receipt's
     // charge. This remains distinct from currently allocated physical bytes.
     std::size_t arrayStorageBudgetBytes()const noexcept {
         if(!appendStorage_)return values_.capacity()*sizeof(RuntimeValue);
-        const auto genericCapacity=packedNumeric()?
+        const auto genericCapacity=packedCells()?
             (std::max)(appendStorage_->capacity(),appendStorage_->genericReady.load(std::memory_order_acquire)?
                 appendStorage_->slots.capacity():0):appendStorage_->slots.capacity();
-        return appendStorage_->numbers.capacity()*sizeof(double)+appendStorage_->singleCapacity*sizeof(float)+genericCapacity*sizeof(RuntimeValue);
+        return appendStorage_->numbers.capacity()*sizeof(double)+appendStorage_->singleCapacity*sizeof(float)+
+            appendStorage_->integers.capacity()*sizeof(std::int32_t)+genericCapacity*sizeof(RuntimeValue);
     }
     std::size_t arrayPrefixCopies()const noexcept{return prefixCopies_;}
     std::size_t arrayStorageAllocations()const noexcept{return storageAllocations_;}
@@ -142,27 +152,39 @@ public:
     std::uint64_t fraction()const noexcept{return fraction_;}
 private:
     struct AppendStorage {
-        explicit AppendStorage(std::size_t capacity,bool compact,bool compactSingle=false):packed(compact),single(compactSingle),slots(compact||compactSingle?0:capacity),numbers(compact?capacity:0),singles(compactSingle&&capacity?std::make_unique<float[]>(capacity):nullptr),singleCapacity(compactSingle?capacity:0){}
+        explicit AppendStorage(std::size_t capacity,bool compact,bool compactSingle=false,bool compactInteger=false)
+            :packed(compact),single(compactSingle),integer(compactInteger),
+             slots(compact||compactSingle||compactInteger?0:capacity),numbers(compact?capacity:0),
+             singles(compactSingle&&capacity?std::make_unique<float[]>(capacity):nullptr),
+             singleCapacity(compactSingle?capacity:0),integers(compactInteger?capacity:0){}
         // Fixed allocation: neither vector size nor data changes after creation.
         // Readers use their immutable prefix and never read the writer's tail.
         const bool packed;
         const bool single;
+        const bool integer;
         std::vector<RuntimeValue> slots;
         std::vector<double> numbers;
         std::unique_ptr<float[]> singles;
         const std::size_t singleCapacity;
+        std::vector<std::int32_t> integers;
         std::atomic<bool> genericReady{false};
         std::atomic<std::size_t> finitePrefix{0};
         std::size_t genericUsed=0;
         std::mutex mutex;
         std::size_t used=0;
-        std::size_t capacity()const noexcept{return packed?numbers.size():single?singleCapacity:slots.size();}
+        std::size_t capacity()const noexcept{return packed?numbers.size():single?singleCapacity:integer?integers.size():slots.size();}
     };
     struct AppendMetadata {
         const std::string type;const ValueType physical,element;const RuntimeValueOwner owner;
     };
     friend std::optional<RuntimeValue> makeRuntimeArray(ValueType,std::vector<std::uint32_t>,
         std::vector<RuntimeValue>,const RuntimeValueOwner &);
+    template<class ReadCell>
+    friend std::optional<RuntimeValue> readRuntimePackedRealArray(const ValueType &,std::uint32_t,
+        const RuntimeValueOwner &,ReadCell);
+    template<class ReadCell>
+    friend std::optional<RuntimeValue> readRuntimePackedI32Array(const ValueType &,std::uint32_t,
+        const RuntimeValueOwner &,ReadCell);
     friend class RuntimePrimitiveArrayPool;
     friend class RuntimePrimitiveArrayEdit;
     friend std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeValue &,
@@ -171,7 +193,7 @@ private:
         std::uint32_t length,std::size_t copies,std::size_t allocations)
         :kind_(Kind::Array),seconds_(0),fraction_(0),appendStorage_(std::move(storage)),appendMetadata_(std::move(metadata)),prefixShape_{length},
         prefixSize_(length),prefixCopies_(copies),storageAllocations_(allocations),
-        elementView_(appendStorage_->packed||appendStorage_->single?std::span<const RuntimeValue>{}:std::span<const RuntimeValue>(appendStorage_->slots.data(),length)){}
+        elementView_(packedCells()?std::span<const RuntimeValue>{}:std::span<const RuntimeValue>(appendStorage_->slots.data(),length)){}
     const Kind kind_;const std::string type_;const RuntimeValueOwner owner_;
     const ValueType element_,key_;const std::vector<std::uint32_t> shape_;
     const std::vector<RuntimeValue> values_;const std::vector<RuntimeNamedField> attributes_;
@@ -475,6 +497,56 @@ inline std::optional<RuntimeValue> makeRuntimeArray(ValueType element,std::vecto
     return sealRuntimeIpeValue(std::make_shared<const RuntimeIpeValue>(RuntimeIpeValue::Kind::Array,type,owner,std::move(element),ValueType{},
         std::move(shape),std::move(values),std::vector<RuntimeNamedField>{},std::vector<std::pair<RuntimeValue,RuntimeValue>>{}));
 }
+// Read a rank-one IEEE Array directly into its immutable backing storage.
+// The reader returns an exact double carrier or an empty optional on failure.
+// F32 producers with non-finite carriers still use the legacy generic factory.
+template<class ReadCell>
+std::optional<RuntimeValue> readRuntimePackedRealArray(const ValueType &element,std::uint32_t length,
+    const RuntimeValueOwner &owner,ReadCell readCell) {
+    const bool single=element.canonicalName=="f32";
+    if((!single&&element.canonicalName!="f64")||!compound_detail::canonicalDescriptor(element)||
+       !runtimeValueOwnerValid(owner))return {};
+    auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(length,!single,single);
+    std::size_t finitePrefix=length;
+    for(std::uint32_t i=0;i<length;++i) {
+        const auto value=readCell(i);
+        if(!value)return {};
+        if(single) {
+            if(!std::isfinite(*value))return {};
+            const auto cell=static_cast<float>(*value);
+            if(static_cast<double>(cell)!=*value)return {};
+            storage->singles[i]=cell;
+        } else {
+            if(finitePrefix==length&&!std::isfinite(*value))finitePrefix=i;
+            storage->numbers[i]=*value;
+        }
+    }
+    storage->used=length;
+    storage->finitePrefix.store(finitePrefix,std::memory_order_relaxed);
+    const auto type="array<"+element.canonicalName+">";
+    auto metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
+        type,valueTypeFromCanonicalName(type),element,owner});
+    return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(
+        std::move(metadata),std::move(storage),length,0,length?1:0)}};
+}
+template<class ReadCell>
+std::optional<RuntimeValue> readRuntimePackedI32Array(const ValueType &element,std::uint32_t length,
+    const RuntimeValueOwner &owner,ReadCell readCell) {
+    if(element.canonicalName!="i32"||!compound_detail::canonicalDescriptor(element)||
+       !runtimeValueOwnerValid(owner))return {};
+    auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(length,false,false,true);
+    for(std::uint32_t i=0;i<length;++i) {
+        const auto cell=readCell(i);
+        if(!cell||*cell<INT32_MIN||*cell>INT32_MAX)return {};
+        storage->integers[i]=static_cast<std::int32_t>(*cell);
+    }
+    storage->used=length;
+    const auto type="array<"+element.canonicalName+">";
+    auto metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
+        type,valueTypeFromCanonicalName(type),element,owner});
+    return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(
+        std::move(metadata),std::move(storage),length,0,length?1:0)}};
+}
 inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeValue &base,
     std::span<const RuntimeValue> suffix,const RuntimeValueOwner &owner,std::size_t availableBytes,const PrimitiveArrayAppendReservation *reservation) {
     const auto category=base.elementType().category;
@@ -499,10 +571,12 @@ inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeV
     auto copies=base.prefixCopies_,allocations=base.storageAllocations_;
     const bool packed=base.elementType().canonicalName=="f64",single=base.elementType().canonicalName=="f32"&&base.finiteNumericElements()&&
         std::all_of(suffix.begin(),suffix.end(),[](const auto &v){return std::isfinite(std::get<double>(v));});
+    const bool integer=base.packedI32();
     const bool detach=!storage||!storage->capacity()||storage->used!=prefixSize||length>storage->capacity()||storage->single!=single;
     const auto reserveStorage=[&](std::size_t capacity,bool shared) {
         if(!reservation)return true;
-        const auto cells=(std::max)(length*64,capacity*(packed?sizeof(double)+sizeof(RuntimeValue):single?sizeof(float)+sizeof(RuntimeValue):sizeof(RuntimeValue)));
+        const auto cellBytes=sizeof(RuntimeValue)+(packed?sizeof(double):single?sizeof(float):integer?sizeof(std::int32_t):0);
+        const auto cells=(std::max)(length*64,capacity*cellBytes);
         const auto credit=shared?(std::min)(reservation->retainedStorageBytes,
             (std::max)(prefixSize*64,base.arrayStorageBudgetBytes())):0;
         return cells<=credit||cells-credit<=reservation->availableAdditionalBytes;
@@ -514,13 +588,15 @@ inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeV
         while(capacity<length)capacity=capacity>limit/2?limit:capacity*2;
         capacity=(std::min)(capacity,limit);
         if(!reserveStorage(capacity,false))return {};
-        auto next=std::make_shared<RuntimeIpeValue::AppendStorage>(capacity,packed,single);
+        auto next=std::make_shared<RuntimeIpeValue::AppendStorage>(capacity,packed,single,integer);
         if(packed) {
             if(base.packedF64())std::copy(base.f64Elements().begin(),base.f64Elements().end(),next->numbers.begin());
             else for(std::size_t i=0;i<prefixSize;++i)next->numbers[i]=std::get<double>(base.elements()[i]);
         }else if(single) {
             if(base.packedF32())std::copy_n(base.f32Data(),prefixSize,next->singles.get());
             else for(std::size_t i=0;i<prefixSize;++i)next->singles[i]=static_cast<float>(std::get<double>(base.elements()[i]));
+        }else if(integer) {
+            std::copy(base.i32Elements().begin(),base.i32Elements().end(),next->integers.begin());
         }else if(base.packedF32()) {
             // The base mutex is held. Read its immutable numeric prefix
             // directly; elements() would try to take that same mutex.
@@ -542,6 +618,7 @@ inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeV
     if(validation_metrics::active)++validation_metrics::active->arrayEnvelopes;
     if(packed)for(std::size_t i=0;i<suffix.size();++i)storage->numbers[prefixSize+i]=std::get<double>(suffix[i]);
     else if(single)for(std::size_t i=0;i<suffix.size();++i)storage->singles[prefixSize+i]=static_cast<float>(std::get<double>(suffix[i]));
+    else if(integer)for(std::size_t i=0;i<suffix.size();++i)storage->integers[prefixSize+i]=static_cast<std::int32_t>(std::get<std::int64_t>(suffix[i]));
     else std::copy(suffix.begin(),suffix.end(),storage->slots.begin()+prefixSize);
     if(base.elementType().category==ValueCategory::FloatingPoint&&storage->finitePrefix.load(std::memory_order_relaxed)==prefixSize){
         auto finite=prefixSize;for(const auto &value:suffix){if(!std::isfinite(std::get<double>(value)))break;++finite;}
@@ -624,6 +701,12 @@ inline const RuntimeValueOwner *runtimeNullReferenceOwner(const RuntimeValue &va
             for(std::size_t i=0;i<ia->elementCount();++i) {
                 const auto x=ia->packedF64()?ia->f64Elements()[i]:ia->packedF32()?double(ia->f32Data()[i]):std::get<double>(ia->elements()[i]);
                 const auto y=ib->packedF64()?ib->f64Elements()[i]:ib->packedF32()?double(ib->f32Data()[i]):std::get<double>(ib->elements()[i]);
+                if(x!=y)return false;
+            }
+        }else if(ia->packedI32()||ib->packedI32()) {
+            for(std::size_t i=0;i<ia->elementCount();++i) {
+                const auto x=ia->packedI32()?std::int64_t(ia->i32Elements()[i]):std::get<std::int64_t>(ia->elements()[i]);
+                const auto y=ib->packedI32()?std::int64_t(ib->i32Elements()[i]):std::get<std::int64_t>(ib->elements()[i]);
                 if(x!=y)return false;
             }
         }else for(std::size_t i=0;i<ia->elementCount();++i)if(!runtimeValuesEqual(ia->elements()[i],ib->elements()[i],depth+1))return false;

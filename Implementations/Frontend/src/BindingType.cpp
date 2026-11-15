@@ -242,12 +242,13 @@ bool referenceClassAssignable(std::string_view source, std::string_view target) 
     }
     const auto found=std::find_if(generated::widgets::definitions.begin(),generated::widgets::definitions.end(),
         [source](const auto &definition){return definition.classId==source;});
-    // Generic reference controls participate in the native object hierarchy.
+    // The portable catalogue defines these value widgets alongside the
+    // generated entries. Both expose role-derived terminals.
     const bool generatedWidget=found!=generated::widgets::definitions.end();
-    const bool hiddenReferenceWidget=source==kReferenceWidgetClass;
-    const bool sourceWidget=generatedWidget || hiddenReferenceWidget;
+    const bool hiddenValueWidget=source==kReferenceWidgetClass || source==kCollectionWidgetClass;
+    const bool sourceWidget=generatedWidget || hiddenValueWidget;
     if (sourceWidget && source == target) return true;
-    if (target == "frog.control") return hiddenReferenceWidget ||
+    if (target == "frog.control") return hiddenValueWidget ||
         (generatedWidget && found->terminal.direction!=WidgetTerminalDirection::None);
     if (target == "frog.object") {
         const auto classes=nativeObjectReferenceClasses();

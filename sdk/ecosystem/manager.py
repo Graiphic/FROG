@@ -6,11 +6,16 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from sdk.ecosystem.contract import ContractError, inspect_manifest
+from sdk.ecosystem.archive import inspect_archive
+from sdk.ecosystem.contract import ContractError, inspect_manifest, read_document
+from sdk.ecosystem.library_resolution import LocalLibraryArchive, PHASES, resolve_library_lock
 
 
 def inspect_install(manifest_path: Path, suffix: str) -> dict:
-    value = inspect_manifest(manifest_path, suffix)
+    return _intake(inspect_manifest(manifest_path, suffix))
+
+
+def _intake(value: dict) -> dict:
     action = {"library": "plan_library_install", "project": "prepare_working_copy",
               "example": "preview_then_working_copy", "bridge": "plan_bridge_install",
               "driver": "plan_driver_prerequisites"}[value["profile"]]
@@ -69,7 +74,31 @@ def local_bridge_command(argv):
     return completed.returncode
 
 
+def resolve_library_command(argv):
+    parser = argparse.ArgumentParser(description="Resolve a .bfrog dependency lock using only explicit local archives.")
+    parser.add_argument("archive", type=Path)
+    parser.add_argument("--origin", required=True)
+    parser.add_argument("--phase", choices=PHASES, required=True)
+    parser.add_argument("--candidate", metavar=("ORIGIN", "FILE"), action="append", nargs=2, default=[])
+    parser.add_argument("--expect-lock", type=Path)
+    args = parser.parse_args(argv)
+    try:
+        expected = read_document(args.expect_lock) if args.expect_lock is not None else None
+        if args.expect_lock is not None and not isinstance(expected, dict):
+            raise ContractError("library.lock_mismatch", "/lock", "Expected a lock object.")
+        result = resolve_library_lock(LocalLibraryArchive(args.archive, args.origin),
+                                      (LocalLibraryArchive(Path(file), origin) for origin, file in args.candidate),
+                                      args.phase, expected=expected)
+        print(json.dumps(result, sort_keys=True))
+        return 0
+    except ContractError as error:
+        print(json.dumps({"status": "error", "diagnostic": error.as_dict()}))
+        return 2
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "resolve-library":
+        return resolve_library_command(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] in ("install", "list", "remove", "recover"):
         try:
             return local_bridge_command(sys.argv[1:])
@@ -79,10 +108,17 @@ def main():
             return 2
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
-    parser.add_argument("--suffix", required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--suffix")
+    source.add_argument("--archive", action="store_true")
     args = parser.parse_args()
     try:
-        print(json.dumps(inspect_install(args.manifest, args.suffix), sort_keys=True))
+        if args.archive:
+            result = _intake(inspect_archive(args.manifest))
+            result["payload_integrity_verified"] = True
+        else:
+            result = inspect_install(args.manifest, args.suffix)
+        print(json.dumps(result, sort_keys=True))
         return 0
     except ContractError as error:
         print(json.dumps({"status": "error", "diagnostic": error.as_dict()}))

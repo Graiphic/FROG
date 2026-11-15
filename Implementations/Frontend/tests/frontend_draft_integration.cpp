@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 #include <frog/frontend.h>
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/DraftTypedConnections.hpp"
 #include "frog_native_engine/FunctionCatalog.hpp"
 #include "frog_native_engine/FunctionPortIdentities.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
@@ -10,6 +11,8 @@
 #include "frog_native_engine/Sha256.hpp"
 #include "../src/CanonicalJsonSupport.hpp"
 #include <algorithm>
+#include <chrono>
+#include <cstdlib>
 #include <iostream>
 #include <filesystem>
 #include <fstream>
@@ -80,6 +83,47 @@ FrogDraftData scalar(std::string type) {
     wire(document,"left-wire","left","value","add","a");wire(document,"right-wire","right","value","add","b");
     indicator(document,type,"add","result");return document;
 }
+void legacyStructureType(Context &context) {
+    auto original=json(R"frog({
+      "format":"frog.document.draft","draft_revision":2,"language":"FROG",
+      "title":"Legacy Enum Case identity","frontPanel":{"widgets":[]},
+      "diagram":{"zoom_percent":100,"nodes":[
+        {"id":"mode","kind":"primitive","type":"frog.studio.numeric.enum_constant",
+         "text":"","value_type":"u16","layout":{"x":80,"y":100,"width":160,"height":34},
+         "enum_constant":{"domain_id":"frog.studio.constant.mode","selected_value":0,"items":[
+           {"id":"off","label":"Off","value":0,"disabled":false,"visible":true},
+           {"id":"on","label":"On","value":1,"disabled":false,"visible":true}]}},
+        {"id":"case","kind":"structure","structure_type":"case",
+         "layout":{"x":280,"y":50,"width":320,"height":240},"boundary":{"inputs":[],"outputs":[]},
+         "structure_terminals":{"selector":{"outer_port":"selector","body_port":"selected_case",
+           "type":"enum<\"frog.studio.constant.mode\",u16>","enum_items":[
+             {"item_id":"off","display_name":"Off","ordinal":0},
+             {"item_id":"on","display_name":"On","ordinal":1}]}},
+         "regions":[{"id":"off_case","matches":[{"kind":"enum_item","item":"off"}],"default":true,
+             "diagram":{"nodes":[],"edges":[],"wire_fragments":[]}},
+           {"id":"on_case","matches":[{"kind":"enum_item","item":"on"}],"default":false,
+             "diagram":{"nodes":[],"edges":[],"wire_fragments":[]}}]}
+        ],"edges":[{"id":"selector-wire","from":{"node":"mode","port":"value"},
+          "to":{"node":"case","port":"selector"}}],"wire_fragments":[]}
+    })frog");
+    auto &nodes=original.object.at("diagram").object.at("nodes").array;
+    auto &caseFields=nodes.at(1).object;
+    const auto legacy=canonical_json::encode(original);
+    const auto checked=call(context,legacy,revision(legacy),"{}",false);
+    const auto derived=call(context,legacy,revision(legacy),"{}",true);
+    if(checked.outcome!=FROG_FRONTEND_SUCCESS)std::cerr<<checked.diagnostics<<'\n';
+    need(checked.outcome==FROG_FRONTEND_SUCCESS&&derived.outcome==FROG_FRONTEND_SUCCESS&&
+        checked.diagnostics==derived.diagnostics&&derived.fir.find("selector-wire")!=std::string::npos,
+        "Case without its redundant type must preserve its actual selector and canonical identity");
+
+    caseFields["type"]=json("null");
+    const auto malformed=canonical_json::encode(original);
+    const auto rejected=call(context,malformed,revision(malformed),"{}",false);
+    if(std::string_view(rejected.diagnostics).find("/diagram/nodes/1/type")==std::string::npos)
+        std::cerr<<rejected.diagnostics<<'\n';
+    need(rejected.outcome==FROG_FRONTEND_REJECTED&&rejected.diagnostics.find("/diagram/nodes/1/type")!=std::string::npos,
+        "A malformed explicit Case type must produce an attributed diagnostic");
+}
 FrogDraftData resourceReference(const binding::TypeRef &type) {
     FrogDraftData document;document.title="Exact typed-null resource reference";
     for(const bool output:{false,true}) {
@@ -103,6 +147,48 @@ FrogDraftData aggregate() {
 }
 }
 namespace {
+void packedArrayLiteral(Context &context) {
+    const std::uint32_t count=std::getenv("FROG_TEST_PACKED_LITERAL_10M")?10'000'000U:32'768U;
+    FrogDraftData document;document.title="Packed real literal through canonical FIR";
+    document.properties.arrayStorageMode=FrogArrayStorageMode::CompactStandalone;
+    auto array=literal("packed","f64","0");
+    array.type="frog.studio.numeric.numeric_array_constant";
+    array.numericArrayRank=1;array.numericArrayShape={count};
+    need(array.numericArrayValues.resizeNumeric(count,"f64"),"Packed Array fixture could not allocate typed pages");
+    array.numericArrayValues.replaceAt(0,"-0");
+    array.numericArrayValues.replaceAt(count-1,"1.2500");
+    document.diagramNodes.push_back(std::move(array));
+    document.diagramNodes.push_back(operation("size","array.size"));
+    wire(document,"data","packed","value","size","array");
+    indicator(document,"i32","size","size");
+    const auto bytes=serializeFrogDraftData(document);
+    if(const auto *fixture=std::getenv("FROG_TEST_PACKED_LITERAL_FIXTURE")) {
+        std::ofstream output(std::filesystem::u8path(fixture),std::ios::binary);
+        output.write(bytes.data(),static_cast<std::streamsize>(bytes.size()));
+        need(bool(output),"Could not write the exact packed literal fixture used by the test");
+    }
+    const auto start=std::chrono::steady_clock::now();
+    const auto result=call(context,bytes,revision(bytes),"{}",true);
+    const auto elapsed=std::chrono::duration<double,std::milli>(std::chrono::steady_clock::now()-start).count();
+    std::cout<<"PACKED_LITERAL elements="<<count<<" draft_bytes="<<bytes.size()<<" fir_bytes="<<result.fir.size()
+        <<" derive_ms="<<elapsed<<" outcome="<<result.outcome<<'\n';
+    if(result.outcome!=FROG_FRONTEND_SUCCESS)std::cerr<<result.diagnostics<<'\n';
+    need(result.outcome==FROG_FRONTEND_SUCCESS,"Compact F64 draft did not derive FIR");
+    need(result.fir.find("studio_numeric_words")!=std::string::npos&&result.fir.find("numeric-cell-bits-le-v1")!=std::string::npos,
+        "The composed FIR expanded its packed Array literal");
+    need(result.fir.size()<bytes.size()*2+4096,"The packed literal acquired an unbounded FIR representation");
+    need(result.provenance.find(hashing::sha256Hex(bytes))!=std::string::npos,"Packed literal provenance no longer identifies the original file");
+    document.diagramNodes.front().numericArrayValues.replaceAt(count-1,"2.5000");
+    const auto modified=serializeFrogDraftData(document);
+    const auto rerun=call(context,modified,revision(modified),"{}",true);
+    need(rerun.outcome==FROG_FRONTEND_SUCCESS&&rerun.fir!=result.fir&&
+        rerun.provenance.find(hashing::sha256Hex(modified))!=std::string::npos,"Edited words reused stale FIR or provenance");
+    document.diagramNodes.front().numericArrayValues.replaceAt(count-1,"NaN");
+    const auto invalid=serializeFrogDraftData(document);
+    const auto refused=call(context,invalid,revision(invalid),"{}",true);
+    need(refused.outcome!=FROG_FRONTEND_SUCCESS&&refused.fir.empty()&&
+        refused.diagnostics.find("IR_CONSTANT_PACKED_ARRAY")!=std::string::npos,"A non-finite authored literal became an executable packed value");
+}
 void colorBoxArrayPresentation(Context &context) {
     FrogDraftData document;document.title="Typed U32 Color Box cells";
     auto colors=literal("colors","u32","0");
@@ -156,10 +242,66 @@ void colorBoxArrayPresentation(Context &context) {
     }
     std::cout<<"COLOR_BOX_ARRAY_FRONTEND_PASS rank=2 exact_u32_values=6 validate_derive=1 save_reopen=1 negative_results="<<refused<<'\n';
 }
+void independentStructureDiagnostics(Context &context) {
+    auto document=scalar("f64");
+    auto event=operation("event","structures.event_structure");event.kind="structure";
+    document.diagramNodes.push_back(event);
+    need(inspectDraftTypedConnections(document).diagnostics.empty(),
+        "A well-formed Timeout case changed the independent connection inspection");
+    auto &authored=document.diagramNodes.back();
+    authored.eventStructureCases.front().id="change";
+    authored.eventStructureCases.front().eventKind="value_change";
+    authored.eventStructureCases.front().eventSource="missing-control";
+    authored.eventStructureCases.front().eventBindings={{"value_change","missing-control","control"}};
+    DiagramCaseStructureTunnel tunnel;tunnel.id="result";tunnel.side="right";
+    tunnel.outputFromStructure=true;tunnel.valueType="unknown";
+    authored.caseStructureTunnels.push_back(tunnel);
+    document.diagramNodes.front()=literal("left","bool","true");
+    const auto bytes=serializeFrogDraftData(document);
+    const auto prepared=prepareDraftFrontend(bytes,"memory:/independent-errors.frog",{},{});
+    for(const auto code:{"event.invalid_configuration","structure.output_unwired","structure.unresolved_tunnel"})
+        need(std::any_of(prepared.diagnostics.begin(),prepared.diagnostics.end(),[&](const auto &d){
+            return (d.blocksBuild || d.blocksRun) && d.stage==DocumentDiagnosticStage::Validation && d.code==code &&
+                d.nodeId=="event" && d.sourcePath.find("/diagram/nodes/")==0;
+        }),"An unrelated type error hid or misattributed an independent Event/tunnel error");
+    need(std::any_of(prepared.diagnostics.begin(),prepared.diagnostics.end(),[](const auto &d){
+        return d.code=="event.invalid_configuration" && d.regionId=="change" &&
+            d.message.find("control:missing-control")!=std::string::npos;
+    }),"The Event error lost its actual missing source or stable case identity");
+    for(bool derive:{false,true}) {
+        const auto rejected=call(context,bytes,revision(bytes),"{}",derive);
+        need(rejected.outcome!=FROG_FRONTEND_SUCCESS && rejected.fir.empty() &&
+            rejected.diagnostics.find("event.invalid_configuration")!=std::string::npos &&
+            rejected.diagnostics.find("structure.output_unwired")!=std::string::npos &&
+            rejected.diagnostics.find("structure.unresolved_tunnel")!=std::string::npos,
+            "Public validate/derive suppressed an independent structure diagnostic");
+    }
+    need(serializeFrogDraftData(document)==bytes,"Validation repaired or mutated the incomplete Event");
+    // Repair only the actual sources and wires, then use the same inspector.
+    document.diagramNodes.front()=literal("left","f64","17");
+    const auto *definition=findWidgetCatalogEntryByClassId("frog.widgets.boolean_control");
+    need(definition,"The real Boolean source definition is absent");
+    auto widget=makeWidgetData("source",*definition,{0,0,100,30});
+    document.widgets.addObject({"source",widget.bounds,std::move(widget)},true);
+    auto &fixed=document.diagramNodes.back();
+    fixed.eventStructureCases.front().eventSource="source";
+    fixed.eventStructureCases.front().eventBindings={{"value_change","source","control"}};
+    fixed.caseStructureTunnels.front().valueType="bool";
+    auto value=literal("event-result","bool","true");value.diagramOwnerStructureId="event";value.diagramOwnerRegionId="change";
+    document.diagramNodes.push_back(std::move(value));
+    DiagramEdge edge{"event-output",{"event-result","value"},{"event","tunnel:result:input"}};
+    edge.diagramOwnerStructureId="event";edge.diagramOwnerRegionId="change";document.diagramEdges.push_back(std::move(edge));
+    need(inspectDraftTypedConnections(document).diagnostics.empty(),
+        "The actual restored control and typed producer did not clear the endpoint errors");
+    std::cout<<"INDEPENDENT_STRUCTURE_DIAGNOSTICS_PASS simultaneous_errors=4 public_validate_derive=1 source_immutable=1 restored_bindings=1\n";
+}
+
 }
 int main() {
     try {
         Context context;
+        independentStructureDiagnostics(context);
+        packedArrayLiteral(context);
         colorBoxArrayPresentation(context);
         const auto exact=qualify(context,scalar("i64"));
         need(exact.fir.find("9007199254740993")!=std::string::npos&&exact.fir.find("i64")!=std::string::npos,"Exact I64 literal/type was narrowed");
@@ -232,9 +374,15 @@ int main() {
             }),"Semantic Unbundle specialization accepted an invented output beyond the exact incoming schema");
             need(authored->diagramNodes.front().clusterFunctionTerminals==1,"Unknown-port validation rewrote the authored row count");
         }
-        auto historical=scalar("f64");
-        need(revision(serializeFrogDraftData(historical))=="2","The finite historical fixture is no longer a real revision-2 writer case");
-        qualify(context,historical);
+        auto historical=json(serializeFrogDraftData(scalar("f64")));
+        historical.object.erase("storage");
+        historical.object["draft_revision"]=json("2");
+        const auto historicalBytes=canonical_json::encode(historical);
+        const auto historicalValidation=call(context,historicalBytes,"2","{}",false);
+        const auto historicalFir=call(context,historicalBytes,"2","{}",true);
+        need(historicalValidation.outcome==FROG_FRONTEND_SUCCESS&&historicalFir.outcome==FROG_FRONTEND_SUCCESS&&
+             historicalFir.provenance.find(hashing::sha256Hex(historicalBytes))!=std::string::npos,
+             "The readable revision-2 fixture lost validation, derivation or its original identity");
 
         auto conditional=scalar("f64");DiagramNode selector;selector.id="conditional";selector.kind="primitive";selector.type="frog.studio.structures.conditional_disable_structure";
         selector.conditionalDisableCases={{"release",false,{{{{"MODE","==","release"}}}}},{"default",true,{}}};
@@ -246,6 +394,7 @@ int main() {
         const auto conditionalBytes=serializeFrogDraftData(conditional);
         const auto unconfigured=call(context,conditionalBytes,revision(conditionalBytes),"{}",true);
         need(unconfigured.outcome!=FROG_FRONTEND_SUCCESS&&!unconfigured.diagnostics.empty(),"Unresolved Conditional symbols silently selected a case");
+        legacyStructureType(context);
         need(call(context,"{","2","{}",false).outcome==FROG_FRONTEND_REJECTED,"Malformed draft was admitted");
         for(const auto field:{"format","draft_revision","frontPanel"}) {
             auto mixed=canonical_json::object();mixed.object["spec_version"]=canonical_json::string("0.1");

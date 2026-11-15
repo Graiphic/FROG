@@ -110,6 +110,14 @@ std::string formatDiagramNumericValue(const DiagramNode &node) {
         if (!setWidgetNumericComplexValueLexeme(formatting, rawText)) return rawText;
         return formatWidgetNumericComplexValue(formatting);
     }
+    if (formatting.valueType == "i64" || formatting.valueType == "u64") {
+        // The double overload is for approximate previews. Keep the authored
+        // digits as the formatter's source for integer display and radix modes.
+        formatting.classId = "frog.widgets.numeric_control";
+        if (setWidgetNumericIntegerValueLexeme(formatting, rawText)) {
+            return formatNumericValue(formatting);
+        }
+    }
     char *end = nullptr;
     const double value = std::strtod(rawText.c_str(), &end);
     if (end == rawText.c_str() || end == nullptr || *end != '\0') return rawText;

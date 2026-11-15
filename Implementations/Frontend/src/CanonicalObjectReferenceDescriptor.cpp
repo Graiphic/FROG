@@ -8,7 +8,7 @@
 #include "frog_native_engine/NotifierReferenceLiteral.hpp"
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/ApplicationControlSourceCodec.hpp"
-#include "frog_native_engine/ApplicationControlSchema.hpp"
+#include "frog_native_engine/ApplicationControlMemberContract.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include <algorithm>
 #include <charconv>
@@ -118,10 +118,9 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
                 const bool label=row.memberId=="label.text"&&row.mode==ApplicationControlPropertyMode::Read;
                 const bool signaling=row.memberId=="value_signaling";
                 if(signaling) {
-                    const auto member=applicationControlMember(type.name,valueSchema,row.memberId);
                     if(row.mode!=ApplicationControlPropertyMode::Write)
                         return fail("canonical.object_reference.write_only","Value (Signaling) is write only.");
-                    if(!member || !member->runtimeAvailable || !member->writable)
+                    if(!applicationControlValueSignalingAvailable(type.name))
                         return fail("canonical.object_reference.member_unavailable","This reference class has no Value (Signaling) writer.",true);
                 }
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;

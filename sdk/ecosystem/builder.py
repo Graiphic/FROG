@@ -1,11 +1,9 @@
-"""Read a P01 manifest and produce the future builder's immutable input plan.
-
-This command does not yet construct a distribution archive or compile FROG.
-"""
+"""Plan distribution input or assemble an archive from existing payload files."""
 from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from sdk.ecosystem.archive import build_archive
 from sdk.ecosystem.contract import ContractError, inspect_manifest
 
 
@@ -23,10 +21,23 @@ def prepare_build(manifest_path: Path, suffix: str) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("manifest", type=Path)
-    parser.add_argument("--suffix", required=True)
+    parser.add_argument("--suffix")
+    parser.add_argument("--output", type=Path)
+    parser.add_argument("--payload-root", type=Path)
     args = parser.parse_args()
+    if args.output is not None:
+        if args.payload_root is None or args.suffix is not None:
+            parser.error("Archive assembly requires --output and --payload-root. The output name supplies the suffix.")
+    elif args.suffix is None or args.payload_root is not None:
+        parser.error("A plan requires --suffix.")
     try:
-        print(json.dumps(prepare_build(args.manifest, args.suffix), sort_keys=True))
+        if args.output is None:
+            result = prepare_build(args.manifest, args.suffix)
+        else:
+            manifest = build_archive(args.manifest, args.payload_root, args.output)
+            result = {"archive": str(args.output), "archive_written": True,
+                      "executable_build_performed": False, "validated_manifest": manifest}
+        print(json.dumps(result, sort_keys=True))
         return 0
     except ContractError as error:
         print(json.dumps({"status": "error", "diagnostic": error.as_dict()}))

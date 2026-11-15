@@ -13,7 +13,7 @@ import re
 from typing import Any
 
 from jsonschema import Draft202012Validator
-from Implementations.Reference.common import FrogPipelineError, load_json_file
+from Implementations.Reference.common import FrogPipelineError, load_json_file, parse_json_text
 
 ROOT = Path(__file__).resolve().parent
 SUFFIXES = {"library": ".bfrog", "project": ".pfrog", "example": ".efrog",
@@ -46,6 +46,20 @@ def read_document(path: Path) -> dict[str, Any]:
         fail("contract." + error.error_code, "/", error.message)
     except OSError as error:
         fail("contract.read_error", "/", str(error))
+
+
+def read_manifest_bytes(data: bytes, label: str) -> dict[str, Any]:
+    if len(data) > MAX_MANIFEST_BYTES:
+        fail("contract.resource_limit", "/", "Manifest exceeds the configured byte limit.")
+    try:
+        value = parse_json_text(data.decode("utf-8"), label)
+    except UnicodeDecodeError:
+        fail("contract.invalid_utf8", "/", "Manifest must be valid UTF-8.")
+    except FrogPipelineError as error:
+        code = "resource_limit" if error.error_code == "source_resource_limit" else error.error_code
+        fail("contract." + code, "/", error.message)
+    validate_text_tree(value)
+    return value
 
 
 def validate_text_tree(value):

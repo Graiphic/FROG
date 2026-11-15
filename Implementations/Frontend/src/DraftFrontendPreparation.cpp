@@ -1,5 +1,6 @@
 #include "frog_native_engine/DraftTypedConnections.hpp"
 #include "FrogDraftJson.hpp"
+#include "FrogDocumentArrayStorage.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
 #include "frog_native_engine/DraftSemanticPreparation.hpp"
 #include "frog_native_engine/DraftRequiredInputs.hpp"
@@ -100,7 +101,12 @@ void attributeDraftSourceDiagnostic(DocumentDiagnostic &diagnostic,FrogDraftData
         diagnostic.nodeId=node->id;diagnostic.subjectId=node->id;
         if(diagnostic.portId.empty()&&subject.size()>node->id.size()+1&&subject.starts_with(node->id)&&subject[node->id.size()]==':')
             diagnostic.portId=subject.substr(node->id.size()+1);
-        diagnostic.ownerStructureId=node->diagramOwnerStructureId;diagnostic.regionId=node->diagramOwnerRegionId;
+        // An endpoint diagnostic may identify an inner region of this very
+        // structure. The node's outer scope is only a missing-location fallback.
+        if(diagnostic.ownerStructureId.empty()) {
+            diagnostic.ownerStructureId=node->diagramOwnerStructureId;
+            if(diagnostic.regionId.empty())diagnostic.regionId=node->diagramOwnerRegionId;
+        }
         if(!node->widgetId.empty())diagnostic.widgetId=node->widgetId;
         if(diagnostic.sourcePath.empty()) {
             diagnostic.sourcePath=identityPath(root,node->id);
@@ -177,8 +183,19 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         error("preparation.authority.mixed","Public source and Studio draft envelopes cannot share one execution authority.",{},
             DocumentDiagnosticDomain::Compatibility,DocumentDiagnosticStage::Format);return out;
     }
+    if(const auto *metadata=raw->member("metadata");metadata && metadata->type!=Json::Type::Object) {
+        error("migration.metadata_invalid","File metadata must be an object.","/metadata",
+            DocumentDiagnosticDomain::Integrity,DocumentDiagnosticStage::Adaptation);
+        return out;
+    }
     auto normalized=prepareExecutionStorageSource(bytes,&why);
-    if(!normalized){error("preparation.storage.invalid",why,"/storage",DocumentDiagnosticDomain::Integrity,DocumentDiagnosticStage::Read);return out;}
+    if(!normalized){
+        const bool resourceLimit = why == document_internal::executionArrayStorageBudgetError;
+        error(resourceLimit ? "preparation.array.representation_budget" : "preparation.storage.invalid",
+            why,"/storage",resourceLimit ? DocumentDiagnosticDomain::Control : DocumentDiagnosticDomain::Integrity,
+            DocumentDiagnosticStage::Read);
+        return out;
+    }
     // Storage expansion may change revision 3 to readable revision 2. Retain
     // the original envelope by moving its tree; do not copy large literals.
     std::optional<Json> authoredEnvelope;
@@ -263,14 +280,21 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
             else{node.type="frog.studio.numeric.numeric_constant";node.text="0";}
         }
     }
-    auto connections=inspectDraftTypedConnections(*document);
-    auto required=inspectDraftRequiredInputs(*document,&connections.connectedPorts);
-    connections.diagnostics.insert(connections.diagnostics.end(),std::make_move_iterator(required.begin()),std::make_move_iterator(required.end()));
-    for(auto &issue:connections.diagnostics) {
-        issue.sourceUri=uri;attributeDraftSourceDiagnostic(issue,*document,*raw);
-        out.diagnostics.push_back(std::move(issue));
-    }
-    if(!out.diagnostics.empty())return out;
+    const auto inspectConnections=[&] {
+        auto connections=inspectDraftTypedConnections(*document);
+        auto required=inspectDraftRequiredInputs(*document,&connections.connectedPorts);
+        connections.diagnostics.insert(connections.diagnostics.end(),std::make_move_iterator(required.begin()),std::make_move_iterator(required.end()));
+        for(auto &issue:connections.diagnostics) {
+            issue.sourceUri=uri;attributeDraftSourceDiagnostic(issue,*document,*raw);
+            out.diagnostics.push_back(std::move(issue));
+        }
+        return out.diagnostics.empty();
+    };
+    const bool hasPolymorphicCalls=std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),
+        [](const auto &node){return node.kind=="frog_call"&&node.polymorphicFrogSelection.has_value();});
+    // A family's authored ports are a presentation cache. Its concrete
+    // member must be selected from source types before validating these wires.
+    if(!hasPolymorphicCalls&&!inspectConnections())return out;
     std::string projected=definitions.linked||passages.changed||conditional?serializeFrogDraftData(*document):*normalized;
     poll();
     if(std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),[](const auto &node){return node.kind=="frog_call";})) {
@@ -284,6 +308,7 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         }
         out.dependencyIdentities=std::move(calls.identities);document=std::move(calls.document);projected=serializeFrogDraftData(*document);
     }
+    if(hasPolymorphicCalls&&!inspectConnections())return out;
     if(!generated.empty()) {
         auto tree=source::parseJson(projected,&why,source::JsonNumberPolicy::PreserveLexeme);
         const auto omit=[&](const auto &self,Json &node)->void {
@@ -291,6 +316,14 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
             else if(node.type==Json::Type::Array)for(auto &child:node.array)self(self,child);
         };
         if(tree){omit(omit,*tree);projected=canonical_json::encode(*tree);}
+    }
+    if (projected != *normalized) {
+        auto projectedStorage = prepareExecutionStorageSource(projected, &why);
+        if (!projectedStorage) {
+            error("preparation.array.representation_budget", why, "/storage", DocumentDiagnosticDomain::Control);
+            return out;
+        }
+        projected = std::move(*projectedStorage);
     }
     poll();auto migration=prepareDraftSemanticSource(*document,projected,uri);
     std::optional<Json> projectedTree;
@@ -309,6 +342,29 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         if(out.diagnostics.empty())error("frontend.draft_validation_indeterminate",
             "Draft preparation did not produce a validated source or an attributable failure.","/diagram",DocumentDiagnosticDomain::Control);
         return out;
+    }
+    if(authoredEnvelope && projected==*normalized) {
+        // Storage normalization feeds semantic preparation. Its derived
+        // readable draft must never replace the exact authoring provenance.
+        auto tree=source::parseJson(migration.publicSource->originalUtf8(),&why,
+            source::JsonNumberPolicy::PreserveLexeme);
+        if(!tree) {
+            error("preparation.storage.provenance",why,"/storage",DocumentDiagnosticDomain::Integrity);
+            return out;
+        }
+        auto &record=tree->object.at("ide").object.at("recoverability").object.at("graiphic_studio_migration");
+        record.object.at("original_sha256")=canonical_json::string(out.originalSourceSha256);
+        if(const auto *revision=authoredEnvelope->member("draft_revision"))
+            record.object.insert_or_assign("original_draft_revision",*revision);
+        record.object.at("preserved_authoring_source")=std::move(*authoredEnvelope);
+        auto sourceWithProvenance=FrogSourceDocument::read(canonical_json::encode(*tree),&why);
+        if(!sourceWithProvenance || sourceWithProvenance->envelopeStatus()!=FrogSourceEnvelopeStatus::Recognized ||
+            !sourceWithProvenance->diagnostics().empty()) {
+            error("preparation.storage.provenance",why.empty()?"The retained storage envelope could not be validated.":why,
+                "/storage",DocumentDiagnosticDomain::Integrity);
+            return out;
+        }
+        migration.publicSource=std::make_shared<const FrogSourceDocument>(std::move(*sourceWithProvenance));
     }
     for(auto &mapping:migration.identities) {
         const auto dependency=std::find_if(out.dependencyIdentities.begin(),out.dependencyIdentities.end(),[&](const auto &entry){return entry.projectedId==mapping.id;});

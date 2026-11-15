@@ -1,6 +1,7 @@
 #include "FrogDraftJson.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include "frog_native_engine/DraftSourcePreparation.hpp"
+#include "frog_native_engine/PolymorphicFrog.hpp"
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/WidgetBindingType.hpp"
 #include "frog_native_engine/DiagramBindingResolver.hpp"
@@ -469,18 +470,31 @@ DraftTypeDefinitionResolution inspectTypeDefinitionClosure(std::string_view sour
         auto current=std::move(pending.back());pending.pop_back();
         if(!visited.insert(current.uri).second)continue;
         if(++programs>maximumDefinitions){appendDiagnostic(resolver.result,"typedef.program_closure.limit","Type Def source inspection exceeds its bounded sub-FROG count.");break;}
+        const auto enqueue=[&](std::string_view path,const std::string &pointer) {
+            const auto callee=resolveDraftDependency({DraftDependencyKind::Source,current.uri,std::string(path),pointer,{}, {}, {}},loader);
+            if(callee.state!=DraftDependencyState::Present||!callee.bytes)return true;
+            if(bytes>maximumClosureBytes||callee.bytes->size()>maximumClosureBytes-bytes) {
+                appendDiagnostic(resolver.result,"typedef.program_closure.limit","Type Def source inspection exceeds its bounded byte count.");
+                return false;
+            }
+            bytes+=callee.bytes->size();
+            pending.push_back({callee.bytes,callee.canonicalUri,false});
+            return true;
+        };
+        if(inspectSubprograms && current.bytes->find(kPolymorphicFrogFormat)!=std::string::npos) {
+            if(const auto family=readPolymorphicFrog(*current.bytes)) {
+                for(std::size_t index=0;index<family->members.size();++index)
+                    if(!enqueue(family->members[index].documentPath,"/members/"+std::to_string(index)+"/document_path"))break;
+                continue;
+            }
+        }
         auto program=readFrogDraftData(*current.bytes);
         if(!program || program->publicSourceAuthority || program->privateSourceAwaitingDiagramMigration)continue;
         auto document=std::move(*program);
         resolver.sourceBytes.insert_or_assign(current.uri,current.bytes);
         resolveTypeDefinitionDocument(document,current.uri,resolver,acceptProposed,{});
         if(inspectSubprograms)for(const auto &node:document.diagramNodes)if(node.kind=="frog_call" && !node.callDocumentPath.empty()) {
-            const auto callee=resolveDraftDependency({DraftDependencyKind::Source,current.uri,node.callDocumentPath,resolver.pointer(current.uri,node.id,"/call/document_path"),{}, {}, {}},loader);
-            if(callee.state!=DraftDependencyState::Present||!callee.bytes)continue; // The call validator owns missing-call diagnostics.
-            if(bytes>maximumClosureBytes||callee.bytes->size()>maximumClosureBytes-bytes) {
-                appendDiagnostic(resolver.result,"typedef.program_closure.limit","Type Def source inspection exceeds its bounded byte count.");break;
-            }
-            bytes+=callee.bytes->size();pending.push_back({callee.bytes,callee.canonicalUri,false});
+            if(!enqueue(node.callDocumentPath,resolver.pointer(current.uri,node.id,"/call/document_path")))break;
         }
         if(current.root&&resolvedRoot)*resolvedRoot=std::move(document);
     }

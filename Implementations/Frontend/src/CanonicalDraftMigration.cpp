@@ -1125,7 +1125,7 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         std::string error;auto parsed=source::parseJson(bytes,&error,source::JsonNumberPolicy::PreserveLexeme);if(!parsed)refuse("/",error,"migration.json", Domain::Integrity);
         const auto &raw=obj(&*parsed,"/");if(raw.member("spec_version")||txt(raw.member("format"),"/format")!="frog.document.draft"||
             !raw.member("draft_revision")||raw.member("draft_revision")->type!=Json::Type::Number||
-            (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"))refuse("/","Only identified Studio drafts 2/4 and the closed scalar5 NativeCall revision-7 corridor are admitted.", "migration.unsupported", Domain::Compatibility);
+            (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="3"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
         // Private drafts may omit metadata; their existing reader keeps the
         // normal document defaults. Only the derived public envelope needs an
         // explicit object. Never treat explicit null/wrong types as absence.
@@ -1151,6 +1151,8 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         }
         if(canonicalDraftNeedsComposition(raw,resolved))
             return prepareCanonicalComposedDraftMigration(bytes,uri,resolved);
+        if(raw.member("draft_revision")->string=="3")
+            refuse("/draft_revision","A revision 3 execution projection requires the composed Array corridor.","migration.unsupported",Domain::Compatibility);
         const bool nativeCallDraft7=raw.member("draft_revision")->string=="7";
         const bool objectDraft=raw.member("draft_revision")->string=="6"||nativeCallDraft7;
         if(objectDraft) {

@@ -98,7 +98,7 @@ def main():
         require(not excluded(sandbox / "sentinel.hpp"), "Fixture temp parent unexpectedly belongs to a historically excluded source path")
 
         def run(name, configure, errors=(), check_sources=(), has_cycle=False, ordered_errors=False,
-                canonical_relative="canonical/runtime_contract.hpp"):
+                canonical_relative="canonical/runtime_contract.hpp", policy_relative=None, policy_error=False):
             tree = sandbox / name
             canonical = tree / canonical_relative
             canonical.parent.mkdir(parents=True, exist_ok=True)
@@ -107,7 +107,10 @@ def main():
             trace = sandbox / (name + ".trace.jsonl")
             command = [str(args.cmake), "--trace-expand", "--trace-format=json-v1", "--trace-redirect=" + str(trace),
                        "-DSCAN_ROOT=" + str(tree), "-DCANONICAL_CONTRACT_HEADER=" + str(canonical),
-                       "-DFROG_OWNERSHIP_PYTHON_EXECUTABLE=" + sys.executable, "-P", str(args.checker)]
+                       "-DFROG_OWNERSHIP_PYTHON_EXECUTABLE=" + sys.executable]
+            if policy_relative is not None:
+                command.append("-DFROG_OWNERSHIP_DIAGNOSTIC_OWNERS_FILE=" + str(tree / policy_relative))
+            command += ["-P", str(args.checker)]
             result = subprocess.run(command, capture_output=True, timeout=15)
             output = (result.stdout + result.stderr).decode("utf-8", errors="replace")
             require((result.returncode != 0) == bool(errors), name + ": ownership accept/refuse result differs\n" + output)
@@ -123,7 +126,7 @@ def main():
             # Observe the genuine CMake file commands: excluded folders are
             # pruned before any listing, source content still read everywhere
             # else. This detects a broadened exclusion or recursive regression.
-            calls = []
+            calls, processes = [], []
             with trace.open("rb") as stream:
                 raw_trace = stream.read(4 * 1024 * 1024 + 1)
             require(len(raw_trace) <= 4 * 1024 * 1024, name + ": trace exceeds the bounded fixture budget")
@@ -131,7 +134,21 @@ def main():
                 event = json.loads(line)
                 if event.get("cmd") == "file":
                     calls.append(event["args"])
+                elif event.get("cmd") == "execute_process":
+                    processes.append(event["args"])
             read_paths = [Path(call[1]) for call in calls if call[0] == "READ"]
+            if policy_error:
+                require(policy_relative is not None and errors and
+                        "Declared Diagnostic ownership policy is invalid" in normalized_output,
+                        name + ": invalid policy did not fail explicitly")
+                require(not read_paths and not any(call[0] == "GLOB_RECURSE" for call in calls) and
+                        not any("runtime_contract_source_inventory.py" in argument
+                                for process in processes for argument in process),
+                        name + ": policy failure did not precede inventory and original-source inspection")
+                records.append({"case": name, "accepted": False, "expected_assertions": list(errors),
+                                "actual_directories": 0, "actual_source_reads": 0,
+                                "policy_rejected_before_inventory": True, "real_cycle": False})
+                return
             require(not any(excluded(path) for path in read_paths), name + ": checker read an excluded source")
             for relative in check_sources:
                 target = actual_file_id(tree / relative)
@@ -375,6 +392,156 @@ def main():
         require(missing_python.returncode != 0 and "FROG_OWNERSHIP_PYTHON_EXECUTABLE" in
                 (missing_python.stdout + missing_python.stderr).decode("utf-8", errors="replace"),
                 "The checker silently selected an interpreter or incomplete physical resolver")
+
+        # Optional private declarations add no SDK knowledge of private paths.
+        # The original fifty-one cases above retain their commands and oracles.
+        policy_name = "config/diagnostic-owners.json"
+        owner_name = "src/reviewed_diagnostic.hpp"
+        owner_namespace = "client::authoring"
+        owner_code = "namespace client::authoring { struct Diagnostic { int authoring; }; }\n"
+        policy_failure = ("Declared Diagnostic ownership policy is invalid",)
+
+        def declared_owner(tree, canonical, code=owner_code, mutate=None):
+            put(tree, owner_name, code)
+            policy = {"format": "frog.runtime-contract.diagnostic-owners", "version": 1,
+                      "owners": [{"path": owner_name, "namespace": owner_namespace}]}
+            if mutate:
+                mutate(policy)
+            put(tree, policy_name, json.dumps(policy))
+
+        for label, code in (("qualified", owner_code),
+                            ("nested", "namespace client { namespace authoring { class Diagnostic { int authoring; }; }}\n")):
+            run("declared-diagnostic-" + label,
+                lambda t,c,code=code: declared_owner(t,c,code),
+                policy_relative=policy_name, check_sources=(owner_name,))
+
+        def declared_and_bridge(tree, canonical):
+            declared_owner(tree, canonical)
+            put(tree, bridge_name, bridge)
+        run("declared-diagnostic-plus-bridge", declared_and_bridge,
+            policy_relative=policy_name, check_sources=(owner_name, bridge_name))
+
+        def declared_and_other_type(tree, canonical):
+            declared_owner(tree, canonical, owner_code + "struct NodeId { int copied; };\n")
+        run("declared-diagnostic-other-contract", declared_and_other_type,
+            errors=("private definition of NodeId",), policy_relative=policy_name,
+            check_sources=(owner_name,))
+
+        def declared_and_copy(tree, canonical):
+            declared_owner(tree, canonical)
+            put(tree, "archive/runtime_contract.hpp", canonical_bytes.decode("utf-8"))
+        run("declared-diagnostic-does-not-admit-copied-header", declared_and_copy,
+            errors=("copied public contract header is forbidden",), policy_relative=policy_name)
+
+        def undeclared_diagnostic_copy(tree, canonical):
+            declared_owner(tree, canonical)
+            put(tree, "src/unreviewed.hpp", owner_code)
+        run("declared-diagnostic-exact-owner-only", undeclared_diagnostic_copy,
+            errors=("private definition of Diagnostic",), policy_relative=policy_name,
+            check_sources=(owner_name, "src/unreviewed.hpp"))
+
+        policy_mutations = {
+            "format": lambda p: p.update(format="unrecognized"),
+            "boolean-version": lambda p: p.update(version=True),
+            "unknown-root-field": lambda p: p.update(types=["NodeId"]),
+            "unknown-owner-field": lambda p: p["owners"][0].update(type="NodeId"),
+            "owners-not-array": lambda p: p.update(owners={}),
+            "duplicate-path": lambda p: p["owners"].append(dict(p["owners"][0], namespace="client::other")),
+            "case-collision": lambda p: p["owners"].append(dict(p["owners"][0], path=owner_name.upper(), namespace="client::other")),
+            "duplicate-namespace": lambda p: p["owners"].append(dict(p["owners"][0], path="src/second.hpp")),
+        }
+        for label, mutation in policy_mutations.items():
+            def mutated_policy(tree, canonical, label=label, mutation=mutation):
+                declared_owner(tree, canonical, mutate=mutation)
+                if label == "duplicate-namespace":
+                    put(tree, "src/second.hpp", owner_code)
+            run("diagnostic-policy-" + label,
+                mutated_policy,
+                errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        for label, namespace in (("sdk-runtime", "frog::sdk::runtime"),
+                                 ("sdk-runtime-child", "frog::sdk::runtime::detail"),
+                                 ("overlong-namespace", "client::" + "x" * 1025)):
+            run("diagnostic-policy-" + label,
+                lambda t,c,namespace=namespace: declared_owner(t,c,
+                    code="namespace " + namespace + " { struct Diagnostic { int copied; }; }\n",
+                    mutate=lambda p:p["owners"][0].update(namespace=namespace)),
+                errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        for label, path in (("parent", "src/../reviewed_diagnostic.hpp"),
+                            ("absolute", "/reviewed_diagnostic.hpp"),
+                            ("backslash", r"src\reviewed_diagnostic.hpp"),
+                            ("stream", "src/reviewed_diagnostic.hpp:other"),
+                            ("missing-source", "src/missing.hpp"),
+                            ("overlong-path", "x" * 1025 + ".hpp")):
+            run("diagnostic-policy-path-" + label,
+                lambda t,c,path=path: declared_owner(t,c,mutate=lambda p:p["owners"][0].update(path=path)),
+                errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        for label, content in (
+            ("malformed", "{"),
+            ("duplicate-member", '{"format":"frog.runtime-contract.diagnostic-owners","version":1,"version":1,"owners":[]}'),
+            ("duplicate-owner-member", '{"format":"frog.runtime-contract.diagnostic-owners","version":1,"owners":[{"path":"src/reviewed_diagnostic.hpp","namespace":"client::authoring","namespace":"client::authoring"}]}'),
+        ):
+            def malformed_policy(tree, canonical, content=content):
+                declared_owner(tree, canonical)
+                put(tree, policy_name, content)
+            run("diagnostic-policy-" + label, malformed_policy,
+                errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        def oversized_policy(tree, canonical):
+            declared_owner(tree, canonical)
+            path = tree / policy_name
+            path.write_bytes(path.read_bytes() + b" " * (64 * 1024 + 1))
+        run("diagnostic-policy-byte-bound", oversized_policy,
+            errors=policy_failure, policy_relative=policy_name, policy_error=True)
+        def excessive_owners(tree, canonical):
+            owners = []
+            for index in range(65):
+                path, namespace = "src/owner-" + str(index) + ".hpp", "client::owner_" + str(index)
+                put(tree, path, "namespace " + namespace + " { struct Diagnostic { int authoring; }; }\n")
+                owners.append({"path": path, "namespace": namespace})
+            put(tree, policy_name, json.dumps({"format": "frog.runtime-contract.diagnostic-owners",
+                                               "version": 1, "owners": owners}))
+        run("diagnostic-policy-owner-bound", excessive_owners,
+            errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        def outside_policy(tree, canonical):
+            declared_owner(tree, canonical)
+            put(tree.parent, "outside-diagnostic-owners.json", (tree / policy_name).read_text(encoding="utf-8"))
+        run("diagnostic-policy-outside-root", outside_policy,
+            errors=policy_failure, policy_relative="../outside-diagnostic-owners.json", policy_error=True)
+
+        def redirected_policy(tree, canonical):
+            declared_owner(tree, canonical)
+            actual = tree / "actual-config"
+            (tree / "config").rename(actual)
+            alias_directory(sandbox, actual, tree / "config")
+        run("diagnostic-policy-redirected", redirected_policy,
+            errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        def redirected_owner(tree, canonical):
+            declared_owner(tree, canonical)
+            actual = tree / "actual-src"
+            (tree / "src").rename(actual)
+            alias_directory(sandbox, actual, tree / "src")
+        run("diagnostic-owner-redirected", redirected_owner,
+            errors=policy_failure, policy_relative=policy_name, policy_error=True)
+
+        invalid_scopes = {
+            "runtime-in-same-file": owner_code + "namespace frog::sdk::runtime { struct Diagnostic { int copied; }; }\n",
+            "qualified-runtime-in-same-file": owner_code + "struct frog::sdk::runtime::Diagnostic { int copied; };\n",
+            "wrong-namespace": "namespace client::other { struct Diagnostic { int copied; }; }\n",
+            "local": "namespace client::authoring { void f() { struct Diagnostic { int copied; }; }}\n",
+            "anonymous": "namespace client::authoring { namespace { struct Diagnostic { int copied; }; }}\n",
+            "alias": "namespace client = frog::sdk::runtime; namespace client::authoring { struct Diagnostic { int copied; }; }\n",
+            "macro": "#define OWNER client::authoring\nnamespace OWNER { struct Diagnostic { int copied; }; }\n",
+            "conditional": "#if 1\n" + owner_code + "#endif\n",
+        }
+        for label, code in invalid_scopes.items():
+            run("diagnostic-policy-scope-" + label,
+                lambda t,c,code=code: declared_owner(t,c,code),
+                errors=policy_failure, policy_relative=policy_name, policy_error=True)
 
     proof = {"status": "PASS", "cases": records, "case_count": len(records), "no_skips": True,
              "canonical_checker": str(args.checker.resolve()), "all_type_assertions": list(CONTRACT_TYPES)}

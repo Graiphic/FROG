@@ -1,0 +1,381 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "language": "FROG",
+  "title": "Mesure",
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "widget-1.button",
+        "classId": "frog.widgets.button",
+        "role": "control",
+        "valueType": "bool",
+        "label": "Mesure / activation",
+        "bounds": {
+          "x": 32,
+          "y": 64,
+          "width": 112,
+          "height": 40
+        },
+        "props": {
+          "behavior.mechanical_action": "switch_when_pressed",
+          "state_text.false_text": "Mesurer",
+          "state_text.true_text": "Mesurer",
+          "state_text.visible": true
+        },
+        "state": {
+          "value": false
+        },
+        "runtime": {
+          "wfrog": "wfrog:local/frog.examples.mesure@1.0.0#d4f9c3693ea821fb0e47e1778356f8b164633c81121560a842a2147bc61cef6a",
+          "realization": "Libraries/Realizations/Default/button.default.wfrog",
+          "asset": "asset:button_rectangular_svg"
+        }
+      },
+      {
+        "id": "widget-1.display",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "f64",
+        "label": "Mesure / mesure",
+        "bounds": {
+          "x": 188,
+          "y": 68,
+          "width": 140,
+          "height": 32
+        },
+        "props": {
+          "data_type.representation": "f64",
+          "representation.kind": "double"
+        },
+        "state": {
+          "value": 0
+        },
+        "runtime": {
+          "wfrog": "wfrog:local/frog.examples.mesure@1.0.0#d4f9c3693ea821fb0e47e1778356f8b164633c81121560a842a2147bc61cef6a",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg"
+        }
+      },
+      {
+        "id": "widget-1.led",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "Mesure / etat",
+        "bounds": {
+          "x": 372,
+          "y": 64,
+          "width": 40,
+          "height": 40
+        },
+        "props": {},
+        "state": {
+          "value": false
+        },
+        "runtime": {
+          "wfrog": "wfrog:local/frog.examples.mesure@1.0.0#d4f9c3693ea821fb0e47e1778356f8b164633c81121560a842a2147bc61cef6a",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_circular_svg"
+        }
+      }
+    ],
+    "groups": [
+      {
+        "id": "group-1",
+        "object_ids": [
+          "widget-1.button",
+          "widget-1.display",
+          "widget-1.led"
+        ]
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "loop",
+        "kind": "structure",
+        "type": "frog.studio.structures.while_loop",
+        "palette_catalog_id": "structures.while_loop",
+        "structure_type": "while_loop",
+        "layout": {
+          "x": 56,
+          "y": 42,
+          "width": 820,
+          "height": 480
+        },
+        "boundary": {
+          "inputs": [],
+          "outputs": []
+        },
+        "structure_terminals": {
+          "condition": {
+            "type": "bool",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": false,
+            "body_port": "condition",
+            "role": "stop_if_true"
+          },
+          "index": {
+            "type": "i64",
+            "outer_visible": false,
+            "exposed_in_body": true,
+            "read_only": true,
+            "body_port": "iteration",
+            "role": "index"
+          }
+        },
+        "while_loop_stop_if_true": true,
+        "regions": [
+          {
+            "id": "body",
+            "diagram": {
+              "nodes": [
+                {
+                  "id": "event",
+                  "kind": "structure",
+                  "type": "frog.studio.structures.event_structure",
+                  "palette_catalog_id": "structures.event_structure",
+                  "structure_type": "event_structure",
+                  "layout": {
+                    "x": 106,
+                    "y": 76,
+                    "width": 600,
+                    "height": 340
+                  },
+                  "boundary": {
+                    "inputs": [],
+                    "outputs": []
+                  },
+                  "structure_terminals": {
+                    "timeout": {
+                      "type": "i64",
+                      "outer_visible": true,
+                      "exposed_in_body": true,
+                      "read_only": true,
+                      "outer_port": "timeout",
+                      "body_port": "timeout_value",
+                      "role": "timeout_milliseconds"
+                    },
+                    "event_data": {
+                      "outer_visible": false,
+                      "exposed_in_body": true,
+                      "read_only": true,
+                      "role": "event_data",
+                      "fields": [
+                        {
+                          "id": "source",
+                          "type": "string",
+                          "body_port": "event_data.source"
+                        },
+                        {
+                          "id": "type",
+                          "type": "string",
+                          "body_port": "event_data.type"
+                        },
+                        {
+                          "id": "time",
+                          "type": "u64",
+                          "body_port": "event_data.time"
+                        }
+                      ]
+                    }
+                  },
+                  "regions": [
+                    {
+                      "id": "pressed",
+                      "event": {
+                        "kind": "value_change",
+                        "source": "widget-1.button",
+                        "studio_bindings": [
+                          {
+                            "kind": "value_change",
+                            "source": "widget-1.button"
+                          }
+                        ]
+                      },
+                      "event_label": "\"Mesure / activation\": Value Change",
+                      "event_data_fields": [
+                        "new_value"
+                      ],
+                      "diagram": {
+                        "nodes": [
+                          {
+                            "id": "high",
+                            "kind": "primitive",
+                            "type": "frog.studio.numeric.numeric_constant",
+                            "palette_catalog_id": "numeric.numeric_constant",
+                            "layout": {
+                              "x": 200,
+                              "y": 120,
+                              "width": 60,
+                              "height": 30
+                            },
+                            "value_type": "f64",
+                            "text": "24.68"
+                          },
+                          {
+                            "id": "low",
+                            "kind": "primitive",
+                            "type": "frog.studio.numeric.numeric_constant",
+                            "palette_catalog_id": "numeric.numeric_constant",
+                            "layout": {
+                              "x": 200,
+                              "y": 242,
+                              "width": 60,
+                              "height": 30
+                            },
+                            "value_type": "f64",
+                            "text": "12.34"
+                          },
+                          {
+                            "id": "select",
+                            "kind": "primitive",
+                            "type": "frog.studio.structures.select",
+                            "palette_catalog_id": "structures.select",
+                            "layout": {
+                              "x": 366,
+                              "y": 186,
+                              "width": 60,
+                              "height": 30
+                            }
+                          },
+                          {
+                            "id": "widget-1.display_value",
+                            "kind": "widget_value",
+                            "type": "f64",
+                            "widget": "widget-1.display",
+                            "layout": {
+                              "x": 540,
+                              "y": 190,
+                              "width": 60,
+                              "height": 30
+                            }
+                          },
+                          {
+                            "id": "widget-1.led_value",
+                            "kind": "widget_value",
+                            "type": "bool",
+                            "widget": "widget-1.led",
+                            "layout": {
+                              "x": 540,
+                              "y": 276,
+                              "width": 60,
+                              "height": 30
+                            }
+                          }
+                        ],
+                        "edges": [
+                          {
+                            "id": "wire-high",
+                            "from": {
+                              "node": "high",
+                              "port": "value"
+                            },
+                            "to": {
+                              "node": "select",
+                              "port": "true"
+                            }
+                          },
+                          {
+                            "id": "wire-low",
+                            "from": {
+                              "node": "low",
+                              "port": "value"
+                            },
+                            "to": {
+                              "node": "select",
+                              "port": "false"
+                            }
+                          },
+                          {
+                            "id": "wire-choice",
+                            "from": {
+                              "node": "event",
+                              "port": "event_data.new_value"
+                            },
+                            "to": {
+                              "node": "select",
+                              "port": "select"
+                            }
+                          },
+                          {
+                            "id": "wire-display",
+                            "from": {
+                              "node": "select",
+                              "port": "result"
+                            },
+                            "to": {
+                              "node": "widget-1.display_value",
+                              "port": "value"
+                            }
+                          },
+                          {
+                            "id": "wire-led",
+                            "from": {
+                              "node": "event",
+                              "port": "event_data.new_value"
+                            },
+                            "to": {
+                              "node": "widget-1.led_value",
+                              "port": "value"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "continue",
+                  "kind": "primitive",
+                  "type": "frog.studio.boolean.false_constant",
+                  "palette_catalog_id": "boolean.false_constant",
+                  "layout": {
+                    "x": 741,
+                    "y": 438,
+                    "width": 60,
+                    "height": 30
+                  },
+                  "value_type": "bool",
+                  "text": "false"
+                }
+              ],
+              "edges": [
+                {
+                  "id": "wire-continue",
+                  "from": {
+                    "node": "continue",
+                    "port": "value"
+                  },
+                  "to": {
+                    "node": "loop",
+                    "port": "condition"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "widget-1.button_value",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "widget-1.button",
+        "layout": {
+          "x": 54,
+          "y": 575,
+          "width": 60,
+          "height": 30
+        }
+      }
+    ],
+    "edges": []
+  }
+}

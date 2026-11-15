@@ -2,6 +2,8 @@
 #include "frog_native_engine/ApplicationControlSchema.hpp"
 #include "frog_native_engine/CanonicalNumericFixedConstants.hpp"
 #include "frog_native_engine/DraftTypedConnections.hpp"
+#include "frog_native_engine/EventStructureSchema.hpp"
+#include "frog_native_engine/StructureTunnelDefaults.hpp"
 #include "frog_native_engine/ClusterFunctionPortProjection.hpp"
 #include "frog_native_engine/ConnectivityCatalog.hpp"
 #include "frog_native_engine/DiagramLiteralSchema.hpp"
@@ -25,6 +27,7 @@
 #include "frog_native_engine/NativeCall.hpp"
 #include "frog_native_engine/DiagramStructureCatalog.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/DraftSourcePreparation.hpp"
 #include "frog_native_engine/DraftInterfaceInspection.hpp"
 #include "frog_native_engine/DiagramBindingResolver.hpp"
 #include "frog_native_engine/CanonicalScalarNative.hpp"
@@ -296,6 +299,65 @@ DraftConnectionInspection inspectDraftTypedConnections(FrogDraftDataView source,
         }
     }
 
+    // Event bindings and ordinary tunnel producers are semantic endpoints,
+    // independent from FIR/target admission. Collect their errors even when
+    // another wire is already ill typed; never hide them behind an early exit.
+    // Reuse this inspection's resolver and one incoming index (no second graph).
+    std::unordered_map<std::string,std::vector<const DiagramEdge*>> structureIncoming;
+    for(const auto &edge:document.diagramEdges)
+        if(edge.to.portId=="event_registration" || edge.to.portId.starts_with("tunnel:"))
+            structureIncoming[edge.to.nodeId+'\x1f'+edge.to.portId].push_back(&edge);
+    const auto structuralError=[&](std::string code,std::string subject,std::string message,
+                                    std::string owner,std::string region=std::string{}) {
+        DocumentDiagnostic diagnostic{DocumentDiagnosticSeverity::Error,DocumentDiagnosticDomain::Semantics,
+            std::move(code),std::move(subject),std::move(message),true,true};
+        diagnostic.stage=DocumentDiagnosticStage::Validation;
+        diagnostic.ownerStructureId=std::move(owner);diagnostic.regionId=std::move(region);
+        result.diagnostics.push_back(std::move(diagnostic));
+    };
+    for(const auto &node:document.diagramNodes) {
+        const auto family=diagramStructureFamilyForNodeType(node.type);
+        if(!family)continue;
+        using Family=DiagramStructureFamily;
+        if(*family==Family::Event) {
+            binding::TypeRef registration;
+            const auto &incoming=structureIncoming[node.id+'\x1f'+"event_registration"];
+            if(incoming.size()==1) {
+                const auto source=typeResolver.resolveSource(*incoming.front());
+                if(source.resolution.accepted())registration=source.resolution.type;
+            }
+            const auto sources=eventStructureSources(node,registration,document.canvas);
+            for(const auto &region:node.eventStructureCases) {
+                auto message=validateEventCaseConfiguration(node,region.id,region);
+                if(message.empty())message=validateEventBindingSources(eventCaseBindings(region),sources);
+                if(!message.empty())structuralError("event.invalid_configuration",node.id,std::move(message),node.id,region.id);
+            }
+        }
+        for(const auto &tunnel:node.caseStructureTunnels) {
+            // Temporal first-read/default and pairing remain at their existing
+            // state owner; this common check owns ordinary boundary transport.
+            if(!tunnel.shiftRegisterPairId.empty())continue;
+            const auto &incoming=structureIncoming[node.id+'\x1f'+binding::tunnelInputId(tunnel.id)];
+            if(!tunnel.outputFromStructure) {
+                if(incoming.empty())structuralError("structure.input_unwired",node.id+":"+tunnel.id,
+                    "Wire this structure input tunnel.",node.id);
+                continue;
+            }
+            const auto type=typeResolver.tunnel(node,tunnel);
+            for(const auto &region:diagramOutputTunnelRegionIds(node,tunnel)) {
+                const bool produced=std::any_of(incoming.begin(),incoming.end(),[&](const auto *edge){
+                    return edge->diagramOwnerStructureId==node.id && edge->diagramOwnerRegionId==region;});
+                if(!produced && !(diagramTunnelSupportsDefault(node,tunnel) && tunnel.useDefaultIfUnwired &&
+                    type.resolution.accepted() && type.resolution.type.known()))
+                    structuralError("structure.output_unwired",node.id+":"+tunnel.id,
+                        "Output tunnel '"+tunnel.id+"' has no producer in region '"+region+"'. Wire a compatible value or configure a supported default.",node.id,region);
+            }
+            if(!type.resolution.accepted() || !type.resolution.type.known())
+                structuralError("structure.unresolved_tunnel",node.id+":"+tunnel.id,
+                    "The tunnel type or its producers could not be resolved.",node.id);
+        }
+    }
+
     return result;
 }
 
@@ -453,11 +515,17 @@ CanonicalDraftResolvedTypes resolveCanonicalDraftTypes(FrogDraftDataView documen
         if(position==routingNodes.end())continue;
         const auto *found=position->second;
         if(!found->constantOwnerNodeId.empty())continue;
+        // The Studio For count is the only structure input admitted here.
+        // Its resolver preserves integer producers and exposes an I64 receiver
+        // for an actual scalar NumericImplicit conversion, independent of the
+        // draft's historical primitive/structure kind spelling.
+        const bool forCount=found->type==diagramStructureNodeType(DiagramStructureFamily::ForLoop)&&
+            edge.to.portId=="count";
         bool implicit=false;
         if(found->kind=="widget_value"&&edge.to.portId=="value") {
             const auto *widget=document.canvas.objectById(found->widgetId);
             implicit=widget&&widget->widget&&widget->widget->role=="indicator";
-        } else if(found->kind=="primitive"&&found->type!="frog.studio.structures.feedback_node") {
+        } else if((found->kind=="primitive"||forCount)&&found->type!="frog.studio.structures.feedback_node") {
             const auto *entry=findFunctionCatalogEntryByDiagramNodeType(found->type);
             if(!entry)entry=findFunctionCatalogEntryByPrimitiveType(found->type);
             const auto *definition=functionBindingDefinitionForNode(*found);
@@ -467,7 +535,7 @@ CanonicalDraftResolvedTypes resolveCanonicalDraftTypes(FrogDraftDataView documen
                 (port->connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit||
                  port->connectionPolicy==FunctionPortConnectionPolicy::NumericScalarOrArrayImplicit);
         }
-        if(!implicit)continue; // No structure/tunnel/Feedback or explicit-conversion admission.
+        if(!implicit)continue; // No other structure/tunnel/Feedback or explicit-conversion admission.
         const auto source=resolver.resolveSource(edge);
         const auto target=resolver.resolveInRegion(edge.to,edge.diagramOwnerStructureId,edge.diagramOwnerRegionId);
         if(!source.complete||!target.complete||!source.resolution.accepted()||!target.resolution.accepted()||
@@ -509,7 +577,14 @@ std::vector<DocumentDiagnostic> inspectDraftSubFrogSemantics(const FrogDraftData
         if(raw)attributeDraftSourceDiagnostic(diagnostic,document,*raw);
         diagnostics.push_back(std::move(diagnostic));
     };
-    auto prepared=prepareDraftSemanticSource(document,bytes,"frog-callee:/current");
+    std::string storageError;
+    const auto preparedStorage=prepareExecutionStorageSource(bytes,&storageError);
+    if (!preparedStorage) {
+        append({DocumentDiagnosticSeverity::Error,DocumentDiagnosticDomain::Control,
+            "preparation.storage.invalid",{},std::move(storageError),true,true});
+        return diagnostics;
+    }
+    auto prepared=prepareDraftSemanticSource(document,*preparedStorage,"frog-callee:/current");
     if(!prepared.accepted()) {
         for(const auto &d:prepared.diagnostics)if(d.blocking) {
             DocumentDiagnostic diagnostic{DocumentDiagnosticSeverity::Error,d.domain,d.code,{},d.message,true,true};

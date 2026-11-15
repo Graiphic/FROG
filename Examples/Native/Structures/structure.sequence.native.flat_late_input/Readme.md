@@ -1,10 +1,10 @@
-# Flat Sequence: an early output feeds a later input
+# Flat Sequence : une sortie précoce alimente une entrée tardive
 
-Flat Sequence: an early output feeds a later input
+Flat Sequence : une sortie précoce alimente une entrée tardive
 
-The first frame publishes 7 to an external Increment. Its result 8 becomes an input to the final frame, which increments again and publishes 9. Waiting for all inputs before the first frame would create a false deadlock: each Flat frame requires only its own inputs when entered.
+La première frame publie 7 vers un Increment extérieur. Son résultat 8 devient une entrée de la dernière frame, qui incrémente encore et publie 9. Attendre toutes les entrées avant la première frame créerait un faux blocage : seules les entrées de chaque frame Flat sont requises à son entrée.
 
-Flat Sequence: an early output feeds a later input
+Flat Sequence : une sortie précoce alimente une entrée tardive
 
 Mode: execution. Profile: studio-draft. Capability: windows-x64/structured-program.
 Expected:

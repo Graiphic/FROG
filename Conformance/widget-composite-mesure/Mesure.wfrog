@@ -1,0 +1,48 @@
+{
+  "wfrog_version": "0.1",
+  "package_kind": "widget_composite_library",
+  "profile": "frog.widget.composite.native-parts@1",
+  "package": {
+    "id": "frog.examples.mesure",
+    "version": "1.0.0",
+    "name": "Mesure",
+    "license": "Apache-2.0"
+  },
+  "imports": [
+    "Libraries/Realizations/Default/button.default.wfrog",
+    "Libraries/Realizations/Default/numeric.default.wfrog",
+    "Libraries/Realizations/Default/boolean.default.wfrog"
+  ],
+  "exports": {"composite_classes": ["frog.examples.mesure.panel"]},
+  "composite_classes": [{
+    "id": "frog.examples.mesure.panel",
+    "children": [
+      {
+        "id": "button", "class": "frog.widgets.button", "role": "control", "type": "bool",
+        "realization": "Libraries/Realizations/Default/button.default.wfrog",
+        "asset": "asset:button_rectangular_svg", "label": "Mesurer",
+        "bounds": {"x": 0, "y": 0, "width": 112, "height": 40},
+        "action": "switch_when_pressed"
+      },
+      {
+        "id": "display", "class": "frog.widgets.numeric_indicator", "role": "indicator", "type": "f64",
+        "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+        "asset": "asset:numeric_rectangular_svg", "label": "Afficheur",
+        "bounds": {"x": 156, "y": 4, "width": 140, "height": 32},
+        "action": ""
+      },
+      {
+        "id": "led", "class": "frog.widgets.boolean_indicator", "role": "indicator", "type": "bool",
+        "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+        "asset": "asset:boolean_circular_svg", "label": "LED",
+        "bounds": {"x": 340, "y": 0, "width": 40, "height": 40},
+        "action": ""
+      }
+    ],
+    "bindings": [
+      {"id": "activation", "part": "button", "member": "Value Change", "direction": "event", "type": "bool"},
+      {"id": "mesure", "part": "display", "member": "Value", "direction": "input", "type": "f64"},
+      {"id": "etat", "part": "led", "member": "Value", "direction": "input", "type": "bool"}
+    ]
+  }]
+}
