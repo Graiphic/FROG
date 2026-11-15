@@ -91,6 +91,15 @@ wire bends and visible slot order are presentation data.
      inline label on its own wire as the intentional exception. Adjust
      spacing before routing. Fit free comments to the text and leave room
      for their attachment grip.
+
+   See the [Array, Cluster and Case diagram saved by Studio 0.0.8.419](examples/array-cluster-case-labels.frog)
+   for the exact Studio draft serialization. The `Total` wire uses
+   `diagram.edges[].label` with text and a position along the route. The Case
+   displays the `title` of each entry in `regions` when
+   `case_structure_subdiagram_label_visible` is enabled. The array constant
+   uses `label_horizontal_anchor` and `label_offset` to put its label above
+   the cells. Use the coordinates and offsets appropriate to the new diagram.
+
 6. **Verify the result in Studio.** Reopen the diagram at 100% and inspect
    every Case for anchored, orthogonal wires, readable labels and intentional
    junctions. For a layout-only change, compare the node and wire IDs, port
