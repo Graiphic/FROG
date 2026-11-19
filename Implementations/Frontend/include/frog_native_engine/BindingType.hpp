@@ -10,7 +10,7 @@
 
 namespace frog::native_engine::binding {
 
-enum class TypeKind { Unknown, Primitive, Array, Enum, Cluster, WaveformGraph, Reference, Matrix, Map, Set };
+enum class TypeKind { Unknown, Primitive, Array, Enum, Cluster, WaveformGraph, Reference, Matrix, Map, Set, Object };
 enum class ChoiceKind { None, Enum, Ring, Dropdown };
 struct ChoiceItemMetadata {
     std::string id;
@@ -53,6 +53,8 @@ struct TypeRef {
     [[nodiscard]] bool integer() const;
     [[nodiscard]] std::string canonical() const;
     [[nodiscard]] static TypeRef reference(std::string classId, std::optional<TypeRef> valueType = {});
+    // Private class-value profile: nominal, immutable, never a live reference.
+    [[nodiscard]] static TypeRef object(std::string classId);
     [[nodiscard]] static TypeRef primitive(std::string_view name);
     [[nodiscard]] static TypeRef array(TypeRef element, std::size_t rank = 1U);
     // Distinct private Matrix profile; no implicit Array conversion or public

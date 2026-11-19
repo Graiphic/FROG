@@ -96,7 +96,81 @@ def resolve_library_command(argv):
         return 2
 
 
+def source_library_command(argv):
+    # Same codec/closure/reference implementation for a CLI author and Studio.
+    # Listing is not installation, semantic admission or an execution claim.
+    from sdk.ecosystem.source_library import capture_source_library
+    parser = argparse.ArgumentParser(description="Inspect pinned callable source-document exports in a local .bfrog.")
+    parser.add_argument("archive", type=Path)
+    parser.add_argument("--origin", required=True)
+    parser.add_argument("--phase", choices=PHASES, default="build")
+    parser.add_argument("--candidate", metavar=("ORIGIN", "FILE"), action="append", nargs=2, default=[])
+    parser.add_argument("--staging-parent", type=Path, required=True)
+    args = parser.parse_args(argv)
+    try:
+        candidates = [LocalLibraryArchive(Path(file), origin) for origin, file in args.candidate]
+        with capture_source_library(LocalLibraryArchive(args.archive, args.origin), args.staging_parent,
+                                    candidates, phase=args.phase) as captured:
+            result = captured.receipt()
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        return 0
+    except ContractError as error:
+        print(json.dumps({"status": "error", "diagnostic": error.as_dict()}))
+        return 2
+
+    except OSError as error:
+        diagnostic = ContractError("library.stage_io", "/staging", str(error))
+        print(json.dumps({"status": "error", "diagnostic": diagnostic.as_dict()}))
+        return 2
+
+
+def install_source_library_command(argv):
+    """Use the same verified codec, then the native owner's transaction engine."""
+    import tempfile
+    from sdk.ecosystem.source_library import capture_source_library
+    parser = argparse.ArgumentParser(description="Install a self-contained source-document .bfrog locally.")
+    parser.add_argument("archive", type=Path)
+    parser.add_argument("--origin", required=True)
+    parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--native-installer", type=Path, required=True)
+    args = parser.parse_args(argv)
+    try:
+        if not args.root.is_absolute() or not args.native_installer.is_absolute() or not args.native_installer.is_file():
+            raise ContractError("library.install.host_required", "/native-installer", "Provide the absolute existing native installer and absolute local root; PATH lookup is disabled.")
+        # Codec staging is owned OS scratch, never an author directory or the
+        # destination package. The native engine performs all activation writes.
+        with tempfile.TemporaryDirectory(prefix="frog-library-install-") as scratch:
+            with capture_source_library(LocalLibraryArchive(args.archive, args.origin), Path(scratch)) as captured:
+                if captured.manifest["dependencies"]:
+                    raise ContractError("library.install.dependency_profile_unsupported", "/dependencies", "The first local activation host accepts self-contained source libraries; P03's transitive resolver remains separate.")
+                receipt = captured.directory / "source-library-capture.json"
+                if receipt.exists():
+                    raise ContractError("library.install.reserved_path", "/files", "The package occupies a host capture metadata path.")
+                receipt.write_text(json.dumps(captured.receipt(), ensure_ascii=False, sort_keys=True), encoding="utf-8")
+                command = [str(args.native_installer), "install-source-library", "--source", str(captured.directory),
+                           "--root", str(args.root), "--manifest-sha256", captured.manifest_sha256]
+                completed = subprocess.run(command, shell=False, check=False, capture_output=True,
+                                           encoding="utf-8", errors="strict", timeout=120)
+                if len(completed.stdout.encode()) > 1024 * 1024 or len(completed.stderr.encode()) > 1024 * 1024:
+                    raise ContractError("library.install.output_limit", "/native-installer", "The native installer exceeded its result budget.")
+                result = json.loads(completed.stdout)
+                if not isinstance(result, dict) or not isinstance(result.get("success"), bool):
+                    raise ContractError("library.install.result_invalid", "/native-installer", "The native installer returned no structured operation result.")
+                if (completed.returncode == 0) != result["success"]:
+                    raise ContractError("library.install.result_invalid", "/native-installer", "The native result and exit status disagree.")
+        print(json.dumps(result, ensure_ascii=False, sort_keys=True))
+        return completed.returncode
+    except (ContractError, OSError, ValueError, subprocess.TimeoutExpired) as error:
+        diagnostic = error.as_dict() if isinstance(error, ContractError) else {"code": "library.install.operation_failed", "message": str(error)}
+        print(json.dumps({"success": False, "status": "error", "diagnostic": diagnostic}, ensure_ascii=False))
+        return 2
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "install-source-library":
+        return install_source_library_command(sys.argv[2:])
+    if len(sys.argv) > 1 and sys.argv[1] == "list-source-exports":
+        return source_library_command(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == "resolve-library":
         return resolve_library_command(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] in ("install", "list", "remove", "recover"):

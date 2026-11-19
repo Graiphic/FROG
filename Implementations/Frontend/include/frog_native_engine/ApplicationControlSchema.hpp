@@ -3,6 +3,7 @@
 #include "frog_native_engine/WidgetInstance.hpp"
 #include "frog_native_engine/FrogWidgetData.hpp"
 #include <optional>
+#include <functional>
 #include <span>
 
 namespace frog::native_engine {
@@ -27,6 +28,13 @@ struct ApplicationControlDiagnostic { std::string code, rowId, message; };
 // indexed Array cell or guesses identity from a current value or a position.
 [[nodiscard]] const WidgetInstance *applicationControlReferencePresentation(
     const DiagramNode &,std::span<const DiagramNode>,std::span<const DiagramEdge>,FrogWidgetDataView);
+// Reuse an existing immutable semantic pass when presentation needs a source
+// schema. The original overload keeps its independent lazy-resolution contract.
+using ApplicationControlSchemaLookup=std::function<binding::TypeResolution(const DiagramNode &,std::string_view)>;
+[[nodiscard]] const WidgetInstance *applicationControlReferencePresentation(
+    const DiagramNode &,std::span<const DiagramNode>,std::span<const DiagramEdge>,
+    FrogWidgetDataView,const ApplicationControlSchemaLookup &);
+
 [[nodiscard]] std::string applicationControlMemberLabel(const ApplicationControlMemberDescriptor &);
 [[nodiscard]] std::string applicationControlClassLabel(std::string_view classId,const binding::TypeRef &valueType={});
 [[nodiscard]] std::vector<ApplicationControlPort> applicationControlPorts(

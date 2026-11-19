@@ -37,6 +37,7 @@
 #include "frog_native_engine/WidgetCatalog.hpp"
 #include "frog_native_engine/WidgetPlacementContract.hpp"
 #include "frog_native_engine/WidgetInstance.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/TabControl.hpp"
 #include "frog_native_engine/WidgetFamilyEngine.hpp"
 #include "FrogDocumentWaveformGraph.hpp"
@@ -84,6 +85,12 @@ using document_internal::jsonUnsignedField;
 using document_internal::mutableObjectField;
 using document_internal::objectField;
 using document_internal::parseCssPixelValue;
+double retainedDraftArrayCellWidth(double width, bool automatic) {
+    // Height-only resizing can freeze a compact automatic cell at width 22.
+    // Preserve authored positive metadata; Canvas minima are not admission rules.
+    const bool compactAuthoredCell = width >= 1.0 && width < 24.0;
+    return std::clamp(width, automatic || compactAuthoredCell ? 1.0 : 24.0, 32768.0);
+}
 FrogDraftInterfaceMapSettings retainedInterfaceMapSettings(
     const JsonValue *interfaceDeclaration, const JsonValue *rootFallback,
     const JsonValue *retainedRootMap = nullptr) {
@@ -1275,7 +1282,11 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
                     }
                     parsedItems.push_back(std::move(parsed));
                 }
-                if (isTabWidget(widget)) {
+                if (isListboxWidget(widget)) {
+                    // Item identities are authored data. The Listbox validator
+                    // diagnoses duplicates instead of renaming an association.
+                    widget.ringItems = std::move(parsedItems);
+                } else if (isTabWidget(widget)) {
                     // Page identity is authored containment. Never repair a
                     // duplicate ID into a different page behind its children.
                     widget.ringItems = std::move(parsedItems);
@@ -1691,6 +1702,7 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
             widget.tabContainer->headerFirstVisible, static_cast<std::uint32_t>(widget.ringItems.size() - 1U));
     }
 
+    if(isListboxWidget(widget))listbox_widget::readState(widget,value);
     return SceneObject{ id, bounds, std::move(widget), std::nullopt, locked, hidden };
 }
 
@@ -2381,6 +2393,11 @@ std::optional<FrogDraftData> readFrogDraftData(
     if (const auto symbolError = document_internal::readCompilationSymbols(*root, document.properties); !symbolError.empty()) {
         if (error) *error = symbolError;
         return std::nullopt;
+    }
+    if(!readClassSourceDeclaration(*root,document.properties.classSource,error))return std::nullopt;
+    if((!document.properties.classSource.classes.empty()||document.properties.classSource.member)&&
+        jsonUnsignedField(*root,"draft_revision").value_or(0U)!=kFrogClassValueDraftRevision) {
+        if(error)*error="By-value class source requires private draft_revision 10.";return std::nullopt;
     }
     document.title = jsonStringField(root.value(), "title").value_or("Untitled 1");
     if (const auto *metadata = objectField(root.value(), "metadata")) {
@@ -3309,10 +3326,9 @@ std::optional<FrogDraftData> readFrogDraftData(
                         "one_dimensional_vertical").value_or(false);
                     if (const auto *cellSize = objectField(*arrayConstant, "cell_size")) {
                         node.numericArrayElementGap=std::clamp(jsonNumberField(*cellSize,"element_gap").value_or(0.0),0.0,64.0);
-                        node.numericArrayCellWidth = std::clamp(
+                        node.numericArrayCellWidth = retainedDraftArrayCellWidth(
                             jsonNumberField(*cellSize, "width").value_or(node.numericArrayCellWidth),
-                            node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 24.0,
-                            32768.0);
+                            node.constantArrayCellBoundsAutomatic.value_or(false));
                         node.numericArrayCellHeight = std::clamp(
                             jsonNumberField(*cellSize, "height").value_or(node.numericArrayCellHeight),
                             node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 18.0,
@@ -3419,6 +3435,11 @@ std::optional<FrogDraftData> readFrogDraftData(
                     (node.type == "frog.studio.numeric.numeric_constant" ||
                      node.type == "frog.studio.numeric.constant"))
                     node.layout = fixedColorBoxBounds(node.layout, kColorBoxConstantSide);
+                if (const auto *call = objectField(nodeValue, "call");
+                    call && call->member("class_operation") && node.kind != "frog_call") {
+                    if(error)*error="Class operations belong to a frog_call node.";
+                    return std::nullopt;
+                }
                 if (node.kind == "static_visual") {
                     if (const auto *visualObject = objectField(nodeValue, "visual")) {
                         StaticVisual visual;
@@ -3428,6 +3449,13 @@ std::optional<FrogDraftData> readFrogDraftData(
                 }
                 if (node.kind == "frog_call" || (node.kind == "fitting_model_reference" || node.kind == "calculus_function_reference")) {
                     if (const auto *call = objectField(nodeValue, "call")) {
+                        if(const auto *operation=call->member("class_operation")) {
+                            if(jsonUnsignedField(*root,"draft_revision").value_or(0U)!=kFrogClassValueDraftRevision) {
+                                if(error)*error="Class operations require private draft_revision 10.";return std::nullopt;
+                            }
+                            node.classOperation=readClassSourceOperation(*operation,error);
+                            if(!node.classOperation||node.kind!="frog_call")return std::nullopt;
+                        }
                         loadedFrogCall = true;
                         node.callDocumentPath =
                             jsonStringField(*call, "document_path").value_or({});
@@ -3598,10 +3626,8 @@ std::optional<FrogDraftData> readFrogDraftData(
                         node.numericArrayRank,
                         1U);
                     normalizeDraftArrayConstantVisibleCounts(node);
-                    node.numericArrayCellWidth = std::clamp(
-                        node.numericArrayCellWidth,
-                        node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 24.0,
-                        32768.0);
+                    node.numericArrayCellWidth = retainedDraftArrayCellWidth(
+                        node.numericArrayCellWidth, node.constantArrayCellBoundsAutomatic.value_or(false));
                     node.numericArrayCellHeight = std::clamp(
                         node.numericArrayCellHeight,
                         node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 18.0,
@@ -3675,7 +3701,8 @@ std::optional<FrogDraftData> readFrogDraftData(
                     node.numericArrayFirstIndices.resize(node.numericArrayRank, 0U);
                     node.numericArrayVisibleCounts.resize(node.numericArrayRank, 1U);
                     normalizeDraftArrayConstantVisibleCounts(node);
-                    node.numericArrayCellWidth = std::clamp(node.numericArrayCellWidth, node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 24.0, 32768.0);
+                    node.numericArrayCellWidth = retainedDraftArrayCellWidth(
+                        node.numericArrayCellWidth, node.constantArrayCellBoundsAutomatic.value_or(false));
                     node.numericArrayCellHeight = std::clamp(node.numericArrayCellHeight, node.constantArrayCellBoundsAutomatic.value_or(false) ? 1.0 : 18.0, node.arrayElementTemplate ? 4096.0 : 180.0);
                     if (node.arrayElementTemplate && isNumericColorBox(*node.arrayElementTemplate))
                         node.numericArrayCellWidth = node.numericArrayCellHeight = kColorBoxConstantSide;

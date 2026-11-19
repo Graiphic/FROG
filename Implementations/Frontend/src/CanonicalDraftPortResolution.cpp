@@ -210,7 +210,14 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
             const auto *state=collectionConstantState(node);
             const std::string preferred=state&&state->kind==CollectionKind::Map?"map":"set";
             if(!actual.resolution.accepted()||!actual.resolution.type.known()) {
-                diagnostic(node.id,preferred,"The Collection constant has no complete exact schema.");continue;
+                // The draft codec explicitly retains empty Collections with
+                // unfinished type models. They need an edit before Run.
+                if(state && state->data.empty() && !collectionType(*state).known() &&
+                    ((state->kind==CollectionKind::Map)==(collectionFunctionId(node.type)=="collection.map.constant"))) {
+                    diagnostics.push_back({"collection.constant_type_unconfigured",node.id+":"+preferred,
+                        "Configure the Collection constant's type models before running.",true,DocumentDiagnosticDomain::Semantics});
+                } else diagnostic(node.id,preferred,"The Collection constant has no complete exact schema.");
+                continue;
             }
             // Both the current map/set spelling and the historical value
             // spelling denote the same single producer. Keep the spelling

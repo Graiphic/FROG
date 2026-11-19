@@ -95,8 +95,13 @@ Unknown encoding/codec, noncanonical base64, inconsistent counts, truncated
 records, trailing bytes, bad UTF-8, corrupt frames or checksum mismatch reject
 the load with a storage diagnostic. They must never become empty arrays or zeros.
 Readers bound the frame window, chunk size, decoded bytes and cell count before
-allocating. The word profile has a separate aggregate 128 MiB decoded budget
-for numeric words and their exceptions. The original formats retain their
+allocating. The word profile has a separate aggregate decoded budget of
+4,294,967,295 bytes for numeric words and their exceptions, matching the U32
+decoded byte fields. This is a logical resource bound. Host allocation admission,
+allocation failures and the native transport's captured available-memory budget
+remain independent. Native composed transport reserves at most one quarter of
+the currently available physical, commit and address-space minimum for packed
+cell bytes, accounting for four simultaneously live copies. The original formats retain their
 64 MiB aggregate decoded budget. Neither budget enlarges the JSON tree budget
 or the 64 MiB encoded document limit.
 Record profiles must match their value field. Numeric element indices and Boolean
@@ -106,8 +111,9 @@ flags are checked before projection; invalid records cannot be silently skipped.
 
 The word profile opens directly into Studio's existing numeric pages with
 implicit zero pages. This does not implement lazy loading from disk. The
-compatibility projection for Run still expands a bounded JSON view; successful
-Save/Open of a large array does not qualify that size for Run. The monofile is
+legacy compatibility projection may still expand a bounded JSON view. The
+canonical native path retains supported typed arrays through preparation and
+publication; Save/Open alone does not qualify a size for Run. The monofile is
 rewritten when saved.
 Independent deterministic chunks keep unchanged chunk contents stable, but the
 initial implementation recompresses them rather than retaining a lazy block cache.

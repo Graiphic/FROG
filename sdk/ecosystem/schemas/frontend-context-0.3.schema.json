@@ -144,7 +144,7 @@
         ],
         "properties": {
           "kind": {
-            "enum": [1, 2]
+            "enum": [1, 2, 5]
           },
           "identity": {
             "type": "string",

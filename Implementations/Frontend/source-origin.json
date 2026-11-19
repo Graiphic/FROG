@@ -13,15 +13,15 @@
       "path": "src/ClassDefinition.cpp",
       "upstream": "FROG/Implementations/Frontend/src/ClassDefinition.cpp",
       "ownership": "created",
-      "sha256": "488eef08dcaac19d38849ae0327fa2b3e6490100f21580c0ec8ba352b4b386ca",
-      "bytes": 36415
+      "sha256": "b2953cd7fca0dfa4830db064f195397b68bec54ad6d85f051f94bf80468d241a",
+      "bytes": 38331
     },
     {
       "path": "include/frog_native_engine/ClassDefinition.hpp",
       "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ClassDefinition.hpp",
       "ownership": "created",
-      "sha256": "2bc54de35312c1b96dbb460959c159c6b80e0516554f61e917a067abdf0f4672",
-      "bytes": 7441
+      "sha256": "e877f43a858df3878d721ca9000a8fe323d7c9e426e3f65a5b4831f95a5135cf",
+      "bytes": 8093
     },
     {
       "path": "src/PolymorphicFrog.cpp",
@@ -215,8 +215,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/BindingType.hpp",
       "path": "include/frog_native_engine/BindingType.hpp",
-      "sha256": "cec26752acb3e405134e9d09e554b469e939e37a709da956648c29dbb24c025c",
-      "bytes": 5948,
+      "sha256": "74ee68853d9fa041c21f587f0ad3f72451611d564f97d4c4d1b2be98998b45ce",
+      "bytes": 5971,
       "ownership": "move"
     },
     {
@@ -873,15 +873,15 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/BindingType.cpp",
       "path": "src/BindingType.cpp",
-      "sha256": "c2a4b5f8e943cffa79a1d6cb08932fec7ceeb32734b9a8c64c5b342e372b32b7",
-      "bytes": 19217,
+      "sha256": "de66e921d504f68277916c556bb22f945c94cab38e1ba5db37bec6573c589c58",
+      "bytes": 20124,
       "ownership": "move"
     },
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/BindingTypeResolution.cpp",
       "path": "src/BindingTypeResolution.cpp",
-      "sha256": "2ed5de1cbb4b7a8e9debe2a434f6082486266c452f41714bc38c542bd4b57ca1",
-      "bytes": 17809,
+      "sha256": "fe6f936666091188f2856241cb33d18509c8e7e57aafbaef23a0639917ee163e",
+      "bytes": 18117,
       "ownership": "move"
     },
     {
@@ -1273,8 +1273,8 @@
       "path": "snapshot/api/frog/frontend.h",
       "upstream": "FROG/sdk/ecosystem/include/frog/frontend.h",
       "ownership": "snapshot",
-      "sha256": "965617133bf538d240f5614cc049b6df2243129a2cff746ea5e5b45987486557",
-      "bytes": 9308
+      "sha256": "0e52ca13753c51a7bbd65a2f382c68c5259ef54d59c1301fdbeecf40092312b4",
+      "bytes": 9441
     },
     {
       "path": "cmake/FrontendInputs.cmake",
@@ -1340,8 +1340,8 @@
       "path": "src/CanonicalComposedDraftMigration.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalComposedDraftMigration.cpp",
       "ownership": "moved",
-      "sha256": "44f6652c03669b7d846530ef02708434b625160bf49f6705102cfa8b8775191b",
-      "bytes": 227221
+      "sha256": "ba1b872a9d05969b80b73d2a67fab29f95c9966ae39758276579b55b8169ab2b",
+      "bytes": 243022
     },
     {
       "path": "src/CanonicalComposedDraftMigration.hpp",
@@ -1502,8 +1502,8 @@
       "path": "src/DiagramBindingResolver.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
       "ownership": "split",
-      "sha256": "892b311d8510b58e6f967055574ab4541ec5706f59100f647a752f43d6cbad67",
-      "bytes": 158827,
+      "sha256": "25374ef5a1aa3cb01038c68a6223d46a5aa63d82fe83ddbb64c24dc86d2b108c",
+      "bytes": 164281,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
@@ -1583,8 +1583,8 @@
       "path": "src/DraftFrontendPreparation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftFrontendPreparation.cpp",
       "ownership": "created",
-      "sha256": "30a5c2fbab8dbebe2876ed4cf76772701655390b0733ca7458c296d4ccdc4cee",
-      "bytes": 21901
+      "sha256": "a4e75101aac801a87e37ae409ba1d114e8027d7704701ae07b208444c19ab336",
+      "bytes": 26021
     },
     {
       "path": "src/DraftInterfaceInspection.cpp",
@@ -1622,8 +1622,8 @@
       "path": "src/DraftSubFrogExecutionProjection.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftSubFrogExecutionProjection.cpp",
       "ownership": "created",
-      "sha256": "5e201cbbe02ccd0fe67a9173899b12466e58d23791b523996afad1b1d7d993fb",
-      "bytes": 49117
+      "sha256": "efb55539dbd5bd255762f2dcf3af51d037ec80f2defe4cfbd4bbdf271c1cb40f",
+      "bytes": 63562
     },
     {
       "path": "src/DraftTypeDefinitionResolution.cpp",
@@ -1657,15 +1657,15 @@
       "path": "src/EventNotificationContract.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/EventNotificationContract.cpp",
       "ownership": "moved",
-      "sha256": "938d2460cb24edf2c2c6dc087371fbf99da06c253df74e843220ed3a2c129ad3",
-      "bytes": 9706
+      "sha256": "a8904dbe4ca45fb0e58df7540ceb15c7658d601b6fda3df2c4cc67fa8ce17a53",
+      "bytes": 9880
     },
     {
       "path": "src/EventStructureSchema.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/EventStructureEditing.cpp",
       "ownership": "split",
-      "sha256": "616716efdfa65eff1d8de579ccaa3b278a7b8e52bc5143d4d7c665b16f811eb0",
-      "bytes": 33976,
+      "sha256": "175cd9d1dd43e4a224558081b84f3d304b6b34b432b02d3ed888d69f18d2e3e0",
+      "bytes": 34193,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/EventStructureEditing.cpp",
@@ -2037,8 +2037,8 @@
       "path": "src/FrogDraftReader.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocument.cpp",
       "ownership": "split",
-      "sha256": "5c2e40eacb6502f09f65162c7297d03ebcd5af5491c05516748d8a49cd8fe7d9",
-      "bytes": 243027,
+      "sha256": "9e19365f600fea6fd802f4f6bb34eb008076c7939f9e7fd14b7172572f707449",
+      "bytes": 248289,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/FrogDocument.cpp",
@@ -2078,8 +2078,8 @@
       "path": "src/FrogDraftWriter.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
       "ownership": "split",
-      "sha256": "baf4fbf23d9092ebcce8f67fd0c28bf9b44e6ced2d0f691021108f9a6d12d513",
-      "bytes": 171468,
+      "sha256": "46bbf296c3402d63c24f59d118b276749308000129f65a02da73b9b6dacdde24",
+      "bytes": 174510,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
@@ -2168,15 +2168,15 @@
       "path": "src/FrontendCli.cpp",
       "upstream": "FROG/Implementations/Frontend/src/FrontendCli.cpp",
       "ownership": "created",
-      "sha256": "0d7c7ca227ea85b114520408fd30833a742487ac5bd186d0de1d162c663755dc",
-      "bytes": 19101
+      "sha256": "a8850e21e55c339b6264249bb224ada97aa758bcf46a9d51215de65c974c6cd7",
+      "bytes": 19104
     },
     {
       "path": "src/FrontendOperation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/FrontendOperation.cpp",
       "ownership": "created",
-      "sha256": "ef263a70716d7b7b49bb474f51a3661e662b40060612fc34560470c9d6c4ec4a",
-      "bytes": 59960
+      "sha256": "2db5c9d2009d8a7fb4cc5ebe39244d78d6077713e5b8f41af018cea2e8482c16",
+      "bytes": 60667
     },
     {
       "path": "src/InPlaceStructure.cpp",
@@ -2390,8 +2390,8 @@
       "path": "src/WidgetBindingType.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/WidgetBindingType.cpp",
       "ownership": "moved",
-      "sha256": "1f7fb661afbfa64d8a5ea560ec64b104e97bc36dbee1b4ef87c0a41e5c5340e0",
-      "bytes": 8710
+      "sha256": "0bca7e3bd117c7fc193de71b81a46ddf66d5944d75e75b391e6cdb27449ef5a5",
+      "bytes": 9196
     },
     {
       "path": "src/WidgetCatalogEntryData.cpp",
@@ -2437,15 +2437,15 @@
       "path": "src/WidgetDataOperations.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/WidgetDataOperations.cpp",
       "ownership": "moved",
-      "sha256": "5b7e7af405b99222057fd883f716895b29f879e0ba89b8c4eceb14c10d0915ef",
-      "bytes": 16480
+      "sha256": "aa3e924742d390f5e927649aa7c154b50a099754268bbb0e8f6c314229ec0470",
+      "bytes": 16935
     },
     {
       "path": "src/WidgetDataValueAssignment.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentWidgetValueAssignment.cpp",
       "ownership": "split",
-      "sha256": "15941ca12614b949946812c7b5eadc8f686600827059a6eac699acf43626d8bf",
-      "bytes": 13850,
+      "sha256": "09ebbe2308b09d1319324edb72ad566f62e8ae25577372d066c28faac6deb638",
+      "bytes": 14382,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/FrogDocumentWidgetValueAssignment.cpp",
@@ -3078,8 +3078,8 @@
       "path": "src/WidgetTypedValueSource.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/WidgetTypedValueSource.cpp",
       "ownership": "moved",
-      "sha256": "f72dcf745320c04c6c05674175687384cfb3d121822bc8c8e8afe5a78202899e",
-      "bytes": 23387
+      "sha256": "c6c9140408fd38203ea912ead575c3b38b814a470338b685331535a71558ecc7",
+      "bytes": 23664
     },
     {
       "path": "src/graph/WaveformGraphData.cpp",
@@ -3409,8 +3409,8 @@
       "path": "include/frog_native_engine/DiagramBindingResolver.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/DiagramBindingResolver.hpp",
       "ownership": "split",
-      "sha256": "8af527d877c7d6edc142de686bf22f7634e899253c517773e39f46bb7d27e207",
-      "bytes": 5145,
+      "sha256": "b5c62ac441e4ac010d0a32359c1f5aa2a455e987ea8190a6ee146cb19e7c539d",
+      "bytes": 5481,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/DiagramBindingResolver.hpp",
@@ -3633,8 +3633,8 @@
       "path": "include/frog_native_engine/FrogDocumentFormat.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocumentFormat.hpp",
       "ownership": "moved",
-      "sha256": "9af742d26d3719ffe4fc3a2461f8c09ab6b06f5e77420701b9072fcc0b19a2f5",
-      "bytes": 2486
+      "sha256": "0a23294d083ef011dcf2b88249a424513fa30b109db7fab0ef91258cec8646fd",
+      "bytes": 2717
     },
     {
       "path": "include/frog_native_engine/FrogDocumentWidgetValues.hpp",
@@ -3647,8 +3647,8 @@
       "path": "include/frog_native_engine/FrogDraftData.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocument.hpp",
       "ownership": "split",
-      "sha256": "cd4a52a7e3443be835c2eb137a182eb5649861ff20b3199903b70b1cacff5b46",
-      "bytes": 48147,
+      "sha256": "14a41449fc6b490f9254bbf7fdcec2467989b53b9612b7531e5fa354a86423eb",
+      "bytes": 50820,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocument.hpp",
@@ -3699,8 +3699,8 @@
       "path": "include/frog_native_engine/FrogWidgetData.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrontPanelCanvas.hpp",
       "ownership": "split",
-      "sha256": "ecc35b59bc983ed43483d7f07129746f2e667636746893d8492f416a4f436b90",
-      "bytes": 9225,
+      "sha256": "9c784572c8362ff4f9d0e2965ed8c56455350c1c1e362ae0e259a8b3d09f1ec5",
+      "bytes": 9548,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrontPanelCanvas.hpp",
@@ -3960,8 +3960,8 @@
       "path": "include/frog_native_engine/WidgetInstance.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/WidgetInstance.hpp",
       "ownership": "moved",
-      "sha256": "c78de2072ac7688fb89bb4f0dc1dc60533b6a5a1aba5de283cd4cac39ecece0a",
-      "bytes": 43178
+      "sha256": "f14981ed7506d92b9c1bcfd2d5092b47896ca532767b0923f725e5912b319975",
+      "bytes": 44268
     },
     {
       "path": "include/frog_native_engine/WidgetNumericData.hpp",
@@ -6042,6 +6042,90 @@
       "ownership": "created",
       "sha256": "b36450f34615df3312d5473557df632218651c67a9c3101be9d2faebcb1248a1",
       "bytes": 12144
+    },
+    {
+      "path": "include/frog_native_engine/ItemSelection.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ItemSelection.hpp",
+      "ownership": "created",
+      "sha256": "a057b96fc9f4546f382f8a34258d28dbc12b5184f90283401ab742f4700dda21",
+      "bytes": 6179
+    },
+    {
+      "path": "include/frog_native_engine/ListboxState.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ListboxState.hpp",
+      "ownership": "created",
+      "sha256": "de523eb29222f71b942b22b033bf24ba3d412b5e67a5863219cf5138ac094c3b",
+      "bytes": 1466
+    },
+    {
+      "path": "include/frog_native_engine/ListboxWidget.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ListboxWidget.hpp",
+      "ownership": "created",
+      "sha256": "8afa1edd2fd8ab49d77aa9d42daa9a11b43408fbdc6aafeda5054cf598c6a60a",
+      "bytes": 1201
+    },
+    {
+      "path": "src/ListboxWidget.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/ListboxWidget.cpp",
+      "ownership": "created",
+      "sha256": "7aa0443426053d60d8cb53e8a44af065506b3e556feae674c06ba49bfda24ffb",
+      "bytes": 15859
+    },
+    {
+      "path": "include/frog_native_engine/ClassProgram.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ClassProgram.hpp",
+      "ownership": "created",
+      "sha256": "dd4d7eb43ebb34b06ed99bc292c55a9bfa09119f7cde836c9cc0061bb5f88ce7",
+      "bytes": 1464
+    },
+    {
+      "path": "include/frog_native_engine/ClassSource.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ClassSource.hpp",
+      "ownership": "created",
+      "sha256": "a985064862b00f152aaf15d6aed9a469f4687bdc91e3cb2a975deeb1ecaf5ea0",
+      "bytes": 1372
+    },
+    {
+      "path": "include/frog_native_engine/DraftClassProjection.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/DraftClassProjection.hpp",
+      "ownership": "created",
+      "sha256": "823a54b12902648fbd769f3ca4ccca6d49da550143c9753524cae634a33cce7f",
+      "bytes": 1288
+    },
+    {
+      "path": "src/ClassProgram.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/ClassProgram.cpp",
+      "ownership": "created",
+      "sha256": "dbd69a89b25d8213b2857dbf7ec309f9cccb7515d175db0d9f14ab18dc9d0f86",
+      "bytes": 8145
+    },
+    {
+      "path": "src/ClassSource.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/ClassSource.cpp",
+      "ownership": "created",
+      "sha256": "c39fa98d5467e678725ce51fb72572ac66a8ad44676fb94fb5e0ab3eec244325",
+      "bytes": 3540
+    },
+    {
+      "path": "src/DraftClassProjection.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/DraftClassProjection.cpp",
+      "ownership": "created",
+      "sha256": "09b0109245c4abe5d1d7ab92f4c5f476f0383368f2afc8655bc068da3b227505",
+      "bytes": 30490
+    },
+    {
+      "path": "include/frog_native_engine/ClassAuthoring.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ClassAuthoring.hpp",
+      "ownership": "created",
+      "sha256": "8288ea350deae5ec3cf9c592fb6054ee432ee17a56c99818d7cee162d5e7c49e",
+      "bytes": 1730
+    },
+    {
+      "path": "src/ClassAuthoring.cpp",
+      "upstream": "FROG/Implementations/Frontend/src/ClassAuthoring.cpp",
+      "ownership": "created",
+      "sha256": "08e5cfb6b111ca189ecfa6ff9802b44e33cf1478f1cad4a3bac9918a94635631",
+      "bytes": 10514
     }
   ],
   "repository_baselines": {

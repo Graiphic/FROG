@@ -1,0 +1,11 @@
+{
+  "returncode": 0,
+  "elapsed_ms": 754.9733999767341,
+  "input_sha256": "b5bbdf47da0c191f27ddeeeb52f15e8e81c9e76da4ccef228b30deb354d4961d",
+  "original_frontend_sha256": "a206e141e35d21e13e4ad7be5f471e5dae468c2d2971bb20467fedc482f4d2ec",
+  "format": "frog.import.layout-historical-fixture.v1",
+  "converter_sha256": "722ea997db37ee315e4c96c6a1edcc58470df23a10be8a57e88ef37986c0273d",
+  "frog_sha256": "b6e266fca621329d2897cd612a673f27ea5675e0f269eb819db030558e4b60f1",
+  "purpose": "Historical before-layout measurement in the same native renderer, not a current recommended layout",
+  "input": "equivalent-expanded-adder19.onnx"
+}

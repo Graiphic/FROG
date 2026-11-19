@@ -91,7 +91,9 @@ public:
         // encoding unchanged. Older readers reject these tags; a live opaque
         // reference is deliberately never serialized.
         std::uint8_t tag=static_cast<std::uint8_t>(value.index());
-        if(runtimeNullReferenceOwner(value))tag=15;
+        const auto widgetSymbol=runtimeWidgetReferenceSymbol(value);
+        if(!widgetSymbol.empty())tag=16;
+        else if(runtimeNullReferenceOwner(value))tag=15;
         else if(runtimeComplex(value))tag=13;else if(runtimeArray(value))tag=8;
         else if(const auto *variant=runtimeVariant(value))tag=variant->isEmptyVariant()?14:9;
         else if(runtimeMap(value))tag=10;else if(runtimeTimestamp(value))tag=11;else if(runtimeSet(value))tag=12;
@@ -136,11 +138,14 @@ public:
             --arrayDepth_;if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
             break;
         }
-        case 15U: {
+        case 15U: case 16U: {
             const auto &reference=std::get<6>(value);
             if(!typed_||packed_||!arrayOwner_||!reference||!reference->validForOwner(*arrayOwner_)||
-                reference->canonicalType().size()>65536||reference->canonicalType().size()>16'000'000-valueBytes_){valid_=false;return;}
-            valueBytes_+=reference->canonicalType().size();string(reference->canonicalType());break;
+                reference->canonicalType().size()>65536||
+                reference->canonicalType().size()+widgetSymbol.size()>16'000'000-valueBytes_){valid_=false;return;}
+            valueBytes_+=reference->canonicalType().size()+widgetSymbol.size();string(reference->canonicalType());
+            if(tag==16)string(widgetSymbol);
+            break;
         }
         case 13U: {
             const auto *complex=runtimeComplex(value);
@@ -332,6 +337,15 @@ public:
             const auto null=makeRuntimeNullReference(type,*arrayOwner_);
             if(!null)return fail("The intrinsic NULL reference has no exact reference type.");
             valueBytes_+=type.size();value=*null;return true;
+        }
+        case 16U: {
+            if(!typed_||packed_||!arrayOwner_)return fail("A local widget symbol requires a typed receiving owner.");
+            std::string type,id;
+            if(!string(type)||type.size()>65536||!string(id)||id.size()>1024||
+                type.size()+id.size()>16'000'000-valueBytes_)return fail("The local widget symbol exceeds its bound.");
+            auto symbol=makeRuntimeWidgetReferenceSymbol(type,id,*arrayOwner_);
+            if(!symbol)return fail("The local widget symbol has an invalid identity or reference type.");
+            valueBytes_+=type.size()+id.size();value=std::move(*symbol);return true;
         }
         case 1U: {
             bool decoded = false;

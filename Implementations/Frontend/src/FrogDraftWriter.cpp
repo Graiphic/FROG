@@ -1,4 +1,5 @@
 #include "frog_native_engine/OptimizationBinding.hpp"
+#include "CanonicalJsonSupport.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
 #include "frog_native_engine/ConnectivityConfiguration.hpp"
@@ -38,6 +39,7 @@
 #include "frog_native_engine/WidgetCatalog.hpp"
 #include "frog_native_engine/WidgetPlacementContract.hpp"
 #include "frog_native_engine/WidgetInstance.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/TabControl.hpp"
 #include "FrogDocumentWaveformGraph.hpp"
 #include "FrogDocumentXYGraph.hpp"
@@ -1099,11 +1101,17 @@ void appendDiagramNode(
         appendIndent(output, indent + 1);
         output << "},\n";
     }
+    if(node.classOperation && node.kind != "frog_call")
+        throw std::invalid_argument("Class operations belong to a frog_call node.");
     if ((node.kind == "frog_call" || (node.kind == "fitting_model_reference" || node.kind == "calculus_function_reference"))) {
         appendJsonField(output, indent + 1, "label", node.label);
         appendJsonBooleanField(output, indent + 1, "label_visible", node.labelVisible);
         appendIndent(output, indent + 1);
         output << "\"call\": {\n";
+        if(node.classOperation) {
+            appendIndent(output,indent+2);output << "\"class_operation\": " <<
+                canonical_json::encode(writeClassSourceOperation(*node.classOperation)) << ",\n";
+        }
         appendJsonField(output, indent + 2, "document_path", node.callDocumentPath);
         appendJsonField(output, indent + 2, "document_title", node.callDocumentTitle);
         appendJsonField(output, indent + 2, "icon_svg", node.callIconSvgText);
@@ -2124,7 +2132,7 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
                 "style.frame.border_color",
                 formatRgbHex(cluster->frameStrokeRgb.value()));
         }
-        if (!cluster->elements.empty()) {
+        {
             appendCommaIfNeeded();
             appendIndent(output, indent + 1);
             appendJsonString(output, "cluster.elements");
@@ -2332,10 +2340,12 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
         appendString("interaction.path.start_path", pathBrowseStartPath(widget));
     }
     if (isListboxWidget(widget)) {
-        appendString("selection.mode","single");
-        appendString("value.selected_id",ringSelectedItemId(widget));
-        appendUnsigned("value.selected_value",static_cast<std::uint32_t>(widget.numericValue.value_or(0.0)));
-        appendRingItems();
+        const auto properties=listbox_widget::properties(widget);
+        for(const auto &[name,value]:properties.object) {
+            appendCommaIfNeeded();appendIndent(output,indent+1);appendJsonString(output,name);output << ": ";
+            document_internal::appendJsonValue(output,value);
+        }
+        if(!properties.member("items"))appendRingItems();
         if (widget.listboxColors) {
             for (std::size_t i=0;i<kListboxColorProperties.size();++i) {
                 if (const auto color=(*widget.listboxColors)[i])
@@ -2481,6 +2491,13 @@ void appendWidgetState(std::ostringstream &output, const WidgetInstance &widget,
         wroteField = true;
     };
 
+    if(isListboxWidget(widget)) {
+        const auto values=listbox_widget::currentState(widget);
+        for(const auto &[name,value]:values.object) {
+            appendCommaIfNeeded();appendIndent(output,indent+1);appendJsonString(output,name);output << ": ";
+            document_internal::appendJsonValue(output,value);
+        }
+    }
     if (widget.booleanValue.has_value()) {
         appendCommaIfNeeded();
         appendIndent(output, indent + 1);
@@ -2514,7 +2531,7 @@ void appendWidgetState(std::ostringstream &output, const WidgetInstance &widget,
         appendCommaIfNeeded();
         appendIndent(output, indent + 1);
         output << "\"numeric_value_present\": " << (widget.numericValue?"true":"false");
-    } else if (widget.numericValue.has_value()) {
+    } else if (widget.numericValue.has_value() && !isListboxWidget(widget)) {
         appendCommaIfNeeded();
         appendIndent(output, indent + 1);
         if (isRingWidget(widget) || isEnumWidget(widget) || isStringDropdownWidget(widget) || isListboxWidget(widget)) {
@@ -3127,6 +3144,12 @@ std::string serializeFrogDraft(
         if (properties.defaultTextFontFamily)
             appendJsonField(output, 2, "font_family", *properties.defaultTextFontFamily, false);
         output << "  },\n";
+    }
+    if(!properties.classSource.classes.empty()||properties.classSource.member||
+        std::any_of(diagramNodes.begin(),diagramNodes.end(),[](const auto &n){return n.classOperation.has_value();}))
+        storageMode.requiredStateRevision=(std::max)(storageMode.requiredStateRevision,kFrogClassValueDraftRevision);
+    for(const auto &[key,value]:writeClassSourceDeclaration(properties.classSource).object) {
+        appendIndent(output,1);appendJsonString(output,key);output << ": " << canonical_json::encode(value) << ",\n";
     }
     appendProgramMetadata(output, documentTitle, properties.metadata, properties.fileVersions);
     appendHostProperties(output, properties.host);

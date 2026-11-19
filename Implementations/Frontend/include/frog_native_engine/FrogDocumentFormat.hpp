@@ -28,7 +28,10 @@ inline constexpr std::uint32_t kFrogTypeDefinitionDraftRevision = 8U;
 // Explicit recovery copies retain unresolved original bytes/provenance.
 // Older readers must refuse instead of silently dropping that authority.
 inline constexpr std::uint32_t kFrogRecoveryDraftRevision = 9U;
-inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogRecoveryDraftRevision;
+// Nominal by-value class declarations, member attribution and class operations.
+// Earlier readers must refuse rather than detach identity/private access rules.
+inline constexpr std::uint32_t kFrogClassValueDraftRevision = 10U;
+inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogClassValueDraftRevision;
 inline constexpr std::string_view kFrogWidgetValueDraftFormat = "frog.widget.value.draft";
 
 [[nodiscard]] bool validFrogStudioFileVersion(std::string_view version) noexcept;

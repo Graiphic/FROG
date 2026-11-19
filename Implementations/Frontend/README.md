@@ -56,6 +56,14 @@ Studio's existing pin is preserved. Original third-party notices remain intact.
 
 
 
+## Source checkpoint — 19 November 2026
+
+The [19 November source checkpoint](../../docs/frontend-checkpoint-2026-11-19.json)
+identifies the Frontend content consumed by the exact Studio source pin. The
+source kit includes the class definitions alongside the Capteur member fixture.
+Source kit verification is separate from a clean application build, a tagged
+binary release and full regression qualification.
+
 ## Source checkpoint — 15 November 2026
 
 The [15 November source checkpoint](../../docs/frontend-checkpoint-2026-11-15.json)

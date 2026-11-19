@@ -117,6 +117,8 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
             for(const auto &row:cfg->properties) {
                 const bool label=row.memberId=="label.text"&&row.mode==ApplicationControlPropertyMode::Read;
                 const bool signaling=row.memberId=="value_signaling";
+                const bool colors=row.memberId=="colors"&&applicationControlBooleanColorsAvailable(type.name)&&
+                    valueSchema==binding::TypeRef::primitive("bool");
                 if(signaling) {
                     if(row.mode!=ApplicationControlPropertyMode::Write)
                         return fail("canonical.object_reference.write_only","Value (Signaling) is write only.");
@@ -126,8 +128,8 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;
                 const bool graphProperty=xy_reference::supported(row.memberId) && graph && graph->kind==ApplicationControlMemberKind::Property && graph->runtimeAvailable &&
                     (row.mode==ApplicationControlPropertyMode::Read?graph->readable:graph->writable);
-                if(row.memberId!="value"&&!signaling&&!label&&!graphProperty)return fail("canonical.object_reference.member_unavailable","The declared class has no native executor for this property.",true);
-                const std::string effect=label?"read_declared_label":signaling?"write_value_signaling":graphProperty?"xy_presentation":row.mode==ApplicationControlPropertyMode::Read?"read_value":"write_value_silent";
+                if(row.memberId!="value"&&!signaling&&!label&&!graphProperty&&!colors)return fail("canonical.object_reference.member_unavailable","The declared class has no native executor for this property.",true);
+                const std::string effect=colors?"boolean_colors_presentation":label?"read_declared_label":signaling?"write_value_signaling":graphProperty?"xy_presentation":row.mode==ApplicationControlPropertyMode::Read?"read_value":"write_value_silent";
                 if(std::find(result.effects.begin(),result.effects.end(),effect)==result.effects.end())result.effects.push_back(effect);
                 if(signaling&&std::find(result.effects.begin(),result.effects.end(),"publish_value_change")==result.effects.end())
                     result.effects.push_back("publish_value_change");
@@ -155,7 +157,9 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
             port("error_in",error,true);port("error_out",error,false);
             for(const auto &row:cfg->properties) {
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;
-                port("property:"+row.id,graph?graph->type:row.memberId=="label.text"?binding::TypeRef::primitive("string"):valueSchema,row.mode==ApplicationControlPropertyMode::Write,row.mode==ApplicationControlPropertyMode::Write);
+                const auto schema=row.memberId=="colors"?applicationControlBooleanColorsType():
+                    graph?graph->type:row.memberId=="label.text"?binding::TypeRef::primitive("string"):valueSchema;
+                port("property:"+row.id,schema,row.mode==ApplicationControlPropertyMode::Write,row.mode==ApplicationControlPropertyMode::Write);
             }
             if(cfg->kind==ApplicationControlKind::Invoke && xyTarget && cfg->methodId!="reinitialize") {
                 const auto method=xy_reference::member(cfg->methodId);

@@ -1,5 +1,6 @@
 #include "FrogDraftJson.hpp"
 #include "frog_native_engine/DraftSourcePreparation.hpp"
+#include "frog_native_engine/DraftClassProjection.hpp"
 #include "CanonicalComposedDraftMigration.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include "FrogDocumentArrayStorage.hpp"
@@ -69,6 +70,7 @@ struct Frozen {
     Json raw;
     SourceIndex index;
     std::string identity;
+    std::map<std::string,ClassCallTarget,std::less<>> memberCalls;
 };
 struct Expanded {
     FrogDraftData document;
@@ -81,6 +83,7 @@ struct Projection {
     std::map<std::string,Frozen> frozen;
     std::map<std::string,DraftSubFrogFrozenSource> frozenTypes;
     std::map<std::string,DraftSubFrogFrozenSource> frozenFamilies;
+    std::optional<CapturedClassProgram> classes;
     std::size_t bytes=0,invocations=0;
     std::set<std::string> reserved;
     std::string rootKey;
@@ -137,6 +140,21 @@ struct Projection {
                 const auto &issue=selected.diagnostics.front();refuse(issue.code,uri,"/diagram",issue.message,{},false,issue.incomplete?DocumentDiagnosticDomain::Control:DocumentDiagnosticDomain::Semantics);
             }
         }
+        std::map<std::string,std::string,std::less<>> classOrigins;
+        std::map<std::string,ClassCallTarget,std::less<>> memberCalls;
+        SourceIndex originalIndex;
+        if(draftHasClasses(selected.document)) {
+            if(!classes)refuse("class.closure_required",uri,"/classes","The root program must explicitly capture its class closure.");
+            if(const auto *diagram=parsed->member("diagram"))indexSource(*diagram,"/diagram",originalIndex);
+            auto lowered=projectDraftClassOperations(selected.document,*parsed,*classes,uri,source.sha256,input.resolver,root);
+            if(!lowered.accepted()) {
+                const auto &issue=lowered.issues.front();refuse(issue.code,issue.sourceUri,issue.pointer,issue.message);
+            }
+            classOrigins=std::move(lowered.generatedFrom);memberCalls=std::move(lowered.memberCalls);selected.document=std::move(lowered.document);
+            parsed=readFrogDraftJson(serializeFrogDraftData(selected.document),&error);
+            if(!parsed)refuse("class.projection_invalid",uri,"/diagram",error);
+            out.changed=true;
+        }
         selected.document.properties.arrayStorageMode=FrogArrayStorageMode::Readable;
         for(const auto &dependency:typeDefinitions.resolution.dependencies) {
             const auto &captured=dependency.source;
@@ -168,9 +186,13 @@ struct Projection {
         if(!passages.error.empty())refuse("sequence.passage_provenance_invalid",uri,"/diagram",passages.error);
         selected.document.properties.arrayStorageMode=FrogArrayStorageMode::Readable;
         Frozen entry;entry.source={std::move(source),typeDefinitions.resolution.schemaFingerprint};
+        entry.memberCalls=std::move(memberCalls);
         entry.active=std::move(selected.document);entry.raw=std::move(*parsed);entry.identity=key;
         auto [it,inserted]=frozen.emplace(key,std::move(entry));
         if(const auto *diagram=it->second.raw.member("diagram"))indexSource(*diagram,"/diagram",it->second.index);
+        for(const auto &[id,path]:originalIndex.nodes)if(it->second.index.nodes.contains(id))it->second.index.nodes[id]=path;
+        for(const auto &[id,origin]:classOrigins)if(const auto found=originalIndex.nodes.find(origin);found!=originalIndex.nodes.end())
+            it->second.index.nodes[id]=found->second;
         return it->second;
     }
     Frozen &load(const std::string &key) {return frozen.at(key);}
@@ -178,6 +200,7 @@ struct Projection {
         const std::string &uri,const std::string &at,const std::string &callsite={}) {
         if(reference.empty()||reference.size()>8192||reference.find('\0')!=reference.npos)
             refuse("subfrog.dependency.path_invalid",uri,at,"The authored dependency reference is empty, overlong or contains NUL.",callsite,false,DocumentDiagnosticDomain::Dependency);
+        if(classes)for(const auto &member:classes->methods)if(member.source.canonicalUri==reference)return member.source;
         auto result=resolveDraftDependency({DraftDependencyKind::Source,std::string(owner),std::string(reference),at,{}, {}, {}},input.resolver);
         if(result.state!=DraftDependencyState::Present||!result.bytes) {
             const bool control=result.state==DraftDependencyState::Cancelled||result.state==DraftDependencyState::LimitExceeded;
@@ -371,9 +394,11 @@ struct Projection {
         std::vector<std::string> calls;
         const bool hasFamilies=std::any_of(result.document.diagramNodes.begin(),result.document.diagramNodes.end(),
             [](const auto &node){return node.polymorphicFrogSelection.has_value();});
-        if (hasFamilies) {
+        if (hasFamilies || classes.has_value()) {
             // Resolve actual producer calls before their consumers, even when
-            // their authoring order differs from their dataflow order.
+            // their authoring order differs from their dataflow order. Class
+            // values also require their real returned Record metadata here;
+            // a serialized call-port type is not the complete producer.
             budget(result.document,source,{});
             std::map<std::string,std::vector<std::string_view>> upstream;
             std::map<std::string_view,const DiagramNode *> authoredNodes;
@@ -412,6 +437,16 @@ struct Projection {
                 resolveFamilyCall(call,result.document,source,pointer,ancestry):
                 resolve(call.callDocumentPath,source.source.source.canonicalUri,source.source.source.canonicalUri,pointer+"/call/document_path",callId);
             auto &callee=load(resolution);
+            if(classes) {
+                const auto member=classes->attributeMember(callee.source.source.canonicalUri,callee.source.source.sha256);
+                const auto requested=source.memberCalls.find(call.id);
+                if(member&&(requested==source.memberCalls.end()||requested->second!=*member))
+                    refuse("class.member_call_required",source.source.source.canonicalUri,pointer+"/call",
+                        "An actual member must be called through its class declaration and dispatch/access contract.",callId);
+                if(requested!=source.memberCalls.end()&&(!member||requested->second!=*member))
+                    refuse("class.member_identity",source.source.source.canonicalUri,pointer+"/call",
+                        "The selected actual member differs from the frozen class target.",callId);
+            }
             if(std::find(ancestry.begin(),ancestry.end(),callee.identity)!=ancestry.end())
                 refuse("subfrog.dependency.cycle",source.source.source.canonicalUri,pointer+"/call/document_path","Recursive call dependencies require an explicit call-stack contract and are not statically expanded.",callId,true);
             if(++invocations>maximumPrograms)refuse("subfrog.dependency.limit",source.source.source.canonicalUri,pointer,"Static call-instance budget exceeded.",callId);
@@ -685,8 +720,16 @@ DraftSubFrogExecutionProjection projectDraftSubFrogExecution(const DraftSubFrogE
         out.document=*input.rootDocument;
         // An unchanged root without calls needs no disk reference, closure or
         // extra dialect admission. Ordinary preparation remains its owner.
-        if(std::none_of(out.document.diagramNodes.begin(),out.document.diagramNodes.end(),[](const auto &n){return n.kind=="frog_call";}))return out;
+        if(!draftHasClasses(out.document)&&std::none_of(out.document.diagramNodes.begin(),out.document.diagramNodes.end(),[](const auto &n){return n.kind=="frog_call";}))return out;
         Projection projection{input,out};
+        if(draftHasClasses(out.document)) {
+            projection.classes=captureDraftClassProgram(out.document,input.sourceUri,input.resolver);
+            if(!projection.classes->accepted()) {
+                const auto &issues=projection.classes->classes.issues.empty()?projection.classes->issues:projection.classes->classes.issues;
+                if(issues.empty())refuse("class.capture_incomplete",input.sourceUri,"/classes","The class/member capture did not establish a complete closure.");
+                const auto &issue=issues.front();refuse(issue.code,issue.sourceUri,issue.pointer,issue.message);
+            }
+        }
         projection.rootKey=input.sourceUri;
         DraftDependencyResult rootSource{DraftDependencyState::Present,input.sourceUri,{}, {},
             hashing::sha256Hex(input.sourceUtf8),std::make_shared<const std::string>(input.sourceUtf8),{}};
@@ -712,6 +755,21 @@ DraftSubFrogExecutionProjection projectDraftSubFrogExecution(const DraftSubFrogE
         }
         for(const auto &[key,entry]:projection.frozenFamilies) {
             out.frozenSources.push_back(entry);frame(digest,key);frame(digest,entry.source.sha256);frame(digest,entry.source.identity);frame(digest,entry.source.version);
+        }
+        if(projection.classes) {
+            std::map<std::string,DraftDependencyResult,std::less<>> closure;
+            for(const auto &entry:projection.classes->classes.definitions)closure.emplace(entry.canonicalUri,entry);
+            for(const auto &entry:projection.classes->methods)closure.emplace(entry.source.canonicalUri,entry.source);
+            for(const auto &[key,source]:closure) {
+                frame(digest,"class-member-value@1");frame(digest,key);frame(digest,source.sha256);frame(digest,source.identity);frame(digest,source.version);
+                if(!projection.frozen.contains(key))out.frozenSources.push_back({source,{}});
+            }
+            std::map<std::string,std::string,std::less<>> unique;
+            std::size_t total=0;for(const auto &entry:out.frozenSources) {
+                const auto &[at,inserted]=unique.emplace(entry.source.canonicalUri,entry.source.sha256);
+                if(!inserted&&at->second!=entry.source.sha256)refuse("class.dependency_changed",entry.source.canonicalUri,"/","A class source changed during projection.");
+                if(inserted) {if(entry.source.bytes->size()>maximumClosureBytes-total)refuse("class.member_limit",entry.source.canonicalUri,"/","The complete frozen program exceeds64MiB.");total+=entry.source.bytes->size();}
+            }
         }
         for(const auto &identity:out.identities) {
             frame(digest,identity.projectedId);frame(digest,identity.sourceUri);frame(digest,identity.sourcePointer);frame(digest,identity.callPath);

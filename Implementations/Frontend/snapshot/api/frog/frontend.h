@@ -96,7 +96,9 @@ enum {
     FROG_FRONTEND_DEPENDENCY_SOURCE = 1,
     FROG_FRONTEND_DEPENDENCY_TYPE_DEFINITION = 2,
     FROG_FRONTEND_DEPENDENCY_LIBRARY_CONTRACT = 3,
-    FROG_FRONTEND_DEPENDENCY_PROFILE_CONTRACT = 4
+    FROG_FRONTEND_DEPENDENCY_PROFILE_CONTRACT = 4,
+    /* Nominal by-value .fclass declaration, distinct from a library contract. */
+    FROG_FRONTEND_DEPENDENCY_CLASS_DEFINITION = 5
 };
 
 typedef struct frog_frontend_dependency_request {

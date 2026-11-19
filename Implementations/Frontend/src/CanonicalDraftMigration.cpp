@@ -1159,7 +1159,7 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
             // Detect the actual configured node and all real scopes before any
             // conversion. Revision7 is not a global Connectivity admission.
             std::vector<const Json*> scopes{&obj(raw.member("diagram"),"/diagram")};
-            std::size_t visited=0,calls=0,objects=0;bool structure=false;
+            std::size_t visited=0,calls=0,objects=0;
             while(!scopes.empty()) {
                 const auto *scope=scopes.back();scopes.pop_back();
                 const auto &nodes=arr(scope->member("nodes"),"/diagram/nodes");
@@ -1168,15 +1168,13 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
                     if(const auto *type=node.member("type");type&&type->type==Json::Type::String&&type->string==kNativeCallDiagramNodeType&&node.member("studio_native_call"))++calls;
                     if(authoredObjectNode(node))++objects;
                     if(const auto *regions=node.member("regions")) {
-                        structure=true;const auto &entries=arr(regions,"/diagram/regions");
+                        const auto &entries=arr(regions,"/diagram/regions");
                         if(entries.size()>1024||scopes.size()>1024-entries.size())refuse("/diagram","Region scan exceeds the existing node budget.","migration.resource_limit", Domain::Control);
                         for(const auto &region:entries)scopes.push_back(&obj(region.member("diagram"),"/diagram/regions/diagram"));
                     }
-                    if(const auto *kind=node.member("kind");kind&&kind->type==Json::Type::String&&kind->string=="structure")structure=true;
                 }
             }
             if(!calls&&!objects)refuse("/draft_revision","This writer revision needs an actual configured scalar5 NativeCall or local Object Reference, not unrelated private extensions.","migration.configured_revision_unavailable", Domain::Compatibility);
-            if(calls&&structure)refuse("/diagram","This first NativeCall corridor is flat; authored regions are not flattened.","migration.native_call_region_unavailable", Domain::Semantics);
         }
         for(const auto &[key,_]:raw.object)if(key!="format"&&key!="draft_revision"&&key!="language"&&key!="title"&&key!="metadata"&&key!="interface"&&key!="interface_map"&&key!="frontPanel"&&key!="diagram"&&key!="host"&&key!="execution_policy"&&key!="text_defaults"&&key!="ide"&&key!="native_options"&&key!="icon"&&key!="conditional_compilation")
             refuse("/"+key,"This source section needs a separately specified migration.", "migration.unsupported", Domain::Compatibility);
@@ -1249,7 +1247,7 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         result.publicSource=std::make_shared<const FrogSourceDocument>(std::move(*accepted));
         if(nativeCallDraft7&&!migration.hasNativeCall&&!migration.hasObjectReferences)refuse("/diagram","The exact configured NativeCall was not migrated.","migration.native_call_configuration_invalid", Domain::Semantics);
         if(migration.hasObjectReferences)result.diagnostics.push_back({"migration.object_reference_execution_profile","/diagram","The local object-reference profile retains complete schemas, stable nested fields and target identity. Reference transport does not read Value. Explicit Value/Reinitialize effects use the real instance store; Reference needs effect opt-in and AOT is unavailable.",false});
-        if(migration.hasNativeCall)result.diagnostics.push_back({"migration.native_call_execution_profile","/diagram","Local scalar5 NativeCall retains its full codec JSON, actual scalar ABI order, default presence and complete error/mirror tuple. This first corridor is flat; Reference needs explicit local-DLL opt-in and AOT/Ui/pointers/callbacks remain unavailable.",false});
+        if(migration.hasNativeCall)result.diagnostics.push_back({"migration.native_call_execution_profile","/diagram","Local scalar5 NativeCall retains its authored scope, full codec JSON, actual scalar ABI order, default presence and complete error/mirror tuple. Reference needs explicit local-DLL opt-in.",false});
         if(migration.hasArrayReal1d)result.diagnostics.push_back({"migration.array_execution_profile","/diagram","Local frog.studio.array.real1d@1: real finite f64 Build1..32, rank1 dynamic array<f64>, explicit wired i32 Index with ARRAY_INDEX_RANGE and Size i32. No public Collections alias, Array widget/literal, Array state/region transfer, Record/String/Event composition or AOT is implied.",false});
         if(migration.hasStringBytes)result.diagnostics.push_back({"migration.string_execution_profile","/diagram","String2 uses the local frog.studio.string.bytes@1 profile: valid UTF-8 including NUL, byte Length i32 and ordered scalar Concat with real a/b drivers. No public frog.text alias, Array/Cluster lifting, String controls or owned AOT is implied.",false});
         if(migration.hasBooleanReduction)result.diagnostics.push_back({"migration.boolean_execution_profile","/diagram","Local frog.studio.boolean.reduce@1 uses exact bool a,b plus actual ascending input_3..input_16 operands; NAND/NOR/XNOR invert once after the complete fold. Implies is a separate local binary !a||b. Existing Core AND/OR/XOR/NOT remain fixed; integer, Array and Cluster coercion/lifting are unavailable.",false});

@@ -4,6 +4,8 @@
 #include "frog_native_engine/PreparedWidgetValueAssignment.hpp"
 #include "frog_native_engine/WidgetBindingType.hpp"
 #include "frog_native_engine/WidgetDataCompatibility.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
+#include "frog_native_engine/WidgetTypedValueSource.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -222,6 +224,12 @@ bool apply(WidgetInstance &target,const values::Tree &tree,std::size_t index,con
 }
 bool assignPreparedPrivateWidgetValues(WidgetInstance &detachedTarget,const WidgetInstance &source,
     bool useFieldIdentities) {
+    if(isListboxWidget(detachedTarget)||isListboxWidget(source)) {
+        if(!isListboxWidget(detachedTarget)||!isListboxWidget(source))return false;
+        if(!binding::fullTypeEqual(binding::widgetType(detachedTarget).type,binding::widgetType(source).type))return false;
+        const auto value=typedWidgetSourceValue(source);
+        return value&&listbox_widget::assignBindingValue(detachedTarget,*value);
+    }
     Preparation preparation;
     preparation.useFieldIdentities=useFieldIdentities;
     const auto targetValue=project(detachedTarget,false,preparation);

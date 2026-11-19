@@ -12,7 +12,11 @@ inline constexpr std::string_view executionArrayStorageBudgetError =
     "FROG array storage: execution projection exceeds the supported JSON representation budget.";
 inline constexpr std::string_view numericWordArrayProfile = "numeric-cell-bits-le-v1";
 inline constexpr std::string_view composedNumericArrayField = "studio_numeric_words";
-inline constexpr std::size_t maximumDecodedNumericWordsBytes = 128U * 1024U * 1024U;
+// Numeric envelopes carry U32 decoded byte counts. Bound the complete document
+// by that representable byte domain, independently of encoded JSON limits.
+// Physical allocations retain ArrayCapacity's current-host admission and their
+// strong failure guarantee. This is a logical decode bound, not reserved RAM.
+inline constexpr std::size_t maximumDecodedNumericWordsBytes = UINT32_MAX;
 struct ArrayStorageWriteContext {
     FrogArrayStorageMode mode = FrogArrayStorageMode::Readable;
     std::size_t remainingBytes = kMaximumFrogDocumentBytes;

@@ -277,7 +277,9 @@ std::optional<std::string> encodeNumericWords(const DiagramArrayValues &cells,
     const auto width=DiagramArrayValues::numericWordBytes(scalar);
     if (!width || !cells.hasNumericWords(scalar)) return std::nullopt;
     if (!arrayAllocationFitsBudget(cells.size(),width,0,context.remainingNumericWordsBytes))
-        throw std::runtime_error("FROG array storage: numeric words exceed the aggregate decoded byte budget.");
+        throw std::runtime_error("FROG array storage: numeric words exceed the aggregate decoded byte budget; required=" +
+            std::to_string(std::uint64_t(cells.size())*width) + "; remaining=" +
+            std::to_string(context.remainingNumericWordsBytes) + ".");
     std::size_t byteCount=cells.size()*width;
     cells.visitNumericSpellings([&](std::size_t,std::string_view spelling) {
         if (spelling.size()>kMaximumFrogJsonStringBytes || !validUtf8(spelling) ||
@@ -541,7 +543,21 @@ bool readArrayStorageMode(const Json &root, FrogArrayStorageMode &mode, std::str
         return true;
     }
     const auto value = jsonStringField(*storage, "array_mode").value_or("");
-    if (jsonUnsignedField(*storage, "version") != 1U) { error = "Unsupported FROG storage version."; return false; }
+    // PreserveLexeme deliberately leaves the binary64 member as NaN.
+    // Read this small version ordinal without casting that sentinel, keeping
+    // the existing integral JSON spellings 1, 1.0 and 1e0 compatible.
+    const auto *version = storage->member("version");
+    double versionNumber = std::numeric_limits<double>::quiet_NaN();
+    if (version && version->type == Json::Type::Number) {
+        versionNumber = version->number;
+        if (!std::isfinite(versionNumber)) {
+            const auto end = version->string.data() + version->string.size();
+            const auto parsed = std::from_chars(version->string.data(), end, versionNumber);
+            if (parsed.ec != std::errc{} || parsed.ptr != end)
+                versionNumber = std::numeric_limits<double>::quiet_NaN();
+        }
+    }
+    if (versionNumber != 1.0) { error = "Unsupported FROG storage version."; return false; }
     if (value == "readable") mode = FrogArrayStorageMode::Readable;
     else if (value == "automatic") mode = FrogArrayStorageMode::Automatic;
     else if (value == "compact_standalone") mode = FrogArrayStorageMode::CompactStandalone;

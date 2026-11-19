@@ -1,5 +1,6 @@
 #pragma once
 #include "frog_native_engine/NativeProgramOptions.hpp"
+#include "frog_native_engine/ClassSource.hpp"
 #include "frog_native_engine/SharedBuffer.hpp"
 #include "frog_native_engine/DiagramArrayValues.hpp"
 
@@ -563,6 +564,7 @@ struct DiagramNode {
     std::optional<std::uint32_t> conditionalDisableVeilRgb;
     int conditionalDisableVeilOpacityPercent = 30;
     std::string callDocumentPath;
+    std::optional<ClassSourceOperation> classOperation;
     std::optional<PolymorphicFrogSelection> polymorphicFrogSelection;
     // Derived presentation for the native editor. The reader and writer
     // persist the selection and family reference independently.
@@ -825,6 +827,9 @@ struct FrogExecutionPolicy {
 enum class FrogArrayStorageMode : std::uint8_t { Readable, Automatic, CompactStandalone };
 
 struct FrogSourceProperties {
+    // Authored class closure/member attribution. Unlike presentation metadata,
+    // these participate in Frontend validation and dependency fingerprints.
+    ClassSourceDeclaration classSource;
     // Private Studio draft persistence only; never a runtime type or value.
     FrogArrayStorageMode arrayStorageMode = FrogArrayStorageMode::Automatic;
     // Authoring typography inherited by newly created objects and literals.

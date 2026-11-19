@@ -451,7 +451,6 @@ struct Builder {
                         fail(n.kind==canonicalNumericExactAbsId?"IR_NUMERIC_EXACT_ABS_SIGNATURE":"IR_NUMERIC_CONVERSION_SIGNATURE",why,p+(at.empty()?"":"/"+at));
                 }
                 if(n.kind==kNativeCallScalarOperationId) {
-                    if(!raw.region.empty())fail("IR_NATIVE_CALL_REGION","The scalar5 NativeCall corridor requires an actual flat root region.",p,true);
                     if(text(v.member("native_call_profile"),p)!=kNativeCallScalarProfile)
                         fail("IR_NATIVE_CALL_PROFILE","NativeCall requires its exact local scalar5 profile.",p);
                     CanonicalNativeCallDiagnostic diagnostic;

@@ -71,9 +71,12 @@ def ignored(part):
 
 def approved(name):
     path = relative_name(name)
+    class_fixture = (name.startswith(FRONT + "/tests/fixtures/")
+                     and path.suffix.lower() == ".fclass")
     return (not any(ignored(p) for p in path.parts[:-1])
             and path.name.casefold() not in EXCLUDED
-            and (path.suffix.lower() in ALLOWED or path.name in ("LICENSE", "NOTICE", "CMakeLists.txt")))
+            and (path.suffix.lower() in ALLOWED or class_fixture
+                 or path.name in ("LICENSE", "NOTICE", "CMakeLists.txt")))
 
 
 def permitted(name):

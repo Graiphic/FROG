@@ -103,7 +103,7 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/FrontendOperation.cpp")
         add_executable(frog-frontend-class-definition-smoke tests/class_definition_smoke.cpp)
         target_link_libraries(frog-frontend-class-definition-smoke PRIVATE frog-frontend-production)
         add_test(NAME frog-frontend-class-definition-smoke COMMAND frog-frontend-class-definition-smoke
-            "${CMAKE_CURRENT_SOURCE_DIR}/../../Examples/compiler/classes-v1")
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/classes-v1")
         set_tests_properties(frog-frontend-class-definition-smoke PROPERTIES TIMEOUT 30 LABELS "frontend;classes;focused")
         find_package(Threads REQUIRED)
         find_package(Python3 COMPONENTS Interpreter REQUIRED)

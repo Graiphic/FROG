@@ -22,7 +22,11 @@ struct ClassDependency {
     std::string id;
     std::string path;
     std::uint32_t revision = 0;
+    bool operator==(const ClassDependency &) const = default;
 };
+
+[[nodiscard]] std::optional<ClassDependency> readClassDependency(
+    const source::JsonValue &,std::string_view extension,std::string *error=nullptr);
 
 struct ClassDependencyRoot {
     std::string ownerUri;
@@ -78,6 +82,8 @@ struct ClassIssue {
     std::string pointer;
     std::string message;
     std::string sourceUri;
+    std::string relatedSourceUri;
+    std::string relatedPointer;
 };
 
 // Structural codec: readable but semantically invalid class declarations can
@@ -139,6 +145,10 @@ public:
     [[nodiscard]] static std::optional<ClassHierarchy> validate(ClassDefinitions definitions,
         std::vector<ClassIssue> &issues);
     [[nodiscard]] bool assignable(std::string_view from, std::string_view to) const;
+    // Hierarchy-sensitive connections are resolved here, not by the structural
+    // type resolver or a Canvas-specific inheritance table.
+    [[nodiscard]] binding::TypeResolution connectObjects(const binding::TypeRef &from,const binding::TypeRef &to) const;
+    [[nodiscard]] std::optional<binding::TypeRef> commonObjectType(std::span<const binding::TypeRef>) const;
     [[nodiscard]] const ClassDefinition *findClass(std::string_view id) const;
     [[nodiscard]] const ClassMethod *findMethod(const ClassCallTarget &) const;
     // caller must be attributed to an actual, validated member declaration.

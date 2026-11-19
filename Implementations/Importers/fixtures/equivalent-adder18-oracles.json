@@ -1,0 +1,210 @@
+[
+  {
+    "inputs": {
+      "a0": false,
+      "a1": false,
+      "b0": false,
+      "b1": false
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": false,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": false,
+      "b0": false,
+      "b1": false
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": false,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": true,
+      "b0": false,
+      "b1": false
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": true,
+      "b0": false,
+      "b1": false
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": false,
+      "b0": true,
+      "b1": false
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": false,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": false,
+      "b0": true,
+      "b1": false
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": true,
+      "b0": true,
+      "b1": false
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": true,
+      "b0": true,
+      "b1": false
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": false,
+      "carry_out": true
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": false,
+      "b0": false,
+      "b1": true
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": false,
+      "b0": false,
+      "b1": true
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": true,
+      "b0": false,
+      "b1": true
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": false,
+      "carry_out": true
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": true,
+      "b0": false,
+      "b1": true
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": false,
+      "carry_out": true
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": false,
+      "b0": true,
+      "b1": true
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": true,
+      "carry_out": false
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": false,
+      "b0": true,
+      "b1": true
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": false,
+      "carry_out": true
+    }
+  },
+  {
+    "inputs": {
+      "a0": false,
+      "a1": true,
+      "b0": true,
+      "b1": true
+    },
+    "expected": {
+      "sum0": true,
+      "sum1": false,
+      "carry_out": true
+    }
+  },
+  {
+    "inputs": {
+      "a0": true,
+      "a1": true,
+      "b0": true,
+      "b1": true
+    },
+    "expected": {
+      "sum0": false,
+      "sum1": true,
+      "carry_out": true
+    }
+  }
+]

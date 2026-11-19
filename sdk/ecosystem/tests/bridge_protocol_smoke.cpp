@@ -16,6 +16,8 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <algorithm>
+#include <vector>
 
 namespace {
 namespace b=frog::bridge;
@@ -109,7 +111,7 @@ void actualDraft() {
     need(!b::graphRequirements(cj::encode(invalid),direct.fir,requirements,error)&&error.code=="bridge.source_projection","A different Source projection inherited the real FIR");
     invalid=context;invalid.object["source"].object["family"]=cj::string("frog.unknown");
     need(!b::graphRequirements(cj::encode(invalid),direct.fir,requirements,error)&&error.code=="bridge.version","An unknown authored source family was admitted");
-    invalid=context;invalid.object["source"].object["version"]=cj::string("10");
+    invalid=context;invalid.object["source"].object["version"]=cj::string("11");
     need(!b::graphRequirements(cj::encode(invalid),direct.fir,requirements,error)&&error.code=="bridge.version","An unknown draft revision was inferred as current");
     DraftSourceCapture capture;capture.bytes=serializeFrogDraftData(passThroughDraft(true));capture.version="sha256:"+hashing::sha256Hex(capture.bytes);
     parent.diagramEdges.clear();DiagramNode call;call.id="call";call.kind="frog_call";call.type="frog.studio.frog_call";call.callDocumentPath="child.frog";call.layout={120,20,48,48};
@@ -271,8 +273,62 @@ void actual(const std::filesystem::path &fixtures) {
     }
 }
 }
+namespace {
+void actualClasses(const std::filesystem::path &folder) {
+    struct Captures {
+        struct Entry {frog_frontend_dependency_kind kind;std::string reference,uri,id,version,bytes;unsigned leases=0;};
+        std::vector<Entry> entries;unsigned resolves=0,releases=0;bool valid=true;
+        static frog_frontend_resolve_status FROG_FRONTEND_CALL resolve(void *user,const frog_frontend_dependency_request *request,frog_frontend_resolved_dependency *out) {
+            auto &self=*static_cast<Captures*>(user);++self.resolves;
+            if(!request||!out){self.valid=false;return FROG_FRONTEND_RESOLVE_ERROR;}
+            const std::string_view reference(request->reference.data,request->reference.size);
+            for(auto &entry:self.entries)if(entry.kind==request->kind&&entry.reference==reference) {
+                out->source_uri=span(entry.uri);out->identity=span(entry.id);out->version=span(entry.version);out->bytes=span(entry.bytes);
+                out->lease=&entry;++entry.leases;return FROG_FRONTEND_RESOLVED;
+            }
+            self.valid=false;return FROG_FRONTEND_NOT_FOUND;
+        }
+        static void FROG_FRONTEND_CALL release(void *user,const frog_frontend_resolved_dependency *value) {
+            auto &self=*static_cast<Captures*>(user);++self.releases;
+            if(!value){self.valid=false;return;}
+            if(!value->lease)return;
+            for(auto &entry:self.entries)if(value->lease==&entry) {
+                if(!entry.leases)self.valid=false;else --entry.leases;return;
+            }
+            self.valid=false;
+        }
+    } captures;
+    for(const auto &file:std::filesystem::directory_iterator(folder))if(file.is_regular_file()&&
+        (file.path().extension()==".frog"||file.path().extension()==".fclass")) {
+        const auto name=file.path().filename().generic_u8string();std::string reference(name.begin(),name.end());
+        const auto bytes=read(file.path()),uri="fixture:/"+reference;
+        const bool definition=file.path().extension()==".fclass";
+        const auto raw=parse(bytes);
+        captures.entries.push_back({static_cast<frog_frontend_dependency_kind>(definition?FROG_FRONTEND_DEPENDENCY_CLASS_DEFINITION:FROG_FRONTEND_DEPENDENCY_SOURCE),
+            reference,uri,definition?raw.object.at("id").string:uri,
+            definition?raw.object.at("revision").string:"sha256:"+frog::native_engine::hashing::sha256Hex(bytes),bytes});
+    }
+    const auto result=deriveBytes(read(folder/"Main.frog"),"frog.document.draft","10",{&captures,Captures::resolve,Captures::release});
+    need(captures.valid&&captures.resolves==captures.releases&&
+        std::all_of(captures.entries.begin(),captures.entries.end(),[](const auto &entry){return entry.leases==0;}),
+        "Actual class capture leaked a dependency or changed its explicit resolution identity");
+    b::GraphRequirements requirements;b::Error error;
+    need(b::graphRequirements(result.provenance,result.fir,requirements,error),"Actual class FIR/provenance was refused: "+error.code+" "+error.message);
+    const auto context=parse(result.provenance);const auto &dependencies=context.object.at("dependencies").array;
+    need(std::count_if(dependencies.begin(),dependencies.end(),[](const auto &entry){return entry.object.at("kind").string=="5";})==4,
+        "Actual nominal class dependencies did not retain four kind-5 definitions");
+    requirements.engineId="graiphic.llvm.cpu";requirements.targetId="windows-x64";requirements.profileId="native-fast";
+    need(b::negotiate(requirements,descriptor(requirements),error),"Classes changed negotiation of their unchanged checked FIR realization");
+    auto invalid=context;invalid.object["source"].object["version"]=cj::string("11");
+    need(!b::graphRequirements(cj::encode(invalid),result.fir,requirements,error)&&error.code=="bridge.version","A future source revision inherited class admission");
+    invalid=context;invalid.object["dependencies"].array.front().object["kind"]=parse("6");
+    need(!b::graphRequirements(cj::encode(invalid),result.fir,requirements,error)&&error.code=="bridge.version","An unknown dependency kind inherited class admission");
+    invalid=context;invalid.object["dependencies"].array.front().object["sha256"]=cj::string("bad");
+    need(!b::graphRequirements(cj::encode(invalid),result.fir,requirements,error)&&error.code=="bridge.schema","An invalid class closure digest was admitted");
+}
+}
 int main(int argc,char **argv) {
-    try {need(argc==3,"Usage: bridge-protocol-smoke <ecosystem-fixtures> <real-frontend-fixtures>");historic(argv[1]);strictWire();exchanges();lifecyclePayloads();actual(argv[2]);actualDraft();
+    try {need(argc==4,"Usage: bridge-protocol-smoke <ecosystem-fixtures> <real-frontend-fixtures> <class-fixtures>");historic(argv[1]);strictWire();exchanges();lifecyclePayloads();actual(argv[2]);actualDraft();actualClasses(std::filesystem::u8path(argv[3]));
         std::cout<<"bridge_protocol_smoke PASS checks="<<checks<<" (historical wire + actual API3 FIR/provenance)\n";return 0;
     }catch(const std::exception &e){std::cerr<<"bridge_protocol_smoke FAIL: "<<e.what()<<'\n';return 1;}
 }

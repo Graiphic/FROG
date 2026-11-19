@@ -165,6 +165,14 @@ CanonicalObjectReferencePort physicalPort(std::string id, const binding::TypeRef
 }
 } // namespace
 
+std::optional<ClassDependency> readClassDependency(const source::JsonValue &value,std::string_view extension,std::string *error) {
+    try {
+        auto result=readDependency(value,"/class");
+        require(dependency(result,extension),"/class","Invalid class dependency identity, path or revision.");
+        return result;
+    } catch(const InvalidClass &failure){if(error)*error=failure.what();return {};}
+}
+
 std::optional<ClassDefinition> readClassDefinition(std::string_view bytes, std::string *error) {
     if (error) error->clear();
     try {
@@ -439,6 +447,23 @@ bool ClassHierarchy::assignable(std::string_view from, std::string_view to) cons
         current = current->parent ? findClass(current->parent->id) : nullptr;
     }
     return false;
+}
+
+binding::TypeResolution ClassHierarchy::connectObjects(const binding::TypeRef &from,const binding::TypeRef &to) const {
+    if(from.kind!=binding::TypeKind::Object||to.kind!=binding::TypeKind::Object||!from.known()||!to.known())
+        return {binding::ResolutionStatus::Incompatible,{},"class.object_required","Only a nominal object value can connect to an object terminal."};
+    if(!findClass(from.name)||!findClass(to.name))
+        return {binding::ResolutionStatus::Unresolved,{},"class.dependency_unavailable","The declared class is absent from the captured closure."};
+    if(assignable(from.name,to.name))return {binding::ResolutionStatus::Compatible,to,{},{}};
+    return {binding::ResolutionStatus::Incompatible,{},assignable(to.name,from.name)?"class.downcast_forbidden":"class.unrelated_types",
+        "A parent cannot connect directly to a child; unrelated nominal classes remain incompatible."};
+}
+std::optional<binding::TypeRef> ClassHierarchy::commonObjectType(std::span<const binding::TypeRef> values) const {
+    if(values.empty())return {};
+    for(const auto &value:values)if(value.kind!=binding::TypeKind::Object||!value.known()||!findClass(value.name))return {};
+    for(auto *candidate=findClass(values.front().name);candidate;candidate=candidate->parent?findClass(candidate->parent->id):nullptr)
+        if(std::all_of(values.begin(),values.end(),[&](const auto &v){return assignable(v.name,candidate->id);}))return binding::TypeRef::object(candidate->id);
+    return {};
 }
 
 bool ClassHierarchy::canAccess(const std::optional<ClassCallTarget> &caller, const ClassCallTarget &target) const {

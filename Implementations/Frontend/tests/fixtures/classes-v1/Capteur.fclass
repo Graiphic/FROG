@@ -1,0 +1,109 @@
+{
+  "format": "frog.class",
+  "version": 1,
+  "id": "sensor",
+  "name": "Capteur",
+  "revision": 1,
+  "parent": null,
+  "fields": [
+    {
+      "id": "offset",
+      "label": "Offset",
+      "type": "i64",
+      "default": 10
+    }
+  ],
+  "methods": [
+    {
+      "id": "set-offset",
+      "name": "Set Offset",
+      "implementation": {
+        "id": "sensor.offset",
+        "path": "Set Offset.frog",
+        "revision": 1
+      },
+      "visibility": "public",
+      "dispatch": "static",
+      "overrides": null,
+      "ports": [
+        {
+          "slot": "receiver",
+          "port_id": "self-in",
+          "direction": "input",
+          "kind": "object",
+          "type": null
+        },
+        {
+          "slot": "offset",
+          "port_id": "offset",
+          "direction": "input",
+          "kind": "data",
+          "type": "i64"
+        },
+        {
+          "slot": "updated",
+          "port_id": "self-out",
+          "direction": "output",
+          "kind": "object",
+          "type": null
+        }
+      ]
+    },
+    {
+      "id": "measure",
+      "name": "Mesurer",
+      "implementation": {
+        "id": "sensor.measure",
+        "path": "Mesurer.frog",
+        "revision": 1
+      },
+      "visibility": "public",
+      "dispatch": "dynamic",
+      "overrides": null,
+      "ports": [
+        {
+          "slot": "receiver",
+          "port_id": "sensor.self",
+          "direction": "input",
+          "kind": "object",
+          "type": null
+        },
+        {
+          "slot": "result",
+          "port_id": "sensor.reading",
+          "direction": "output",
+          "kind": "data",
+          "type": "i64"
+        }
+      ]
+    },
+    {
+      "id": "get-offset",
+      "name": "Get Offset",
+      "implementation": {
+        "id": "sensor.get-offset",
+        "path": "Get Offset.frog",
+        "revision": 1
+      },
+      "visibility": "protected",
+      "dispatch": "static",
+      "overrides": null,
+      "ports": [
+        {
+          "slot": "receiver",
+          "port_id": "get.self",
+          "direction": "input",
+          "kind": "object",
+          "type": null
+        },
+        {
+          "slot": "result",
+          "port_id": "get.offset",
+          "direction": "output",
+          "kind": "data",
+          "type": "i64"
+        }
+      ]
+    }
+  ]
+}

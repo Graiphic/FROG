@@ -1,3 +1,4 @@
+#include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/WidgetBindingType.hpp"
 #include "frog_native_engine/WidgetInstance.hpp"
@@ -17,8 +18,11 @@ void attachChoices(TypeRef &type, const WidgetInstance &widget, ChoiceKind kind)
 }
 TypeParseResult leafType(const WidgetInstance &widget) {
     if (isListboxWidget(widget)) {
-        if (widget.valueType!="u16") return {{}, "This Listbox terminal exposes value.selected_value as U16.", false};
-        return parseType("u16");
+        const auto state=listbox_widget::state(widget);
+        if(const auto why=listbox_widget::validate(widget,state);!why.empty())return {{},why,false};
+        const auto type=listbox_widget::bindingType(state.projection);
+        if(widget.valueType!=type.canonical())return {{},"Listbox declared type and explicit value projection disagree.",false};
+        return {type,{},false};
     }
     if(isWaveformGraphWidget(widget)) {
         if(!widget.waveformGraph)return {{},"Waveform Graph has no typed state.",false};

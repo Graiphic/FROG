@@ -52,11 +52,11 @@ def definition(ast, name):
                 and children(n)[-1]["kind"] == "CompoundStmt")
 
 
-def location(node, data):
+def location(node, data, source_name="expression.c"):
     begin = node.get("range", {}).get("begin", node.get("loc", {}))
     begin = begin.get("expansionLoc", begin)
     offset = begin.get("offset", 0)
-    return {"file": "expression.c", "line": data.count(b"\n", 0, offset) + 1,
+    return {"file": source_name, "line": data.count(b"\n", 0, offset) + 1,
             "column": offset - data.rfind(b"\n", 0, offset), "byte_offset": offset}
 
 
@@ -67,30 +67,81 @@ def record_fields(ast, name):
             if field["kind"] == "FieldDecl"]
 
 
-def read_check(ast, data, entry):
-    check = definition(ast, entry)
+def unavailable_entry(ast, data, check, source_name):
+    """Explain the actual reachable effects, without admitting an opaque call.
+
+    This is diagnostic discovery only. read_check remains the owner of the
+    admitted checked/fail profile; this function never emits a partial result.
+    """
+    definitions = {node["name"]: node for node in children(ast)
+                   if node.get("kind") == "FunctionDecl" and children(node)
+                   and children(node)[-1]["kind"] == "CompoundStmt"}
+    pending, seen, members, effects = [check["name"]], set(), [], []
+
+    def walk(node):
+        pending_nodes = [node]
+        while pending_nodes:
+            current = pending_nodes.pop()
+            yield current
+            pending_nodes.extend(reversed(children(current)))
+
+    runtime_services = {"_create_locale", "_free_locale", "_strtod_l", "strlen", "isspace", "isdigit"}
+    while pending:
+        name = pending.pop(0)
+        if name in seen:
+            continue
+        seen.add(name)
+        function = definitions[name]
+        members.append({"name": name, **location(function, data, source_name)})
+        for node in walk(children(function)[-1]):
+            if node.get("kind") != "CallExpr" or not children(node):
+                continue
+            callee = strip(children(node)[0])
+            reference = callee.get("referencedDecl", {})
+            called = reference.get("name")
+            if reference.get("kind") != "FunctionDecl":
+                continue
+            if called in definitions and called not in seen:
+                pending.append(called)
+            if called in runtime_services or called == name:
+                effects.append({"function": name, "callee": called,
+                    "reason": "recursive_call" if called == name else "c_runtime_effect",
+                    **location(node, data, source_name)})
+    return {"code": "c_import.entry_unavailable", **location(check, data, source_name),
+            "entry": check["name"], "reachable_members": members, "unavailable_effects": effects,
+            "message": "The checked/fail profile does not translate this complete entry. "
+                       "C byte cursors, recursive control flow and CRT calls need admitted typed realizations; "
+                       "ordinary numeric String conversion is not a replacement for _strtod_l. "
+                       "No executable partial document was emitted."}
+
+
+def read_check(ast, data, entry, source_name="expression.c"):
+    try:
+        check = definition(ast, entry)
+    except StopIteration as error:
+        raise ValueError({"code": "c_import.entry_missing", "file": source_name,
+                          "entry": entry, "message": "The selected C function has no definition in this translation unit."}) from error
     if entry != "checked":
-        raise ValueError({"code": "c_import.entry_unavailable", **location(check, data),
-                          "message": "The complete entry requires C pointer/locale/recursion or other effects outside this import profile."})
+        raise ValueError(unavailable_entry(ast, data, check, source_name))
     fail = definition(ast, "fail")
     parser_fields = dict(record_fields(ast, "Parser"))
     if (parser_fields.get("nodes") != "unsigned int" or parser_fields.get("error") != "int"
             or record_fields(ast, "Value") != [("number", "double"), ("depth", "unsigned int")]):
-        raise ValueError({"code": "c_import.record_unavailable", **location(check, data)})
+        raise ValueError({"code": "c_import.record_unavailable", **location(check, data, source_name)})
     # AST casts and referenced declarations, rather than comments, determine the
     # admitted C profile. This intentionally rejects new shapes before emitting.
     signatures = {"checked": "Value (Parser *, double, unsigned int)",
                   "fail": "Value (Parser *, int)"}
     for func in (check, fail):
         if func["type"]["qualType"] != signatures[func["name"]]:
-            raise ValueError({"code": "c_import.signature_unavailable", **location(func, data)})
+            raise ValueError({"code": "c_import.signature_unavailable", **location(func, data, source_name)})
     fail_body = shape(children(fail)[-1])
     if fail_body != ("CompoundStmt", ("IfStmt", ("!", ("error", "parser")),
                      ("=", ("error", "parser"), "code")), ("ReturnStmt", (0, 0))):
-        raise ValueError({"code": "c_import.effect_unavailable", **location(fail, data)})
+        raise ValueError({"code": "c_import.effect_unavailable", **location(fail, data, source_name)})
     statements = children(children(check)[-1])
     if len(statements) != 3:
-        raise ValueError({"code": "c_import.statement_unavailable", **location(check, data)})
+        raise ValueError({"code": "c_import.statement_unavailable", **location(check, data, source_name)})
     limit, finite, success = map(shape, statements)
     try:
         l_if, (disjunction, (count_cmp, (increment, (count_field, parser)), count),
@@ -98,7 +149,7 @@ def read_check(ast, data, entry):
         f_if, (negation, (classification, (builtin, classifier, *classification_values), zero)), (
             ret2, (call2, name2, p2, finite_error)) = finite
     except (TypeError, ValueError) as error:
-        raise ValueError({"code": "c_import.statement_unavailable", **location(check, data)}) from error
+        raise ValueError({"code": "c_import.statement_unavailable", **location(check, data, source_name)}) from error
     if ((l_if, disjunction, count_cmp, increment, count_field, parser, depth_cmp, depth_name,
          ret1, call1, name1, p1) != ("IfStmt", "||", ">", "++", "nodes", "parser",
                                       ">", "depth", "ReturnStmt", "CallExpr", "fail", "parser")
@@ -110,9 +161,9 @@ def read_check(ast, data, entry):
             or not all(isinstance(x, int) for x in (count, depth, limit_error, finite_error))
             or not all(0 <= x <= 0xFFFFFFFF for x in (count, depth))
             or not all(-(2**31) <= x < 2**31 for x in (limit_error, finite_error))):
-        raise ValueError({"code": "c_import.statement_unavailable", **location(check, data)})
+        raise ValueError({"code": "c_import.statement_unavailable", **location(check, data, source_name)})
     return (count, depth, limit_error, finite_error), {
-        key: location(node, data) for key, node in zip(
+        key: location(node, data, source_name) for key, node in zip(
             ("checked", "fail", "limit", "finite", "success"), (check, fail, *statements))}
 
 
@@ -285,9 +336,14 @@ def main():
     p.add_argument("--frontend", type=Path, required=True)
     p.add_argument("--output", type=Path, required=True)
     args = p.parse_args()
-    data = args.source.read_bytes()
     source_header = args.source.with_suffix(".h")
-    header_data = source_header.read_bytes()
+    try:
+        data = args.source.read_bytes()
+        header_data = source_header.read_bytes()
+    except OSError as error:
+        print(json.dumps({"code": "c_import.header_or_source_missing", "source": str(source_header),
+                          "message": "This specialized QMH profile requires the source and its sibling header. Choose Pure C function for ordinary covered functions.", "detail": str(error)}))
+        return 2
     command = [str(args.clang.resolve(strict=True)), "/nologo", "/TC", "/std:c17",
                "/utf-8", "/W4", "/WX", "/O2", "/MT", "/DUNICODE", "/D_UNICODE",
                "/D_WIN32_WINNT=0x0A00", "/clang:-fsyntax-only",
@@ -309,10 +365,12 @@ def main():
         return 2
     try:
         ast = json.loads(ast_result.stdout)
-        constants, locations = read_check(ast, data, args.entry)
+        constants, locations = read_check(ast, data, args.entry, args.source.name)
     except (StopIteration, KeyError, ValueError) as error:
         details = error.args[0] if error.args and isinstance(error.args[0], dict) else {
-            "code": "c_import.ast_unavailable", "entry": args.entry}
+            "code": "c_import.profile_structure_unavailable", "entry": args.entry, "source": str(args.source),
+            "message": "Clang parsed the file, but its AST does not match the specialized checked/fail QMH contract. Use a detected pure function or another profile.",
+            "detail": str(error)}
         print(json.dumps(details))
         return 2
     doc, mapping = emit(constants, locations)

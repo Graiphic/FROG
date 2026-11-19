@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "frog_native_engine/WidgetDataOperations.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
 #include "frog_native_engine/FrogDocumentWidgetValues.hpp"
@@ -128,6 +129,9 @@ void intrinsic(WidgetInstance &widget) {
         widget.waveformGraph->current.reset();
     } else if (isBooleanWidget(widget) || isButtonWidget(widget)) {
         static_cast<void>(setWidgetBooleanValue(widget, false));
+    } else if(isListboxWidget(widget)&&listbox_widget::state(widget).projection!=listbox_widget::Projection::SelectedValue) {
+        auto state=listbox_widget::state(widget);state.selection.selected.clear();state.selection.active.clear();state.selection.anchor.clear();
+        static_cast<void>(listbox_widget::setState(widget,std::move(state)));
     } else if (isEnumWidget(widget) || isRingWidget(widget) || isListboxWidget(widget)) {
         const auto item = std::find_if(widget.ringItems.begin(), widget.ringItems.end(), [](const auto &v) { return !v.disabled; });
         widget.numericValue = item == widget.ringItems.end() ? 0.0 : double(item->value);

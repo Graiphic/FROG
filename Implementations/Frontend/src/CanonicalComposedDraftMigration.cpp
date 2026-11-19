@@ -31,6 +31,7 @@
 #include "FrogDocumentConditionalDisable.hpp"
 #include "frog_native_engine/ApplicationControlSourceCodec.hpp"
 #include "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
+#include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/CanonicalNativeCallScalar.hpp"
 #include "frog_native_engine/CanonicalInPlaceDescriptor.hpp"
 #include "frog_native_engine/CanonicalCollectionDescriptor.hpp"
@@ -84,6 +85,7 @@
 #include "frog_native_engine/WidgetBindingType.hpp"
 #include "frog_native_engine/TypeDefinitionLink.hpp"
 #include "frog_native_engine/WidgetTypedValueSource.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/TimestampSourceProjection.hpp"
 #include "frog_native_engine/CanonicalNumericScalarPalette.hpp"
 #include "frog_native_engine/Sha256.hpp"
@@ -138,11 +140,24 @@ void fields(const Json &value,std::initializer_list<std::string_view> names,cons
 }
 
 void authoredRootFields(const Json &root) {
-    fields(root,{"format","draft_revision","language","title","metadata","interface","interface_map","frontPanel","diagram","host","execution_policy","text_defaults","ide","native_options","icon","conditional_compilation"},"/");
+    fields(root,{"format","draft_revision","language","title","metadata","interface","interface_map","frontPanel","diagram","host","execution_policy","text_defaults","ide","native_options","icon","conditional_compilation","classes","class_member","storage"},"/");
+    // Storage is the existing writer's encoding policy, not an operation or
+    // a change of numeric values. Keep it in original/provenance source and
+    // validate with the same codec as the common document reader.
+    if(const auto *storage=root.member("storage")) {
+        fields(*storage,{"version","array_mode"},"/storage");
+        FrogArrayStorageMode mode;
+        std::string error;
+        if(!document_internal::readArrayStorageMode(root,mode,error))
+            fail("/storage",error,"migration.storage_invalid",Domain::Integrity);
+    }
     // The common reader and Conditional specialization already consume these
     // exact project/target symbols. Recognize the same authored field here,
     // retaining its strict schema instead of rejecting or erasing it.
     FrogSourceProperties properties;
+    std::string classError;
+    if(!readClassSourceDeclaration(root,properties.classSource,&classError))
+        fail("/classes",classError,"class.source_invalid",Domain::Semantics);
     if(const auto error=document_internal::readCompilationSymbols(root,properties);!error.empty())
         fail("/conditional_compilation",error,"migration.conditional_symbols_invalid",Domain::Semantics);
 }
@@ -271,6 +286,11 @@ std::optional<Json> composedNumericValue(const Json &value,std::string_view type
         float number=0;const auto parsed=std::from_chars(value.string.data(),value.string.data()+value.string.size(),number);
         if(parsed.ec!=std::errc{}||parsed.ptr!=value.string.data()+value.string.size()||!std::isfinite(number))return {};
         return value;
+    }
+    if(type=="i128" || type=="u128") {
+        if(value.type!=Json::Type::Number)return {};
+        const auto exact=numeric_value::canonicalWideIntegerLexeme(value.string,type);
+        return exact?source::parseJson(*exact,nullptr,source::JsonNumberPolicy::PreserveLexeme):std::nullopt;
     }
     const bool signedNarrow=type=="i4"||type=="i8"||type=="i16",unsignedNarrow=type=="u4"||type=="u8"||type=="u16";
     if(signedNarrow||unsignedNarrow) {
@@ -438,6 +458,7 @@ struct Adapter {
     std::map<std::string,Literal> literals;
     std::set<std::string> activeLiteral,edgeIds,widgetIds,usedPortNodes,sourceNodeIds;
     std::map<std::string,binding::TypeRef> widgetTypes;
+    Json editorOnlyWidgets=array();
 
     bool hasNativeCalls() const {
         return std::any_of(nodes.begin(),nodes.end(),[](const auto &entry){
@@ -866,6 +887,29 @@ struct Adapter {
         } else fail(at,"This owned literal family needs an explicit composed-program contract.","migration.composed_literal_unavailable", Domain::Compatibility);
         activeLiteral.erase(id);return literals.emplace(id,std::move(value)).first->second;
     }
+    // The native writer historically omitted the elements array for an empty
+    // editor Cluster. Recognize that exact shape, never a missing nonempty
+    // schema or a malformed elements field. It is not an executable record.
+    bool emptyClusterEditor(const Json &widget) {
+        const auto *klass=widget.member("classId"),*declared=widget.member("valueType"),*props=widget.member("props");
+        if(!klass||klass->type!=Json::Type::String||
+           (klass->string!="frog.widgets.cluster_control"&&klass->string!="frog.widgets.cluster_indicator")||
+           !declared||declared->type!=Json::Type::String||
+           (declared->string!="cluster:unknown"&&declared->string!="cluster<>")||
+           !props||props->type!=Json::Type::Object)return false;
+        const auto *parts=props->member("cluster.elements");
+        return !parts||(parts->type==Json::Type::Array&&parts->array.empty());
+    }
+    bool widgetParticipates(std::string_view id) const {
+        const auto mentions=[&](const auto &self,const Json &value)->bool {
+            if(value.type==Json::Type::String)return value.string==id;
+            if(value.type==Json::Type::Object)for(const auto &[_,child]:value.object)if(self(self,child))return true;
+            if(value.type==Json::Type::Array)for(const auto &child:value.array)if(self(self,child))return true;
+            return false;
+        };
+        for(const auto &[_,node]:nodes)if(mentions(mentions,*node.raw))return true;
+        return false;
+    }
     binding::TypeRef widgetType(const Json &widget,const std::string &path,unsigned depth=0,const binding::TypeRef *attested=nullptr) {
         if(depth>32)fail(path,"Widget value nesting exceeds32.", "migration.composed_source_invalid", Domain::Control);
         const auto klass=text(widget.member("classId"),path+"/classId"),declared=text(widget.member("valueType"),path+"/valueType");
@@ -938,11 +982,13 @@ struct Adapter {
         const bool ringClass=klass=="frog.widgets.ring_control"||klass=="frog.widgets.ring_indicator";
         const bool listboxClass=klass=="frog.widgets.listbox_control"||klass=="frog.widgets.listbox_indicator";
         if(listboxClass) {
-            const auto *mode=props.member("selection.mode");
-            if(depth!=0 || declared!="u16" || (mode && (mode->type!=Json::Type::String || mode->string!="single")))
-                fail(path,"The native Listbox profile requires a root widget with single selection and a U16 selected value.",
+            const auto actual=deserializeArrayElementWidget(encode(widget));
+            const auto type=actual?binding::widgetType(*actual):binding::TypeParseResult{{},"Listbox data cannot be decoded",false};
+            if(depth!=0 || !type.valid() || !type.type.known() ||
+               (attested && !canonicalObjectReferenceFullTypeEqual(*attested,type.type)))
+                fail(path,"The native Listbox projection is unavailable: "+type.error,
                     "migration.listbox_profile_unavailable",Domain::FrontendCapability);
-            return binding::TypeRef::primitive("u16");
+            return type.type;
         }
         const auto *dropdown=props.member("display.string.dropdown");
         const bool dropdownClass=stringClass&&dropdown&&dropdown->type==Json::Type::Boolean&&dropdown->boolean;
@@ -981,6 +1027,22 @@ struct Adapter {
     }
     Json scalarWidgetValue(const Json &widget,const binding::TypeRef &schema,const std::string &path) {
         const auto &props=widgetProperties(widget,path);
+        const auto *classField=widget.member("classId");
+        const auto classId=classField&&classField->type==Json::Type::String?classField->string:std::string{};
+        if(classId=="frog.widgets.listbox_control"||classId=="frog.widgets.listbox_indicator") {
+            const auto actual=deserializeArrayElementWidget(encode(widget));std::string why;
+            const auto value=actual?typedWidgetSourceValue(*actual,&why):std::nullopt;
+            if(!actual||!value||!canonicalObjectReferenceFullTypeEqual(binding::widgetType(*actual).type,schema))
+                fail(path,"Listbox exact selection/projection unavailable: "+why,"migration.listbox_profile_unavailable",Domain::FrontendCapability);
+            return *value;
+        }
+        if(schema.kind==binding::TypeKind::Primitive && (schema.name=="i128" || schema.name=="u128")) {
+            const auto actual=deserializeArrayElementWidget(encode(widget));std::string why;
+            const auto value=actual?typedWidgetSourceValue(*actual,&why):std::nullopt;
+            if(!actual || !value || !canonicalObjectReferenceFullTypeEqual(binding::widgetType(*actual).type,schema))
+                fail(path,"The exact 128-bit widget projection is unavailable: "+why,"migration.composed_source_invalid",Domain::Semantics);
+            return *value;
+        }
         if(schema.kind==binding::TypeKind::Primitive&&schema.name=="variant") {
             const auto decoded=deserializeArrayElementWidget(encode(widget));
             if(!decoded||decoded->classId!="frog.widgets.variant_control"||
@@ -1078,6 +1140,15 @@ struct Adapter {
             identifyWidgetTree(widget,at); // Annotation IDs remain real, unique root identities.
             if(supportLabelAnnotation(widget,at))continue;
             if(role!="control"&&role!="indicator")fail(at,"The actual widget role must remain control or indicator.", "migration.composed_source_invalid", Domain::Semantics);
+            // Compile-time specialization removes excluded terminals, while
+            // retaining every FP object in the authored document. An empty
+            // editor shell with no active terminal/reference contributes no
+            // value declaration to FIR. Keep its exact source in recoverability.
+            // Active/incomplete Clusters still take the ordinary refusal below.
+            if(emptyClusterEditor(widget)&&!widgetParticipates(id)) {
+                Json view=object();view.object={{"id",string(id)},{"reason",string("unconfigured_cluster_without_active_participant")}};
+                editorOnlyWidgets.array.push_back(std::move(view));continue;
+            }
             const auto witness=std::find_if(resolved.widgets.begin(),resolved.widgets.end(),[&](const auto &w){return w.widgetId==id;});
             if(witness==resolved.widgets.end()||std::count_if(resolved.widgets.begin(),resolved.widgets.end(),[&](const auto &w){return w.widgetId==id;})!=1)
                 fail(at,"A widget needs one hash-bound current/default projection from the common private value codec.","migration.composed_widget_resolution_required", Domain::Semantics);
@@ -1105,8 +1176,9 @@ struct Adapter {
             // implementing a competing private document decoder here.
             const auto widgetClass=text(widget.member("classId"),at);
             const bool xyWidget=widgetClass==xy::classId || widgetClass==graph::classId;
-            auto schema=compositeArray&&attested&&!xyWidget?*attested:widgetType(widget,at,0,attested?&*attested:nullptr);
-            if(compositeArray&&!xyWidget) {
+            const bool listboxWidget=widgetClass=="frog.widgets.listbox_control"||widgetClass=="frog.widgets.listbox_indicator";
+            auto schema=compositeArray&&attested&&!xyWidget&&!listboxWidget?*attested:widgetType(widget,at,0,attested?&*attested:nullptr);
+            if(compositeArray&&!xyWidget&&!listboxWidget) {
                 const auto klass=text(widget.member("classId"),at);
                 if((schema.kind==binding::TypeKind::Array&&klass!="frog.widgets.array_control"&&klass!="frog.widgets.array_indicator")||
                    (schema.kind==binding::TypeKind::Cluster&&klass!="frog.widgets.cluster_control"&&klass!="frog.widgets.cluster_indicator")||
@@ -1175,7 +1247,13 @@ struct Adapter {
                     if(!decoded)fail(at+"/props/data.default","The authored stored default is invalid JSON.", "migration.composed_source_invalid", Domain::Integrity);
                     const Json *actual=&*decoded;
                     if(const auto *nested=decoded->member("widget"))actual=nested;
-                    const auto storedSchema=widgetType(objectAt(actual,at),at+"/props/data.default");
+                    // The common codec already migrated historical defaults by
+                    // stable field identity (witness->defaultWidgetJson). An
+                    // empty creation-time shell is a valid historical default,
+                    // not evidence that today's typed Cluster is damaged.
+                    const auto storedSchema=emptyClusterEditor(objectAt(actual,at))
+                        ?binding::TypeRef::cluster({},{})
+                        :widgetType(*actual,at+"/props/data.default");
                     if(!canonicalObjectReferenceFullTypeEqual(storedSchema,schema))
                         out.diagnostics.push_back({"migration.composed_historical_widget_default_migrated",at+"/props/data.default",
                             "The stored historical default has another field schema. The existing common default projection preserved the current stable fields and migrated matching identities only; no positional pairing or source rewrite was performed.",false});
@@ -1891,7 +1969,6 @@ struct Adapter {
                         target+"/native_call_configuration",&diagnostic);
                     if(!descriptor)fail(at+"/studio_native_call",diagnostic.message,
                         diagnostic.unsupported?"migration.native_call_signature_unavailable":"migration.native_call_configuration_invalid", diagnostic.unsupported?Domain::FrontendCapability:Domain::Semantics);
-                    if(!scopeOwners.at(path).empty())fail(at,"The scalar5 NativeCall corridor requires an actual flat root region.","migration.native_call_region_unavailable", Domain::FrontendCapability);
                     Json activePorts=array();
                     for(const auto &declared:descriptor->ports) {
                         const auto &actual=port(id,declared.id,declared.input);
@@ -2262,6 +2339,10 @@ bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolve
         for(const auto &widget:widgets->array) {
             const auto *klass=widget.member("classId");
             if(!klass||klass->type!=Json::Type::String)continue;
+            // Support Labels are non-value authoring annotations. Select their
+            // existing strict composed adapter even in an otherwise scalar
+            // program; routing is not admission of a malformed Label.
+            if(klass->string=="frog.widgets.label")return true;
             if(klass->string.find("cluster_")!=klass->string.npos||klass->string=="frog.studio.widgets.tab_control"||
                klass->string=="frog.studio.widgets.tab_indicator"||klass->string=="frog.widgets.array_control"||
                klass->string=="frog.widgets.array_indicator"||klass->string==xy::classId||klass->string==graph::classId)return true;
@@ -2298,7 +2379,9 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         const auto &root=objectAt(&*parsed,"/");authoredRootFields(root);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","Sub-FROG projection requires identified private Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&!(revision==8&&typeDefinitionsValidated))
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&!(revision==8&&typeDefinitionsValidated)&&
+            !(revision==kFrogClassValueDraftRevision&&((root.member("classes")&&!root.member("classes")->array.empty())||root.member("class_member")||
+                std::any_of(authored.diagramNodes.begin(),authored.diagramNodes.end(),[](const auto &n){return n.classOperation.has_value();}))))
             fail("/draft_revision","This revision needs the existing exact-source Type Definition resolution handoff.","migration.composed_type_definition_resolution_required", Domain::Dependency);
         if(const auto *metadata=root.member("metadata"))objectAt(metadata,"/metadata");
         if(const auto *policy=root.member("execution_policy"))
@@ -2494,9 +2577,13 @@ CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string
         if(!parsed)fail("/","The original source is invalid JSON.", "migration.composed_source_invalid", Domain::Integrity);
         const auto &root=objectAt(&*parsed,"/");
         authoredRootFields(root);
+        if(root.member("classes")||root.member("class_member"))
+            fail("/classes","By-value classes require the common class/Sub-FROG preparation before public Source derivation.","class.preparation_required",Domain::Semantics);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","This adapter requires identified Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
         if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
+        if(root.member("storage") && revision<kFrogArrayStorageDraftRevision)
+            fail("/storage","FROG storage options require private draft_revision 3.","migration.storage_invalid",Domain::Integrity);
         const auto *metadata=root.member("metadata");
         if(metadata&&metadata->type!=Json::Type::Object)
             fail("/metadata","File metadata must be an object.","migration.metadata_invalid", Domain::Integrity);
@@ -2573,6 +2660,7 @@ CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string
         Json recovery=ide.member("recoverability")?objectAt(ide.member("recoverability"),"/ide/recoverability"):object();Json provenance=object();
         provenance.object={{"original_uri",string(std::string(uri))},{"original_sha256",string(result.originalSha256)},
             {"profile",string("frog.studio.explicit-draft-to-public@1")},{"preserved_authoring_source",*parsed}};
+        if(!adapter.editorOnlyWidgets.array.empty())provenance.object.emplace("editor_only_widgets",std::move(adapter.editorOnlyWidgets));
         recovery.object["graiphic_studio_migration"]=std::move(provenance);ide.object["recoverability"]=std::move(recovery);output.object.emplace("ide",std::move(ide));
         std::string error;
         if(document_internal::boundedDocumentJsonValueCount(output)>kMaximumFrogJsonValueCount) {

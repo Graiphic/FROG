@@ -1,0 +1,225 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 10,
+  "storage": {
+    "version": 1,
+    "array_mode": "readable"
+  },
+  "language": "FROG",
+  "title": "Capteur — Mesurer",
+  "classes": [
+    {
+      "id": "sensor",
+      "path": "Capteur.fclass",
+      "revision": 1
+    },
+    {
+      "id": "analog",
+      "path": "Analogique.fclass",
+      "revision": 1
+    },
+    {
+      "id": "digital",
+      "path": "Numerique.fclass",
+      "revision": 1
+    },
+    {
+      "id": "inherited",
+      "path": "Herite.fclass",
+      "revision": 1
+    }
+  ],
+  "frontPanel": {
+    "widgets": [
+      {
+        "id": "member-receiver",
+        "classId": "frog.widgets.variant_control",
+        "role": "control",
+        "valueType": "object<\"sensor\">",
+        "label": "receiver",
+        "bounds": {
+          "x": 40,
+          "y": 40,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "sensor.self",
+          "connection_requirement": "required",
+          "interface_map_slot": "slot.sensor.self"
+        }
+      },
+      {
+        "id": "member-result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "result",
+        "bounds": {
+          "x": 40,
+          "y": 140,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true,
+          "data_type.representation": "i64"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "sensor.reading",
+          "connection_requirement": "recommended",
+          "interface_map_slot": "slot.sensor.reading"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "member-receiver-terminal",
+        "kind": "widget_value",
+        "type": "object<\"sensor\">",
+        "layout": {
+          "x": 60,
+          "y": 200,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "member-receiver"
+      },
+      {
+        "id": "member-result-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "layout": {
+          "x": 850,
+          "y": 300,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "member-result"
+      },
+      {
+        "id": "read-offset",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 320,
+          "y": 150,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "offset",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "read_field",
+            "class": {
+              "id": "sensor",
+              "path": "Capteur.fclass",
+              "revision": 1
+            },
+            "member_id": "offset"
+          },
+          "ports": [
+            {
+              "id": "object",
+              "source_port_id": "object",
+              "interface_map_slot": "",
+              "label": "object",
+              "value_type": "object<\"sensor\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.5
+            },
+            {
+              "id": "value",
+              "source_port_id": "value",
+              "interface_map_slot": "",
+              "label": "value",
+              "value_type": "i64",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "member-receiver-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "read-offset",
+          "port": "object"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "read-offset",
+          "port": "value"
+        },
+        "to": {
+          "node": "member-result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "class_member": {
+    "class_id": "sensor",
+    "method_id": "measure",
+    "implementation_id": "sensor.measure",
+    "revision": 1
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "sensor.self",
+        "type": "object<\"sensor\">",
+        "connection": "required"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "sensor.reading",
+        "type": "i64"
+      }
+    ]
+  }
+}

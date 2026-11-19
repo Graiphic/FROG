@@ -83,7 +83,7 @@ Dependencies loadDependencies(const fs::path &lock,std::vector<fs::path> &inputs
     Dependencies result;result.snapshots.reserve(entries.array.size());std::uint64_t total=0;
     const auto base=fs::absolute(lock).parent_path();
     for(const auto &entry:entries.array){fields(entry,{"kind","reference","requesting_source_uri","source_uri","identity","version","path"});const auto &kind=member(entry,"kind");
-        if(kind.type!=Json::Type::Number)throw Failure(64,"Dependency kind must be the exact integer 1, 2, 3 or 4.");const auto k=integer(kind.string);if(k<1||k>4)throw Failure(64,"Dependency kind is outside 1..4.");
+        if(kind.type!=Json::Type::Number)throw Failure(64,"Dependency kind must be the exact integer 1, 2, 3, 4 or 5.");const auto k=integer(kind.string);if(k<1||k>5)throw Failure(64,"Dependency kind is outside 1..5.");
         Snapshot s;s.kind=static_cast<frog_frontend_dependency_kind>(k);s.reference=string(entry,"reference");s.uri=string(entry,"source_uri");s.id=string(entry,"identity");s.version=string(entry,"version");
         if(entry.member("requesting_source_uri"))s.ownerUri=string(entry,"requesting_source_uri");
         s.file=path(string(entry,"path"));if(s.file.is_relative())s.file=base/s.file;s.file=identity(s.file);

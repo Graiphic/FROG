@@ -5,6 +5,32 @@ Frontend version before you generate a larger graph. For documents that Studio
 saves as `frog.document.draft`, use the separate [Studio draft profile](../Expression/Studio%20authoring%20document%20profile%20v1.md)
 and its documented migration and repair paths.
 
+## Reading order for generators
+
+1. Choose the format, Studio/Frontend versions and target; read the matching
+   [contracts](#1-start-from-a-complete-program). Do not mix Source and Studio
+   Draft envelopes or infer port identities from labels.
+2. Apply the [layout rules](#lay-out-generated-diagrams-for-left-to-right-dataflow)
+   in order.
+3. [Validate and derive](#2-validate-derive-and-select-a-target), then use a
+   [qualified execution path](#3-qualified-example-paths). State expected and
+   observed results separately; validation alone does not prove execution.
+4. Finish the [checklist](#final-checklist) and report unsupported content with
+   [explicit refusals](#4-deliberate-refusals). The
+   [LLM trial](#5-optional-isolated-llm-trial) is optional and separately attributed.
+
+### Name the example file
+
+For a new Studio example, name the entry `.frog` after the example as it
+appears in the catalogue. For example, *User Events : inscription, émission,
+Flush et nettoyage* becomes `User Events - inscription, émission, Flush et nettoyage.frog`.
+Keep meaningful words and accents. Replace characters forbidden in a Windows
+filename. If several examples share a title, include the distinguishing type
+or case in the name. Keep this filename stable across display languages.
+
+Record the actual relative path in the catalogue. Links and tests should use
+that path. The catalogue ID remains stable when an existing example is renamed.
+
 ## 1. Start from a complete program
 
 [Example 01](../Examples/01_pure_addition/main.frog) is a complete headless
@@ -32,81 +58,194 @@ Keep the original input and write a separate candidate for validation.
 
 ### Lay out generated diagrams for left-to-right dataflow
 
-Use Graiphic Studio as the reference for editor geometry. Measure the actual
-port contacts and painted bounds in the target Studio version. Positions,
-wire bends and visible slot order are presentation data.
+Use the target Graiphic Studio version as the authority for sizes, painted
+bounds and actual port contacts. These are presentation rules, not additional
+language-validity rules. Work in two passes within each region. First place
+all objects at their final sizes, with their labels and port clearances.
+Then route the wires. If a route would have to go around the chain, revisit
+the placement before finalizing the wire.
 
-1. **Place every diagram control on the left and every indicator on the
-   right.** Give each region its own left-to-right flow. Order terminals by
-   the physical ports they serve and keep independent work on separate rows.
-   Place local constants next to their consumers and align the output and
-   input contacts for a straight lead. Use Studio's standard function sizes.
-   Keep ordinary functions at least 85% of their standard size and
-   compact functions at 100%. Control and indicator sizes remain editable.
-2. **Route only as far as necessary.** Use a straight wire between aligned
-   ports. For lateral ports on different rows, prefer horizontal approaches
-   joined by one continuous vertical segment. Add bends only to clear a
-   body, label, port approach or structure boundary. Fix placement first if
-   the router would otherwise create small steps or run across text.
-3. **Make branches and joins readable.** Give independent wires separate
-   lanes. If a crossing is unavoidable, keep it perpendicular and free of a
-   junction. Share a trunk only for branches of the same source port in the
-   same execution region. Use a real junction and remove redundant parallel
-   segments. For stacked branches descending to a collector on the right,
-   start with the lowest branch on the leftmost vertical lane and place the
-   higher branches progressively farther right. Preserve the collector's
-   input identities and priority. Check every Case region separately, and
-   preserve the tunnel identities and connections on both sides of the wall.
-4. **Keep the error path visible and typed.** For a graph with an error
-   flow, use the native **Error Cluster Control** at the lower left and
-   **Error Cluster Indicator** at the lower right. Connect the control to
-   the first applicable error input. Carry the whole ordered cluster
-   (status, code and source) through every applicable operation or tunnel
-   to the output indicator. Extract a field only when a decision or
-   diagnostic needs it. For operations that follow standard error handling,
-   an incoming true status skips the normal work and carries the incoming
-   cluster forward. Honor explicitly documented cleanup and execute-on-error
-   behavior. In an authored guard, use an Error Case to make execution
-   conditional. A Select choosing a result still evaluates its producers.
-5. **Label the data and the work.** Put a control's visible diagram label to
-   its left and an indicator's to its right. Place other needed labels above
-   or below the object, on whichever side has room. Use this especially for
-   wide constants such as an array. Hide the external labels of functions
-   and structures by default when the icon or caption already identifies
-   them. Keep a function label only when it adds information the icon cannot
-   convey.
-   - Give each structure, and each separately visible region or frame, a
-     short native subdiagram label where Studio supports one. Describe the
-     work in a few words. Use “Process loop” for a simple loop, “False case”
-     or “True case” when that is sufficient, and a short description of each
-     sequence step. Use the Studio field for that structure or region and
-     reserve the resulting header area when placing tunnels, nodes and wires.
-   - Prefer a short native label on an existing clear wire segment when the
-     data needs explanation. Keep it away from bends, junctions, terminals
-     and other labels. If the wire already names the destination clearly,
-     hide the duplicate diagram label on that terminal. Keep the underlying
-     widget name and binding intact.
-   - Reserve space for the actual rendered text. A label must clear all
-     other text, wire routes, nodes and structure chrome, with the native
-     inline label on its own wire as the intentional exception. Adjust
-     spacing before routing. Fit free comments to the text and leave room
-     for their attachment grip.
+#### Preserve the program and the editing scope
 
-   See the [Array, Cluster and Case diagram saved by Studio 0.0.8.419](examples/array-cluster-case-labels.frog)
-   for the exact Studio draft serialization. The `Total` wire uses
-   `diagram.edges[].label` with text and a position along the route. The Case
-   displays the `title` of each entry in `regions` when
-   `case_structure_subdiagram_label_visible` is enabled. The array constant
-   uses `label_horizontal_anchor` and `label_offset` to put its label above
-   the cells. Use the coordinates and offsets appropriate to the new diagram.
+- Preserve identities, port endpoints, types, values, dependencies, branches
+  and execution regions. Geometry never creates a junction or defines a port.
+- Respect fixed objects and manual placements outside the requested scope.
+  Wire-only cleanup must not move nodes. Report a constrained route rather
+  than changing the program or hiding an unresolved layout problem.
 
-6. **Verify the result in Studio.** Reopen the diagram at 100% and inspect
-   every Case for anchored, orthogonal wires, readable labels and intentional
-   junctions. For a layout-only change, compare the node and wire IDs, port
-   endpoints, regions, types and values, and run the same inputs before and
-   after. For a new error path, test normal execution and a true incoming
-   status with a known code and source. Check both propagation and whether
-   the normal work or required cleanup actually ran.
+#### Keep the overview to one working view
+
+- Design the main diagram so that its inputs, control flow and outputs can be
+  followed together at 100% in the target Studio diagram viewport. Check the
+  usable canvas after toolbars, with labels and wires visible. Apply the same
+  check separately to each displayed Case, loop body and called diagram.
+- For an interactive program, keep input handling, state transitions and
+  display updates identifiable. Use a loop when state persists across actions
+  and an Event or Case for genuine alternatives supported by the target.
+  Extract cohesive or repeated work into callable sub-FROGs with named, typed
+  inputs and outputs. Supply every callee and resolve it from the delivered
+  entry document. Use the selected format's call and interface contract
+  ([Source invocation](../Expression/Diagram.md#sub-frog-invocation),
+  [Studio draft](../Expression/Studio%20authoring%20document%20profile%20v1.md)).
+- If one view overflows, first remove unused gaps, then split at a meaningful
+  boundary. Keep standard sizes, readable text and all requested operations.
+  Record the viewport, zoom and any region that still requires scrolling.
+  This is a generation target, independent of file-format admission.
+
+
+#### Size and label objects before routing
+
+- Use Studio's standard function sizes: ordinary functions must stay at least
+  85% of their standard size, and compact functions at 100%. Control and
+  indicator sizes remain editable.
+- Put control labels on the left and indicator labels on the right. Put
+  other useful labels above or below where there is room, especially for
+  wide constants such as arrays. Hide external function and structure labels
+  when their icon or caption suffices; retain a label that adds useful meaning.
+- Give every supported structure, region and frame a short native subdiagram
+  label, such as "Process loop", "True case" or a description of a sequence
+  step. Reserve its header area before placing nodes, tunnels and wires.
+- Prefer short native labels on clear wire segments, away from bends,
+  junctions and terminals. Hide a destination's duplicate diagram label when
+  the wire names it clearly; preserve the widget name and binding.
+- Reserve the actual text bounds at the final size and font. Fit free
+  comments to their text and leave room for their attachment grip.
+
+The [Array, Cluster and Case saved by Studio 0.0.8.419](examples/array-cluster-case-labels.frog)
+shows the serialization: `Total` uses `diagram.edges[].label`; Case labels use
+each `regions` entry's `title` with `case_structure_subdiagram_label_visible`;
+the array label uses `label_horizontal_anchor` and `label_offset`. Adapt the
+coordinates to the new diagram instead of copying them blindly.
+
+#### Place clear left-to-right rows
+
+- Put controls on the left, operations in dataflow order and indicators on
+  the right, within each execution region. Keep the main path on one
+  horizontal row whenever possible; put parallel paths on separate aligned
+  horizontal rows. Order terminals by the physical ports they serve.
+- **First pass — placement.** Align consecutive functions on their actual
+  reference and error contacts first. Reserve separate, direct lanes for
+  those two flows before fitting data terminals, constants and indicators.
+- Place a constant immediately upstream of the port it feeds. Use the port
+  axis if clear. If occupied, place the constant above the consumer for an
+  upper input or below it for a lower input, on the input side. Leave enough
+  room for a short approach. Size string constants so their contents remain
+  readable. A local input should never have to travel around the chain.
+- Leave room on both sides of wide or multiport nodes such as Register For
+  Events. At 100%, each connected wire should have a visible, individually
+  selectable stretch outside the node. Widen just that local gap as needed.
+- Keep a visible minimum gap between independent objects and their labels.
+  Use Studio's existing layout clearances, reserve wire lanes and increase
+  spacing where actual text or port bounds require it. Shorter wires never
+  justify overlap or loss of this gap. Native labels on their own wire and
+  integrated components retain their existing placement contracts.
+
+#### Straight wires and port alignment
+
+- **Second pass — wiring.** Route references and the complete error cluster
+  first, then data. For each link in a generated error chain, use a straight
+  connection or, if alignment is impossible, at most one short local offset
+  between the two port levels. With horizontal ports that offset has one
+  vertical segment. A trip around a node group or the diagram perimeter
+  fails the layout check. Return to placement if a second offset is needed.
+- Choose the shortest readable orthogonal route that respects clearance,
+  obstacles, ports and region boundaries. With comparable length and
+  clearance, prefer fewer bends.
+- **No unnecessary staircase wiring.** If output and input can be aligned
+  with a clear passage, align them and use one straight horizontal segment.
+  Remove short jogs, zigzags and obsolete bends caused only by misplacement.
+  This also applies to a string constant feeding a Case selector or tunnel.
+- If endpoints must remain on different rows, use horizontal approaches
+  joined by one continuous vertical segment where the passage is clear.
+  Extra bends must serve an actual obstacle, port approach, branch or wall.
+- Give independent wires separate lanes. Share a trunk only for real branches
+  of the same source port in the same execution region; keep actual junctions
+  and remove redundant parallel segments. If unavoidable, a crossing is
+  perpendicular and has no junction.
+- Bring successive functions closer until the visible gap still accommodates
+  their terminals, labels, a branch if needed and a selectable stretch of
+  wire. Keep extra space where a real obstacle or a bus of wires needs it.
+- Between independent parallel wires, leave a continuous visible strip of
+  canvas between their painted strokes at 100%. Check long trunks as well
+  as short approaches to ports. Distinct coordinates alone can still look
+  like one thick line. Keep same-source junctions intact and fan out near a
+  crowded connector when its fixed port pitch limits local clearance.
+- For stacked branches descending to a collector on the right, try the lowest
+  branch on the leftmost vertical lane, with higher branches farther right.
+  Preserve collector input identities and priority, and tunnel connections on
+  both sides of each wall. Check every Case region separately.
+
+**Worked example — two DBL inputs feeding four operations**
+
+![Studio calculator with two distinct vertical wire trunks from A and B, four horizontal arithmetic rows and four orange DBL indicators on the right](calculator-dbl-fanout.png)
+
+Follow A and B separately from the controls on the left. Each source branches
+along its own vertical trunk. A feeds the first operand on every row and B the
+second, preserving the order for subtraction and division. A perpendicular
+crossing between A and B has no junction dot. If the two trunks share any
+length of the same line on screen, move one into a clear lane.
+
+Align each result port with its own palette-standard DBL Numeric Indicator.
+In the theme shown, the four terminals are orange, with the labels Somme,
+Différence, Produit and Quotient on the right. Use the palette terminal and
+binding for the document's type and theme. The image illustrates the layout.
+
+#### Lay out a readable fan-in
+
+For three independent producers feeding a multi-input function, put their
+outputs in the same vertical order as the function's actual input contacts.
+Align the middle producer with its input and put the result indicator to the
+right on the actual output axis. Both of these links can then be single
+horizontal segments.
+
+Give the upper and lower producers separate horizontal approach rows. Bring
+each to its contact with one short vertical offset where the corridor is open.
+The two vertical sections can use the same column only if their spans are
+disjoint and a visible gap remains between them. If two offsets would share
+any portion of a line, move one producer or give its offset a different
+column. Keep a visible gap around the bodies, labels and each wire stroke.
+
+At 100%, follow every link from producer to contact and check the brief
+approaches beside the function as well as the long runs. Preserve the input
+order and the intended branches when improving the placement.
+
+#### Keep error flow explicit
+
+- For a new example with error flow, connect a native Error Cluster Control
+  to the first error input on the left. Carry the complete ordered cluster
+  (status, code, source) through the chain. Connect the last function's
+  error output directly to a native Error Cluster Indicator on the right.
+- Unbundle only when the example explicitly teaches error fields or the
+  requested program actually consumes a field. Expected status and code
+  can be asserted by a test on the complete cluster. They do not call for
+  an Unbundle and two scalar indicators on the teaching diagram.
+- In a User Events example, keep the message constant just above Generate
+  User Event when its data port is above the reserved error lane. Keep the
+  U32 count beside Flush Event Queue with a single short offset if needed.
+  The last Destroy User Event supplies the complete error indicator.
+- Honor each operation's error contract: standard incoming errors skip normal
+  work and propagate unchanged; documented cleanup or execute-on-error paths
+  still apply. Use an Error Case for an authored execution guard. Selecting
+  a result with Select does not prevent its producers from executing.
+
+#### Final checklist
+
+- [ ] At 100%, the main flow and each displayed region fit the recorded working view or have a documented reason for overflow. Called files resolve and expose their actual typed ports.
+- [ ] Each pair of independent parallel runs has visible background between strokes. Adjacent functions use the space needed for reading and editing.
+- [ ] Each fan-in keeps independent arrivals separate through their final approach. Aligned producers and the result indicator use a straight link wherever the passage is clear.
+- [ ] Objects and text have clear spacing, with no unintended overlap.
+- [ ] Main and parallel paths read left to right; actual out/in contacts are
+  aligned wherever permitted, with no removable staircase or needless length.
+- [ ] Follow each reference and error wire from port to port. Check for
+  perimeter detours and multiple offsets. Check that each local constant
+  approaches from the appropriate side and the final error cluster is whole.
+- [ ] Wires are anchored and orthogonal, with intentional junctions and
+  justified bends; inspect every Case at 100% in Studio.
+- [ ] Identities, endpoints, regions, types and values are preserved. For a
+  layout-only edit, compare them and run the same inputs before and after.
+- [ ] Check observed outputs against expectations. For an error-flow change,
+  test both normal execution and a known incoming error, including required
+  cleanup. Report what was actually validated and what remains unchecked.
 
 ## 2. Validate, derive and select a target
 

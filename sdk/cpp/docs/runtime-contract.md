@@ -130,9 +130,21 @@ registry, target, address or resource. Decoding binds this immutable NULL to the
 declared receiving value owner. It never obtains a Queue or creates a resource.
 Full nominal widget/source schemas remain part of their existing contracts.
 
-Only this sealed intrinsic authority is encodable. Ordinary provider-backed
-references, including live Queue handles, remain rejected. The existing depth,
+Ordinary provider-backed references, including live Queue handles, remain rejected. The existing depth,
 node and aggregate byte bounds apply; the reference type is limited to65536
 bytes. Legacy scalar and packed-array profiles reject this tag. Historical
 encodings are unchanged; older typed readers reject the new tag rather than
 silently substituting a value. Consumers must use the qualified matching SDK.
+
+### Local widget reference symbols (typed tag 16)
+
+An authored Studio widget target can travel in a typed default as a sealed
+symbol. It carries the canonical reference type and the bounded stable widget
+ID scoped to the artifact's document. The existing Source declaration supplies
+the full schema. The live registry checks the actual target and full schema
+before any operation can use the reference.
+
+Only the sealed symbolic carrier is encoded with this tag. The codec preserves
+Array rank, shape and order and applies the existing recursive bounds. A widget
+ID can be at most 1024 bytes. The legacy scalar and packed-array profiles
+reject symbols. Live handles remain in their owning registry.

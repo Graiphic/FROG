@@ -51,6 +51,7 @@ constexpr DiagramStructureShelfFieldSpec payloadFields[]{
     {"old_attributes","OldAttrib","cluster<id:string,name:string,rgb:u32,visible:bool,lines:bool,points:bool,width:f64>"},
     {"new_attributes","NewAttrib","cluster<id:string,name:string,rgb:u32,visible:bool,lines:bool,points:bool,width:f64>"},
     {"target_id","Target ID","string"}, {"graph_update","Graph Update","string"},
+    {"item_id","Item ID","string"}, {"item_index","Item Index","u32"}, {"item_value","Item Value","u16"},
     {"discard","Discard?","bool"}, {"silent_shutdown","SilentShutdown","bool"},
     {"accepted","Accepted?","bool"}, {"drag_cursor","Cursor","ref<frog.cursor>"}};
 
@@ -181,6 +182,7 @@ bool eventNotificationAllowsNewBinding(const EventNotificationSpec &event,const 
 }
 bool eventNotificationSupportsSource(const EventNotificationSpec &event, const EventSourceSpec &source) noexcept {
     if(event.kind.starts_with("xy_") && source.referenceClassId!=xy::classId)return false;
+    if(event.kind=="item_activated" && source.referenceClassId!="frog.widgets.listbox_control")return false;
     if(source.scope==EventSourceScope::Dynamic && !source.registeredKind.empty())
         return event.kind==source.registeredKind &&
             (event.sourceScopes & scopeBit(source.registeredSourceScope))!=0 &&

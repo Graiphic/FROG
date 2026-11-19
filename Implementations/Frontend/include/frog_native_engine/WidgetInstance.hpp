@@ -8,6 +8,7 @@
 #include "frog_native_engine/ApplicationControlTypes.hpp"
 #include "frog_native_engine/CollectionAuthoringState.hpp"
 #include "frog_native_engine/HeapOptional.hpp"
+#include "frog_native_engine/ListboxState.hpp"
 #include "frog_native_engine/TypeDefinitionLink.hpp"
 #include "frog_native_engine/graph/WaveformGraph.hpp"
 #include "frog_native_engine/graph/XYGraph.hpp"
@@ -17,6 +18,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -28,6 +30,12 @@ constexpr std::uint32_t kTransparentColorModel = 0xFFFFFFFFU;
 [[nodiscard]] constexpr bool isTransparentColorModel(std::uint32_t rgb) noexcept {
     return rgb == kTransparentColorModel;
 }
+
+struct BooleanAppearanceColors {
+    // The existing state-face stroke and fill channels, respectively.
+    std::optional<std::uint32_t> foreground;
+    std::optional<std::uint32_t> background;
+};
 
 enum class NumericIncrementDecrementSide {
     Left,
@@ -390,6 +398,10 @@ struct WidgetInstance {
     };
     using ListboxColors = std::array<std::optional<std::uint32_t>, static_cast<std::size_t>(ListboxColor::Count)>;
     HeapOptional<ListboxColors> listboxColors;
+    HeapOptional<listbox_widget::State> listboxState;
+    // Appended to preserve aggregate initializers. Run presentation only.
+    // True to False, False to True, Hover False and Hover True.
+    HeapOptional<std::array<BooleanAppearanceColors, 4>> runtimeBooleanExtraColors;
 
 };
 
@@ -402,6 +414,12 @@ struct WidgetInstance {
     Rect bounds);
 
 [[nodiscard]] bool isBooleanWidget(const WidgetInstance &widget) noexcept;
+[[nodiscard]] unsigned booleanAppearanceStateCount(const WidgetInstance &) noexcept;
+[[nodiscard]] BooleanAppearanceColors booleanAppearanceColorOverrides(const WidgetInstance &, unsigned) noexcept;
+[[nodiscard]] std::optional<unsigned> booleanAppearanceReleaseTransition(std::string_view action, bool before) noexcept;
+// Apply to the Run presentation copy. Returns true for every accepted write,
+// including an identical palette. Invalid input leaves the widget untouched.
+[[nodiscard]] bool setBooleanAppearanceColors(WidgetInstance &, std::span<const BooleanAppearanceColors>);
 [[nodiscard]] constexpr bool isListboxWidget(const WidgetInstance &widget) noexcept {
     return widget.classId == "frog.widgets.listbox_control" || widget.classId == "frog.widgets.listbox_indicator";
 }

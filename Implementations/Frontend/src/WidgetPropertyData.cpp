@@ -170,6 +170,55 @@ constexpr std::array<std::string_view, 3> kLabelVerticalAlignments{
 
 } // namespace
 
+unsigned booleanAppearanceStateCount(const WidgetInstance &widget) noexcept {
+    if (!isBooleanWidget(widget) && !isButtonWidget(widget)) return 0;
+    if (widget.role == "control") return 6;
+    return widget.role == "indicator" ? 4 : 0;
+}
+
+BooleanAppearanceColors booleanAppearanceColorOverrides(const WidgetInstance &widget, unsigned index) noexcept {
+    if (index >= booleanAppearanceStateCount(widget)) return {};
+    if (index >= 2 && widget.runtimeBooleanExtraColors) return (*widget.runtimeBooleanExtraColors)[index - 2];
+    if (index % 2 == 0) return {widget.stateFalseStrokeRgb, widget.stateFalseFillRgb};
+    return {widget.stateTrueStrokeRgb, widget.stateTrueFillRgb};
+}
+
+std::optional<unsigned> booleanAppearanceReleaseTransition(std::string_view action, bool before) noexcept {
+    if (action == "switch_when_released") return before ? 2U : 3U;
+    if (action == "latch_when_released" && !before) return 3U;
+    return std::nullopt;
+}
+
+bool setBooleanAppearanceColors(WidgetInstance &widget, std::span<const BooleanAppearanceColors> colors) {
+    const auto supportedCount = booleanAppearanceStateCount(widget);
+    const auto count = colors.size();
+    if (!supportedCount || (count != 1 && count != 2 && count != 4 && count != supportedCount)) return false;
+    const auto accepted = [](std::optional<std::uint32_t> color) {
+        return !color || *color <= 0x00FFFFFFU || isTransparentColorModel(*color);
+    };
+    for (const auto &pair : colors) {
+        if (!accepted(pair.foreground) || !accepted(pair.background)) return false;
+    }
+
+    const auto select = [&](unsigned index) -> const BooleanAppearanceColors & {
+        return colors[count == 1 ? 0 : count == 2 ? index % 2 : index];
+    };
+    const auto off = select(0);
+    const auto on = select(1);
+    // Capture the pre-existing hover override flags before assigning stable
+    // states. An inherited hover still follows its theme default after a short
+    // write, while an explicit hover colour keeps its exact value.
+    widget.runtimeBooleanExtraColors = std::array<BooleanAppearanceColors, 4>{
+        select(2), select(3),
+        count == 6 ? select(4) : booleanAppearanceColorOverrides(widget, 4),
+        count == 6 ? select(5) : booleanAppearanceColorOverrides(widget, 5)};
+    static_cast<void>(setStateStrokeColorOverride(widget, false, off.foreground));
+    static_cast<void>(setStateFillColorOverride(widget, false, off.background));
+    static_cast<void>(setStateStrokeColorOverride(widget, true, on.foreground));
+    static_cast<void>(setStateFillColorOverride(widget, true, on.background));
+    return true;
+}
+
 bool setBooleanWidgetStateFillColor(
     WidgetInstance &widget,
     bool trueState,

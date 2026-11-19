@@ -1,0 +1,368 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 10,
+  "storage": {
+    "version": 1,
+    "array_mode": "readable"
+  },
+  "language": "FROG",
+  "title": "Capteur analogique — Mesurer",
+  "classes": [
+    {
+      "id": "sensor",
+      "path": "Capteur.fclass",
+      "revision": 1
+    },
+    {
+      "id": "analog",
+      "path": "Analogique.fclass",
+      "revision": 1
+    },
+    {
+      "id": "digital",
+      "path": "Numerique.fclass",
+      "revision": 1
+    },
+    {
+      "id": "inherited",
+      "path": "Herite.fclass",
+      "revision": 1
+    }
+  ],
+  "frontPanel": {
+    "widgets": [
+      {
+        "id": "member-receiver",
+        "classId": "frog.widgets.variant_control",
+        "role": "control",
+        "valueType": "object<\"analog\">",
+        "label": "receiver",
+        "bounds": {
+          "x": 40,
+          "y": 40,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_input_id": "analog.self",
+          "connection_requirement": "required",
+          "interface_map_slot": "slot.analog.self"
+        }
+      },
+      {
+        "id": "member-result",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "result",
+        "bounds": {
+          "x": 40,
+          "y": 140,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true,
+          "data_type.representation": "i64"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        },
+        "binding": {
+          "mode": "widget_value",
+          "public_output_id": "analog.reading",
+          "connection_requirement": "recommended",
+          "interface_map_slot": "slot.analog.reading"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "member-receiver-terminal",
+        "kind": "widget_value",
+        "type": "object<\"analog\">",
+        "layout": {
+          "x": 60,
+          "y": 200,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "member-receiver"
+      },
+      {
+        "id": "member-result-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "layout": {
+          "x": 850,
+          "y": 300,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "member-result"
+      },
+      {
+        "id": "parent-offset",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 300,
+          "y": 100,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "get-offset",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "static_call",
+            "class": {
+              "id": "sensor",
+              "path": "Capteur.fclass",
+              "revision": 1
+            },
+            "member_id": "get-offset"
+          },
+          "ports": [
+            {
+              "id": "get.self",
+              "source_port_id": "get.self",
+              "interface_map_slot": "",
+              "label": "get.self",
+              "value_type": "object<\"sensor\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.5
+            },
+            {
+              "id": "get.offset",
+              "source_port_id": "get.offset",
+              "interface_map_slot": "",
+              "label": "get.offset",
+              "value_type": "i64",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "own-data",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 300,
+          "y": 300,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "calibration",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "read_field",
+            "class": {
+              "id": "analog",
+              "path": "Analogique.fclass",
+              "revision": 1
+            },
+            "member_id": "calibration"
+          },
+          "ports": [
+            {
+              "id": "object",
+              "source_port_id": "object",
+              "interface_map_slot": "",
+              "label": "object",
+              "value_type": "object<\"analog\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.5
+            },
+            {
+              "id": "value",
+              "source_port_id": "value",
+              "interface_map_slot": "",
+              "label": "value",
+              "value_type": "i64",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "sum-data",
+        "kind": "primitive",
+        "type": "frog.core.add",
+        "layout": {
+          "x": 500,
+          "y": 150,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false
+      },
+      {
+        "id": "base",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "layout": {
+          "x": 500,
+          "y": 400,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "value_type": "i64",
+        "text": "100"
+      },
+      {
+        "id": "sum-base",
+        "kind": "primitive",
+        "type": "frog.core.add",
+        "layout": {
+          "x": 680,
+          "y": 200,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "member-receiver-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "parent-offset",
+          "port": "get.self"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "member-receiver-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "own-data",
+          "port": "object"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "parent-offset",
+          "port": "get.offset"
+        },
+        "to": {
+          "node": "sum-data",
+          "port": "a"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "own-data",
+          "port": "value"
+        },
+        "to": {
+          "node": "sum-data",
+          "port": "b"
+        }
+      },
+      {
+        "id": "wire-4",
+        "from": {
+          "node": "sum-data",
+          "port": "result"
+        },
+        "to": {
+          "node": "sum-base",
+          "port": "a"
+        }
+      },
+      {
+        "id": "wire-5",
+        "from": {
+          "node": "base",
+          "port": "value"
+        },
+        "to": {
+          "node": "sum-base",
+          "port": "b"
+        }
+      },
+      {
+        "id": "wire-6",
+        "from": {
+          "node": "sum-base",
+          "port": "result"
+        },
+        "to": {
+          "node": "member-result-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 0,
+      "y": 0
+    }
+  },
+  "class_member": {
+    "class_id": "analog",
+    "method_id": "measure-analog",
+    "implementation_id": "analog.measure",
+    "revision": 1
+  },
+  "interface": {
+    "inputs": [
+      {
+        "id": "analog.self",
+        "type": "object<\"analog\">",
+        "connection": "required"
+      }
+    ],
+    "outputs": [
+      {
+        "id": "analog.reading",
+        "type": "i64"
+      }
+    ]
+  }
+}

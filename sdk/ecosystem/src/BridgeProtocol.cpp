@@ -243,7 +243,7 @@ GraphRequirements requirements(std::string_view provenanceBytes,std::string_view
     const bool draft=family=="frog.document.draft";
     // These are admitted provenance families/versions, not a source reader.
     // The bridge consumes only the complete FIR produced by that Frontend.
-    if((draft&&!oneOf(version,{"0","1","2","3","4","5","6","7","8","9"}))||
+    if((draft&&!oneOf(version,{"0","1","2","3","4","5","6","7","8","9","10"}))||
         (!draft&&(family!="frog.source"||version!="0.1")))
         reject("bridge.version","The authored source family or version is not supported.","/source/version");
     hash(source,"sha256","/source");str(source,"document_id","/source",8192);
@@ -284,7 +284,10 @@ GraphRequirements requirements(std::string_view provenanceBytes,std::string_view
         const auto p=at("/dependencies",std::to_string(i));const auto &dependency=dependencies.array[i];
         fields(dependency,{"kind","identity","version","sha256","source_uri","origin"},{},p);
         const auto kind=integer(dependency,"kind",p);
-        if(kind!=1&&kind!=2)reject("bridge.version","This API-3 dependency kind is not supported.",at(p,"kind"));
+        // Class definitions are frozen Frontend inputs; their methods have
+        // already become the same checked FIR operations. This is admission
+        // of provenance, never a second class resolver or dispatcher.
+        if(kind!=1&&kind!=2&&kind!=5)reject("bridge.version","This API-3 dependency kind is not supported.",at(p,"kind"));
         for(const auto key:{"identity","version","source_uri"})str(dependency,key,p,8192);
         constant(dependency,"origin","explicit-resolver",p);hash(dependency,"sha256",p);
     }

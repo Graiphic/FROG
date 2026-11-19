@@ -1,4 +1,5 @@
 #include "frog_native_engine/DraftTypedConnections.hpp"
+#include "frog_native_engine/DraftClassProjection.hpp"
 #include "FrogDraftJson.hpp"
 #include "FrogDocumentArrayStorage.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
@@ -14,23 +15,41 @@
 #include <algorithm>
 #include <set>
 #include <iterator>
+#include <unordered_map>
 
 namespace frog::native_engine {
 namespace {
 using Json=source::JsonValue;
-std::string identityPath(const Json &root,std::string_view id) {
-    std::vector<std::pair<const Json*,std::string>> pending{{&root,{}}};std::string found;bool seen=false;
-    while(!pending.empty()) {
-        auto [node,path]=std::move(pending.back());pending.pop_back();
-        if(node->type==Json::Type::Object) {
-            if(const auto *value=node->member("id");value&&value->type==Json::Type::String&&value->string==id) {
-                if(seen)return {};seen=true;found=path;
-            }
-            for(const auto &[key,value]:node->object)pending.emplace_back(&value,canonical_json::pointer(path,key));
-        } else if(node->type==Json::Type::Array)
-            for(std::size_t i=0;i<node->array.size();++i)pending.emplace_back(&node->array[i],canonical_json::pointer(path,std::to_string(i)));
+// One immutable source tree can have hundreds of FIR mappings. Build its
+// attribution index once instead of rescanning every JSON value per identity.
+// Duplicate IDs stay ambiguous, including duplicates in retained metadata.
+class IdentityPathIndex {
+public:
+    explicit IdentityPathIndex(const Json &root) {
+        std::vector<std::pair<const Json*,std::string>> pending{{&root,{}}};
+        while(!pending.empty()) {
+            auto [node,path]=std::move(pending.back());pending.pop_back();
+            if(node->type==Json::Type::Object) {
+                if(const auto *id=node->member("id");id&&id->type==Json::Type::String) {
+                    auto [found,inserted]=paths_.try_emplace(id->string,path);
+                    if(!inserted)found->second.clear();
+                }
+                for(const auto &[key,value]:node->object)
+                    pending.emplace_back(&value,canonical_json::pointer(path,key));
+            } else if(node->type==Json::Type::Array)
+                for(std::size_t i=0;i<node->array.size();++i)
+                    pending.emplace_back(&node->array[i],canonical_json::pointer(path,std::to_string(i)));
+        }
     }
-    return found;
+    std::string_view find(std::string_view id) const {
+        const auto found=paths_.find(std::string(id));
+        return found==paths_.end()?std::string_view{}:std::string_view{found->second};
+    }
+private:
+    std::unordered_map<std::string,std::string> paths_;
+};
+std::string identityPath(const Json &root,std::string_view id) {
+    return std::string(IdentityPathIndex(root).find(id));
 }
 std::string authoredPath(std::string_view path,const Json &projected,const Json &original) {
     if(path.empty()||!path.starts_with('/'))return std::string(path);
@@ -281,6 +300,15 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         }
     }
     const auto inspectConnections=[&] {
+        // Broken authored wires are editable program errors, not an unknown
+        // storage format. Diagnose them before execution migration (which must
+        // never drop them), using the existing readiness identity and anchors.
+        for(const auto &fragment:document->diagramWireFragments) {
+            error("incomplete_wire_fragment","A broken or incomplete wire remains in the Diagram.",{},
+                DocumentDiagnosticDomain::Topology,DocumentDiagnosticStage::Validation);
+            auto &diagnostic=out.diagnostics.back();diagnostic.subjectId=fragment.id;
+            attributeDraftSourceDiagnostic(diagnostic,*document,*raw);
+        }
         auto connections=inspectDraftTypedConnections(*document);
         auto required=inspectDraftRequiredInputs(*document,&connections.connectedPorts);
         connections.diagnostics.insert(connections.diagnostics.end(),std::make_move_iterator(required.begin()),std::make_move_iterator(required.end()));
@@ -294,10 +322,11 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         [](const auto &node){return node.kind=="frog_call"&&node.polymorphicFrogSelection.has_value();});
     // A family's authored ports are a presentation cache. Its concrete
     // member must be selected from source types before validating these wires.
-    if(!hasPolymorphicCalls&&!inspectConnections())return out;
+    const bool hasClasses=draftHasClasses(*document);
+    if(!hasPolymorphicCalls&&!hasClasses&&!inspectConnections())return out;
     std::string projected=definitions.linked||passages.changed||conditional?serializeFrogDraftData(*document):*normalized;
     poll();
-    if(std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),[](const auto &node){return node.kind=="frog_call";})) {
+    if(hasClasses||std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),[](const auto &node){return node.kind=="frog_call";})) {
         auto calls=projectDraftSubFrogExecution({std::make_shared<const FrogDraftData>(*document),projected,std::string(uri),resolver,context,true});
         for(const auto &issue:calls.diagnostics){error(issue.code,issue.message,issue.sourcePath,issue.domain);out.diagnostics.back().sourceUri=issue.sourceUri;out.diagnostics.back().subjectId=issue.callsiteId;out.diagnostics.back().callsiteId=issue.callsiteId;if(!issue.callsiteId.empty()){out.diagnostics.back().relatedSourceUri=uri;out.diagnostics.back().relatedSourcePath=identityPath(*raw,issue.callsiteId);}}
         if(!out.diagnostics.empty())return out;
@@ -308,7 +337,7 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         }
         out.dependencyIdentities=std::move(calls.identities);document=std::move(calls.document);projected=serializeFrogDraftData(*document);
     }
-    if(hasPolymorphicCalls&&!inspectConnections())return out;
+    if((hasPolymorphicCalls||hasClasses)&&!inspectConnections())return out;
     if(!generated.empty()) {
         auto tree=source::parseJson(projected,&why,source::JsonNumberPolicy::PreserveLexeme);
         const auto omit=[&](const auto &self,Json &node)->void {
@@ -366,11 +395,12 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
         }
         migration.publicSource=std::make_shared<const FrogSourceDocument>(std::move(*sourceWithProvenance));
     }
+    const IdentityPathIndex authoredIdentities(*raw);
     for(auto &mapping:migration.identities) {
         const auto dependency=std::find_if(out.dependencyIdentities.begin(),out.dependencyIdentities.end(),[&](const auto &entry){return entry.projectedId==mapping.id;});
-        if(dependency!=out.dependencyIdentities.end()) {mapping.originalPointer=identityPath(*raw,dependency->callsiteId);mapping.generated=dependency->generated;}
+        if(dependency!=out.dependencyIdentities.end()) {mapping.originalPointer=authoredIdentities.find(dependency->callsiteId);mapping.generated=dependency->generated;}
         else if(generated.contains(mapping.id)||generated.contains(mapping.id.substr(0,mapping.id.find(':')))){mapping.generated=true;mapping.originalPointer="/diagram";}
-        else if(const auto original=identityPath(*raw,mapping.id);!original.empty())mapping.originalPointer=original;
+        else if(const auto original=authoredIdentities.find(mapping.id);!original.empty())mapping.originalPointer=original;
     }
     out.source=std::move(migration.publicSource);out.identities=std::move(migration.identities);out.controls=std::move(migration.controls);
     out.projectedDraft=std::move(projected);out.document=std::make_shared<const FrogDraftData>(std::move(*document));

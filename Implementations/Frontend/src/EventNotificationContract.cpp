@@ -24,6 +24,7 @@ std::span<const EventNotificationSpec> eventNotificationCatalog() noexcept {
     static constexpr EventNotificationSpec specs[]{
         {"timeout", "Timeout", "Timing", application, C::Any, false, {}, {}, false, {}, "NI S05; FROG public common fields"},
         {"value_change", "Value Change", "Value", control, C::Any, false, "old_value new_value", {}, true, {}, "NI S06"},
+        {"item_activated", "Item Activated", "Items", control, C::Any, false, "item_id item_index item_value", {}, true, {}, "FROG Listbox; native U16 item projection v1"},
         {"key_down", "Key Down", "Key", interactive, C::Any, false, key, {}, true, {}, "NI S08/S13"},
         {"key_down_filter", "Key Down?", "Key", interactive, C::Any, true, key, keyResponse, true, {}, "NI S09/S13"},
         {"key_repeat", "Key Repeat", "Key", interactive, C::Any, false, key, {}, true, {}, "NI S10"},

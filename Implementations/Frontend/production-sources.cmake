@@ -45,6 +45,10 @@ set(FROG_FRONTEND_PRODUCTION_SOURCES
     src/CanonicalTimestampNative.cpp
     src/CanonicalVariantAnalysisNative.cpp
     src/ClassDefinition.cpp
+    src/ClassProgram.cpp
+    src/ClassSource.cpp
+    src/ClassAuthoring.cpp
+    src/DraftClassProjection.cpp
     src/CollectionAuthoringState.cpp
     src/CollectionBinding.cpp
     src/CollectionModelSemantic.cpp
@@ -147,6 +151,7 @@ set(FROG_FRONTEND_PRODUCTION_SOURCES
     src/WidgetDataValueAssignment.cpp
     src/WidgetFamilyEngine.cpp
     src/WidgetInstanceData.cpp
+    src/ListboxWidget.cpp
     src/WidgetNumericData.cpp
     src/WidgetPictureData.cpp
     src/WidgetPropertyData.cpp

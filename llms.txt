@@ -6,6 +6,9 @@
 
 - [Generator guide, exact CLI and tested corpus](docs/generate-frog.md)
 - [Open and run a generated program in Studio](docs/generate-frog.md#run-a-generated-program)
+- [One-view diagrams, structures and callable sub-FROGs](docs/generate-frog.md#keep-the-overview-to-one-working-view)
+- [Two-pass layout: place constants by port, then route references and errors first](docs/generate-frog.md#lay-out-generated-diagrams-for-left-to-right-dataflow)
+- [Readable fan-in: separate independent wires, align real contacts and reserve visible clearance](docs/generate-frog.md#lay-out-a-readable-fan-in)
 - [Canonical Source syntax and full example](Expression/Frog%20source%20guide.md)
 - [Canonical Source JSON Schema](Expression/schema/frog.schema.json)
 - [Studio draft profile](Expression/Studio%20authoring%20document%20profile%20v1.md)

@@ -225,6 +225,48 @@ int main() {
     codec_detail::Writer liveWriter(true,false,&ieeeOwner);liveWriter.runtimeValue(*live);require(std::move(liveWriter).finish().empty(),"A live reference handle was serialized");
     std::cout<<"INTRINSIC_NULL_CODEC_PASS types=3 nested_record exact_i64 owner foreign truncated legacy active_ref_refused\n";
 
+    const auto symbolType=valueTypeFromCanonicalName("ref<\"frog.widgets.boolean_control\",bool>");
+    const auto firstSymbol=makeRuntimeWidgetReferenceSymbol(symbolType.canonicalName,"widget-A",ieeeOwner);
+    const auto secondSymbol=makeRuntimeWidgetReferenceSymbol(symbolType.canonicalName,"widget-B",ieeeOwner);
+    require(firstSymbol&&secondSymbol&&runtimeWidgetReferenceSymbol(*firstSymbol)=="widget-A"&&
+        runtimeWidgetReferenceSymbol(*secondSymbol)=="widget-B","Distinct widget symbols lost their identity");
+    require(!makeRuntimeWidgetReferenceSymbol("bool","widget-A",ieeeOwner)&&
+        !makeRuntimeWidgetReferenceSymbol(symbolType.canonicalName,"",ieeeOwner)&&
+        !makeRuntimeWidgetReferenceSymbol(symbolType.canonicalName,std::string(1025,'x'),ieeeOwner)&&
+        !makeRuntimeWidgetReferenceSymbol(symbolType.canonicalName,"widget-A",{}),"The symbol admitted an invalid type, ID or owner");
+    const auto symbols=makeRuntimeArray(symbolType,{1,2},{*secondSymbol,*firstSymbol},ieeeOwner);
+    require(bool(symbols),"The typed Array rejected symbolic widget references");
+    codec_detail::Writer symbolicWriter(true,false,&ieeeOwner);
+    symbolicWriter.runtimeValue(*symbols);
+    const auto symbolicBytes=std::move(symbolicWriter).finish();
+    codec_detail::Reader symbolicReader(symbolicBytes);
+    require(symbolicReader.typed(true),"Symbol reader profile failed");
+    symbolicReader.arrayOwner(ieeeOwner);
+    RuntimeValue decodedSymbols;
+    require(symbolicReader.runtimeValue(decodedSymbols)&&symbolicReader.finished(),"The local symbol Array could not be decoded");
+    const auto *decodedSymbolArray=runtimeArray(decodedSymbols);
+    const std::array<std::uint32_t,2> expectedSymbolShape{1,2};
+    require(decodedSymbolArray&&decodedSymbolArray->elementType()==symbolType&&
+        std::equal(decodedSymbolArray->shape().begin(),decodedSymbolArray->shape().end(),
+            expectedSymbolShape.begin(),expectedSymbolShape.end())&&
+        decodedSymbolArray->elementCount()==2&&decodedSymbolArray->owner()==ieeeOwner&&
+        runtimeWidgetReferenceSymbol(decodedSymbolArray->elements()[0])=="widget-B"&&
+        runtimeWidgetReferenceSymbol(decodedSymbolArray->elements()[1])=="widget-A",
+        "Symbol Array roundtrip lost type, dimensions, identity or order");
+    codec_detail::Writer wrongOwner(true,false,&foreignOwner);
+    wrongOwner.runtimeValue(*firstSymbol);
+    require(std::move(wrongOwner).finish().empty(),"A local symbol from another owner was encoded");
+    codec_detail::Writer legacySymbol;
+    legacySymbol.runtimeValue(*firstSymbol);
+    require(std::move(legacySymbol).finish().empty(),"A local symbol entered the legacy scalar codec");
+    auto shortSymbols=symbolicBytes;shortSymbols.pop_back();
+    codec_detail::Reader shortSymbolReader(shortSymbols);
+    require(shortSymbolReader.typed(true),"Truncated symbol profile failed");
+    shortSymbolReader.arrayOwner(ieeeOwner);
+    RuntimeValue invalidSymbol;
+    require(!shortSymbolReader.runtimeValue(invalidSymbol),"The codec admitted a truncated widget symbol");
+    std::cout<<"WIDGET_REFERENCE_SYMBOL_CODEC_PASS shape=1x2 distinct_ids=2 foreign_owner legacy truncated\n";
+
     ProgramArtifact artifact;
     artifact.artifactId = ArtifactId{ "artifact-1" };
     artifact.sourceDocumentId = DocumentId{ "document-1" };

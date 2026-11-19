@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+namespace frog::native_engine { class ClassHierarchy; }
 namespace frog::native_engine::binding {
 
 // Bind legacy By Name selections to stable cluster field IDs and refresh their
@@ -30,7 +31,7 @@ class TypeResolver {
 public:
     using LeafResolver = std::function<TypeParseResult(const DiagramNode &, std::string_view)>;
     TypeResolver(std::span<const DiagramNode> nodes, std::span<const DiagramEdge> edges,
-        FrogWidgetDataView canvas, LeafResolver leaf = {});
+        FrogWidgetDataView canvas, LeafResolver leaf = {},const ClassHierarchy *classes=nullptr);
     [[nodiscard]] BindingResult resolve(const DiagramEdgeEndpoint &endpoint);
     // Event Data belongs to the semantic region of the actual wire. A visible
     // editor case is never an input to type resolution.
@@ -56,6 +57,9 @@ private:
     FrogWidgetDataView canvas_;
     std::span<const DiagramNode> nodes_;
     LeafResolver leaf_;
+    const ClassHierarchy *classes_=nullptr;
+    [[nodiscard]] TypeResolution connect(const TypeRef &,const TypeRef &,ConnectionPolicy=ConnectionPolicy::Exact) const;
+    [[nodiscard]] TypeResolution unify(std::span<const TypeRef>) const;
     std::optional<std::vector<EventSourceSpec>> eventSources_;
     std::unordered_map<std::string,EventDataAuthoringSchema> eventSchemas_;
     EventDataAuthoringSchema pendingEventSchema_;

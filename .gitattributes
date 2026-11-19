@@ -829,3 +829,38 @@ Implementations/Frontend/include/frog_native_engine/PolymorphicFrog.hpp -text
 Implementations/Frontend/src/ClassDefinition.cpp -text
 Implementations/Frontend/src/PolymorphicFrog.cpp -text
 Implementations/Frontend/tests/class_definition_smoke.cpp -text
+
+# Exact publication inputs — 2026-11-19
+"IR/Backend contract.md" -text
+"IR/Construction rules.md" -text
+"IR/Derivation rules.md" -text
+"IR/Execution IR.md" -text
+"IR/Hybrid UI compiler execution.md" -text
+"IR/Identity and Mapping.md" -text
+"IR/Library call model.md" -text
+"IR/Source to FIR scope matrix.md" -text
+Implementations/Frontend/include/frog_native_engine/ClassAuthoring.hpp -text
+Implementations/Frontend/include/frog_native_engine/ClassProgram.hpp -text
+Implementations/Frontend/include/frog_native_engine/ClassSource.hpp -text
+Implementations/Frontend/include/frog_native_engine/DraftClassProjection.hpp -text
+Implementations/Frontend/include/frog_native_engine/ItemSelection.hpp -text
+Implementations/Frontend/include/frog_native_engine/ListboxState.hpp -text
+Implementations/Frontend/include/frog_native_engine/ListboxWidget.hpp -text
+Implementations/Frontend/src/ClassAuthoring.cpp -text
+Implementations/Frontend/src/ClassProgram.cpp -text
+Implementations/Frontend/src/ClassSource.cpp -text
+Implementations/Frontend/src/DraftClassProjection.cpp -text
+Implementations/Frontend/src/ListboxWidget.cpp -text
+Implementations/Frontend/tests/fixtures/classes-v1/Analogique.fclass -text
+Implementations/Frontend/tests/fixtures/classes-v1/Capteur.fclass -text
+"Implementations/Frontend/tests/fixtures/classes-v1/Get Offset.frog" -text
+Implementations/Frontend/tests/fixtures/classes-v1/Herite.fclass -text
+Implementations/Frontend/tests/fixtures/classes-v1/Main.frog -text
+"Implementations/Frontend/tests/fixtures/classes-v1/Mesurer Analogique.frog" -text
+"Implementations/Frontend/tests/fixtures/classes-v1/Mesurer Numérique.frog" -text
+Implementations/Frontend/tests/fixtures/classes-v1/Mesurer.frog -text
+Implementations/Frontend/tests/fixtures/classes-v1/Numerique.fclass -text
+Implementations/Frontend/tests/fixtures/classes-v1/README.md -text
+"Implementations/Frontend/tests/fixtures/classes-v1/Set Calibration.frog" -text
+"Implementations/Frontend/tests/fixtures/classes-v1/Set Offset.frog" -text
+sdk/ecosystem/docs/source-document-libraries.md -text

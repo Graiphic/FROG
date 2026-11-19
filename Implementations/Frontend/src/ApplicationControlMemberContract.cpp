@@ -16,6 +16,19 @@ bool applicationControlValueSignalingAvailable(std::string_view classId) noexcep
     return definition && definition->terminal.direction!=WidgetTerminalDirection::None;
 }
 
+bool applicationControlBooleanColorsAvailable(std::string_view classId) noexcept {
+    const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId));
+    return definition && (definition->family==WidgetFamily::Boolean || definition->family==WidgetFamily::Button);
+}
+
+binding::TypeRef applicationControlBooleanColorsType() {
+    using binding::TypeRef;
+    auto colors=TypeRef::cluster({"foreground_color","background_color"},
+        {TypeRef::primitive("u32"),TypeRef::primitive("u32")});
+    colors.fieldNames={"Foreground Color","Background Color"};
+    return TypeRef::array(std::move(colors));
+}
+
 bool applicationControlHasReferenceInput(const ApplicationControlNode &node) noexcept {
     return node.kind!=ApplicationControlKind::Reference &&
         (node.kind!=ApplicationControlKind::Property || node.target.kind==ApplicationControlTargetKind::Unbound);

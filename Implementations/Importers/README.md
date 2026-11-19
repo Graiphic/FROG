@@ -14,12 +14,24 @@ python Import-CNativeCall.py --source forward.c --library sample.dll --entry for
 python Import-QmhWin32Panel.py --source calculator.c --clang clang-cl.exe --frontend frog-frontend.exe --output new-panel-folder
 ```
 
-- ONNX admits IR 9 and ai.onnx opset 18, scalar Boolean And, Or and Not,
-  and inline scalar Boolean initializers within the documented bounds.
+- ONNX admits IR 7–13 and ai.onnx opsets 7–25 for the verified schemas:
+  Boolean And/Or/Xor (schema 7), Not (schema 1), with no attributes.
+  Scalars `[]` and fixed rank-one BOOL tensors `[1..64]` remain distinct.
+  Typed and raw inline BOOL initializers are decoded by the pinned SDK;
+  declared initializer inputs remain overridable. Equal-shape arrays and
+  scalar-to-array broadcasting are supported. Different array lengths,
+  symbolic/unknown shapes, higher ranks, external weights, custom domains,
+  functions/training/configurations and other operators are explicitly refused.
+  Bounds: 1 MiB source, 24 nodes, 8 inputs/outputs, 64 declarations.
+  Original IR/opsets/bytes are retained; no version renumbering is performed.
   Open `model.frog`. Its mapping and the captured input accompany it.
 - The bounded QMH profile admits the exact `checked` and `fail` AST, including
   the sibling header. Open `checked-editable.frog` for Studio editing.
   The directory also contains the established Source and its Frontend receipts.
+  `product`, `factor` and `expression_evaluate` are not admitted by that profile.
+  Their refusals identify the reachable members and the source locations of
+  recursive calls and C runtime effects. A missing entry is distinct from an
+  unsupported definition. No executable partial document is emitted.
 - The DLL profile accepts one direct C wrapper with one to four scalars by
   value, a scalar return, Windows x64 cdecl and a named, non-forwarded export.
   The DLL must have no PE imports or delay imports. The caller declares
@@ -28,7 +40,12 @@ python Import-QmhWin32Panel.py --source calculator.c --clang clang-cl.exe --fron
   without loading or executing it.
 - The Win32 profile preserves the matching calculator panel as editable widgets.
   The mapping records each imported field and the native behavior still
-  unbound. Open `qmh-front-panel.frog`.
+  unbound. It attributes the shared queue call sites, close/Abort source order
+  and the transitive producer/consumer check for error EDIT handle access.
+  A changed binding is refused at its C source location; editable error fields
+  are not inferred to be computational inputs. These observations do not
+  bind callbacks to FROG events or qualify the complete evaluator.
+  Open `qmh-front-panel.frog`.
 
 Each destination must be new. Refusals include the responsible phase or source
 location where available. Clang runs in syntax-only mode. For C sources using
@@ -103,7 +120,8 @@ explicitly, then retry.
 ## Fixtures
 
 Run `python fixtures/and_or.py new-fixture-folder` to generate the supported
-And → Or model and an And → Xor refusal case. `fixtures/expression.c` and its
+And → Or and And → Xor models. Xor is now admitted; `outside-profile.onnx`
+uses a valid ONNX Equal operation as the unsupported-operation neighbor. `fixtures/expression.c` and its
 header exercise the bounded expression profile. `fixtures/panel.c` exercises
 the layout profile with 27 editable widgets and an independent test layout.
 Use it for syntax inspection only. To build the scalar DLL
@@ -117,3 +135,43 @@ lld-link /dll /noentry /nodefaultlib /machine:x64 /Brepro /out:sample.dll sample
 
 The scalar fixture returns `a + 2*b` modulo 2³². The caller is
 `fixtures/forward.c`.
+
+## Analyze first, or import an ordinary C function
+
+Studio's **File → Import → ONNX… / C…** uses the same analysis and conversion
+code. The preparation form lists actual metadata, compatibility, diagnostics
+and compilation context before publication. Change the file, copy technical
+details, adjust include folders/macros, or cancel without replacing open files.
+The analyzed source digest is checked again before a result is opened.
+Studio supplies Python/ONNX/Clang/Frontend using its installed runtime; no PATH
+setup or manual conversion command is needed. Source C is parsed, not run.
+
+```powershell
+python Import-OnnxGraph.py model.onnx --analyze --report model-analysis.json
+python Import-CProject.py --single-file --source example.c --clang path/to/clang-cl.exe --analyze --report c-analysis.json
+python Import-CProject.py --single-file --source example.c --entry calculate --clang path/to/clang-cl.exe --frontend path/to/frog-frontend.exe --output imported-function
+```
+
+Repeat `--include folder` and `--define NAME=value` for the single-file context.
+Select the actual function discovered by Clang. The pure profile covers total,
+side-effect-free one-return expressions with one or two homogeneous U32 or BOOL
+arguments and the same return type. U32 supports +, −, ×, &, |, ^ modulo 2^32.
+BOOL supports !, &&, ||, &, |, ^ and 0/1; eager dataflow is only used after the
+entire reachable closure is proved pure and total in this bounded profile.
+Effects/short-circuit side effects, floating point, mixed conversions, pointers,
+recursion, unsupported statements and unresolved functions are refused. Direct
+calls become editable sub-FROGs with explicit ports, identities and source maps.
+This reuses the C Project translator; it does not change CMake target discovery.
+The specialized QMH, scalar DLL and Win32 layout-only profiles remain separate.
+Their names are suggestions until their own AST/ABI guards accept the input.
+
+Run `python fixtures/boolean_compatibility.py new-fixtures` for redistributable
+18-operation XOR and 19-operation And/Or/Not equivalent two-bit adders, vector
+cases, a valid outside-profile model and a pure C source. These are identified
+**equivalents**, not copies of unavailable user models. Sixteen four-bit inputs
+are checked against independent integer addition and ONNX ReferenceEvaluator.
+`fixtures/test_compatibility.py --frontend path/to/frog-frontend.exe --clang
+path/to/clang-cl.exe` exercises formats, schema versions, refusals, original
+identity, actual Frontend admission and a deliberately compiled Windows x64 C
+oracle. UI/Run/EXE qualification is separate; a passed JSON/checker test alone
+does not establish it.

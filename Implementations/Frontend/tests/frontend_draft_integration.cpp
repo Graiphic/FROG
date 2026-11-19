@@ -242,6 +242,31 @@ void colorBoxArrayPresentation(Context &context) {
     }
     std::cout<<"COLOR_BOX_ARRAY_FRONTEND_PASS rank=2 exact_u32_values=6 validate_derive=1 save_reopen=1 negative_results="<<refused<<'\n';
 }
+void incompleteWireDiagnostics(Context &context) {
+    auto document=scalar("f64");
+    DiagramWireFragment fragment;fragment.id="loose-wire";
+    fragment.source=DiagramEdgeEndpoint{"left","value"};
+    fragment.points={{0,0},{20,0}};fragment.typeHint="f64";fragment.typeHintAuthoritative=true;
+    document.diagramWireFragments.push_back(fragment);
+    const auto bytes=serializeFrogDraftData(document);
+    const auto loaded=readFrogDraftData(bytes);
+    need(loaded&&loaded->diagramWireFragments.size()==1,"Read discarded an intentionally incomplete wire");
+    const auto prepared=prepareDraftFrontend(bytes,"memory:/broken-wire.frog",{},{});
+    need(std::any_of(prepared.diagnostics.begin(),prepared.diagnostics.end(),[](const auto &d) {
+        return d.code=="incomplete_wire_fragment"&&d.domain==DocumentDiagnosticDomain::Topology&&
+            d.stage==DocumentDiagnosticStage::Validation&&d.subjectId=="loose-wire"&&
+            d.sourcePath=="/diagram/wire_fragments/0"&&(d.blocksBuild||d.blocksRun);
+    }),"Broken wire was not a localized, editable topology error before migration");
+    for(bool derive:{false,true}) {
+        const auto refused=call(context,bytes,revision(bytes),"{}",derive);
+        need(refused.outcome!=FROG_FRONTEND_SUCCESS&&refused.fir.empty()&&
+            refused.diagnostics.find("incomplete_wire_fragment")!=std::string::npos&&
+            refused.diagnostics.find("migration.unsupported")==std::string::npos,
+            "Validation/derive misclassified a broken wire as an unknown format or admitted FIR");
+    }
+    need(serializeFrogDraftData(document)==bytes,"Inspection mutated the authored broken wire");
+    std::cout<<"INCOMPLETE_WIRE_FRONTEND_PASS localized_topology=1 read_retained=1 validate_derive_refused=1 source_immutable=1\n";
+}
 void independentStructureDiagnostics(Context &context) {
     auto document=scalar("f64");
     auto event=operation("event","structures.event_structure");event.kind="structure";
@@ -300,6 +325,7 @@ void independentStructureDiagnostics(Context &context) {
 int main() {
     try {
         Context context;
+        incompleteWireDiagnostics(context);
         independentStructureDiagnostics(context);
         packedArrayLiteral(context);
         colorBoxArrayPresentation(context);
@@ -450,6 +476,27 @@ int main() {
         DocumentDiagnostic diagnostic;diagnostic.subjectId="add:part:a";
         attributeDraftSourceDiagnostic(diagnostic,attribution,tree);
         need(diagnostic.nodeId=="add:part"&&diagnostic.portId=="a"&&diagnostic.sourcePath=="/diagram/nodes/2","Attribution split an actual node ID or lost its source path");
+        // Attribution indexing must preserve escaped/stable identities and
+        // the previous refusal to attribute a duplicate retained-source ID.
+        auto indexed=scalar("i64");
+        indexed.diagramNodes[0].id="left:~part/one";
+        for(auto &edge:indexed.diagramEdges)
+            if(edge.from.nodeId=="left")edge.from.nodeId="left:~part/one";
+        const auto indexedBytes=serializeFrogDraftData(indexed);
+        const auto indexedPreparation=prepareDraftFrontend(indexedBytes,"memory:/identity-index.frog",{},{});
+        need(indexedPreparation.accepted(),"Indexed attribution changed semantic admission");
+        const auto mapped=std::find_if(indexedPreparation.identities.begin(),indexedPreparation.identities.end(),
+            [](const auto &entry){return entry.id=="left:~part/one";});
+        need(mapped!=indexedPreparation.identities.end()&&mapped->originalPointer=="/diagram/nodes/0",
+            "Indexed attribution lost an exact authored node pointer");
+        auto duplicated=json(indexedBytes);
+        auto metadata=canonical_json::object();
+        metadata.object.emplace("id",canonical_json::string("left:~part/one"));
+        duplicated.object.insert_or_assign("metadata",std::move(metadata));
+        DocumentDiagnostic duplicateDiagnostic;duplicateDiagnostic.subjectId="left:~part/one";
+        attributeDraftSourceDiagnostic(duplicateDiagnostic,indexed,duplicated);
+        need(duplicateDiagnostic.sourcePath.empty(),"Ambiguous retained IDs acquired a coincidental source pointer");
+        need(serializeFrogDraftData(indexed)==indexedBytes,"Attribution indexing changed source values or identities");
         std::cout<<"Draft C API: exact I64, aggregate, revision 2, Conditional, diagnostics and immutable repeatability passed\n";
         return 0;
     } catch(const std::exception &error) {std::cerr<<error.what()<<'\n';return 1;}

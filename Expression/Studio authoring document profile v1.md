@@ -209,6 +209,17 @@ member configuration is preserved; incompatible members remain diagnosable.
 Read/write permissions and method signatures govern actual port directions.
 Editor services do not establish a graph execution provider or public lowering.
 
+The saved Property Node row order is explicit. Studio can extend it by dragging
+the bottom handle. The authoring operation takes the available properties in
+the effective target’s Select Property menu order, starting after the last
+configured eligible row, or from the first available property if there is no
+eligible anchor. The last available property repeats at the end of the list.
+Each added occurrence is a separate row with its own identity and applicable
+read/write permissions. Existing row identities, modes and connections are
+retained on extension. Save/Open reads the stored rows and their order directly.
+The menu order determines authoring defaults; it is not a serialization rule
+or an execution requirement.
+
 Front Panel references and reference-valued Cluster fields retain their complete
 value schema. Use the relevant product receipt for supported widget and field
 combinations. Reference-node wiring, widget authoring and runtime use each require

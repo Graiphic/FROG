@@ -586,7 +586,6 @@ struct Builder {
     void nativeCallCorridor() {
         if(std::none_of(out.nodes.begin(),out.nodes.end(),[](const auto &n){return n.nativeCall.has_value();}))return;
         for(const auto &n:out.nodes) {
-            if(n.family=="structure"||!n.regionId.empty())fail("IR_NATIVE_CALL_REGION_UNAVAILABLE","The first local scalar5 call corridor is flat; no region is flattened into another owner.",n.sourceNodeId,true);
             if(canonicalArrayNativeContract(n.kind)||canonicalStringNativeContract(n.kind))fail("IR_NATIVE_CALL_COMPOSITION_UNAVAILABLE","Scalar5 does not acquire the Array3/String2 execution profiles.",n.sourceNodeId,true);
             for(const auto &p:n.ports)if(p.typeRef.starts_with("array<")||p.typeRef.starts_with("ref<")||
                 (p.typeRef.starts_with("cluster<")&&p.typeRef!=kNativeCallScalarErrorType))

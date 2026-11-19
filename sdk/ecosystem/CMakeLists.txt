@@ -20,7 +20,8 @@ add_executable(frog-bridge-protocol-smoke EXCLUDE_FROM_ALL tests/bridge_protocol
 target_include_directories(frog-bridge-protocol-smoke PRIVATE "${FROG_BRIDGE_FRONTEND_ROOT}/src")
 target_link_libraries(frog-bridge-protocol-smoke PRIVATE frog-bridge-protocol frog-frontend frog-frontend-production)
 add_test(NAME frog-bridge-protocol-smoke COMMAND frog-bridge-protocol-smoke
-    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures" "${FROG_BRIDGE_FRONTEND_ROOT}/tests/fixtures")
+    "${CMAKE_CURRENT_SOURCE_DIR}/fixtures" "${FROG_BRIDGE_FRONTEND_ROOT}/tests/fixtures"
+    "${FROG_BRIDGE_FRONTEND_ROOT}/tests/fixtures/classes-v1")
 set_tests_properties(frog-bridge-protocol-smoke PROPERTIES LABELS "sdk;bridge;protocol;frontend;bounded" TIMEOUT 60)
 add_executable(frog-bridge-json-smoke EXCLUDE_FROM_ALL tests/bridge_json_smoke.cpp)
 target_link_libraries(frog-bridge-json-smoke PRIVATE frog-bridge-protocol)

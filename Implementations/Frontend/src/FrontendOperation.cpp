@@ -438,7 +438,9 @@ struct Request {
         return out;
     }
     ne::DraftDependencyResult draftDependency(const ne::DraftDependencyRequest &wanted) {
-        const auto &value=captureDocument(static_cast<std::uint32_t>(wanted.kind),wanted.authoredReference,
+        const auto kind=wanted.kind==ne::DraftDependencyKind::ClassDefinition?FROG_FRONTEND_DEPENDENCY_CLASS_DEFINITION:
+            wanted.kind==ne::DraftDependencyKind::TypeDefinition?FROG_FRONTEND_DEPENDENCY_TYPE_DEFINITION:FROG_FRONTEND_DEPENDENCY_SOURCE;
+        const auto &value=captureDocument(kind,wanted.authoredReference,
             wanted.expectedIdentity,wanted.expectedVersion,wanted.expectedSha256,wanted.ownerUri,wanted.sourcePointer);
         return {ne::DraftDependencyState::Present,value.uri,value.identity,value.version,value.hash,value.bytes,{}};
     }
@@ -547,7 +549,7 @@ Json describe(const frog_frontend_limits &limits) {
         {"default_limits",limitsJson(normalized({}))},{"effective_limits",limitsJson(limits)},
         {"max_fir_bytes",number(ne::CanonicalIrLimits{}.maximumIrBytes)},
         {"max_resolution_steps",number(maximumResolutionSteps)},
-        {"dependency_kinds",strings({"source","type_definition"})},{"dissemination",cj::string("local")},
+        {"dependency_kinds",strings({"source","type_definition","class_definition"})},{"dissemination",cj::string("local")},
         {"native_execution_claim",cj::boolean(false)}};
     return result;
 }

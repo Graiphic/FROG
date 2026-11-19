@@ -1,4 +1,5 @@
 #include "frog_native_engine/WidgetTypedValueSource.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/graph/XYGraph.hpp"
 #include "frog_native_engine/graph/WaveformGraph.hpp"
 #include "frog_native_engine/TimestampSourceProjection.hpp"
@@ -154,6 +155,11 @@ struct Projection {
         throw std::runtime_error("Integer widget value could not be encoded.");
       token = std::string(buffer.data(), r.ptr);
     }
+    if(type.name=="i128" || type.name=="u128") {
+      const auto exact=numeric_value::canonicalWideIntegerLexeme(*token,type.name);
+      if(!exact)throw std::runtime_error("The widget integer exceeds its declared exact 128-bit width.");
+      return *exact;
+    }
     const auto canonical = numeric_value::canonicalWideIntegerLexeme(
         *token, unsignedType ? "u64" : "i64");
     if (!canonical)
@@ -190,6 +196,10 @@ struct Projection {
   }
   Json value(const WidgetInstance &widget, const Type &type, unsigned depth) {
     enter(depth);
+    if(isListboxWidget(widget)) {
+      std::string why;const auto projected=listbox_widget::bindingValue(widget,&why);
+      if(!projected)throw std::runtime_error(why);jsonBudget(*projected,depth);return *projected;
+    }
     if(isWaveformGraphWidget(widget)) {
       if(!widget.waveformGraph || widget.waveformGraph->preservedSource ||
           !binding::fullTypeEqual(widget.waveformGraph->datatype,type))

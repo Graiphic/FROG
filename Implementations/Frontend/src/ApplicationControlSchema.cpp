@@ -73,17 +73,21 @@ std::vector<std::string> applicationControlReferenceClasses() {
     result.emplace_back("file");
     return result;
 }
+static bool applicationControlClassKnown(std::string_view classId) {
+    const auto native=binding::nativeObjectReferenceClasses();
+    return classId=="file" || std::find(native.begin(),native.end(),classId)!=native.end() ||
+        findWidgetDefinitionByClassId(classId)!=nullptr;
+}
 static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMembers(std::string_view classId,
-    const TypeRef &valueType) {
-    const auto classes=applicationControlReferenceClasses();
-    if (std::find(classes.begin(),classes.end(),classId)==classes.end() &&
-        !findWidgetDefinitionByClassId(classId)) return {};
+    const TypeRef &valueType,std::string_view only={}) {
+    if(!applicationControlClassKnown(classId))return {};
     std::vector<ApplicationControlMemberDescriptor> result;
-    const auto property=[&](std::string id,std::string label,std::string group,TypeRef type,
+    const auto property=[&](std::string id,std::string label,std::string group,auto &&type,
             bool read=true,bool write=false,bool available=true,std::string reason={}) {
+        if(!only.empty() && id!=only)return;
         ApplicationControlMemberDescriptor item;
         item.id=std::move(id);item.label=std::move(label);item.group=std::move(group);
-        item.type=std::move(type);item.readable=read;item.writable=write;
+        item.type=std::forward<decltype(type)>(type);item.readable=read;item.writable=write;
         item.authoringAvailable=available;item.unavailableReason=std::move(reason);
         item.help="Private document authoring provider; runtime access is unavailable.";
         if(item.id=="position" || item.id=="bounds" || item.id=="size")
@@ -106,6 +110,7 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
     };
     const auto method=[&](std::string id,std::string label,bool available,
             std::vector<ApplicationControlParameter> params={},std::optional<TypeRef> output={}) {
+        if(!only.empty() && id!=only)return;
         ApplicationControlMemberDescriptor item;
         item.kind=ApplicationControlMemberKind::Method;item.id=std::move(id);item.label=std::move(label);
         item.group="Methods";item.authoringAvailable=available;item.parameters=std::move(params);item.resultType=std::move(output);
@@ -141,8 +146,10 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
         property("default_value","Default Value","Value",dataType,true,true);
         property("value_type","Value Type","Value",primitive("string"));
         property("value_signaling","Value (Signaling)","Value",dataType,false,true,false);
-        result.back().runtimeAvailable=true;
-        result.back().help="Writes the current typed value and queues Value Change, including identical values. Write-only; Latch Boolean actions are unsupported. Value writes stay silent. Uses captured OldVal/NewVal and the actual control reference; handler completion is asynchronous.";
+        if(!result.empty() && result.back().id=="value_signaling") {
+            result.back().runtimeAvailable=true;
+            result.back().help="Writes the current typed value and queues Value Change, including identical values. Write-only; Latch Boolean actions are unsupported. Value writes stay silent. Uses captured OldVal/NewVal and the actual control reference; handler completion is asynchronous.";
+        }
     }
     property("interaction.visible","Visible","Appearance",primitive("bool"),true,true);
     property("interaction.enabled","Enabled","Appearance",primitive("bool"),true,true,!definition || cap(WidgetCapability::EnabledState),
@@ -195,6 +202,14 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
         property("boolean_text.false","Boolean Text.False","Boolean Text",primitive("string"),true,true);
         property("boolean_text.true","Boolean Text.True","Boolean Text",primitive("string"),true,true);
         property("boolean_text.visible","Boolean Text.Visible","Boolean Text",primitive("bool"),true,true);
+    }
+    if(applicationControlBooleanColorsAvailable(classId)) {
+        property("colors","Colors[4]","Appearance",applicationControlBooleanColorsType(),true,true,false);
+        if(!result.empty() && result.back().id=="colors") {
+            auto &colors=result.back();
+            colors.runtimeAvailable=true;
+            colors.help="Reads or writes Foreground Color and Background Color (U32 RGB) for False, True, True to False and False to True, followed by False/True mouse-over colors when supported. Write 1, 2, 4 or, on a compatible style, 6 pairs. Does not change the Boolean value or text.";
+        }
     }
     if(cap(WidgetCapability::MechanicalAction)) {
         property("mechanical_action","Mechanical Action","Operation",primitive("string"),true,true);
@@ -311,22 +326,24 @@ namespace {
 using Descriptor=ApplicationControlMemberDescriptor;
 using Direction=ApplicationControlParameterDirection;
 std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRef &valueType,
-    const WidgetInstance *presentation) {
-    auto result=baseApplicationControlMembers(classId,valueType);
-    if(result.empty())return result;
+    const WidgetInstance *presentation,std::string_view only={}) {
+    auto result=baseApplicationControlMembers(classId,valueType,only);
+    if(result.empty() && (only.empty() || !applicationControlClassKnown(classId)))return result;
     const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId));
     const bool control=definition || classId=="frog.control";
     const bool text=classId=="frog.text.label" || classId=="frog.text.caption" || classId=="frog.text.boolean";
-    const auto property=[&](std::string id,std::string label,TypeRef type,bool read=true,
+    const auto property=[&](std::string id,std::string label,auto &&type,bool read=true,
         bool write=false,bool available=true,std::string reason={}) {
+        if(!only.empty() && id!=only)return;
         Descriptor member;member.id=std::move(id);member.label=std::move(label);
-        member.type=std::move(type);member.readable=read;member.writable=write;
+        member.type=std::forward<decltype(type)>(type);member.readable=read;member.writable=write;
         member.authoringAvailable=available;member.unavailableReason=std::move(reason);
         member.help="The descriptor configures a typed operation; target capabilities are checked separately. Runtime access requires its own provider.";
         result.push_back(std::move(member));
     };
     const auto method=[&](std::string id,std::string label,bool available,
         std::vector<ApplicationControlParameter> params={},std::optional<TypeRef> output={}) {
+        if(!only.empty() && id!=only)return;
         Descriptor member;member.id=std::move(id);member.label=std::move(label);
         member.kind=ApplicationControlMemberKind::Method;member.authoringAvailable=available;
         member.parameters=std::move(params);member.resultType=std::move(output);
@@ -579,6 +596,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
     place("caption.reference","Reference",{"Caption"},2,260);
     place("label.reference","Reference",{"Label"},2,530);
     place("boolean_text.reference","Reference",{"Boolean Text"},3,1000,"frog.control.boolean");
+    place("colors","Colors[4]",{},3,1040,"frog.control.boolean");
     // Existing flat properties are explicit paths to their text object.
     for(const auto &[part,caption,base]:std::initializer_list<std::tuple<const char*,const char*,std::uint32_t>>{
         {"label","Label",530},{"caption","Caption",260},{"boolean_text","Boolean Text",1000}}) {
@@ -738,6 +756,11 @@ std::vector<ApplicationControlMemberDescriptor> applicationControlMembers(std::s
 }
 const WidgetInstance *applicationControlReferencePresentation(const DiagramNode &node,
     std::span<const DiagramNode> nodes,std::span<const DiagramEdge> edges,FrogWidgetDataView canvas) {
+    return applicationControlReferencePresentation(node,nodes,edges,canvas,{});
+}
+const WidgetInstance *applicationControlReferencePresentation(const DiagramNode &node,
+    std::span<const DiagramNode> nodes,std::span<const DiagramEdge> edges,FrogWidgetDataView canvas,
+    const ApplicationControlSchemaLookup &lookup) {
     const auto *current=&node;
     std::string port;
     std::vector<std::string> fields,members;
@@ -776,6 +799,7 @@ const WidgetInstance *applicationControlReferencePresentation(const DiagramNode 
     // display text. Construction is lazy for ordinary direct references.
     std::optional<binding::TypeResolver> schemas;
     const auto schema=[&](const DiagramNode &owner,std::string_view output) {
+        if(lookup)return lookup(owner,output);
         if(!schemas)schemas.emplace(nodes,edges,canvas);
         return schemas->resolve({owner.id,std::string(output)}).resolution;
     };
@@ -879,6 +903,14 @@ const WidgetInstance *applicationControlReferencePresentation(const DiagramNode 
 
 std::optional<ApplicationControlMemberDescriptor> applicationControlMember(std::string_view classId,
     const TypeRef &valueType,std::string_view memberId,const WidgetInstance *presentation) {
+    // Value descriptions are root members. Do not build unrelated subobject
+    // menus/Array Element catalogues to type a single data terminal. The same
+    // descriptor builders and ordering/decorations remain authoritative.
+    if(memberId=="value" || memberId=="value_signaling" || memberId=="colors") {
+        for(auto &member:referenceCatalogue(classId,valueType,presentation,memberId))
+            if(member.id==memberId)return std::move(member);
+    }
+    // Aliases, nested paths and absent members keep the complete ordered lookup.
     for(auto &member:applicationControlMembers(classId,valueType,presentation))
         if(member.id==memberId || std::find(member.migrationAliases.begin(),member.migrationAliases.end(),memberId)!=member.migrationAliases.end())
             return std::move(member);

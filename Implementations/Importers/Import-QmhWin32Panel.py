@@ -38,7 +38,10 @@ def syntax(node):
         return json.loads(token.removeprefix("L"))
     if kind == "DeclRefExpr":
         return node["referencedDecl"]["name"]
-    return (node.get("opcode", node.get("name", kind)), *(syntax(child) for child in parts))
+    tag = node.get("opcode", node.get("name", kind))
+    if kind == "UnaryOperator" and node.get("isPostfix"):
+        tag = "post" + tag
+    return (tag, *(syntax(child) for child in parts))
 
 
 def one(values):
@@ -54,11 +57,11 @@ def local(node, name):
     return one(n for n in walk(node) if n["kind"] == "VarDecl" and n.get("name") == name)
 
 
-def position(node, data):
+def position(node, data, source_name="calculator.c"):
     begin = node.get("range", {}).get("begin", node.get("loc", {}))
     begin = begin.get("expansionLoc", begin)
     offset = begin["offset"]
-    return {"file": "calculator.c", "line": data.count(b"\n", 0, offset) + 1,
+    return {"file": source_name, "line": data.count(b"\n", 0, offset) + 1,
             "column": offset - data.rfind(b"\n", 0, offset), "byte_offset": offset}
 
 
@@ -81,13 +84,88 @@ def rect(values):
     return dict(zip(("x", "y", "width", "height"), values))
 
 
-def derive(ast, data):
+class BindingRefusal(ValueError):
+    def __init__(self, reason, function, node, data, source_name):
+        super().__init__(reason)
+        self.diagnostic = {"code": "c_ui_import." + reason, "member": function,
+                           **position(node, data, source_name),
+                           "message": "The observed C binding differs from the bounded panel profile. "
+                                      "No executable binding or partial output was emitted."}
+
+
+def host_bindings(body, data, source_name):
+    """Attribute the observed C wiring, without admitting an executable graph.
+
+    These are call-site/source observations, not a callback-name-to-FROG-event
+    registry. Keep the layout-only boundary explicit until the complete imported
+    consumer and evaluator are admitted by the common Frontend.
+    """
+    queue = ("&", ("queue", "app"))
+
+    def call(function, name, arguments):
+        node = one(calls(body[function], name))
+        if syntax(node)[2:] != arguments:
+            raise BindingRefusal("unsupported_" + function + "_binding", function, node, data, source_name)
+        return node
+
+    key = call("producer_key", "enqueue_element", (queue, "label", ("++", ("sent", "app")),
+               "error", ("&", "outgoing")))
+    close = call("producer_close", "enqueue_element", (queue, "close", ("++", ("sent", "app")),
+                 ("CallExpr", "producer_error"), ("&", "outgoing")))
+    release = call("producer_close", "release_queue", (queue, "outgoing", ("&", "outgoing")))
+    abort = call("host_abort", "SetEvent", (("abort_requested", "app"),))
+    abort_release = call("host_abort", "queue_release", (queue,))
+    dequeue = call("consumer_thread", "dequeue_element", (queue, ("&", "message"),
+                   ("&", "sequence"), ("error", "state"), ("&", ("error", "state"))))
+    obtain = call("initialize", "obtain_queue", (queue, "startup_error", ("&", ("producer_error", "app"))))
+    if position(close, data)["byte_offset"] >= position(release, data)["byte_offset"]:
+        raise BindingRefusal("unsupported_close_release_order", "producer_close", release, data, source_name)
+    if position(abort, data)["byte_offset"] >= position(abort_release, data)["byte_offset"]:
+        raise BindingRefusal("unsupported_abort_release_order", "host_abort", abort_release, data, source_name)
+
+    # Follow actual calls from the producer/consumer entry points. In particular,
+    # EDIT/Control/field names alone do not establish a computational input.
+    pending, reachable = ["producer_key", "producer_close", "consumer_thread"], set()
+    while pending:
+        name = pending.pop()
+        if name in reachable:
+            continue
+        reachable.add(name)
+        for node in walk(body[name]):
+            if (node.get("kind") == "MemberExpr" and node.get("name") == "error_fields"
+                    and syntax(node) == ("error_fields", "app")):
+                raise BindingRefusal("unsupported_error_field_access", name, node, data, source_name)
+            if node.get("kind") == "CallExpr":
+                callee = syntax(children(node)[0])
+                if isinstance(callee, str) and callee in body and callee not in reachable:
+                    pending.append(callee)
+
+    def site(function, node):
+        return {"function": function, "source": position(node, data, source_name),
+                "call": syntax(node)}
+
+    return {
+        "scope": "observed C call sites; not executable FROG bindings",
+        "execution_bound": False,
+        "shared_queue": [site(name, node) for name, node in (
+            ("initialize", obtain), ("producer_key", key), ("producer_close", close),
+            ("producer_close", release), ("host_abort", abort_release), ("consumer_thread", dequeue))],
+        "close_order": [site("producer_close", close), site("producer_close", release)],
+        "abort_order": [site("host_abort", abort), site("host_abort", abort_release)],
+        "error_input_read_check": {"source_scope": source_name, "reachable_members": sorted(reachable),
+                                   "app_error_fields_references": 0,
+                                   "meaning": "No error EDIT handle reaches the observed producer/consumer calls. Startup error is a separate input."},
+    }
+
+
+def derive(ast, data, source_name="calculator.c"):
     body = {n["name"]: n for n in children(ast) if n.get("kind") == "FunctionDecl"
             and children(n) and children(n)[-1].get("kind") == "CompoundStmt"}
     window = body["window_proc"]
     layout = body["layout"]
     bg = body["draw_background"]
     init = body["initialize"]
+    bindings = host_bindings(body, data, source_name)
     key_table = local(ast, "keys")
     key_rows = children(one(children(key_table)))
     display, key, stop, edit = [syntax(n)[2:] for n in calls(window, "CreateWindowExW")]
@@ -169,7 +247,7 @@ def derive(ast, data):
                           "style.text.font_size": f"{font_px}px"})
             widget["typography"] = {"inheritanceVersion": 1, "resolvedPointSize": font_px * 72 / 96}
         widgets.append(widget)
-        mapping.append({"widget": ident, "source": position(origin, data), "control_id": control_id,
+        mapping.append({"widget": ident, "source": position(origin, data, source_name), "control_id": control_id,
                         "class": widget["classId"], "role": role, "value_type": value_type,
                         "layout_coverage": "exact_logical_at_96_dpi",
                         "logical_bounds": widget["bounds"], "label": label})
@@ -233,8 +311,9 @@ def derive(ast, data):
     }
     receipt = {"source_sha256": hashlib.sha256(data).hexdigest(), "logical_dpi": scale_call[-1],
                "initial_client_size": [args[0] for args in initial_size], "keypad_frame": pad_rect,
+               "host_binding_evidence": bindings,
                "widgets": mapping, "effects": {
-                   name: {"source": position(node, data), "coverage": coverage, "detail": detail}
+                   name: {"source": position(node, data, source_name), "coverage": coverage, "detail": detail}
                    for name, (node, coverage, detail) in effects.items()}}
     return document, receipt
 
@@ -269,10 +348,23 @@ def main():
     capture = time.perf_counter()
     if source.read_bytes() != data:
         parser.exit(2, "c_ui_import.source_changed\n")
+    ast = {}
     try:
-        document, receipt = derive(json.loads(result.stdout), data)
+        ast = json.loads(result.stdout)
+        document, receipt = derive(ast, data, source.name)
     except (KeyError, ValueError, IndexError, TypeError) as error:
-        parser.exit(2, f"c_ui_import.unsupported_ast: {error}\n")
+        if isinstance(error, BindingRefusal):
+            parser.exit(2, json.dumps(error.diagnostic, ensure_ascii=False) + "\n")
+        code = "c_ui_import.required_member_missing" if isinstance(error, KeyError) else "c_ui_import.unsupported_ast"
+        detail = {"code": code, "source": str(source), "member": str(error),
+                  "message": "The parsed C does not match this specialized Win32 layout profile. Required members include window_proc, keys and layout; no callback is inferred as a FROG event. The complete original AST refusal is retained.",
+                  "original": str(error)}
+        member = str(error).strip("'") if isinstance(error, KeyError) else (
+            "layout" if "layout" in str(error) else "keys" if "key" in str(error) else "window_proc")
+        context = next((n for n in children(ast) if n.get("name") == member), None)
+        if context is not None:
+            detail["context"] = {"member": member, **position(context, data, source.name)}
+        parser.exit(2, json.dumps(detail, ensure_ascii=False) + "\n")
     receipt.update(clang_sha256=hashlib.sha256(clang.read_bytes()).hexdigest(), command=argv)
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = Path(tempfile.mkdtemp(prefix=".qmh-ui-import-", dir=output.parent))

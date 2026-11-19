@@ -135,6 +135,11 @@ private:
             if(scalar!="f64")fail("The private Matrix value profile supports f64 elements only.");
             return TypeRef::matrix(TypeRef::primitive(scalar));
         }
+        if (take("object<")) {
+            auto result=TypeRef::object(identity());expect(">");
+            if(!result.known())fail("Object requires a complete nominal class identity.");
+            return result;
+        }
         if (take("ref<")) {
             auto classId = identity();
             std::optional<TypeRef> schema;
@@ -261,6 +266,9 @@ TypeRef TypeRef::reference(std::string classId, std::optional<TypeRef> valueType
     if (valueType) result.children.push_back(std::move(*valueType));
     return result;
 }
+TypeRef TypeRef::object(std::string classId) {
+    TypeRef result;result.kind=TypeKind::Object;result.name=std::move(classId);return result;
+}
 TypeRef TypeRef::primitive(std::string_view name) {
     TypeRef result; result.kind = TypeKind::Primitive; result.name = name; return result;
 }
@@ -293,6 +301,11 @@ TypeRef TypeRef::cluster(std::vector<std::string> ids, std::vector<TypeRef> fiel
 }
 bool TypeRef::known() const {
     if (kind == TypeKind::Unknown) return false;
+    if(kind==TypeKind::Object) {
+        return !name.empty()&&name.size()<=128&&rank==0&&!extent&&children.empty()&&fieldIds.empty()&&fieldNames.empty()&&
+            choiceKind==ChoiceKind::None&&choices.empty()&&std::all_of(name.begin(),name.end(),[](unsigned char c){
+                return (c>='a'&&c<='z')||(c>='A'&&c<='Z')||(c>='0'&&c<='9')||c=='_'||c=='.'||c=='-';});
+    }
     if (kind == TypeKind::Reference) {
         if (name.empty() || rank != 0U || extent || !fieldIds.empty() || children.size() > 1U ||
             (!std::all_of(name.begin(), name.end(), [](unsigned char c) {
@@ -345,6 +358,7 @@ std::string TypeRef::canonical() const {
     case TypeKind::Matrix: return known()?"matrix<"+children.front().canonical()+">":"unknown";
     case TypeKind::Map: return known()?"map<"+children[0].canonical()+","+children[1].canonical()+">":"unknown";
     case TypeKind::Set: return known()?"set<"+children.front().canonical()+">":"unknown";
+    case TypeKind::Object: return known()?"object<"+quoted(name)+">":"unknown";
     case TypeKind::Reference:
         if (!known()) return "unknown";
         return "ref<" + quoted(name) + (children.empty() ? "" : "," + children.front().canonical()) + ">";

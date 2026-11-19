@@ -1,11 +1,21 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "frog_native_engine/ClassDefinition.hpp"
+#include "frog_native_engine/ClassProgram.hpp"
+#include "frog_native_engine/FrogDraftData.hpp"
+#include "frog_native_engine/Sha256.hpp"
+#include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/DraftClassProjection.hpp"
+#include "frog_native_engine/ClassAuthoring.hpp"
+#include "frog_native_engine/DraftInterfaceInspection.hpp"
+#include "frog_native_engine/DiagramBindingResolver.hpp"
 
 #include <algorithm>
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <set>
 
 namespace {
 using namespace frog::native_engine;
@@ -71,6 +81,21 @@ void run() {
     check(!prepareClassField("offset", "Offset", "i64", "1.5", &fieldError) && fieldError.starts_with("/default"),
         "Class editor accepted a nonintegral default");
     auto definitions = sensors();
+    const auto memberDraft=makeClassMemberDraft(definitions.at("sensor"),"set-offset",{"sensor","Capteur.fclass",1});
+    if(!memberDraft.accepted())throw std::runtime_error(memberDraft.issues.front().message);
+    const auto actualBindings=inspectFrogDraftInterfaceBindings(memberDraft.document->declaredInterface,
+        memberDraft.document->widgets,memberDraft.document->diagramNodes,memberDraft.document->properties,{});
+    if(!actualBindings.empty())throw std::runtime_error("Ordinary native member authoring: "+actualBindings.front().code+": "+actualBindings.front().message);
+    const auto memberRoundTrip=readFrogDraftData(serializeFrogDraftData(*memberDraft.document));
+    check(memberRoundTrip&&memberRoundTrip->properties.classSource==memberDraft.document->properties.classSource,
+        "New native member attribution did not survive Save/Open");
+    std::vector<ClassIssue> connectorIssues;
+    const auto adopted=adoptClassMemberConnector(definitions.at("sensor"),"set-offset",*memberDraft.document,connectorIssues);
+    check(adopted&&connectorIssues.empty()&&writeClassDefinition(*adopted)==writeClassDefinition(definitions.at("sensor")),
+        "Explicit actual connector adoption changed stable identities or signature slots");
+    auto foreignMember=*memberDraft.document;foreignMember.properties.classSource.member->classId="foreign";
+    check(!adoptClassMemberConnector(definitions.at("sensor"),"set-offset",foreignMember,connectorIssues)&&
+        !connectorIssues.empty(),"Connector adoption accepted a member of another class");
     for (auto &[id, definition] : definitions) {
         const auto bytes = writeClassDefinition(definition);
         std::string error;
@@ -88,7 +113,29 @@ void run() {
     check(hierarchy.has_value() && issues.empty(), "Renaming broke nominal identity");
     const ClassCallTarget measure{"sensor", "measure"}, setOffset{"sensor", "set-offset"};
     const ClassCallTarget member{"analog", "measure-analog"};
+    ClassIssue overrideIssue;
+    const auto override=makeClassOverride(*hierarchy,definitions.at("inherited"),{"sensor","measure"},
+        "inherited.custom",{"inherited.custom.impl","Custom.frog",1},&overrideIssue);
+    check(override&&override->overrides==ClassOverride{"sensor","measure"}&&override->ports[0].slot=="receiver"&&
+        override->ports[0].publicPortId!="sensor.self","Override authoring did not specialize the inherited connector with stable independent identities");
+    auto child=definitions.at("inherited");child.methods.push_back(*override);
+    const auto overrideDraft=makeClassMemberDraft(child,override->id,{"inherited","Herite.fclass",1});
+    check(overrideDraft.accepted(),"Native authoring cannot realize a specialized object connector");
+    check(!makeClassOverride(*hierarchy,definitions.at("inherited"),{"sensor","private"},
+        "bad.override",{"bad.override.impl","Bad.frog",1}),"Private/static method became an overridable dynamic slot");
     check(hierarchy->assignable("analog", "sensor"), "No upcast");
+    std::vector<DiagramNode> objectNodes(2);
+    objectNodes[0].id="child-source";objectNodes[0].kind="frog_call";
+    objectNodes[0].callPorts.push_back({"value","value",{},{},TypeRef::object("analog").canonical(),false});
+    objectNodes[1].id="parent-target";objectNodes[1].kind="frog_call";
+    objectNodes[1].callPorts.push_back({"object","object",{},{},TypeRef::object("sensor").canonical(),true});
+    DiagramEdge objectWire;objectWire.id="object-upcast";objectWire.from={"child-source","value"};objectWire.to={"parent-target","object"};
+    std::vector<DiagramEdge> objectWires{objectWire};
+    FrogWidgetDataView qualified(std::span<const SceneObject>{},{},8,{},nullptr,nullptr,{},&*hierarchy);
+    binding::TypeResolver qualifiedResolver(objectNodes,objectWires,qualified);
+    check(qualifiedResolver.connection(objectWire).accepted(),"Existing resolver consumers cannot use a borrowed common class context");
+    binding::TypeResolver unqualifiedResolver(objectNodes,objectWires,{});
+    check(!unqualifiedResolver.connection(objectWire).accepted(),"A canvas-free structural pass invented inheritance without a qualified context");
     check(!hierarchy->assignable("sensor", "analog") && !hierarchy->assignable("other", "sensor"), "Unsafe nominal conversion");
     check(!hierarchy->canAccess({}, {"sensor", "protected"}) &&
         hierarchy->canAccess(member, {"sensor", "protected"}), "Incorrect protected access");
@@ -196,12 +243,89 @@ void run() {
         "A changed revision was silently substituted");
 }
 
+void actualMembers() {
+    auto definitions=sensors();
+    std::map<std::string,std::string,std::less<>> files;
+    for(auto &[id,definition]:definitions) {
+        for(auto &method:definition.methods) {
+            method.implementation.path=method.implementation.id+".frog";
+            FrogDraftData document;document.title=method.name;
+            document.properties.classSource.member=ClassMemberIdentity{id,method.id,method.implementation.id,method.implementation.revision};
+            document.declaredInterface.emplace();
+            for(const auto &port:method.ports)check(document.declaredInterface->declarePort(port.input,port.publicPortId,
+                port.kind==ClassPortKind::Object?TypeRef::object(id).canonical():port.dataType.canonical(),port.input?"required":""),"Could not author actual member connector");
+            files.emplace(method.implementation.path,serializeFrogDraftData(document));
+        }
+        files.emplace(id+".fclass",writeClassDefinition(definition));
+    }
+    // Parent paths are authored in the owning .fclass, independently of names.
+    files.emplace("Capteur.fclass",files.at("sensor.fclass"));
+    const std::vector<ClassDependencyRoot> roots{{"fixture:/Main.frog","/classes/0",{"analog","analog.fclass",1}},
+        {"fixture:/Main.frog","/classes/1",{"digital","digital.fclass",1}},
+        {"fixture:/Main.frog","/classes/2",{"inherited","inherited.fclass",1}}};
+    const DraftDependencyResolver resolve=[&](const DraftDependencyRequest &request) {
+        DraftDependencyResult result;
+        if(const auto found=files.find(request.authoredReference);found!=files.end()) {
+            result.state=DraftDependencyState::Present;result.canonicalUri="fixture:/"+request.authoredReference;
+            result.bytes=std::make_shared<const std::string>(found->second);
+        }
+        return result;
+    };
+    const auto capture=captureClassProgram(roots,resolve);
+    if(!capture.accepted())throw std::runtime_error(capture.issues.empty()?capture.classes.issues.front().message:capture.issues.front().message);
+    check(capture.methods.size()==6,"Actual member closure is incomplete");
+    const ClassCallTarget member{"analog","measure-analog"};
+    const auto *actual=capture.findMember(member);check(actual&&actual->document,"Missing immutable actual member");
+    check(capture.attributeMember(actual->source.canonicalUri,actual->source.sha256)==member,"Actual member was not attributed");
+    check(!capture.attributeMember("fixture:/copy.frog",actual->source.sha256),"Copied member annotation gained private privileges");
+    check(!capture.attributeMember(actual->source.canonicalUri,hashing::sha256Hex("changed")),"Changed member bytes kept privileges");
+    check(!capture.attributeMember(actual->source.canonicalUri,{}),"Unsealed source gained privileges");
+    const auto saved=serializeFrogDraftData(*actual->document);
+    const auto reopened=readFrogDraftData(saved);
+    check(reopened&&reopened->properties.classSource==actual->document->properties.classSource,
+        "Save/Open changed semantic member attribution");
+    const auto assertRefused=[&](std::string_view code) {
+        const auto rejected=captureClassProgram(roots,resolve);
+        check(!rejected.accepted(),"Invalid actual member accepted");
+        check(std::any_of(rejected.issues.begin(),rejected.issues.end(),[&](const auto &i){return i.code==code&&
+            i.sourceUri=="fixture:/analog.fclass"&&!i.relatedSourceUri.empty();}),"Actual member refusal lost its declaration/member locations");
+    };
+    auto changed=*actual->document;
+    changed.properties.classSource.member->implementationId="unrelated.member";
+    files["analog.measure.frog"]=serializeFrogDraftData(changed);assertRefused("class.member_identity");
+    changed=*actual->document;
+    check(changed.declaredInterface->editPortForAuthoring("analog.self",true,TypeRef::object("analog").canonical(),
+        true,TypeRef::object("sensor").canonical(),std::nullopt),"Could not edit negative connector fixture");
+    files["analog.measure.frog"]=serializeFrogDraftData(changed);assertRefused("class.method_connector");
+    files["analog.measure.frog"]=saved;
+    check(captureClassProgram(roots,resolve).accepted(),"Restored actual member did not recover");
+
+    const auto &hierarchy=*capture.classes.hierarchy;
+    const auto analog=TypeRef::object("analog"),digital=TypeRef::object("digital"),parent=TypeRef::object("sensor");
+    check(binding::parseType(analog.canonical()).type==analog,"Nominal object type did not round trip");
+    check(hierarchy.connectObjects(analog,parent).accepted(),"Captured hierarchy refused a valid upcast");
+    check(!hierarchy.connectObjects(parent,analog).accepted(),"Captured hierarchy admitted an implicit downcast");
+    check(!hierarchy.connectObjects(analog,digital).accepted(),"Different child classes became structurally interchangeable");
+    check(!binding::connect(analog,parent).accepted(),"Structural resolver invented inheritance without a captured hierarchy");
+    const std::array selected{analog,digital};
+    check(hierarchy.commonObjectType(selected)==parent,"Select did not find the declared common parent");
+    check(!hierarchy.connectObjects(hierarchy.recordLayout("sensor")->schema,parent).accepted(),"A forged Record became an object");
+
+    FrogDraftData source;source.properties.classSource.classes={{"analog","analog.fclass",1}};
+    DiagramNode node;node.id="object";node.kind="frog_call";
+    node.classOperation=ClassSourceOperation{ClassOperationKind::Default,{"analog","analog.fclass",1},{}};
+    source.diagramNodes.push_back(node);
+    const auto sourceCopy=readFrogDraftData(serializeFrogDraftData(source));
+    check(sourceCopy&&sourceCopy->properties.classSource==source.properties.classSource&&
+        sourceCopy->diagramNodes.front().classOperation==node.classOperation,"Object declaration did not survive Save/Open");
+}
+
 void checkExample(const std::filesystem::path &directory) {
     const auto load = [&](const DraftDependencyRequest &request) {
         DraftDependencyResult result;
-        const auto path = directory / request.authoredReference;
+        const auto path = directory / std::filesystem::u8path(request.authoredReference);
         std::ifstream input(path, std::ios::binary);
-        if (input && request.kind == DraftDependencyKind::ClassDefinition) {
+        if (input && (request.kind == DraftDependencyKind::ClassDefinition||request.kind==DraftDependencyKind::Source)) {
             result.state = DraftDependencyState::Present;
             result.canonicalUri = "fixture:/" + request.authoredReference;
             result.bytes = std::make_shared<const std::string>(std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>());
@@ -218,12 +342,65 @@ void checkExample(const std::filesystem::path &directory) {
     check(plan && plan->arms.size() == 4 && plan->arms[0].implementation == ClassCallTarget{"analog", "measure-analog"} &&
         plan->arms[1].implementation == ClassCallTarget{"digital", "measure-digital"} &&
         plan->arms[2].implementation == ClassCallTarget{"sensor", "measure"}, "Redistributable sensor dispatch plan is incorrect");
+    const auto program=captureClassProgram(roots,load);
+    if(!program.accepted())throw std::runtime_error(program.issues.empty()?program.classes.issues.front().message:program.issues.front().message);
+    check(program.methods.size()==6,"Actual redistributable member bodies are missing");
+    std::ifstream main(directory/"Main.frog",std::ios::binary);
+    const std::string bytes(std::istreambuf_iterator<char>(main),{});
+    const auto prepared=prepareDraftFrontend(bytes,"fixture:/Main.frog",{},load);
+    if(!prepared.accepted()) {
+        std::string why;for(const auto &issue:prepared.diagnostics)why+=issue.code+" at "+issue.sourceUri+issue.sourcePath+": "+issue.message+"\n";
+        throw std::runtime_error(why);
+    }
+    check(prepared.originalSourceSha256==hashing::sha256Hex(bytes)&&prepared.sourceRevision==10,
+        "Class preparation lost exact authoring provenance/revision");
+    check(prepared.subprogramDependencyFingerprint.size()==64&&prepared.dependencies.size()>=10,
+        "Class definitions or actual methods escaped the frozen dependency seal");
+    std::set<std::string> memberUris;
+    for(const auto &identity:prepared.dependencyIdentities)memberUris.insert(identity.sourceUri);
+    for(const auto &method:program.methods)check(memberUris.contains(method.source.canonicalUri),"A real member body lost its source correspondence");
+    check(std::none_of(prepared.document->diagramNodes.begin(),prepared.document->diagramNodes.end(),[](const auto &n){return n.classOperation.has_value()||n.kind=="frog_call";}),
+        "Class preparation left an opaque call or unlowered object operation");
+    const auto source=readFrogDraftData(bytes);check(bool(source),"Actual class source is unreadable");
+    const auto rejected=[&](std::string input,std::string_view code) {
+        const auto before=hashing::sha256Hex(input);
+        const auto result=prepareDraftFrontend(input,"fixture:/Main.frog",{},load);
+        check(!result.accepted()&&result.originalSourceSha256==before&&*result.originalDraft==input,
+            "A class refusal modified or discarded the editable original");
+        if(std::none_of(result.diagnostics.begin(),result.diagnostics.end(),[&](const auto &i){return i.code==code&&!i.sourcePath.empty();})) {
+            std::string why="Missing located refusal "+std::string(code)+": ";for(const auto &i:result.diagnostics)why+=i.code+":"+i.message+"; ";throw std::runtime_error(why);
+        }
+    };
+    auto privateRead=*source;
+    DiagramNode read;read.id="forbidden-private";read.kind="frog_call";read.type="frog.studio.frog_call";
+    read.classOperation=ClassSourceOperation{ClassOperationKind::ReadField,{"sensor","Capteur.fclass",1},"offset"};
+    read.callPorts=*classOperationPorts(*read.classOperation,program);privateRead.diagramNodes.push_back(read);
+    rejected(serializeFrogDraftData(privateRead),"class.private_access");
+    auto forged=*source;forged.properties.classSource.member=ClassMemberIdentity{"analog","measure-analog","analog.measure",1};
+    rejected(serializeFrogDraftData(forged),"class.member_unattributed");
+    auto downcast=*source;
+    DiagramNode call;call.id="forbidden-downcast";call.kind="frog_call";call.type="frog.studio.frog_call";call.callDocumentPath="Mesurer Analogique.frog";
+    const auto &analogMethod=capture.hierarchy->findClass("analog")->methods.front();
+    for(const auto &p:analogMethod.ports)call.callPorts.push_back({p.publicPortId,p.publicPortId,{},p.slot,
+        p.kind==ClassPortKind::Object?TypeRef::object("analog").canonical():p.dataType.canonical(),p.input,p.input?"required":"recommended"});
+    downcast.diagramNodes.push_back(call);
+    DiagramEdge edge;edge.id="parent-to-child";edge.from={"choose","result"};edge.to={call.id,"analog.self"};downcast.diagramEdges.push_back(edge);
+    rejected(serializeFrogDraftData(downcast),"class.downcast_forbidden");
+    auto bypass=*source;call.id="ordinary-member-bypass";call.callDocumentPath="Get Offset.frog";call.callPorts.clear();
+    const auto *get=capture.hierarchy->findMethod({"sensor","get-offset"});
+    for(const auto &p:get->ports)call.callPorts.push_back({p.publicPortId,p.publicPortId,{},p.slot,
+        p.kind==ClassPortKind::Object?TypeRef::object("sensor").canonical():p.dataType.canonical(),p.input,p.input?"required":"recommended"});
+    bypass.diagramNodes.push_back(call);edge.id="bypass-wire";edge.to={call.id,"get.self"};bypass.diagramEdges.push_back(edge);
+    rejected(serializeFrogDraftData(bypass),"class.member_call_required");
+    auto unknown=bytes;const auto at=unknown.find("\"class_operation\"");check(at!=std::string::npos,"No actual class operation in the fixture");
+    unknown.insert(at,"\"undeclared_class_effect\":true,");rejected(std::move(unknown),"class.source_unknown_field");
 }
 }
 
 int main(int argc, char **argv) {
     try {
         run();
+        actualMembers();
         if (argc == 2) checkExample(argv[1]);
         std::cout << "Class codec, nominal hierarchy, member contract and immutable transport: PASS\n";
         return 0;

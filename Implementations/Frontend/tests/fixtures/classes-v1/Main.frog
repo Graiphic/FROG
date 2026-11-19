@@ -1,0 +1,790 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 10,
+  "storage": {
+    "version": 1,
+    "array_mode": "readable"
+  },
+  "language": "FROG",
+  "title": "Capteur — objets par valeur et vrai dispatch",
+  "classes": [
+    {
+      "id": "sensor",
+      "path": "Capteur.fclass",
+      "revision": 1
+    },
+    {
+      "id": "analog",
+      "path": "Analogique.fclass",
+      "revision": 1
+    },
+    {
+      "id": "digital",
+      "path": "Numerique.fclass",
+      "revision": 1
+    },
+    {
+      "id": "inherited",
+      "path": "Herite.fclass",
+      "revision": 1
+    }
+  ],
+  "frontPanel": {
+    "widgets": [
+      {
+        "id": "analog-selected",
+        "classId": "frog.widgets.boolean_control",
+        "role": "control",
+        "valueType": "bool",
+        "label": "Capteur analogique",
+        "bounds": {
+          "x": 40,
+          "y": 40,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true
+        },
+        "state": {
+          "value": true
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        }
+      },
+      {
+        "id": "updated",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "Après Set Offset (7)",
+        "bounds": {
+          "x": 300,
+          "y": 180,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true,
+          "data_type.representation": "i64"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        }
+      },
+      {
+        "id": "original",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "Branche originale indépendante",
+        "bounds": {
+          "x": 300,
+          "y": 320,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true,
+          "data_type.representation": "i64"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        }
+      },
+      {
+        "id": "inherited",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "i64",
+        "label": "Hérité sans redéfinition",
+        "bounds": {
+          "x": 300,
+          "y": 460,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true,
+          "data_type.representation": "i64"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        }
+      },
+      {
+        "id": "calibration",
+        "classId": "frog.widgets.numeric_control",
+        "role": "control",
+        "valueType": "i64",
+        "label": "Calibration",
+        "bounds": {
+          "x": 40,
+          "y": 130,
+          "width": 125,
+          "height": 52
+        },
+        "props": {
+          "label.visible": true,
+          "data_type.representation": "i64"
+        },
+        "state": {
+          "value": -3
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "nodes": [
+      {
+        "id": "analog-selected-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "layout": {
+          "x": 60,
+          "y": 200,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "analog-selected"
+      },
+      {
+        "id": "analog-default",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 220,
+          "y": 120,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "analog",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "default",
+            "class": {
+              "id": "analog",
+              "path": "Analogique.fclass",
+              "revision": 1
+            },
+            "member_id": ""
+          },
+          "ports": [
+            {
+              "id": "value",
+              "source_port_id": "value",
+              "interface_map_slot": "",
+              "label": "value",
+              "value_type": "object<\"analog\">",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "digital-default",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 220,
+          "y": 300,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "digital",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "default",
+            "class": {
+              "id": "digital",
+              "path": "Numerique.fclass",
+              "revision": 1
+            },
+            "member_id": ""
+          },
+          "ports": [
+            {
+              "id": "value",
+              "source_port_id": "value",
+              "interface_map_slot": "",
+              "label": "value",
+              "value_type": "object<\"digital\">",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "inherited-default",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 220,
+          "y": 650,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "inherited",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "default",
+            "class": {
+              "id": "inherited",
+              "path": "Herite.fclass",
+              "revision": 1
+            },
+            "member_id": ""
+          },
+          "ports": [
+            {
+              "id": "value",
+              "source_port_id": "value",
+              "interface_map_slot": "",
+              "label": "value",
+              "value_type": "object<\"inherited\">",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "choose",
+        "kind": "primitive",
+        "type": "frog.studio.structures.select",
+        "layout": {
+          "x": 430,
+          "y": 210,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false
+      },
+      {
+        "id": "set-offset",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 650,
+          "y": 170,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "set-offset",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "static_call",
+            "class": {
+              "id": "sensor",
+              "path": "Capteur.fclass",
+              "revision": 1
+            },
+            "member_id": "set-offset"
+          },
+          "ports": [
+            {
+              "id": "self-in",
+              "source_port_id": "self-in",
+              "interface_map_slot": "",
+              "label": "self-in",
+              "value_type": "object<\"sensor\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.3333333333333333
+            },
+            {
+              "id": "offset",
+              "source_port_id": "offset",
+              "interface_map_slot": "",
+              "label": "offset",
+              "value_type": "i64",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.6666666666666666
+            },
+            {
+              "id": "self-out",
+              "source_port_id": "self-out",
+              "interface_map_slot": "",
+              "label": "self-out",
+              "value_type": "object<\"sensor\">",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "new-offset",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "layout": {
+          "x": 500,
+          "y": 390,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "value_type": "i64",
+        "text": "7"
+      },
+      {
+        "id": "measure-updated",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 850,
+          "y": 170,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "measure",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "dynamic_call",
+            "class": {
+              "id": "sensor",
+              "path": "Capteur.fclass",
+              "revision": 1
+            },
+            "member_id": "measure"
+          },
+          "ports": [
+            {
+              "id": "sensor.self",
+              "source_port_id": "sensor.self",
+              "interface_map_slot": "",
+              "label": "sensor.self",
+              "value_type": "object<\"sensor\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.5
+            },
+            {
+              "id": "sensor.reading",
+              "source_port_id": "sensor.reading",
+              "interface_map_slot": "",
+              "label": "sensor.reading",
+              "value_type": "i64",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "measure-original",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 650,
+          "y": 480,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "measure",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "dynamic_call",
+            "class": {
+              "id": "sensor",
+              "path": "Capteur.fclass",
+              "revision": 1
+            },
+            "member_id": "measure"
+          },
+          "ports": [
+            {
+              "id": "sensor.self",
+              "source_port_id": "sensor.self",
+              "interface_map_slot": "",
+              "label": "sensor.self",
+              "value_type": "object<\"sensor\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.5
+            },
+            {
+              "id": "sensor.reading",
+              "source_port_id": "sensor.reading",
+              "interface_map_slot": "",
+              "label": "sensor.reading",
+              "value_type": "i64",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "measure-inherited",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 650,
+          "y": 650,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "measure",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "dynamic_call",
+            "class": {
+              "id": "sensor",
+              "path": "Capteur.fclass",
+              "revision": 1
+            },
+            "member_id": "measure"
+          },
+          "ports": [
+            {
+              "id": "sensor.self",
+              "source_port_id": "sensor.self",
+              "interface_map_slot": "",
+              "label": "sensor.self",
+              "value_type": "object<\"sensor\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.5
+            },
+            {
+              "id": "sensor.reading",
+              "source_port_id": "sensor.reading",
+              "interface_map_slot": "",
+              "label": "sensor.reading",
+              "value_type": "i64",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        }
+      },
+      {
+        "id": "updated-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "layout": {
+          "x": 850,
+          "y": 300,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "updated"
+      },
+      {
+        "id": "original-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "layout": {
+          "x": 850,
+          "y": 400,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "original"
+      },
+      {
+        "id": "inherited-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "layout": {
+          "x": 850,
+          "y": 500,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "inherited"
+      },
+      {
+        "id": "calibration-terminal",
+        "kind": "widget_value",
+        "type": "i64",
+        "layout": {
+          "x": 60,
+          "y": 30,
+          "width": 66.3,
+          "height": 29.75
+        },
+        "label_visible": false,
+        "widget": "calibration"
+      },
+      {
+        "id": "set-calibration",
+        "kind": "frog_call",
+        "type": "frog.studio.frog_call",
+        "layout": {
+          "x": 330,
+          "y": 70,
+          "width": 72,
+          "height": 56
+        },
+        "label_visible": false,
+        "call": {
+          "document_path": "",
+          "document_title": "Analogique — Set Calibration",
+          "icon_svg": "",
+          "class_operation": {
+            "kind": "static_call",
+            "class": {
+              "id": "analog",
+              "path": "Analogique.fclass",
+              "revision": 1
+            },
+            "member_id": "set-calibration"
+          },
+          "ports": [
+            {
+              "id": "self-in",
+              "source_port_id": "self-in",
+              "interface_map_slot": "",
+              "label": "self-in",
+              "value_type": "object<\"analog\">",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.3333333333333333
+            },
+            {
+              "id": "calibration",
+              "source_port_id": "calibration",
+              "interface_map_slot": "",
+              "label": "calibration",
+              "value_type": "i64",
+              "direction": "input",
+              "connection_requirement": "required",
+              "normalized_x": 0,
+              "normalized_y": 0.6666666666666666
+            },
+            {
+              "id": "self-out",
+              "source_port_id": "self-out",
+              "interface_map_slot": "",
+              "label": "self-out",
+              "value_type": "object<\"analog\">",
+              "direction": "output",
+              "connection_requirement": "recommended",
+              "normalized_x": 1,
+              "normalized_y": 0.5
+            }
+          ]
+        },
+        "label": "Set Calibration"
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "set-calibration",
+          "port": "self-out"
+        },
+        "to": {
+          "node": "choose",
+          "port": "true"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "digital-default",
+          "port": "value"
+        },
+        "to": {
+          "node": "choose",
+          "port": "false"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "analog-selected-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "choose",
+          "port": "select"
+        }
+      },
+      {
+        "id": "wire-3",
+        "from": {
+          "node": "choose",
+          "port": "result"
+        },
+        "to": {
+          "node": "set-offset",
+          "port": "self-in"
+        }
+      },
+      {
+        "id": "wire-4",
+        "from": {
+          "node": "new-offset",
+          "port": "value"
+        },
+        "to": {
+          "node": "set-offset",
+          "port": "offset"
+        }
+      },
+      {
+        "id": "wire-5",
+        "from": {
+          "node": "set-offset",
+          "port": "self-out"
+        },
+        "to": {
+          "node": "measure-updated",
+          "port": "sensor.self"
+        }
+      },
+      {
+        "id": "wire-6",
+        "from": {
+          "node": "choose",
+          "port": "result"
+        },
+        "to": {
+          "node": "measure-original",
+          "port": "sensor.self"
+        }
+      },
+      {
+        "id": "wire-7",
+        "from": {
+          "node": "inherited-default",
+          "port": "value"
+        },
+        "to": {
+          "node": "measure-inherited",
+          "port": "sensor.self"
+        }
+      },
+      {
+        "id": "wire-8",
+        "from": {
+          "node": "measure-updated",
+          "port": "sensor.reading"
+        },
+        "to": {
+          "node": "updated-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-9",
+        "from": {
+          "node": "measure-original",
+          "port": "sensor.reading"
+        },
+        "to": {
+          "node": "original-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "wire-10",
+        "from": {
+          "node": "measure-inherited",
+          "port": "sensor.reading"
+        },
+        "to": {
+          "node": "inherited-terminal",
+          "port": "value"
+        }
+      },
+      {
+        "id": "calibration-object",
+        "from": {
+          "node": "analog-default",
+          "port": "value"
+        },
+        "to": {
+          "node": "set-calibration",
+          "port": "self-in"
+        }
+      },
+      {
+        "id": "calibration-value",
+        "from": {
+          "node": "calibration-terminal",
+          "port": "value"
+        },
+        "to": {
+          "node": "set-calibration",
+          "port": "calibration"
+        }
+      }
+    ],
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 0,
+      "y": 0
+    }
+  }
+}

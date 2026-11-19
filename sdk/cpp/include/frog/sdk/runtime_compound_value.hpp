@@ -27,6 +27,7 @@ public:
 std::optional<RuntimeValue> makeRuntimeRecord(std::vector<RuntimeNamedField>);
 std::optional<RuntimeValue> makeRuntimeReference(std::shared_ptr<const RuntimeReferenceAuthority>, const RuntimeValueOwner &);
 std::optional<RuntimeValue> makeRuntimeNullReference(std::string, const RuntimeValueOwner &);
+std::optional<RuntimeValue> makeRuntimeWidgetReferenceSymbol(std::string, std::string, const RuntimeValueOwner &);
 
 // Immutable local containers used by frog.studio.ipe@1. Existing SDK
 // RuntimeValue alternatives and public artifact schema numbers are unchanged.
@@ -280,6 +281,27 @@ public:
 private:
     const std::string type_;const RuntimeValueOwner owner_;
 };
+// A local Source identity is inert until the actual instance registry resolves
+// it. Only this sealed data carrier can be encoded with a widget identity.
+class WidgetReferenceSymbol final : public RuntimeReferenceAuthority {
+    friend std::optional<RuntimeValue> frog::sdk::runtime::makeRuntimeWidgetReferenceSymbol(
+        std::string, std::string, const RuntimeValueOwner &);
+    WidgetReferenceSymbol(std::string type, std::string id, RuntimeValueOwner owner)
+        :type_(std::move(type)), id_(std::move(id)), owner_(std::move(owner)) {}
+public:
+    std::string_view canonicalType() const noexcept override { return type_; }
+    bool validForOwner(const RuntimeValueOwner &owner) const noexcept override {
+        return owner==owner_ && runtimeValueOwnerValid(owner_);
+    }
+    bool equivalentTo(const RuntimeReferenceAuthority &other) const noexcept override {
+        const auto *symbol=dynamic_cast<const WidgetReferenceSymbol*>(&other);
+        return symbol && symbol->owner_==owner_ && symbol->type_==type_ && symbol->id_==id_;
+    }
+    std::string_view id() const noexcept { return id_; }
+private:
+    const std::string type_,id_;
+    const RuntimeValueOwner owner_;
+};
 class BorrowedReference final : public CompoundRuntimeValue {
 private:
     friend std::optional<RuntimeValue> frog::sdk::runtime::makeRuntimeReference(std::shared_ptr<const RuntimeReferenceAuthority>, const RuntimeValueOwner &);
@@ -459,6 +481,13 @@ inline bool validateIpe(const RuntimeIpeValue &v,const RuntimeValueOwner *owner,
 [[nodiscard]] inline std::optional<RuntimeValue> makeRuntimeNullReference(std::string type,const RuntimeValueOwner &owner) {
     if(type.size()>65536||!structural_detail::TypeSyntax(type).reference()||!runtimeValueOwnerValid(owner))return {};
     return makeRuntimeReference(std::shared_ptr<const RuntimeReferenceAuthority>{new compound_detail::IntrinsicNullReferenceAuthority(std::move(type),owner)},owner);
+}
+[[nodiscard]] inline std::optional<RuntimeValue> makeRuntimeWidgetReferenceSymbol(
+    std::string type, std::string widgetId, const RuntimeValueOwner &owner) {
+    if(type.size()>65536 || !structural_detail::TypeSyntax(type).reference() ||
+        widgetId.size()>1024 || !structural_detail::identity(widgetId) || !runtimeValueOwnerValid(owner))return {};
+    return makeRuntimeReference(std::shared_ptr<const RuntimeReferenceAuthority>{
+        new compound_detail::WidgetReferenceSymbol(std::move(type),std::move(widgetId),owner)},owner);
 }
 
 inline std::optional<RuntimeValue> sealRuntimeIpeValue(std::shared_ptr<const RuntimeIpeValue> value) {
@@ -667,6 +696,11 @@ inline const RuntimeValueOwner *runtimeNullReferenceOwner(const RuntimeValue &va
     const auto authority=runtimeReferenceAuthority(value);
     const auto *null=dynamic_cast<const compound_detail::IntrinsicNullReferenceAuthority*>(authority.get());
     return null?&null->owner():nullptr;
+}
+inline std::string_view runtimeWidgetReferenceSymbol(const RuntimeValue &value) noexcept {
+    const auto authority=runtimeReferenceAuthority(value);
+    const auto *symbol=dynamic_cast<const compound_detail::WidgetReferenceSymbol*>(authority.get());
+    return symbol?symbol->id():std::string_view{};
 }
 
 // Content equality is explicit. The scalar variant keeps its legacy identity

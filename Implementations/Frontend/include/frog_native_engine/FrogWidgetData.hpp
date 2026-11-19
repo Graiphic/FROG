@@ -11,6 +11,7 @@
 #include <utility>
 #include <unordered_map>
 namespace frog::native_engine {
+class ClassHierarchy;
 enum class StaticVisualKind {
     Svg,
     Dib
@@ -73,9 +74,12 @@ class FrogWidgetDataView {
     FrogWidgetPresentation presentation_;
     const void *lookupContext_ = nullptr;
     const SceneObject *(*lookup_)(const void*,std::string_view) = nullptr;
+    const ClassHierarchy *objectClasses_=nullptr;
 public:
     FrogWidgetDataView() = default;
-    FrogWidgetDataView(std::span<const SceneObject> objects, std::span<const SceneObjectGroup> groups={}, double gridPitch=8.0, Size size={}, const void *context=nullptr, const SceneObject *(*lookup)(const void*,std::string_view)=nullptr,FrogWidgetPresentation presentation={}) : objects_(objects),groups_(groups),gridPitch_(gridPitch),size_(size),presentation_(presentation),lookupContext_(context),lookup_(lookup) {}
+    FrogWidgetDataView(std::span<const SceneObject> objects, std::span<const SceneObjectGroup> groups={}, double gridPitch=8.0, Size size={}, const void *context=nullptr, const SceneObject *(*lookup)(const void*,std::string_view)=nullptr,FrogWidgetPresentation presentation={},const ClassHierarchy *objectClasses=nullptr) : objects_(objects),groups_(groups),gridPitch_(gridPitch),size_(size),presentation_(presentation),lookupContext_(context),lookup_(lookup),objectClasses_(objectClasses) {}
+    // Borrowed validated Frontend context, never authored or serialized data.
+    [[nodiscard]] const ClassHierarchy *qualifiedObjectClasses() const noexcept {return objectClasses_;}
     [[nodiscard]] const std::optional<std::uint32_t>& ideFrontPanelBackgroundRgb() const noexcept {return presentation_.frontBackground;}
     [[nodiscard]] const std::optional<std::uint32_t>& ideFrontPanelGridRgb() const noexcept {return presentation_.frontGrid;}
     [[nodiscard]] const std::optional<std::uint32_t>& ideDiagramBackgroundRgb() const noexcept {return presentation_.diagramBackground;}

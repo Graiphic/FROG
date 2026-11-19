@@ -143,6 +143,10 @@ TypeResolution connect(const TypeRef &source, const TypeRef &target, ConnectionP
     if (!source.known() || !target.known()) {
         return {ResolutionStatus::Unresolved, {}, "binding.type_unresolved", "A terminal type is not yet determined."};
     }
+    if(source.kind==TypeKind::Object||target.kind==TypeKind::Object) {
+        if(source==target)return {ResolutionStatus::Compatible,target,{},{}};
+        return mismatch("class.nominal_resolution_required","Object classes require the captured class hierarchy; structural conversion is forbidden.");
+    }
     if (source.kind == TypeKind::Reference || target.kind == TypeKind::Reference) {
         if (source.kind != TypeKind::Reference || target.kind != TypeKind::Reference)
             return mismatch("binding.reference_required", "Object references and data values are distinct.");

@@ -212,6 +212,17 @@ class CandidateExportTests(unittest.TestCase):
         records += "".join(name + ":" + exporter.digest((self.front / name).read_bytes()) + "\n" for name in paths)
         self.assertEqual(exporter.frontend_identity(self.front), exporter.digest(records.encode("utf-8")))
 
+    def test_class_definitions_are_kept_only_in_frontend_test_fixtures(self):
+        class_fixture = self.front / "tests/fixtures/classes-v1/Capteur.fclass"
+        class_fixture.parent.mkdir(parents=True)
+        class_fixture.write_bytes(b'{"format":"class-fixture"}\n')
+        self.refresh_inventory()
+        (self.front / "Outside.fclass").write_bytes(class_fixture.read_bytes())
+        self.assertEqual(self.capture()["status"], "verified")
+        relative = class_fixture.relative_to(self.frog)
+        self.assertEqual((self.kit / relative).read_bytes(), class_fixture.read_bytes())
+        self.assertFalse((self.kit / exporter.FRONT / "Outside.fclass").exists())
+
     def test_build_named_sources_are_kept_but_build_directories_are_excluded(self):
         retained = {
             "include/frog_native_engine/BuildArrayBinding.hpp": "#pragma once\n",

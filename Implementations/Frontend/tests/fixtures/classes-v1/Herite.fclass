@@ -1,0 +1,14 @@
+{
+  "format": "frog.class",
+  "version": 1,
+  "id": "inherited",
+  "name": "Capteur hérité",
+  "revision": 1,
+  "parent": {
+    "id": "sensor",
+    "path": "Capteur.fclass",
+    "revision": 1
+  },
+  "fields": [],
+  "methods": []
+}
