@@ -403,6 +403,14 @@ struct WidgetInstance {
     // True to False, False to True, Hover False and Hover True.
     HeapOptional<std::array<BooleanAppearanceColors, 4>> runtimeBooleanExtraColors;
 
+    // Editor history for a disconnected Interface Map binding. The owner
+    // prevents a cloned widget from adopting another widget's declared port.
+    struct DetachedInterfaceBinding {
+        std::string widgetId;
+        std::string portId;
+    };
+    HeapOptional<DetachedInterfaceBinding> detachedInterfaceBinding;
+
 };
 
 // Shared source-data initializer; placement-only normalization stays in Studio.

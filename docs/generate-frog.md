@@ -123,6 +123,16 @@ coordinates to the new diagram instead of copying them blindly.
   the right, within each execution region. Keep the main path on one
   horizontal row whenever possible; put parallel paths on separate aligned
   horizontal rows. Order terminals by the physical ports they serve.
+- Where a node produces both data and error, place the indicators in the
+  vertical order of their actual output contacts. If the contacts are closer
+  together than the indicator labels, fan the rows outward from the group.
+  Give independent test signals, such as a constant driving a demo LED,
+  their own clear row.
+- Try a straight wire for each individual connection, including references
+  and the value port of a compound constant. Align the contacts rather than
+  the centers of the node bodies. On a dense fan-in, if aligning two
+  producers would overlap their bodies or place a wire behind either one,
+  align one producer and give the other a short offset in its own lane.
 - **First pass — placement.** Align consecutive functions on their actual
   reference and error contacts first. Reserve separate, direct lanes for
   those two flows before fitting data terminals, constants and indicators.

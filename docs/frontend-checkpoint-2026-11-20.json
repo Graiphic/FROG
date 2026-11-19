@@ -1,0 +1,17 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-20",
+  "frontend": {
+    "software_version": "0.2.0-local",
+    "api_version": 3,
+    "base_revision": "32c8fee2f22a1231a21de7bc1965652d1e6b3f17",
+    "content_sha256": "7dd3a9a6c04f919cfa2a2f952cdd22bf8d7f58a4d84bd0b99a47a80f9b719094"
+  },
+  "qualification": {
+    "basis": "Versioned sources with an exact Studio pin, verified dependencies and self-contained redistributable test fixtures.",
+    "limits": [
+      "Source checkpoint only.",
+      "A tagged binary, clean-checkout rebuild and complete application regression remain separate."
+    ]
+  }
+}

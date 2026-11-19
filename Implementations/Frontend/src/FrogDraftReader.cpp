@@ -1457,6 +1457,13 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
     }
 
     if (const auto *binding = objectField(value, "binding")) {
+        if (const auto *detached = objectField(*binding, "detached")) {
+            const auto owner = jsonStringField(*detached, "widget_id");
+            const auto port = jsonStringField(*detached, "port_id");
+            if (owner && *owner == widget.instanceId && port && !port->empty()) {
+                widget.detachedInterfaceBinding = WidgetInstance::DetachedInterfaceBinding{*owner, *port};
+            }
+        }
         if (const auto publicInput = jsonStringField(*binding, "public_input_id")) {
             widget.publicInputId = publicInput.value();
             widget.publicOutputId.reset();

@@ -322,7 +322,8 @@ bool hasWidgetBinding(const WidgetInstance &widget) noexcept {
     return supportsPublicInterfaceBinding(widget) &&
         (widget.publicInputId.has_value() ||
         widget.publicOutputId.has_value() ||
-        widget.interfaceMapSlotId.has_value());
+        widget.interfaceMapSlotId.has_value() ||
+        (widget.detachedInterfaceBinding && widget.detachedInterfaceBinding->widgetId == widget.instanceId));
 }
 
 void appendWidgetBinding(std::ostringstream &output, const WidgetInstance &widget, int indent, bool comma = true) {
@@ -342,6 +343,14 @@ void appendWidgetBinding(std::ostringstream &output, const WidgetInstance &widge
     }
     if (widget.interfaceMapSlotId.has_value()) {
         appendJsonField(output, indent + 1, "interface_map_slot", widget.interfaceMapSlotId.value(), true);
+    }
+    if (widget.detachedInterfaceBinding && widget.detachedInterfaceBinding->widgetId == widget.instanceId) {
+        appendIndent(output, indent + 1);
+        output << "\"detached\": {\n";
+        appendJsonField(output, indent + 2, "widget_id", widget.detachedInterfaceBinding->widgetId, true);
+        appendJsonField(output, indent + 2, "port_id", widget.detachedInterfaceBinding->portId, false);
+        appendIndent(output, indent + 1);
+        output << "},\n";
     }
     appendJsonField(
         output,

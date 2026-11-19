@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "kind": "frog.frontend.local-provenance-and-licence-observations",
-  "observedDate": "2026-11-19",
+  "observedDate": "2026-11-20",
   "dissemination": "authorized-source-checkpoint-publication",
   "redistributionRightsGrantedForSelectedGraiphicOriginals": true,
   "thirdPartyContentRelicensed": false,
@@ -1620,8 +1620,8 @@
       },
       {
         "path": "include/frog_native_engine/WidgetInstance.hpp",
-        "sha256": "7ecca305c3e5d3f5a3b4eec304875d9c74131aa1a4494063140972ca61884d31",
-        "size": 45305
+        "sha256": "890526cd940ee46518fb9951988d00e296e99a5cdee6bf12b43c94172fc4d037",
+        "size": 45638
       },
       {
         "path": "include/frog_native_engine/WidgetNumericData.hpp",
@@ -2540,13 +2540,13 @@
       },
       {
         "path": "src/FrogDraftReader.cpp",
-        "sha256": "191a0de2b2c605da288cdb44c0a0d6804e6a0c58ad767379f0cfb1e7233bb720",
-        "size": 248609
+        "sha256": "594d53ed91655a59a04286c2798d0f1b1dd8983725c68c8a8f6bb9918e5fb037",
+        "size": 249042
       },
       {
         "path": "src/FrogDraftWriter.cpp",
-        "sha256": "46bbf296c3402d63c24f59d118b276749308000129f65a02da73b9b6dacdde24",
-        "size": 174510
+        "sha256": "a967d383952c5676eb0c98c0b227f60aaa1874986c52cedce5178509aa1ff636",
+        "size": 175105
       },
       {
         "path": "src/FrogJson.cpp",
@@ -14251,8 +14251,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/README.md",
-      "current_hash": "d7c9756ba30b16d7f4d14ac77b47d279703c304edf2d8d86e36c8150332f5858",
-      "current_bytes": 13629,
+      "current_hash": "b7c12baae06477e6c1d06ea2e3f2664dd30dfc0f642f3eb524191583074f7098",
+      "current_bytes": 13777,
       "capture_relation": "no-capture",
       "inProductionIncludeClosure": false,
       "observedSpdx": [],
@@ -27255,8 +27255,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/WidgetInstance.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/WidgetInstance.hpp",
       "ownership": "split",
-      "current_hash": "7ecca305c3e5d3f5a3b4eec304875d9c74131aa1a4494063140972ca61884d31",
-      "current_bytes": 45305,
+      "current_hash": "890526cd940ee46518fb9951988d00e296e99a5cdee6bf12b43c94172fc4d037",
+      "current_bytes": 45638,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -37370,8 +37370,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDraftReader.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocument.cpp",
       "ownership": "split",
-      "current_hash": "191a0de2b2c605da288cdb44c0a0d6804e6a0c58ad767379f0cfb1e7233bb720",
-      "current_bytes": 248609,
+      "current_hash": "594d53ed91655a59a04286c2798d0f1b1dd8983725c68c8a8f6bb9918e5fb037",
+      "current_bytes": 249042,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -37444,8 +37444,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDraftWriter.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
       "ownership": "split",
-      "current_hash": "46bbf296c3402d63c24f59d118b276749308000129f65a02da73b9b6dacdde24",
-      "current_bytes": 174510,
+      "current_hash": "a967d383952c5676eb0c98c0b227f60aaa1874986c52cedce5178509aa1ff636",
+      "current_bytes": 175105,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -46744,7 +46744,7 @@
     "knownThirdPartySourceComponentsIdentified": 1,
     "documentaryContentReviewOpen": true,
     "currentCandidateSelectedFiles": 708,
-    "publication": "Explicitly authorized 2026-11-19; remote identity recorded separately",
+    "publication": "Authorized source checkpoint, 2026-11-20. Remote identity recorded separately.",
     "qualification": "Not inferred from inventory",
     "t298_document_codec_files_added": 30
   },
@@ -47392,10 +47392,17 @@
       ],
       "updatedCurrentHashes": 69,
       "sourceOriginCapturesPreserved": true
+    },
+    {
+      "date": "2026-11-20",
+      "priorInventorySha256": "eab08cedc966ad345b1ceed139b05c29ffdba0c7e0b97a777d9385da71870ff8",
+      "updatedCurrentHashes": 4,
+      "addedFiles": [],
+      "scope": "Existing widget binding metadata and draft reader/writer. File and licence scope unchanged."
     }
   ],
   "currentCandidateKitSelection": {
-    "date": "2026-11-19",
+    "date": "2026-11-20",
     "frontendSelectedFiles": 624,
     "filesWithoutInventorySelfReference": [
       {
@@ -47510,8 +47517,8 @@
       },
       {
         "path": "Implementations/Frontend/README.md",
-        "sha256": "d7c9756ba30b16d7f4d14ac77b47d279703c304edf2d8d86e36c8150332f5858",
-        "bytes": 13629
+        "sha256": "b7c12baae06477e6c1d06ea2e3f2664dd30dfc0f642f3eb524191583074f7098",
+        "bytes": 13777
       },
       {
         "path": "Implementations/Frontend/cmake/FrogFrontendConfig.cmake",
@@ -48720,8 +48727,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/WidgetInstance.hpp",
-        "sha256": "7ecca305c3e5d3f5a3b4eec304875d9c74131aa1a4494063140972ca61884d31",
-        "bytes": 45305
+        "sha256": "890526cd940ee46518fb9951988d00e296e99a5cdee6bf12b43c94172fc4d037",
+        "bytes": 45638
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/WidgetNumericData.hpp",
@@ -49665,13 +49672,13 @@
       },
       {
         "path": "Implementations/Frontend/src/FrogDraftReader.cpp",
-        "sha256": "191a0de2b2c605da288cdb44c0a0d6804e6a0c58ad767379f0cfb1e7233bb720",
-        "bytes": 248609
+        "sha256": "594d53ed91655a59a04286c2798d0f1b1dd8983725c68c8a8f6bb9918e5fb037",
+        "bytes": 249042
       },
       {
         "path": "Implementations/Frontend/src/FrogDraftWriter.cpp",
-        "sha256": "46bbf296c3402d63c24f59d118b276749308000129f65a02da73b9b6dacdde24",
-        "bytes": 174510
+        "sha256": "a967d383952c5676eb0c98c0b227f60aaa1874986c52cedce5178509aa1ff636",
+        "bytes": 175105
       },
       {
         "path": "Implementations/Frontend/src/FrogJson.cpp",
@@ -50954,5 +50961,5 @@
       "sha256": "0d675a04be4b1caa2ae7ed08ea4f3c9c8a85cdacafddf9a2bb85918abb7f5d02"
     }
   ],
-  "currentCandidateSelectionSha256": "9ce4e6f6ca4ef5148fe0489e7cd6c00bdcc4fef42f6a0942a27e83bf31cb5bdd"
+  "currentCandidateSelectionSha256": "e7716ee88ae59b8e37fe77de21590a14dacf0cbcd5cfaf59e73a870da43acf74"
 }

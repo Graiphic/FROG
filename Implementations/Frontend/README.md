@@ -4,6 +4,8 @@
 
 This directory contains the Frontend core extracted from Studio's semantic owners, its C-interface library and standalone CLI. It reads explicitly declared `frog.source` bytes and `frog.document.draft` documents, resolves host-supplied dependencies, validates the language and produces FIR with diagnostics, mappings and provenance. Ordinary, structured, composed and Event producers share this owner. Reading and semantic migrations that leave the original unchanged are shared; repair proposals, previews and transactional application remain private to Studio.
 
+The [20 November source checkpoint](../../docs/frontend-checkpoint-2026-11-20.json) records the exact Frontend pin for detached widget bindings.
+
 **Published source checkpoint, 12 November 2026.** Software `0.2.0-local`,
 API 3. The [published receipt](../../docs/frontend-checkpoint-2026-11-12.json)
 identifies the content used by Studio 0.0.8.094. The

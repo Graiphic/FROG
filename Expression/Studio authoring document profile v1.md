@@ -272,8 +272,13 @@ Widget `binding` uses `mode: "widget_value"`, explicit input/output ID,
 from its rectangle, display color and current list position.
 
 Disconnect clears only the selected association and returns that slot to neutral
-appearance. It does not remove or renumber the slot. Copy creates an independent
-unbound object and must leave the original's association unchanged.
+appearance. It does not remove or renumber the slot. For an existing declared
+port, Studio can retain the last association in the private widget binding
+metadata as `detached.widget_id` and `detached.port_id`. The detached record
+supplies the stable ID when the same widget reconnects to a compatible port.
+It contributes neither an active widget binding nor a new declaration.
+Copy creates an independent unbound object and must leave the original's
+association unchanged.
 
 Custom descriptors `custom_v1`, `custom_v2` and `custom_v3` belong to the existing
 `custom_v1` binding-map implementation profile; descriptor version and profile
