@@ -115,7 +115,7 @@ def frontend_args(fixture, source=None, version=None):
     ]
 
 
-def test_frontend_advertises_the_qualified_format_boundary(cli):
+def test_frontend_advertises_the_reader_format_boundary(cli):
     description = run_frontend(cli, "describe")
     formats = description["source_formats"]
     assert {item["version"] for item in formats if item["family"] == SOURCE} == set(
@@ -152,7 +152,7 @@ def test_frontend_derives_fir_from_the_source_saved_in_gs(cli, tmp_path):
     ("fixture_id", "field", "version"),
     [
         ("canonical-scalar", "spec_version", "0.2"),
-        ("studio-variant-cluster", "draft_revision", 10),
+        ("studio-variant-cluster", "draft_revision", BASELINE["studio_reader_revisions"]["last"] + 1),
     ],
 )
 def test_frontend_refuses_future_format_without_fir(cli, tmp_path, fixture_id, field, version):
@@ -167,6 +167,23 @@ def test_frontend_refuses_future_format_without_fir(cli, tmp_path, fixture_id, f
         "--output", fir, expected=3,
     )
     assert {item["code"] for item in diagnostics} == {"frontend.format_unsupported"}
+    assert not fir.exists()
+
+
+def test_private_class_revision_requires_composed_resolution_without_fir(cli, tmp_path):
+    fixture = FIXTURES["studio-variant-cluster"]
+    doc = read_json(ROOT / fixture["path"])
+    doc["draft_revision"] = 10
+    source = tmp_path / "incomplete-class-draft.frog"
+    source.write_text(json.dumps(doc), encoding="utf-8")
+    fir = tmp_path / "incomplete-class-draft.fir"
+    diagnostics = run_frontend(
+        cli, "derive", *frontend_args(fixture, source=source, version="10"),
+        "--output", fir, expected=2,
+    )
+    assert {item["code"] for item in diagnostics} == {
+        "migration.composed_type_definition_resolution_required"
+    }
     assert not fir.exists()
 
 

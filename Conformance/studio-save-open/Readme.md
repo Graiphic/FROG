@@ -20,6 +20,11 @@ SHA-256 digests, writer versions and qualified operations.
   qualifies persistence. The CI checks its bytes, envelope and schema; it does
   not expand or execute the Array.
 
+The manifest tracks reader admission and public schema coverage separately.
+The shared reader recognizes private class revision 10. The public structural
+schema still covers revisions 2 through 9. The version gate verifies that an
+incomplete revision 10 document cannot produce FIR without composed resolution.
+
 To extend the evidence, save and reopen a redistributable fixture via the
 actual GS document path. Verify the feature that distinguishes the revision
 and retain the output bytes, Studio and Frontend identities, and results for

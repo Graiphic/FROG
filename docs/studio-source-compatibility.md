@@ -12,6 +12,9 @@ are available as source. They own reading, explicit dependency resolution, types
 semantic validation, FIR, diagnostics, maps and provenance. Studio pins the
 software, API and content it uses.
 
+- [19 November source checkpoint](frontend-checkpoint-2026-11-19.json)
+  identifies the Frontend content pinned by Studio. Its reader reports draft
+  revisions 0 through 10. The structural schema covers revisions 2 through 9.
 - [12 November source checkpoint](frontend-checkpoint-2026-11-12.json)
   records the published content `c815f0a1…0df9a9`, Frontend `0.2.0-local`
   API 3 and Studio `0.0.8.094`. That publication reused qualification.
@@ -53,7 +56,7 @@ decision, diagnostics and qualification evidence.
 
 | Surface | Public source | Studio authoring document |
 | --- | --- | --- |
-| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; reader 0–9, ordinary current writer 3–8, recovery writer 9 |
+| Envelope | `spec_version: "0.1"` | `format: "frog.document.draft"`; reader 0–10, ordinary writer 3–8, recovery writer 9, private class profile 10 |
 | Required sections | `metadata`, `interface`, `diagram` | Ordinary writer emits `metadata`, `frontPanel`, `diagram`. Independent `interface` is optional. Archive-only recovery can omit panel and diagram. |
 | Front Panel spelling | Optional `front_panel` | `frontPanel` |
 | Public interface | Independent of widgets | Retained independent declarations when present; historical widget-derived projection remains a compatibility path |
@@ -96,6 +99,7 @@ private provider to universal canonical execution.
 | Draft 6/7, symbolic objects and configured external calls | Shared writer, API 3, GS 0.0.7.750 for the scalar DLL case | Authoring and structural checks for Application Control. The revision 7 `gs_add` fixture reopened and produced 5 in Studio and the exported EXE. Migration and execution require a supported signature and provider. |
 | Draft 8, linked standard Type Definition | GS 0.0.6.052 historical delivery, API 3 `c815f0a1…0df9a9` CLI, Studio publication fixtures | Historical demonstration ran after Save/Open. The CLI validates `Acquisition.frog` with the exact captured `.ftype` and reports the missing resolver without it. The Studio replay verifies stable IDs and distinct current/default values across publication and reopening. TD-20 Enum/Case resolution failed. |
 | Draft 9, explicit recovery | GS 0.0.7.662 recovery fixture and Studio recovery model checks | Projection and archive-only shapes, exact origin preservation and diagnostic revalidation. The known repaired cosine program ran with 10,000 values per Run. An unresolved archive has no runnable graph. |
+| Draft 10, private class profile | API 3, 19 November source checkpoint | The reader recognizes the revision. An incomplete class draft requires composed resolution and produces a dependency diagnostic without FIR. The public structural schema stays at revision 9. |
 
 The CTests used for this reconciliation were already-built component binaries.
 Their individual results do not qualify every path on the installed Studio

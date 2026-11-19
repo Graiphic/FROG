@@ -22,8 +22,9 @@ operations, recovery, and target execution. The
 describes the captured producers and evidence from that date.
 
 The [structural schema](Schemas/frog.studio-document.schema.json) describes
-ordinary writer-shaped documents from revision 2 and the explicit revision 9
-recovery envelope. Historical input 0/1 is handled by the reader and Studio
+ordinary writer-shaped documents from revision 2 through the revision 9
+recovery envelope. The private class profile at revision 10 is outside this
+structural schema. Historical input 0/1 is handled by the reader and Studio
 migration. Full types, nested provider payloads, dependency resolution, repair
 and execution require the implementation validators.
 
@@ -43,7 +44,7 @@ select two source authorities. Changing a filename or replacing key spellings
 is not a migration. A public Source reader can preserve more constructs than
 the editing importer can materialize; reading and canvas editing are separate.
 
-The revision resolver admits integers 0 through 9. The ordinary writer
+The reader recognizes integers 0 through 10. The ordinary writer
 currently emits at least revision 3 and always records `storage`, including
 when Readable is explicitly selected. The historical October writer emitted
 revision 2 without Storage. Features raise the minimum revision.
@@ -59,6 +60,7 @@ revision 2 without Storage. Features raise the minimum revision.
 | 7 | Configured Connectivity, native calls and .NET metadata |
 | 8 | Linked standard Type Definitions on nodes and widgets |
 | 9 | Explicit Studio recovery copy carrying the retained origin |
+| 10 | Private class authoring profile with explicit composed dependency resolution |
 
 Feature requirements compose: the writer selects the required revision for
 the whole document, including nested values and node configurations. A future
