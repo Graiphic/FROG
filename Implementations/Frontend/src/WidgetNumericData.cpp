@@ -662,6 +662,7 @@ bool ringRepresentationSupported(std::string_view representation) noexcept {
 }
 
 std::string ringRepresentationKind(const WidgetInstance &widget) {
+    if (isRingWidget(widget) && widget.pictureRing) return "uint16";
     if (isRingWidget(widget) && widget.numericRepresentationKind.has_value()) {
         if (const auto *mapping = numericRepresentationMapping(widget.numericRepresentationKind.value());
             mapping != nullptr && ringRepresentationSupported(mapping->kind)) {
@@ -690,7 +691,8 @@ bool setRingRepresentationKind(WidgetInstance &widget, std::string_view represen
     }
 
     const auto *mapping = numericRepresentationMapping(representation);
-    if (mapping == nullptr || !ringRepresentationSupported(mapping->kind)) {
+    if (mapping == nullptr || !ringRepresentationSupported(mapping->kind) ||
+        (widget.pictureRing && mapping->kind != "uint16")) {
         return false;
     }
 

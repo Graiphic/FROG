@@ -5,15 +5,13 @@
 ## Start
 
 - [Generator guide, exact CLI and tested corpus](docs/generate-frog.md)
-- [Open and run a generated program in Studio](docs/generate-frog.md#run-a-generated-program)
-- [One-view diagrams, structures and callable sub-FROGs](docs/generate-frog.md#keep-the-overview-to-one-working-view)
-- [Two-pass layout: place constants by port, then route references and errors first](docs/generate-frog.md#lay-out-generated-diagrams-for-left-to-right-dataflow)
-- [Readable fan-in: separate independent wires, align real contacts and reserve visible clearance](docs/generate-frog.md#lay-out-a-readable-fan-in)
-- Align the actual output and input contacts whenever their wire can be straight. Keep a short local offset only when real port, label or object clearance requires it. Apply the rule to references, constants, data and error. Give independent test signals their own row. [Placement rules](docs/generate-frog.md#place-clear-left-to-right-rows)
+- [Generate, validate and execute a program](docs/generate-frog.md#2-validate-derive-and-select-a-target)
+- [Case tunnels, subprograms and typed bindings](docs/generate-frog.md#structures-calls-and-case-tunnels)
 - [Canonical Source syntax and full example](Expression/Frog%20source%20guide.md)
 - [Canonical Source JSON Schema](Expression/schema/frog.schema.json)
 - [Studio draft profile](Expression/Studio%20authoring%20document%20profile%20v1.md)
 - [Studio and Frontend compatibility](docs/studio-source-compatibility.md)
+- [Importer CLIs and supported profiles](Implementations/Importers/README.md)
 
 ## Contracts
 

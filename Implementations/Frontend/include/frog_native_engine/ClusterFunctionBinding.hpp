@@ -2,6 +2,7 @@
 #include "frog_native_engine/FunctionPortIdentities.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
 #include "frog_native_engine/BindingType.hpp"
+#include "frog_native_engine/DiagramShapeCatalog.hpp"
 #include <algorithm>
 #include <charconv>
 
@@ -58,11 +59,14 @@ inline std::string_view clusterFunctionDisplayName(const DiagramNode &node,unsig
     }
     return name;
 }
+inline constexpr double kPositionalClusterFunctionWidth =
+    diagramShapeGeometry(DiagramShapeStandard::Square).canvasSide;
+
 inline double clusterFunctionWidth(const DiagramNode &node) {
     if(isClusterArrayStrip(node.type)) return kClusterArrayStripWidth;
     if(isClusterByName(node.type)&&std::isfinite(node.clusterFunctionMeasuredWidth)&&node.clusterFunctionMeasuredWidth>0)
         return node.clusterFunctionMeasuredWidth;
-    double width=isClusterByName(node.type)?67.42:32;
+    double width=isClusterByName(node.type)?67.42:kPositionalClusterFunctionWidth;
     if(isClusterByName(node.type)) for(unsigned i=0;i<clusterFunctionCount(node);++i)
         width=(std::max)(width,44.0+8.0*clusterFunctionDisplayName(node,i).size());
     return (std::min)(width,400.0);

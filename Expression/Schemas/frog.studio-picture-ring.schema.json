@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graiphic.github.io/FROG/Expression/Schemas/frog.studio-picture-ring.schema.json",
+  "title": "Studio Draft 11 ordinary document envelope",
+  "description": "Picture Ring writer profile. Image decoding, strict reference types, class declarations and target execution require their respective validators.",
+  "type": "object",
+  "required": ["format", "draft_revision", "language", "title", "metadata", "storage", "frontPanel", "diagram"],
+  "not": {"required": ["spec_version"]},
+  "properties": {
+    "format": {"const": "frog.document.draft"},
+    "draft_revision": {"const": 11},
+    "language": {"const": "FROG"},
+    "title": {"type": "string"},
+    "metadata": {"type": "object"},
+    "storage": {"$ref": "frog.studio-document.schema.json#/properties/storage"},
+    "frontPanel": {"$ref": "frog.studio-document.schema.json#/properties/frontPanel"},
+    "diagram": {"$ref": "frog.studio-document.schema.json#/$defs/graph"}
+  }
+}

@@ -864,3 +864,7 @@ Implementations/Frontend/tests/fixtures/classes-v1/README.md -text
 "Implementations/Frontend/tests/fixtures/classes-v1/Set Calibration.frog" -text
 "Implementations/Frontend/tests/fixtures/classes-v1/Set Offset.frog" -text
 sdk/ecosystem/docs/source-document-libraries.md -text
+
+# Exact published inputs, 2026-11-22
+Implementations/Frontend/include/frog_native_engine/PictureRing.hpp -text
+Implementations/Frontend/src/MathVariantLookup.hpp -text

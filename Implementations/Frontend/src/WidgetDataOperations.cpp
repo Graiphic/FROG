@@ -236,6 +236,7 @@ bool assign(WidgetInstance &target, const WidgetInstance &source) {
 
 std::string encode(const WidgetInstance &widget) {
     auto value = widget; sanitize(value);
+    if (value.pictureRing) value.ringItems.clear(); // A data snapshot stores the index; the object owns the catalog.
     auto result = serializeArrayElementWidget(value);
     if(result.size()>maximumBytes)return {};
     // A native graph may display more samples than the authored JSON reader

@@ -160,6 +160,22 @@ It is the repository-level policy that organizes stabilization across the alread
 <hr/>
 
 <h2 id="current-published-version">5. Current Published Version</h2>
+
+### Release record, 22 November 2026
+
+For each syntax release, record the affected file family, writer revision,
+oldest reader, migration and refusal tests in the [version matrix](Matrix.md).
+Advance the version written in a file when its retained syntax changes. Studio
+Draft 11 identifies embedded Picture Ring choices. Canonical Source 0.1 and
+FIR 0.1 keep their existing compatibility identifiers. User help, styling and
+host fixes have their own publication history. The editor records its own
+build in file provenance. The specification corpus advances from 0.1-draft to
+0.1-draft.1 with this publication. Each subsequent syntax publication must
+advance its corpus identifier and record compatibility in the matrix.
+
+<p>
+This section is the canonical repository-visible place where the current published specification corpus version is declared.
+</p>
 <p>
 This section is the canonical repository-visible place where the current published specification corpus version is declared.
 </p>
@@ -175,7 +191,7 @@ This section is the canonical repository-visible place where the current publish
   <tbody>
     <tr>
       <td>Specification corpus version</td>
-      <td><code>0.1-draft</code></td>
+      <td><code>0.1-draft.1</code></td>
       <td>Current published repository-level specification posture under active consolidation</td>
     </tr>
     <tr>
@@ -202,11 +218,11 @@ More detailed per-surface status is centralized in <code>Versioning/Matrix.md</c
 </p>
 
 <p>
-The distinction between <code>0.1-draft</code> and <code>.frog spec_version = 0.1</code> is intentional:
+The distinction between <code>0.1-draft.1</code> and <code>.frog spec_version = 0.1</code> is intentional:
 </p>
 
 <ul>
-  <li><code>0.1-draft</code> describes the current repository-wide publication posture of the specification corpus,</li>
+  <li><code>0.1-draft.1</code> describes the current repository-wide publication posture of the specification corpus,</li>
   <li><code>spec_version = 0.1</code> describes the source-format compatibility target for canonical <code>.frog</code> artifacts within the currently bounded published subset.</li>
 </ul>
 

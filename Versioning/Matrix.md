@@ -301,6 +301,16 @@ The widget layer is organized as a standard-facing surface rather than a collect
 The current implementation priority remains to keep the bounded Examples 01–15 executable corridor, reference checks, widget validation, and version-governance posture coherent. The separate 47-directory example inventory must not be used as a runtime coverage count.
 </p>
 
+## Corpus 0.1-draft.1 — syntax release of 22 November 2026
+
+The [Studio authoring profile](../Expression/Studio%20authoring%20document%20profile%20v1.md#envelopes-and-revision-admission)
+now specifies Draft **11** for embedded Picture Ring catalogues. Source **0.1**
+and FIR **0.1** keep their existing grammar. Ordinary new Studio documents
+with storage start at **3**. Class declarations require at least **10**.
+The source file's optional `metadata.created_by` and `metadata.saved_by`
+record the four-part editor versions. `metadata.program_version` belongs
+to the program's author.
+
 ## Studio reconciliation — 14 October 2026
 
 The [Studio authoring profile](../Expression/Studio%20authoring%20document%20profile%20v1.md) records readable 2, storage 3, exact integer 4, complex 5, Application Control 6 and Connectivity 7. These existing authoring revisions do not change canonical `spec_version: 0.1` or the specification-corpus version. The snapshot format is separately versioned.

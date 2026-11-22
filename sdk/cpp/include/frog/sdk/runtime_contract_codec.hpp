@@ -33,13 +33,14 @@ inline constexpr std::array<std::uint8_t, 8> kPackedF64ArrayMagic{
 inline constexpr std::uint32_t kMaximumCollectionSize = 1'000'000U;
 inline constexpr std::uint32_t kMaximumStringSize = 16U * 1024U * 1024U;
 inline constexpr std::size_t kMaximumTypedEnvelopeSize = 32U * 1024U * 1024U;
-// Optional byte limits for an intake that distinguishes an artifact's
-// ordinary encoding from the exact packed real cell stream. The on-wire
-// representation and the generic codec limits remain the same.
+// Optional limits and encoding opt-in for mutually controlled private hosts.
+// The default public encoding and generic codec limits remain the same.
 struct ArtifactEncodingLimits {
     std::size_t ordinaryBytes=SIZE_MAX;
     std::size_t packedNumericCellBytes=0;
+    bool compactNumericArrays=false;
 };
+inline constexpr std::uint8_t kPrivateCompactNumericArrayTag=17;
 
 class Writer final {
 public:
@@ -94,7 +95,9 @@ public:
         const auto widgetSymbol=runtimeWidgetReferenceSymbol(value);
         if(!widgetSymbol.empty())tag=16;
         else if(runtimeNullReferenceOwner(value))tag=15;
-        else if(runtimeComplex(value))tag=13;else if(runtimeArray(value))tag=8;
+        else if(runtimeComplex(value))tag=13;
+        else if(const auto *array=runtimeArray(value))
+            tag=limits_.compactNumericArrays&&array->packedCells()?kPrivateCompactNumericArrayTag:8;
         else if(const auto *variant=runtimeVariant(value))tag=variant->isEmptyVariant()?14:9;
         else if(runtimeMap(value))tag=10;else if(runtimeTimestamp(value))tag=11;else if(runtimeSet(value))tag=12;
         enumeration(tag);
@@ -159,18 +162,18 @@ public:
             }else {unsignedInteger(complex->realBits());unsignedInteger(complex->imaginaryBits());}
             break;
         }
-        case 8U: case 9U: case 10U: case 11U: case 12U: case 14U: {
+        case 8U: case 9U: case 10U: case 11U: case 12U: case 14U: case kPrivateCompactNumericArrayTag: {
             const auto &carrier=*std::get<6>(value);
             if(!typed_||packed_||!runtimeValueRepresentable(value,valueTypeFromCanonicalName(carrier.canonicalType()))||
                 (tag!=11&&(!arrayOwner_||!runtimeValueValidForOwner(value,valueTypeFromCanonicalName(carrier.canonicalType()),*arrayOwner_)))) {valid_=false;return;}
-            if(tag==8) {
+            if(tag==8||tag==kPrivateCompactNumericArrayTag) {
                 const auto &a=*runtimeArray(value);valueType(a.elementType());unsignedInteger(static_cast<std::uint32_t>(a.shape().size()));
                 for(const auto extent:a.shape())unsignedInteger(extent);
                 unsignedInteger(static_cast<std::uint32_t>(a.elementCount()));
                 const auto begin=data_.size(),outerNodes=valueNodes_,outerBytes=valueBytes_;++arrayDepth_;
                 if(a.packedCells()) {
                     if(a.elementCount()&&depth==32)valid_=false;
-                    else writePackedArrayCells(a);
+                    else writePackedArrayCells(a,tag==kPrivateCompactNumericArrayTag);
                 }else for(const auto &v:a.elements()){valueNodes_=0;valueBytes_=0;runtimeValue(v,depth+1);}
                 --arrayDepth_;valueNodes_=outerNodes;valueBytes_=outerBytes;
                 if(!arrayDepth_)arrayEnvelopeBytes_+=data_.size()-begin;
@@ -217,26 +220,39 @@ private:
         }
         return true;
     }
-    void writePackedArrayCells(const RuntimeIpeValue &array) {
+    void writePackedArrayCells(const RuntimeIpeValue &array,bool compact) {
         if(!valid_)return;
-        constexpr std::size_t cellBytes=1+sizeof(double);
+        const auto kind=compound_detail::packedNumericKind(array.elementType().canonicalName);
+        const auto cellBytes=compact?compound_detail::packedNumericWidth(kind):1+sizeof(std::uint64_t);
         const auto count=array.elementCount(),begin=data_.size();
-        if(count>(data_.max_size()-begin)/cellBytes){valid_=false;return;}
+        if(!cellBytes||count>(data_.max_size()-begin)/cellBytes){valid_=false;return;}
         const auto bytes=count*cellBytes;
         const auto exempt=limits_.packedNumericCellBytes!=0;
         if(exempt ? bytes>limits_.packedNumericCellBytes-packedNumericBytes_ : !allowBytes(bytes)) {valid_=false;return;}
         data_.resize(begin+bytes);
         auto *destination=data_.data()+begin;
-        const auto write=[&](std::uint8_t tag,std::uint64_t bits) {
-            *destination++=tag;
-            for(unsigned shift=0;shift<64;shift+=8)*destination++=static_cast<std::uint8_t>(bits>>shift);
-        };
-        if(array.packedI32()) {
-            for(const auto cell:array.i32Elements())write(2U,static_cast<std::uint64_t>(std::int64_t(cell)));
-        }else if(array.packedF32()) {
-            const auto *cells=array.f32Data();
-            for(std::size_t i=0;i<count;++i)write(4U,std::bit_cast<std::uint64_t>(double(cells[i])));
-        }else for(const auto cell:array.f64Elements())write(4U,std::bit_cast<std::uint64_t>(cell));
+        compound_detail::visitPackedNumericKind(kind,[&]<class T>() {
+            if constexpr(!std::is_void_v<T>) {
+                const auto cells=array.numericElements<T>();
+                if(compact) {
+                    using Word=compound_detail::PackedNumericWord<T>;
+                    for(const auto cell:cells) {
+                        const auto word=std::bit_cast<Word>(cell);
+                        for(unsigned shift=0;shift<sizeof(T)*8;shift+=8)
+                            *destination++=static_cast<std::uint8_t>(word>>shift);
+                    }
+                } else {
+                    constexpr std::uint8_t tag=std::is_floating_point_v<T>?4U:std::is_signed_v<T>?2U:3U;
+                    for(const auto cell:cells) {
+                        using Carrier=compound_detail::NumericScalarCarrier<T>;
+                        const auto word=std::bit_cast<std::uint64_t>(static_cast<Carrier>(cell));
+                        *destination++=tag;
+                        for(unsigned shift=0;shift<64;shift+=8)
+                            *destination++=static_cast<std::uint8_t>(word>>shift);
+                    }
+                }
+            }
+        });
         if(exempt)packedNumericBytes_+=bytes;
     }
     std::vector<std::uint8_t> data_;
@@ -251,7 +267,8 @@ private:
 
 class Reader final {
 public:
-    explicit Reader(std::span<const std::uint8_t> data) : data_(data) {}
+    explicit Reader(std::span<const std::uint8_t> data,bool compactNumericArrays=false)
+        :data_(data),compactNumericArrays_(compactNumericArrays){}
     bool typed(bool enabled, bool packed = false) {
         typed_ = enabled || packed; packed_=packed;
         // Array payload bytes are charged separately while parsing; metadata
@@ -445,56 +462,54 @@ public:
             if(!decoded)return fail("Complex components violate the exact finite carrier contract.");
             value=std::move(*decoded);return true;
         }
-        case 8U: case 9U: case 10U: case 11U: case 12U: case 14U: {
+        case 8U: case 9U: case 10U: case 11U: case 12U: case 14U: case kPrivateCompactNumericArrayTag: {
             if(!typed_||packed_||(tag!=11&&(!arrayOwner_||!runtimeValueOwnerValid(*arrayOwner_))))return fail("Local IPE values require a typed envelope and its exact value owner.");
             std::optional<RuntimeValue> complete;
-            if(tag==8) {
+            if(tag==8||tag==kPrivateCompactNumericArrayTag) {
+                const bool compact=tag==kPrivateCompactNumericArrayTag;
+                if(compact&&!compactNumericArrays_)return fail("The private numeric Array profile was not enabled.");
                 ValueType element;std::uint32_t rank=0,size=0;
                 if(!valueType(element)||!count(rank)||rank==0||rank>16)return fail("Invalid IPE Array rank.");
                 std::vector<std::uint32_t> shape(rank);
                 for(auto &extent:shape)if(!unsignedInteger(extent))return false;
                 const auto product=array_detail::elementCount(shape);
                 if(!unsignedInteger(size)||!product||size!=*product)return fail("IPE Array shape/value count differs or exceeds4294967295 elements.");
-                if(size>(std::numeric_limits<std::size_t>::max)()/sizeof(RuntimeValue))return fail("Not enough memory to complete this operation.");
                 const auto begin=cursor_,outerNodes=valueNodes_,outerBytes=valueBytes_;++arrayDepth_;
                 // At least one tag byte is required per element. Refuse a
                 // forged huge count before attempting its vector allocation.
                 if(!reserve(size))return false;
                 try {
-                if(rank==1&&element.canonicalName=="i32") {
-                    constexpr std::size_t signedWireSize=1+sizeof(std::int64_t);
-                    if(size&&(depth==32||size>(data_.size()-cursor_)/signedWireSize))
-                        return fail("Invalid signed I32 Array depth or payload length.");
+                const auto kind=compound_detail::packedNumericKind(element.canonicalName);
+                const auto width=compound_detail::packedNumericWidth(kind);
+                if(compact&&!width)return fail("The private Array profile requires a fixed-width numeric element type.");
+                if(width) {
+                    const auto cellBytes=compact?width:1+sizeof(std::uint64_t);
+                    if(size&&(depth==32||size>(data_.size()-cursor_)/cellBytes))
+                        return fail("Invalid numeric Array depth or payload length.");
                     auto next=cursor_;
-                    complete=readRuntimePackedI32Array(element,size,*arrayOwner_,[&](std::uint32_t)->std::optional<std::int64_t>{
-                        if(data_[next++]!=2U)return {};
+                    const auto readWord=[&](std::size_t bytes) {
                         std::uint64_t bits=0;
-                        for(unsigned shift=0;shift<64;shift+=8)bits|=std::uint64_t(data_[next++])<<shift;
-                        return std::bit_cast<std::int64_t>(bits);
-                    });
-                    if(!complete)return fail("Invalid signed I32 Array element or type descriptor.");
-                    cursor_=next;
-                }else if(rank==1&&(element.canonicalName=="f32"||element.canonicalName=="f64")) {
-                    constexpr std::size_t realWireSize=1+sizeof(std::uint64_t);
-                    if(size&&(depth==32||size>(data_.size()-cursor_)/realWireSize))
-                        return fail("Invalid real IPE Array depth or payload length.");
-                    // Commit cursor movement only when the complete packed value is valid.
-                    // Legacy F32 carriers with IEEE exceptional values use the generic reader.
-                    auto next=cursor_;
+                        for(unsigned shift=0;shift<bytes*8;shift+=8)bits|=std::uint64_t(data_[next++])<<shift;
+                        return bits;
+                    };
+                    // Legacy F32 used a double carrier for IEEE exceptional
+                    // values. Preserve those packets and their wider payload.
                     bool legacyF32=false;
-                    const bool single=element.canonicalName=="f32";
-                    complete=readRuntimePackedRealArray(element,size,*arrayOwner_,[&](std::uint32_t)->std::optional<double>{
-                        if(data_[next++]!=4U)return {};
-                        std::uint64_t bits=0;
-                        for(unsigned shift=0;shift<64;shift+=8)bits|=std::uint64_t(data_[next++])<<shift;
-                        const auto cell=std::bit_cast<double>(bits);
-                        legacyF32=single&&!std::isfinite(cell);
-                        return cell;
-                    });
+                    if(compact) {
+                        complete=readRuntimePackedNumericArray(element,std::move(shape),*arrayOwner_,
+                            [&](std::uint32_t) -> std::optional<std::uint64_t> {return readWord(width);});
+                    } else {
+                        complete=compound_detail::visitPackedNumericKind(kind,[&]<class T>() -> std::optional<RuntimeValue> {
+                            if constexpr(std::is_void_v<T>)return {};
+                            else return readLegacyNumericCells<T>(element,shape,next,readWord,legacyF32);
+                        });
+                    }
                     if(complete)cursor_=next;
-                    else if(!legacyF32)return fail("Invalid real IPE Array element or type descriptor.");
+                    else if(!legacyF32)return fail("Invalid numeric IPE Array element or type descriptor.");
                 }
                 if(!complete) {
+                    if(size>(std::numeric_limits<std::size_t>::max)()/sizeof(RuntimeValue))
+                        return fail("Not enough memory to complete this operation.");
                     std::vector<RuntimeValue> elements;elements.reserve(size);
                     for(std::uint32_t i=0;i<size;++i){valueNodes_=0;valueBytes_=0;RuntimeValue v;if(!runtimeValue(v,depth+1))return false;elements.push_back(std::move(v));}
                     complete=makeRuntimeArray(std::move(element),std::move(shape),std::move(elements),*arrayOwner_);
@@ -542,6 +557,24 @@ public:
     [[nodiscard]] std::string_view error() const noexcept { return error_; }
 
 private:
+    template<class T,class ReadWord>
+    std::optional<RuntimeValue> readLegacyNumericCells(const ValueType &element,
+        std::span<const std::uint32_t> shape,std::size_t &next,ReadWord &readWord,bool &legacyF32) {
+        return readRuntimePackedNumericCells<T>(element,shape,*arrayOwner_,[&](std::uint32_t) -> std::optional<T> {
+            constexpr std::uint8_t expected=std::is_floating_point_v<T>?4U:std::is_signed_v<T>?2U:3U;
+            if(data_[next++]!=expected)return {};
+            using Carrier=compound_detail::NumericScalarCarrier<T>;
+            const auto cell=std::bit_cast<Carrier>(readWord(sizeof(std::uint64_t)));
+            if constexpr(std::is_same_v<T,float>) {
+                legacyF32=!std::isfinite(cell);
+                if(legacyF32||static_cast<double>(static_cast<float>(cell))!=cell)return {};
+            } else if constexpr(std::is_integral_v<T>) {
+                if(!std::in_range<T>(cell))return {};
+            }
+            return static_cast<T>(cell);
+        });
+    }
+
     [[nodiscard]] bool reserve(std::size_t size) {
         if (!valid_ || size > data_.size() - cursor_) {
             return fail("The artifact payload is truncated.");
@@ -560,6 +593,7 @@ private:
     std::span<const std::uint8_t> data_;
     std::size_t cursor_ = 0U;
     bool valid_ = true, typed_ = false, packed_ = false;
+    const bool compactNumericArrays_;
     const RuntimeValueOwner *arrayOwner_ = nullptr;
     std::size_t valueNodes_ = 0, valueBytes_ = 0;
     std::size_t arrayEnvelopeBytes_ = 0;
@@ -676,8 +710,8 @@ inline Diagnostic codecDiagnostic(std::string message) {
 }
 
 [[nodiscard]] inline ArtifactDecodeResult decodeProgramArtifact(
-    std::span<const std::uint8_t> payload) {
-    codec_detail::Reader reader(payload);
+    std::span<const std::uint8_t> payload,bool compactNumericArrays) {
+    codec_detail::Reader reader(payload,compactNumericArrays);
     std::array<std::uint8_t, codec_detail::kMagic.size()> magic{};
     ProgramArtifact artifact;
     const auto fail = [&reader]() {
@@ -813,6 +847,10 @@ inline Diagnostic codecDiagnostic(std::string message) {
     }
     if (result.diagnostics.empty()) result.artifact = std::move(artifact);
     return result;
+}
+
+[[nodiscard]] inline ArtifactDecodeResult decodeProgramArtifact(std::span<const std::uint8_t> payload) {
+    return decodeProgramArtifact(payload,false);
 }
 
 } // namespace frog::sdk::runtime

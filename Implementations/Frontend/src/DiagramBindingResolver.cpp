@@ -136,10 +136,12 @@ TypeResolution connectShiftRegister(const TypeRef &source, const TypeRef &target
             ? ConnectionPolicy::NumericImplicit : ConnectionPolicy::Exact);
 }
 const DiagramCaseStructureTunnel *findTunnel(const DiagramNode &node, std::string_view port) {
+    if (node.caseStructureTunnels.empty()) return nullptr;
+    const auto target = diagram_identity::parseTunnelPort(port);
+    if (!target) return nullptr;
     if (!isCase(node) && !isDiagramStructureNodeType(node.type)) return nullptr;
     for (const auto &tunnel : node.caseStructureTunnels) {
-        if (port == tunnelInputId(tunnel.id) || port == tunnelOutputId(tunnel.id) ||
-            (tunnel.conditional && port == diagramTunnelConditionPortId(tunnel.id))) return &tunnel;
+        if (tunnel.id == target->id && (target->face != diagram_identity::TunnelFace::Condition || tunnel.conditional)) return &tunnel;
     }
     return nullptr;
 }
@@ -632,9 +634,9 @@ BindingResult TypeResolver::tunnel(const DiagramNode &node, const DiagramCaseStr
     std::vector<TypeRef> types;
     const DiagramCaseStructureTunnel *shiftInitializer=nullptr;
     if(!boundary.shiftRegisterPairId.empty()) for(const auto *edge:incomingEdges(node.id)) {
+        if (!edge->to.portId.ends_with(":input")) continue;
         const auto *member=findTunnel(node,edge->to.portId);
-        if(!member || member->outputFromStructure || member->shiftRegisterPairId!=boundary.shiftRegisterPairId ||
-            edge->to.portId!=tunnelInputId(member->id)) continue;
+        if(!member || member->outputFromStructure || member->shiftRegisterPairId!=boundary.shiftRegisterPairId) continue;
         // The topmost initialized history determines the common representation.
         // Other slots have independent initial values and convert to this type.
         if(!shiftInitializer || member->shiftRegisterHistoryIndex<shiftInitializer->shiftRegisterHistoryIndex ||
@@ -649,9 +651,9 @@ BindingResult TypeResolver::tunnel(const DiagramNode &node, const DiagramCaseStr
         const auto &edge = *incoming;
         const auto *member = &boundary;
         if (edge.to.portId != port) {
-            member = boundary.shiftRegisterPairId.empty() ? nullptr : findTunnel(node, edge.to.portId);
-            if (member == nullptr || member->shiftRegisterPairId != boundary.shiftRegisterPairId ||
-                edge.to.portId != tunnelInputId(member->id)) continue;
+            if (boundary.shiftRegisterPairId.empty() || !edge.to.portId.ends_with(":input")) continue;
+            member = findTunnel(node, edge.to.portId);
+            if (member == nullptr || member->shiftRegisterPairId != boundary.shiftRegisterPairId) continue;
         }
         // Choose the authoritative face before resolving any producer. A
         // connected initializer keeps priority even while its type is unknown.
@@ -675,6 +677,10 @@ BindingResult TypeResolver::tunnel(const DiagramNode &node, const DiagramCaseStr
         if (direction(edge.from) != FunctionPortDirection::Output)
             return {{ResolutionStatus::Incompatible, {}, "binding.direction", "A tunnel must be driven by an output."}, false, {}};
         auto source = resolveSource(edge);
+        // The iterative resolver will run the pending producer and replay
+        // this frame. Its provisional types, region counts and diagnostics
+        // are discarded. Resume the remaining regions with real evidence.
+        if (evaluationFrame_ && evaluationFrame_->pending) return source;
         if (!hasShiftInitializer && !boundary.shiftRegisterPairId.empty() &&
             source.resolution.status == ResolutionStatus::Unresolved) {
             const auto producer = nodesById_.find(edge.from.nodeId);
@@ -731,8 +737,9 @@ BindingResult TypeResolver::tunnel(const DiagramNode &node, const DiagramCaseStr
     // With no inner producer a declared indicator type can constrain the tunnel.
     // Polymorphic consumer hints and the persisted inferred cache cannot do so.
     if (boundary.shiftRegisterPairId.empty() && types.empty() && defaultAllowed) {
+        const auto output = tunnelOutputId(boundary.id);
         for (const auto &edge : edges_) {
-            if (edge.from.nodeId != node.id || edge.from.portId != tunnelOutputId(boundary.id) ||
+            if (edge.from.nodeId != node.id || edge.from.portId != output ||
                 direction(edge.to) != FunctionPortDirection::Input) continue;
             const auto sink = nodesById_.find(edge.to.nodeId);
             if (sink == nodesById_.end() || sink->second->kind != "widget_value") continue;

@@ -17,6 +17,7 @@
 #include "frog_native_engine/FunctionCatalog.hpp"
 #include "frog_native_engine/DiagramStructureCatalog.hpp"
 #include "frog_native_engine/CanonicalNumericRing.hpp"
+#include "frog_native_engine/PictureRing.hpp"
 #include "frog_native_engine/CanonicalNumericArrayReduction.hpp"
 #include "frog_native_engine/CanonicalNumericRandom.hpp"
 #include "frog_native_engine/CanonicalNumericAccumulate.hpp"
@@ -144,13 +145,13 @@ void authoredRootFields(const Json &root) {
     // Storage is the existing writer's encoding policy, not an operation or
     // a change of numeric values. Keep it in original/provenance source and
     // validate with the same codec as the common document reader.
-    if(const auto *storage=root.member("storage")) {
-        fields(*storage,{"version","array_mode"},"/storage");
-        FrogArrayStorageMode mode;
-        std::string error;
-        if(!document_internal::readArrayStorageMode(root,mode,error))
-            fail("/storage",error,"migration.storage_invalid",Domain::Integrity);
-    }
+    draft_presentation::storage(root,[](auto path,auto message,auto kind) {
+        using Issue=draft_presentation::StorageIssue;
+        const auto code=kind==Issue::Policy?"migration.storage_invalid":
+            kind==Issue::UnknownField?"migration.composed_field_unavailable":"migration.composed_source_invalid";
+        fail(std::move(path),std::move(message),code,
+            kind==Issue::UnknownField?Domain::Compatibility:Domain::Integrity);
+    });
     // The common reader and Conditional specialization already consume these
     // exact project/target symbols. Recognize the same authored field here,
     // retaining its strict schema instead of rejecting or erasing it.
@@ -384,6 +385,8 @@ bool requiresScope(const Json &scope,unsigned depth) {
         if(scalarLiteral(node))if(const auto *t=node.member("value_type");t&&t->type==Json::Type::String&&(t->string=="c32"||t->string=="c64"))return true;
         if(const auto *t=node.member("type");t&&t->type==Json::Type::String) {
             const auto id=bare(t->string);
+            if(id=="numeric.ring_constant")if(const auto *ring=node.member("ring_constant"))
+                if(const auto *picture=ring->member("picture_ring");picture&&picture->type==Json::Type::Boolean&&picture->boolean)return true;
             // A standalone Path already has an exact composed literal codec.
             // Owned Path fields retain their established immutable-Record
             // corridor; do not give the classic String2 profile a Path alias.
@@ -495,10 +498,13 @@ struct Adapter {
             const auto at=path+"/nodes/"+std::to_string(i);const auto &n=objectAt(&ns[i],at);
             const auto id=text(n.member("id"),at+"/id");
             if(sourceNodeIds.size()>=1024||id.size()>1024||id.find('\0')!=id.npos||!sourceNodeIds.insert(id).second)fail(at,"Node identities must remain distinct and bounded.", "migration.composed_source_invalid", Domain::Integrity);
-            if(text(n.member("kind"),at+"/kind")=="comment") {
-                draft_presentation::comment(n,scope,at,[](auto path,auto message){
+            const auto kind = text(n.member("kind"), at + "/kind");
+            if (kind == "comment" || kind == "static_visual") {
+                const auto reject = [](auto path, auto message) {
                     fail(std::move(path),std::move(message),"migration.presentation_invalid", Domain::Compatibility);
-                });
+                };
+                if (kind == "comment") draft_presentation::comment(n, scope, at, reject);
+                else draft_presentation::staticVisual(n, at, reject);
                 out.identities.push_back({"presentation",id,at,std::string(draft_presentation::provenance)+at,false});
                 continue;
             }
@@ -696,7 +702,9 @@ struct Adapter {
     binding::TypeRef ringType(const Json &node,const std::string &at) {
         const auto cp=at+"/ring_constant";
         const auto &configuration=objectAt(node.member("ring_constant"),cp);
-        fields(configuration,{"selected_value","allow_undefined_values","text_overflow_visible","digital_display_visible","items"},cp);
+        fields(configuration,{"selected_value","allow_undefined_values","text_overflow_visible","digital_display_visible","items","picture_ring"},cp);
+        const auto *pictureFlag=configuration.member("picture_ring");
+        const bool picture=pictureFlag&&flag(pictureFlag,cp+"/picture_ring");
         const auto repr=text(node.member("value_type"),at+"/value_type");
         const auto parsed=binding::parseType(repr);
         if(!parsed.valid()||parsed.type.kind!=binding::TypeKind::Primitive||!canonicalNumericRingRepresentationSupported(repr))
@@ -704,14 +712,19 @@ struct Adapter {
         auto result=parsed.type;
         const auto &items=arrayAt(configuration.member("items"),cp+"/items");
         if(items.size()>4096)fail(cp,"Ring choices exceed the bounded authored definition.", "migration.composed_source_invalid", Domain::Semantics);
+        if(picture&&(repr!="u16"||items.size()>kPictureRingMaximumItems))
+            fail(cp,"Picture Ring requires U16 representation and a bounded image catalogue.", "migration.composed_source_invalid", Domain::Semantics);
         if(!items.empty())result.choiceKind=binding::ChoiceKind::Ring;
         std::set<std::string> ids;std::set<std::uint32_t> values;
         for(std::size_t i=0;i<items.size();++i) {
             const auto ip=cp+"/items/"+std::to_string(i);
-            fields(items[i],{"id","label","value","disabled","visible"},ip);
+            if(picture)fields(items[i],{"id","label","value","disabled","visible","image"},ip);
+            else fields(items[i],{"id","label","value","disabled","visible"},ip);
             binding::ChoiceItemMetadata choice;
             choice.id=text(items[i].member("id"),ip+"/id");choice.label=text(items[i].member("label"),ip+"/label",true);
             choice.value=ordinal(items[i].member("value"),ip+"/value");
+            if(picture&&choice.value!=i)
+                fail(ip,"A Picture Ring item value must match its zero-based catalogue index.", "migration.composed_source_invalid", Domain::Semantics);
             if(!composedNumericValue(*items[i].member("value"),repr)||!canonicalNumericRingChoiceRepresentable(repr,choice.value))
                 fail(ip,"Ring choice is not exactly representable in its actual numeric representation.","migration.ring_choice_unrepresentable", Domain::Semantics);
             if(const auto *v=items[i].member("disabled"))choice.disabled=flag(v,ip+"/disabled");
@@ -723,6 +736,7 @@ struct Adapter {
         if(!composedNumericValue(*configuration.member("selected_value"),repr)||!canonicalNumericRingChoiceRepresentable(repr,selected))
             fail(cp,"Ring selected value is not exactly representable in its actual numeric representation.","migration.ring_choice_unrepresentable", Domain::Semantics);
         const bool undefined=flag(configuration.member("allow_undefined_values"),cp+"/allow_undefined_values");
+        if(picture&&!undefined)fail(cp,"Picture Ring must preserve numeric values without a matching image.", "migration.composed_source_invalid", Domain::Semantics);
         if(!undefined&&!values.contains(selected))fail(cp,"Ring literal does not select an authored item and undefined values are disabled.", "migration.composed_source_invalid", Domain::Semantics);
         for(const auto key:{"text_overflow_visible","digital_display_visible"})if(const auto *v=configuration.member(key))static_cast<void>(flag(v,cp+"/"+key));
         return result;
@@ -980,6 +994,8 @@ struct Adapter {
         const bool enumClass=klass=="frog.widgets.enum_control"||klass=="frog.widgets.enum_indicator"||
             klass=="frog.studio.widgets.tab_control"||klass=="frog.studio.widgets.tab_indicator";
         const bool ringClass=klass=="frog.widgets.ring_control"||klass=="frog.widgets.ring_indicator";
+        const auto *pictureFlag=ringClass?props.member("picture_ring"):nullptr;
+        const bool picture=pictureFlag&&flag(pictureFlag,path+"/props/picture_ring");
         const bool listboxClass=klass=="frog.widgets.listbox_control"||klass=="frog.widgets.listbox_indicator";
         if(listboxClass) {
             const auto actual=deserializeArrayElementWidget(encode(widget));
@@ -1013,6 +1029,16 @@ struct Adapter {
                 fail(path,"The Ring has no implemented exact carrier in its declared representation.","migration.ring_representation_unavailable", Domain::FrontendCapability);
             if(ringClass&&!canonicalNumericRingMetadataValid(*attested))
                 fail(path,"Ring choices are not exactly representable in the declared numeric type; no choice is silently rounded.","migration.ring_choice_unrepresentable", Domain::Semantics);
+            if(picture) {
+                if(declared!="u16"||attested->choices.size()>kPictureRingMaximumItems||
+                    !flag(props.member("data_type.allow_undefined_values"),path+"/props/data_type.allow_undefined_values"))
+                    fail(path,"Picture Ring requires U16, a bounded catalogue and preservation of unmatched numeric values.",
+                        "migration.composed_source_invalid", Domain::Semantics);
+                for(std::size_t i=0;i<attested->choices.size();++i)
+                    if(attested->choices[i].value!=i)
+                        fail(path,"Picture Ring choices must follow the zero-based catalogue order.",
+                            "migration.composed_source_invalid", Domain::Semantics);
+            }
             return *attested;
         }
         const auto type=binding::parseType(declared);
@@ -1130,6 +1156,15 @@ struct Adapter {
         if(widgets.size()>1024)fail("/frontPanel","The existing widget budget was exceeded.", "migration.composed_source_invalid", Domain::Control);
         for(std::size_t i=0;i<widgets.size();++i) {
             const auto at="/frontPanel/widgets/"+std::to_string(i),target="/front_panel/widgets/"+std::to_string(list.array.size());const auto &authored=objectAt(&widgets[i],at);
+            if (draft_presentation::isStaticImageWidget(authored)) {
+                draft_presentation::staticImageWidget(authored, at, [](auto p, auto m) {
+                    fail(std::move(p), std::move(m), "migration.presentation_invalid", Domain::Compatibility);
+                });
+                identifyWidgetTree(authored, at);
+                const auto id = text(authored.member("id"), at + "/id");
+                out.identities.push_back({"presentation", id, at, std::string(draft_presentation::provenance) + at, false});
+                continue;
+            }
             const auto normalization=normalizeCanonicalDraftWidget(authored,at,&resolved);
             for(const auto &d:normalization.diagnostics)if(d.blocking)fail(d.path,d.message,d.code,d.domain);
             const auto &widget=normalization.current?*normalization.current:authored;
@@ -1650,7 +1685,8 @@ struct Adapter {
             const auto *type=node.member("type");
             if(!type||type->type!=Json::Type::String||type->string!=kNativeCallDiagramNodeType)
                 fail(path,"NativeCall configuration belongs only to its actual configured node.","migration.native_call_configuration_invalid", Domain::Semantics);
-            if(ordinal(root.member("draft_revision"),"/draft_revision")!=7)
+            const auto revision = ordinal(root.member("draft_revision"),"/draft_revision");
+            if(revision != kFrogConnectivityDraftRevision && revision != kFrogPictureRingDraftRevision)
                 fail(path,"Configured NativeCall requires its explicitly identified revision-7 writer.","migration.native_call_revision_unavailable", Domain::Compatibility);
         }
         if(const auto *mode=node.member("comparison_aggregates")) {
@@ -1864,9 +1900,10 @@ struct Adapter {
         const auto &ns=arrayAt(raw.member("nodes"),path+"/nodes");
         for(std::size_t i=0;i<ns.size();++i) {
             const auto at=path+"/nodes/"+std::to_string(i);const auto &node=ns[i];
-            if(text(node.member("kind"),at+"/kind")=="comment")continue; // validated and attributed by index()
+            const auto kind = text(node.member("kind"), at + "/kind");
+            if (kind == "comment" || kind == "static_visual") continue; // validated and attributed by index()
             nodeFields(node,at);
-            const auto id=text(node.member("id"),at+"/id"),kind=text(node.member("kind"),at+"/kind");
+            const auto id=text(node.member("id"),at+"/id");
             if(node.member("constant_owner_node_id"))continue;
             const auto target=targetPath+"/nodes/"+std::to_string(nodeList.array.size());Json item=object();
             item.object={{"id",string(id)},{"kind",string(kind)},{"studio_ports",portList(id)}};
@@ -2194,7 +2231,7 @@ struct Adapter {
                 if(type=="event_structure") {Json event=object();event.object={{"profile",string(std::string(canonicalComposedProgramProfile))},{"cases",std::move(eventCases)}};
                     for(const auto &[key,value]:node.object)if(key.starts_with("studio_event_")&&!key.ends_with("_visible")&&!key.ends_with("_normalized_y"))event.object.emplace(key,value);
                     item.object.emplace("studio_event",std::move(event));}
-            } else fail(at,"This authored node family has no composed-program implementation contract.","migration.composed_node_unavailable", (kind=="frog_call"||kind=="static_visual"||kind=="conditional_default")?Domain::FrontendCapability:Domain::Compatibility);
+            } else fail(at,"This authored node family has no composed-program implementation contract.","migration.composed_node_unavailable", (kind=="frog_call"||kind=="conditional_default")?Domain::FrontendCapability:Domain::Compatibility);
             nodeList.array.push_back(std::move(item));
             if(kind=="primitive"&&node.member("type")&&
                 (!canonicalNumericRandomMigrationIdentity(text(node.member("type"),at)).empty()||
@@ -2337,6 +2374,7 @@ bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolve
         }
     if(const auto *panel=root.member("frontPanel"))if(const auto *widgets=panel->member("widgets");widgets&&widgets->type==Json::Type::Array)
         for(const auto &widget:widgets->array) {
+            if (draft_presentation::isStaticImageWidget(widget)) return true;
             const auto *klass=widget.member("classId");
             if(!klass||klass->type!=Json::Type::String)continue;
             // Support Labels are non-value authoring annotations. Select their
@@ -2350,8 +2388,10 @@ bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolve
             if(!declared||declared->type!=Json::Type::String)continue;
             if(klass->string=="frog.studio.widgets.reference") {
                 const auto type=binding::parseType(declared->string);
-                if(type.valid()&&type.type.known()&&configuredTypedNullResourceWidget(widget,type.type,"/frontPanel/widgets"))
-                    return true;
+                // A configured Reference widget belongs to the adapter
+                // that validates its descriptor and the full retained schema.
+                if(type.valid()&&type.type.known()&&type.type.kind==binding::TypeKind::Reference&&
+                    widget.member("studio_application_control"))return true;
             }
             // Route the existing composed widget families, not arbitrary
             // unsupported scalars. Full schemas, values and ports remain
@@ -2379,7 +2419,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         const auto &root=objectAt(&*parsed,"/");authoredRootFields(root);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","Sub-FROG projection requires identified private Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&!(revision==8&&typeDefinitionsValidated)&&
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision&&!(revision==8&&typeDefinitionsValidated)&&
             !(revision==kFrogClassValueDraftRevision&&((root.member("classes")&&!root.member("classes")->array.empty())||root.member("class_member")||
                 std::any_of(authored.diagramNodes.begin(),authored.diagramNodes.end(),[](const auto &n){return n.classOperation.has_value();}))))
             fail("/draft_revision","This revision needs the existing exact-source Type Definition resolution handoff.","migration.composed_type_definition_resolution_required", Domain::Dependency);
@@ -2423,8 +2463,12 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
             for(std::size_t i=0;i<nodes.size();++i) {
                 const auto at=path+"/nodes/"+std::to_string(i);const auto &node=objectAt(&nodes[i],at);const auto id=text(node.member("id"),at+"/id");
                 if(activeNodes.contains(id)) {
-                    if(text(node.member("kind"),at+"/kind")=="comment")
-                        draft_presentation::comment(node,scope,at,[](auto p,auto m){fail(std::move(p),std::move(m),"migration.presentation_invalid", Domain::Compatibility);});
+                    const auto kind = text(node.member("kind"), at + "/kind");
+                    const auto reject = [](auto p, auto m) {
+                        fail(std::move(p), std::move(m), "migration.presentation_invalid", Domain::Compatibility);
+                    };
+                    if (kind == "comment") draft_presentation::comment(node, scope, at, reject);
+                    else if (kind == "static_visual") draft_presentation::staticVisual(node, at, reject);
                     else adapter.nodes.emplace(id,Node{&node,at,path});
                 }
                 if(const auto *regions=node.member("regions"))for(std::size_t r=0;r<arrayAt(regions,at+"/regions").size();++r)
@@ -2503,7 +2547,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         CanonicalDraftResolvedTypes widgetResolutions;
         widgetResolutions.originalSha256=hashing::sha256Hex(bytes);
         std::vector<std::string_view> legacyWidgetIds;
-        for(const auto &widget:widgets)if(const auto *legacy=widget.member("class_ref");legacy&&legacy->type==Json::Type::String&&legacy->string=="frog.widgets.numeric_control")
+        for(const auto &widget:widgets)if(canonicalDraftWidgetRequiresLegacyWitness(widget))
             if(const auto *id=widget.member("id");id&&id->type==Json::Type::String)legacyWidgetIds.push_back(id->string);
         if(!legacyWidgetIds.empty())for(const auto &d:appendCanonicalDraftWidgetResolutions(authored,widgetResolutions,legacyWidgetIds))if(d.blocking)
             fail(d.path,d.message,d.code,d.domain);
@@ -2511,6 +2555,19 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         for(std::size_t i=0;i<widgets.size();++i) {
             try {
             const auto at="/frontPanel/widgets/"+std::to_string(i);auto widget=objectAt(&widgets[i],at);linkFields(widget,at);
+                if (draft_presentation::isStaticImageWidget(widget)) {
+                    draft_presentation::staticImageWidget(widget, at, [](auto p, auto m) {
+                        fail(std::move(p), std::move(m), "migration.presentation_invalid", Domain::Compatibility);
+                    });
+                    adapter.identifyWidgetTree(widget, at);
+                    const auto id = text(widget.member("id"), at + "/id");
+                    const auto *live = authored.canvas.objectById(id);
+                    if (!live || !live->staticVisual || live->widget) {
+                        fail(at, "The Static Image annotation has no matching non-value model object.",
+                            "migration.composed_source_invalid", Domain::Integrity);
+                    }
+                    continue;
+                }
             const auto normalization=normalizeCanonicalDraftWidget(widget,at,&widgetResolutions);
             for(const auto &d:normalization.diagnostics)if(d.blocking)fail(d.path,d.message,d.code,d.domain);
             if(normalization.current)widget=*normalization.current;
@@ -2581,7 +2638,7 @@ CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string
             fail("/classes","By-value classes require the common class/Sub-FROG preparation before public Source derivation.","class.preparation_required",Domain::Semantics);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","This adapter requires identified Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
         if(root.member("storage") && revision<kFrogArrayStorageDraftRevision)
             fail("/storage","FROG storage options require private draft_revision 3.","migration.storage_invalid",Domain::Integrity);
         const auto *metadata=root.member("metadata");

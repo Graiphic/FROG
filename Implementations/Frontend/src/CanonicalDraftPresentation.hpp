@@ -1,5 +1,6 @@
 #pragma once
 #include "CanonicalJsonSupport.hpp"
+#include "FrogDocumentArrayStorage.hpp"
 #include "frog_native_engine/FrogIconPresentation.hpp"
 #include "frog_native_engine/CanonicalStringNative.hpp"
 #include "frog_native_engine/DiagramCommentAttachment.hpp"
@@ -32,6 +33,22 @@ template<class Reject> void fields(const Json &value,
         if(std::find(names.begin(),names.end(),key)==names.end())
             reject(pointer(path,key),"An unknown presentation field cannot conceal executable state.");
 }
+// Storage selects a lossless document encoding, not executable semantics.
+// Share its closed envelope checks and existing codec across migration profiles.
+enum class StorageIssue { Shape, UnknownField, Policy };
+template<class Reject> void storage(const Json &root,Reject reject) {
+    const auto *value=root.member("storage");if(!value)return;
+    if(value->type!=Json::Type::Object)
+        reject(std::string("/storage"),std::string("Storage requires an explicit object."),StorageIssue::Shape);
+    for(const auto &[key,_]:value->object)
+        if(key!="version"&&key!="array_mode")
+            reject(pointer("/storage",key),std::string("Unknown storage field has no document encoding contract."),StorageIssue::UnknownField);
+    FrogArrayStorageMode mode;
+    std::string error;
+    if(!document_internal::readArrayStorageMode(root,mode,error))
+        reject(std::string("/storage"),std::move(error),StorageIssue::Policy);
+}
+
 template<class Reject> std::string text(const Json *value,const std::string &path,
     std::size_t limit,bool allowEmpty,Reject reject) {
     if(!value||value->type!=Json::Type::String||(!allowEmpty&&value->string.empty())||
@@ -89,6 +106,89 @@ template<class Reject> void wireLabel(const Json &value,const std::string &path,
             if(std::string_view(key)=="normalized_position"&&(n<0||n>1))
                 reject(path+"/"+key,"A wire label must retain its normalized anchor.");
         }
+}
+
+template<class Reject> void staticVisualFrame(const Json *layout, const std::string &path, Reject reject) {
+    if (!layout) reject(path, "A static visual requires its authored frame.");
+    fields(*layout, {"x", "y", "width", "height", "bounds_ref", "origin"}, path, reject);
+    for (const auto key : {"x", "y", "width", "height"}) {
+        const auto extent = number(layout->member(key), path + "/" + key, reject);
+        if ((std::string_view(key) == "width" || std::string_view(key) == "height") && extent <= 0.0) {
+            reject(path + "/" + key, "Static visual dimensions must be positive.");
+        }
+    }
+}
+
+template<class Reject> void staticVisualMedia(const Json *visual, const std::string &path, Reject reject) {
+    if (!visual) reject(path, "A static visual requires a media record.");
+    fields(*visual, {"kind", "sourceName", "mediaRef", "mediaRefChunks", "mediaType",
+        "naturalWidth", "naturalHeight", "preserveAspectRatio", "rotationQuarterTurns",
+        "flipHorizontal", "flipVertical", "svgText", "dibBase64"}, path, reject);
+    const auto kind = text(visual->member("kind"), path + "/kind", 8, false, reject);
+    if (kind != "svg" && kind != "dib") reject(path + "/kind", "Unknown static visual media kind.");
+    // Media decoding and limits belong to the document reader. Migration
+    // preserves the media record in the authored source without decoding it.
+}
+
+template<class Reject> void staticVisual(const Json &value, const std::string &path, Reject reject) {
+    fields(value, {"id", "kind", "group", "hidden", "locked", "layout", "visual"}, path, reject);
+    if (const auto *group = value.member("group")) {
+        text(group, path + "/group", 1024, true, reject);
+    }
+    for (const auto key : {"hidden", "locked"}) {
+        if (const auto *flag = value.member(key); flag && flag->type != Json::Type::Boolean) {
+            reject(path + "/" + key, "A static visual flag must be Boolean.");
+        }
+    }
+    staticVisualFrame(value.member("layout"), path + "/layout", reject);
+    staticVisualMedia(value.member("visual"), path + "/visual", reject);
+}
+
+inline bool isStaticImageWidget(const Json &widget) {
+    const auto *klass = widget.member("class_ref");
+    const auto *type = widget.member("type");
+    return (klass && klass->type == Json::Type::String && klass->string == "frog.widgets.image_static") ||
+        (type && type->type == Json::Type::String && type->string == "staticVisual");
+}
+
+template<class Reject> void staticImageWidget(const Json &widget, const std::string &path, Reject reject) {
+    // Revision-2 static visuals used a closed inline image record, before
+    // the Image class, role and property envelope were added by the writer.
+    if (!widget.member("class_ref") && !widget.member("role")) {
+        fields(widget, {"id", "type", "bounds", "visual", "locked", "hidden"}, path, reject);
+        if (text(widget.member("type"), path + "/type", 32, false, reject) != "staticVisual")
+            reject(path + "/type", "A legacy inline Image must be a Static Image.");
+        for (const auto key : {"locked", "hidden"}) {
+            if (const auto *flag = widget.member(key); flag && flag->type != Json::Type::Boolean)
+                reject(path + "/" + key, "A legacy image flag must be Boolean.");
+        }
+        staticVisualFrame(widget.member("bounds"), path + "/bounds", reject);
+        staticVisualMedia(widget.member("visual"), path + "/visual", reject);
+        return;
+    }
+    fields(widget, {"id", "type", "class_ref", "role", "bounds", "layout", "props", "visual",
+        "studio", "locked", "hidden", "studio_tab_parent_id", "studio_tab_page_id"}, path, reject);
+    if (text(widget.member("type"), path + "/type", 32, false, reject) != "staticVisual" ||
+        text(widget.member("class_ref"), path + "/class_ref", 64, false, reject) != "frog.widgets.image_static" ||
+        text(widget.member("role"), path + "/role", 32, false, reject) != "support") {
+        reject(path, "An Image annotation must be the actual non-value Static Image widget.");
+    }
+    staticVisualFrame(widget.member("bounds"), path + "/bounds", reject);
+    if (const auto *layout = widget.member("layout")) staticVisualFrame(layout, path + "/layout", reject);
+    const auto *props = widget.member("props");
+    if (!props) reject(path + "/props", "An Image annotation requires its media properties.");
+    fields(*props, {"label.text", "label.visible", "media_ref", "media_type", "media.original_format",
+        "media.intrinsic_width", "media.intrinsic_height", "media.fit", "media.preserve_aspect_ratio",
+        "media.alt_text", "transform.rotation_quarter_turns", "transform.flip_horizontal", "transform.flip_vertical",
+        "layout.aura_band_px", "interaction.visible", "interaction.enabled", "interaction.read_only",
+        "realization.variant"}, path + "/props", reject);
+    if (const auto *asset = widget.member("visual")) {
+        fields(*asset, {"asset_ref"}, path + "/visual", reject);
+    }
+    if (const auto *studio = widget.member("studio")) {
+        fields(*studio, {"staticVisual"}, path + "/studio", reject);
+        staticVisualMedia(studio->member("staticVisual"), path + "/studio/staticVisual", reject);
+    }
 }
 
 template<class Reject> void comment(const Json &value,const Json &scope,

@@ -247,6 +247,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
         const bool fixedStringLiteral=fixedStringEntry&&functionFixedStringConstantValue(*fixedStringEntry).has_value();
         if(fixedStringLiteral||node.type=="frog.studio.cluster.constant"||node.type=="frog.studio.error.constant"||
             node.type=="frog.studio.numeric.numeric_constant"||node.type=="frog.studio.numeric.enum_constant"||
+            node.type=="frog.studio.numeric.ring_constant"||
             node.type=="frog.studio.boolean.true_constant"||node.type=="frog.studio.boolean.false_constant"||
             node.type=="frog.studio.string.constant"||node.type=="frog.studio.path.constant"||
             node.type=="frog.studio.array.array_constant"||node.type=="frog.studio.numeric.numeric_array_constant"||

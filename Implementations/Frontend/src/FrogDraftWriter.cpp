@@ -100,7 +100,8 @@ std::uint32_t storedPayloadStateRevision(std::string_view text) {
             value.find(kFrogWidgetValueDraftFormat)!=value.npos ||
             value.find("numeric-elements-json-le32-v1")!=value.npos ||
             value.find("numeric-cell-text-le32-v1")!=value.npos ||
-            value.find(document_internal::numericWordArrayProfile)!=value.npos;
+            value.find(document_internal::numericWordArrayProfile)!=value.npos ||
+            value.find(document_internal::exactNarrowNumericWordArrayProfile)!=value.npos;
     };
     if(!candidate(text))return 0;
     std::uint32_t required=0;
@@ -285,6 +286,7 @@ bool hasWidgetPropertyOverrides(const WidgetInstance &widget) noexcept {
         widget.pathBrowseExistenceMode.has_value() ||
         widget.pathBrowseStartPath.has_value() ||
         widget.enumDomainId.has_value() ||
+        widget.pictureRing ||
         widget.stringDropdown ||
         isListboxWidget(widget) ||
         ((isRingWidget(widget) || isEnumWidget(widget)) && !widget.ringItems.empty()) ||
@@ -916,6 +918,10 @@ void appendDiagramNode(
                     indent + 2,
                     "allow_undefined_values",
                     node.ringAllowUndefinedValues);
+                if (node.pictureRing) {
+                    storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogPictureRingDraftRevision);
+                    appendJsonBooleanField(output, indent + 2, "picture_ring", true);
+                }
             }
             appendJsonBooleanField(
                 output,
@@ -937,6 +943,8 @@ void appendDiagramNode(
                 appendJsonIntegerField(output, indent + 4, "value", item.value);
                 appendJsonBooleanField(output, indent + 4, "disabled", item.disabled);
                 appendJsonField(output, indent + 4, "id", item.id);
+                if (node.pictureRing && item.imageDataUri)
+                    appendJsonField(output, indent + 4, "image", *item.imageDataUri);
                 appendJsonBooleanField(output, indent + 4, "visible", item.visible, false);
                 appendIndent(output, indent + 3);
                 output << '}' << (index + 1U < node.enumItems.size() ? "," : "") << '\n';
@@ -1854,6 +1862,10 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
             output << ", ";
             appendJsonString(output, "visible");
             output << ": " << (item.visible ? "true" : "false");
+            if (widget.pictureRing && item.imageDataUri) {
+                output << ", \"image\": ";
+                appendJsonString(output, *item.imageDataUri);
+            }
             if (isTabWidget(widget)) {
                 output << ", ";
                 appendJsonString(output, "caption");
@@ -2363,6 +2375,12 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
         }
     }
     if (isRingWidget(widget) || isEnumWidget(widget)) {
+        if (widget.pictureRing) {
+            storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogPictureRingDraftRevision);
+            appendBool("picture_ring", true);
+            if (widget.pictureRingDropdownArrowHidden)
+                appendBool("picture_ring.dropdown_arrow_hidden", true);
+        }
         if (isEnumWidget(widget)) {
             appendString("data_type.representation", enumRepresentationValueType(widget));
             appendString("data_type.named_numeric_size", enumNamedSize(widget));
@@ -2386,8 +2404,8 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
             appendBool("items.sequential_values", ringItemsAreSequential());
             appendRingItems();
         }
-        if (widget.ringAllowUndefinedValues.has_value()) {
-            appendBool("data_type.allow_undefined_values", widget.ringAllowUndefinedValues.value());
+        if (widget.pictureRing || widget.ringAllowUndefinedValues.has_value()) {
+            appendBool("data_type.allow_undefined_values", ringAllowUndefinedValues(widget));
         }
     }
     if (widget.buttonStateFalseText.has_value()) {

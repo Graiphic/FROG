@@ -1,5 +1,6 @@
 #include "frog_native_engine/ContextPathIdentity.hpp"
 #include "frog_native_engine/CanonicalDraftMigration.hpp"
+#include "frog_native_engine/DraftInterfaceInspection.hpp"
 #include "FrogDocumentConditionalDisable.hpp"
 #include "frog_native_engine/CanonicalRecordConstant.hpp"
 #include "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
@@ -738,10 +739,12 @@ struct Migration {
                 // The exact authored value remains in recoverability provenance;
                 // it does not create an executable node, port or dependency.
             }
-            if(kind=="comment") {
-                draft_presentation::comment(n,raw,at,[](auto path,auto message){
+            if (kind == "comment" || kind == "static_visual") {
+                const auto reject = [](auto path, auto message) {
                     refuse(std::move(path),std::move(message),"migration.presentation_invalid", Domain::Compatibility);
-                });
+                };
+                if (kind == "comment") draft_presentation::comment(n, raw, at, reject);
+                else draft_presentation::staticVisual(n, at, reject);
                 identity("presentation",id,at,std::string(draft_presentation::provenance)+at);
                 continue;
             }
@@ -1125,7 +1128,7 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         std::string error;auto parsed=source::parseJson(bytes,&error,source::JsonNumberPolicy::PreserveLexeme);if(!parsed)refuse("/",error,"migration.json", Domain::Integrity);
         const auto &raw=obj(&*parsed,"/");if(raw.member("spec_version")||txt(raw.member("format"),"/format")!="frog.document.draft"||
             !raw.member("draft_revision")||raw.member("draft_revision")->type!=Json::Type::Number||
-            (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="3"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
+            (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="3"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"&&raw.member("draft_revision")->string!="11"))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
         // Private drafts may omit metadata; their existing reader keeps the
         // normal document defaults. Only the derived public envelope needs an
         // explicit object. Never treat explicit null/wrong types as absence.
@@ -1151,8 +1154,16 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         }
         if(canonicalDraftNeedsComposition(raw,resolved))
             return prepareCanonicalComposedDraftMigration(bytes,uri,resolved);
-        if(raw.member("draft_revision")->string=="3")
-            refuse("/draft_revision","A revision 3 execution projection requires the composed Array corridor.","migration.unsupported",Domain::Compatibility);
+        draft_presentation::storage(raw,[](auto path,auto message,auto kind) {
+            refuse(std::move(path),std::move(message),"migration.storage_invalid",
+                kind==draft_presentation::StorageIssue::UnknownField?Domain::Compatibility:Domain::Integrity);
+        });
+        if(raw.member("storage")&&raw.member("draft_revision")->string=="2")
+            refuse("/storage","FROG storage options require private draft_revision 3.","migration.storage_invalid",Domain::Integrity);
+        // The current writer emits revision3 for the encoding policy even
+        // without an Array. This does not grant unrelated revision3 extensions.
+        if(raw.member("draft_revision")->string=="3"&&!raw.member("storage"))
+            refuse("/draft_revision","A classic revision 3 execution projection requires the writer's storage envelope.","migration.unsupported",Domain::Compatibility);
         const bool nativeCallDraft7=raw.member("draft_revision")->string=="7";
         const bool objectDraft=raw.member("draft_revision")->string=="6"||nativeCallDraft7;
         if(objectDraft) {
@@ -1176,7 +1187,7 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
             }
             if(!calls&&!objects)refuse("/draft_revision","This writer revision needs an actual configured scalar5 NativeCall or local Object Reference, not unrelated private extensions.","migration.configured_revision_unavailable", Domain::Compatibility);
         }
-        for(const auto &[key,_]:raw.object)if(key!="format"&&key!="draft_revision"&&key!="language"&&key!="title"&&key!="metadata"&&key!="interface"&&key!="interface_map"&&key!="frontPanel"&&key!="diagram"&&key!="host"&&key!="execution_policy"&&key!="text_defaults"&&key!="ide"&&key!="native_options"&&key!="icon"&&key!="conditional_compilation")
+        for(const auto &[key,_]:raw.object)if(key!="format"&&key!="draft_revision"&&key!="language"&&key!="title"&&key!="metadata"&&key!="interface"&&key!="interface_map"&&key!="frontPanel"&&key!="diagram"&&key!="host"&&key!="execution_policy"&&key!="text_defaults"&&key!="ide"&&key!="native_options"&&key!="icon"&&key!="conditional_compilation"&&key!="storage")
             refuse("/"+key,"This source section needs a separately specified migration.", "migration.unsupported", Domain::Compatibility);
         FrogSourceProperties compilationProperties;
         if(const auto why=document_internal::readCompilationSymbols(raw,compilationProperties);!why.empty())
@@ -1211,6 +1222,24 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
             const auto &actual=obj(declared,"/interface");
             for(const auto &[key,_]:actual.object)if(key!="inputs"&&key!="outputs")
                 refuse("/interface/"+key,"An authored interface field needs its own migration contract.","migration.interface_unsupported", Domain::Compatibility);
+            const auto *panel=raw.member("frontPanel");
+            const auto *diagram=raw.member("diagram");
+            const auto isEmptyArray=[](const Json *value) {
+                return value && value->type==Json::Type::Array && value->array.empty();
+            };
+            if(panel&&diagram&&isEmptyArray(panel->member("widgets"))&&isEmptyArray(diagram->member("nodes"))&&
+                isEmptyArray(diagram->member("edges"))&&
+                (!diagram->member("wire_fragments")||isEmptyArray(diagram->member("wire_fragments")))) {
+                const auto declaration=FrogDraftInterface::read(encode(actual));
+                if(declaration) {
+                    const auto inspection=inspectFrogDraftInterface(*declaration);
+                    if(inspection.inspectable&&inspection.contractValid&&!inspection.ports.empty()&&
+                        std::none_of(inspection.diagnostics.begin(),inspection.diagnostics.end(),
+                            [](const auto &diagnostic){return diagnostic.blocksBuild||diagnostic.blocksRun;}))
+                        refuse("/interface","The private declaration has no body or executable terminal realizations.",
+                            "migration.interface_body_unavailable",Domain::FrontendCapability);
+                }
+            }
             empty(actual.member("inputs"),"/interface/inputs");empty(actual.member("outputs"),"/interface/outputs");
         }
         Migration migration{result};migration.resolvedTypes=resolved;migration.exactIntegerState=raw.member("draft_revision")->string=="4"||objectDraft;migration.nativeCallDraft7=nativeCallDraft7;migration.objectDraft=objectDraft;
@@ -1261,20 +1290,42 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
     catch(const std::exception &failure){result.publicSource.reset();result.diagnostics.push_back({"migration.invalid_source","/",failure.what(),true,Domain::Control});}
     return result;
 }
+bool canonicalDraftWidgetRequiresLegacyWitness(const source::JsonValue &authored) noexcept {
+    const auto *klass=authored.member("class_ref");
+    return klass && klass->type==Json::Type::String &&
+        (klass->string=="frog.widgets.numeric_control" || klass->string=="frog.widgets.picture_indicator");
+}
 CanonicalDraftWidgetNormalization normalizeCanonicalDraftWidget(const source::JsonValue &authored,
     const std::string &from,const CanonicalDraftResolvedTypes *resolvedTypes) {
     CanonicalDraftWidgetNormalization result;std::optional<Json> normalized;
     try {
-        if(const auto *legacyClass=authored.member("class_ref");legacyClass&&
-            legacyClass->type==Json::Type::String&&legacyClass->string=="frog.widgets.numeric_control") {
-            // This finite historical shape is interpreted by the portable
-            // model codec, never by a second defaults/alias decoder here.
+        if(canonicalDraftWidgetRequiresLegacyWitness(authored)) {
+            // The portable model codec supplies the complete schema and the
+            // normalized record. Only previously identified envelopes enter.
+            const auto *legacyClass=authored.member("class_ref");
+            const bool picture=legacyClass->string=="frog.widgets.picture_indicator";
+            const std::string_view expectedRole=picture?"indicator":"control";
+            const auto expectedType=picture
+                ? binding::TypeRef::array(binding::TypeRef::primitive("u32"),2)
+                : binding::TypeRef::primitive("f64");
             for(const auto &[key,_]:authored.object)
-                if(key!="id"&&key!="role"&&key!="class_ref"&&key!="label"&&key!="layout")
-                    refuse(from+"/"+key,"This legacy numeric shape has an unaccounted field; no value or configuration was discarded.","migration.legacy_widget_field_unavailable", Domain::Compatibility);
+                if(key!="id"&&key!="role"&&key!="class_ref"&&key!="label"&&key!="layout"&&
+                    !(picture&&key=="props"))
+                    refuse(from+"/"+key,"This legacy widget has an unaccounted field; no value or configuration was discarded.","migration.legacy_widget_field_unavailable", Domain::Compatibility);
             const auto id=txt(authored.member("id"),from+"/id");
-            if(txt(authored.member("role"),from+"/role")!="control")
-                refuse(from+"/role","The authored role conflicts with its numeric control class.","migration.legacy_widget_invalid", Domain::Semantics);
+            if(txt(authored.member("role"),from+"/role")!=expectedRole)
+                refuse(from+"/role","The authored role conflicts with its legacy widget class.","migration.legacy_widget_invalid", Domain::Semantics);
+            std::optional<bool> labelVisible;
+            if(const auto *props=authored.member("props")) {
+                const auto &appearance=obj(props,from+"/props");
+                for(const auto &[key,field]:appearance.object) {
+                    if(key!="label.visible")
+                        refuse(from+"/props/"+key,"The legacy Picture Indicator property has no accounted migration.","migration.legacy_widget_field_unavailable", Domain::Compatibility);
+                    if(field.type!=Json::Type::Boolean)
+                        refuse(from+"/props/label.visible","The Picture Indicator label visibility must remain Boolean.","migration.legacy_widget_invalid", Domain::Semantics);
+                    labelVisible=field.boolean;
+                }
+            }
             const auto *label=authored.member("label");
             if(!label||label->type!=Json::Type::String)
                 refuse(from+"/label","The legacy numeric label must be text.","migration.legacy_widget_invalid", Domain::Semantics);
@@ -1296,23 +1347,32 @@ CanonicalDraftWidgetNormalization normalizeCanonicalDraftWidget(const source::Js
                 refuse(from,"Missing or oversized model-codec widget schema.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
             const auto schemaJson=source::parseJson(witness->fullTypeJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);
             const auto schema=schemaJson?canonicalObjectReferenceReadType(*schemaJson):std::nullopt;
-            if(!schema||!canonicalObjectReferenceFullTypeEqual(*schema,binding::TypeRef::primitive("f64")))
-                refuse(from,"The model-codec widget schema is not exactly f64.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
+            if(!schema||!canonicalObjectReferenceFullTypeEqual(*schema,expectedType))
+                refuse(from,"The model-codec widget schema differs from the legacy widget contract.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
             normalized=source::parseJson(witness->currentWidgetJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);
             if(!normalized||normalized->type!=Json::Type::Object)
                 refuse(from,"The model-codec widget record is malformed.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
             const auto &record=*normalized;
             if(txt(record.member("id"),from)!=id||txt(record.member("classId"),from)!=legacyClass->string||
-                txt(record.member("role"),from)!="control"||txt(record.member("valueType"),from)!="f64"||
+                txt(record.member("role"),from)!=expectedRole||
+                txt(record.member("valueType"),from)!=(picture?"frog.array<u32,rank=2>":"f64")||
                 !record.member("label")||!exact(*record.member("label"),*label))
                 refuse(from,"The model-codec widget changed identity, class, role, type or label.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
             const auto &bounds=obj(record.member("bounds"),from+"/bounds");layout(bounds,from+"/bounds");
             for(const auto key:{"x","y","width","height"})
                 if(std::stod(bounds.member(key)->string)!=std::stod(rect.member(key)->string))
                     refuse(from+"/layout/"+key,"The model-codec frame differs from its actual source frame.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
-            const auto current=source::parseJson(witness->currentValueJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);
-            if(!current||!typedScalar(*current,"f64")||!exact(value(record,"f64",from),*current))
-                refuse(from,"The model-codec state disagrees with its exact typed current value.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
+            if(labelVisible.has_value()) {
+                const auto *props=record.member("props");
+                const auto *visible=props?props->member("label.visible"):nullptr;
+                if(!visible || visible->type!=Json::Type::Boolean || visible->boolean!=*labelVisible)
+                    refuse(from+"/props/label.visible","The model-codec record changed the authored label visibility.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
+            }
+            if(!picture) {
+                const auto current=source::parseJson(witness->currentValueJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);
+                if(!current||!typedScalar(*current,"f64")||!exact(value(record,"f64",from),*current))
+                    refuse(from,"The model-codec state disagrees with its exact typed current value.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
+            }
         }
     } catch(const Refusal &failure) {
         result.diagnostics.push_back({failure.code,failure.path,failure.message,true,failure.domain});

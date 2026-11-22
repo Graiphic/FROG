@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <initializer_list>
 #include <set>
+#include <unordered_map>
 #include <utility>
 
 namespace frog::native_engine {
@@ -52,12 +53,6 @@ bool stableId(std::string_view id) {
     });
 }
 }
-// Pure reference type construction belongs with typed reference values.
-// It is shared by numeric payload validation without linking the editor/document.
-binding::TypeRef applicationControlReferenceType(const ApplicationControlNode &node) {
-    return binding::TypeRef::reference(node.expectedClass,node.valueType.known()?std::optional{node.valueType}:std::nullopt);
-}
-
 std::optional<std::uint32_t> applicationControlRingItemMaximum(const TypeRef &valueType) noexcept {
     if(valueType.kind!=binding::TypeKind::Primitive)return {};
     if(valueType.name=="u8")return 0xFFU;
@@ -916,6 +911,28 @@ std::optional<ApplicationControlMemberDescriptor> applicationControlMember(std::
             return std::move(member);
     return {};
 }
+namespace {
+// A port/diagnostic query has a single effective schema and presentation.
+// Preserve ordered alias lookup and reuse it for repeated row occurrences.
+class PropertyMemberLookup {
+public:
+    PropertyMemberLookup(std::string_view classId,const TypeRef &valueType,const WidgetInstance *presentation)
+        : classId_(classId),valueType_(valueType),presentation_(presentation) {}
+
+    const ApplicationControlMemberDescriptor *find(std::string_view memberId) {
+        if(memberId.empty())return nullptr;
+        const auto [entry,inserted]=members_.try_emplace(memberId);
+        if(inserted)entry->second=applicationControlMember(classId_,valueType_,memberId,presentation_);
+        return entry->second?&*entry->second:nullptr;
+    }
+
+private:
+    std::string_view classId_;
+    const TypeRef &valueType_;
+    const WidgetInstance *presentation_;
+    std::unordered_map<std::string_view,std::optional<ApplicationControlMemberDescriptor>> members_;
+};
+}
 std::string applicationControlClassLabel(std::string_view classId,const TypeRef &value) {
     if(classId==kOccurrenceReferenceClass)return "Occurrence";
     if(classId==kRendezvousReferenceClass)return "Rendezvous";
@@ -979,8 +996,9 @@ std::vector<ApplicationControlPort> applicationControlPorts(const ApplicationCon
     const auto error=TypeRef::cluster({"status","code","source"},{primitive("bool"),primitive("i32"),primitive("string")});
     add("error_in","Error",D::Input,error);add("error_out","Error",D::Output,error);
     if(node.kind==ApplicationControlKind::Property) {
+        PropertyMemberLookup members(ref.name,value,presentation);
         for(std::size_t i=0;i<node.properties.size();++i) {
-            const auto &row=node.properties[i];const auto member=applicationControlMember(ref.name,value,row.memberId,presentation);
+            const auto &row=node.properties[i];const auto *member=members.find(row.memberId);
             if(!member || member->kind!=ApplicationControlMemberKind::Property) {
                 // A previous selection keeps its stable wire anchor when a
                 // new class has no such property. Unknown type stays broken.
@@ -1032,9 +1050,10 @@ std::vector<ApplicationControlDiagnostic> validateApplicationControlNode(const A
     std::set<std::string> ids;
     if(node.kind==ApplicationControlKind::Property) {
         if(node.properties.empty())error("application_control.unconfigured",{},"Select a property.");
+        PropertyMemberLookup members(ref.name,value,presentation);
         for(const auto &row:node.properties) {
             if(!stableId(row.id) || !ids.insert(row.id).second)error("application_control.row_id",row.id,"Property occurrence IDs must be unique and stable.");
-            const auto member=applicationControlMember(ref.name,value,row.memberId,presentation);
+            const auto *member=members.find(row.memberId);
             if(!member || member->kind!=ApplicationControlMemberKind::Property)error("application_control.property",row.id,"Select a property of the effective reference class.");
             else if(row.mode==ApplicationControlPropertyMode::Read?!member->readable:!member->writable)
                 error("application_control.permission",row.id,"This property does not allow the selected mode.");

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Extracted from the existing Studio data owner; no editor or runtime.
 #include "frog_native_engine/graph/WaveformGraph.hpp"
+#include "frog_native_engine/graph/XYGraphDataHelpers.hpp"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -13,6 +14,35 @@ namespace frog::native_engine::graph {
 bool validRange(Range range) noexcept {
     return std::isfinite(range.minimum) && std::isfinite(range.maximum) &&
         range.minimum < range.maximum && std::isfinite(range.maximum - range.minimum);
+}
+
+bool validRange(Range range, AxisScale scale) noexcept {
+    return validRange(range) && (scale == AxisScale::Linear ||
+        (scale == AxisScale::Logarithmic && range.minimum > 0.0));
+}
+
+namespace {
+std::string validateAxis(const AxisOptions &axis, Range range, char name) {
+    const std::string label = std::string(1, name) + " axis";
+    if (axis.scale != AxisScale::Linear && axis.scale != AxisScale::Logarithmic)
+        return "WFG_AXIS_SCALE: invalid " + label + " mapping.";
+    if (!validRange(range, axis.scale)) {
+        if (axis.scale == AxisScale::Logarithmic)
+            return "WFG_AXIS_RANGE: " + label + " logarithmic bounds must be finite, positive and increasing.";
+        return "WFG_AXIS_RANGE: " + label + " minimum must be finite and less than its finite maximum.";
+    }
+    if (axis.format && static_cast<unsigned>(*axis.format) > static_cast<unsigned>(AxisFormat::SI))
+        return "WFG_AXIS_FORMAT: invalid " + label + " format.";
+    if (axis.precision < 0 || axis.precision > 17)
+        return "WFG_AXIS_PRECISION: " + label + " precision must be between 0 and 17.";
+    if (static_cast<unsigned>(axis.timeContent) > static_cast<unsigned>(TimeContent::Time))
+        return "WFG_AXIS_TIME: invalid " + label + " date/time content.";
+    if (!xy::data_detail::timeUnit(axis.timeUnit))
+        return "WFG_AXIS_TIME: " + label + " time unit must be s, ms, us, ns, min, h or d.";
+    if (!xy::data_detail::timeOrigin(axis.timeOrigin) || !xy::data_detail::timeZone(axis.timeZone))
+        return "WFG_AXIS_TIME: " + label + " requires a valid epoch and time zone.";
+    return {};
+}
 }
 
 std::string validate(const Dataset &data) {
@@ -91,8 +121,8 @@ std::string validate(const Design &design) {
             (title->alignment != "default" && title->alignment != "left" && title->alignment != "center" && title->alignment != "right"))
             return "WFG_TITLE_STYLE: invalid title bounds or font.";
     }
-    if (!validRange(design.xRange) || !validRange(design.yRange))
-        return "WFG_AXIS_RANGE: finite minimum must be less than maximum.";
+    if (auto issue = validateAxis(design.xAxis, design.xRange, 'X'); !issue.empty()) return issue;
+    if (auto issue = validateAxis(design.yAxis, design.yRange, 'Y'); !issue.empty()) return issue;
     if (design.xLabel.size() > 1024 || design.yLabel.size() > 1024 || design.plots.size() > maximumSeries)
         return "WFG_CONFIG_LIMIT: axis label or plot count exceeds the profile limit.";
     std::unordered_set<std::string> ids;

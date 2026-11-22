@@ -112,7 +112,7 @@ struct WidgetDefinition {
 };
 
 // Studio-private placement preset; independent of the widget semantic class.
-enum class WidgetAuthoringPreset : std::uint8_t { None, StringDropdown };
+enum class WidgetAuthoringPreset : std::uint8_t { None, StringDropdown, PictureRing };
 
 struct WidgetCatalogEntry {
     WidgetFamily family;

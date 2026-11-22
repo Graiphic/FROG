@@ -98,7 +98,14 @@ std::optional<WidgetInstance> decode(const std::vector<DiagramNode> &nodes,const
         if(!present || (widgetNumericValue(widget)!=node.enumSelectedValue&&!setRingSelectedValue(widget,node.enumSelectedValue))) {
             error="An Enum constant value is absent from its declared domain.";return finish({});
         }
-    } else if(string)static_cast<void>(setWidgetStringValue(widget,node.text));
+    } else if(string) {
+        if(node.type.ends_with("string.dropdown_constant")) {
+            widget.stringDropdown=true;
+            widget.ringItems=node.enumItems;
+            widget.numericValue=node.enumSelectedValue;
+        }
+        static_cast<void>(setWidgetStringValue(widget,node.text));
+    }
     else if(boolean)static_cast<void>(setWidgetBooleanValue(widget,node.text=="true" || node.type.ends_with("true_constant")));
     else {
         widget.valueType=node.valueType.empty()?"f64":node.valueType;
@@ -177,7 +184,15 @@ bool install(std::vector<DiagramNode> &nodes,const std::string &id,const WidgetI
         node.type="frog.studio.numeric.enum_constant";node.valueType=enumRepresentationValueType(widget);
         node.enumDomainId=widget.enumDomainId.value_or("");node.enumItems=ringItems(widget);
         node.enumSelectedValue=static_cast<std::uint32_t>(widgetNumericValue(widget));
-    } else if(isStringWidget(widget)) {node.type="frog.studio.string.constant";node.valueType="string";node.text=widgetStringValue(widget);}
+    } else if(isStringWidget(widget)) {
+        node.type=isStringDropdownWidget(widget)?"frog.studio.string.dropdown_constant":"frog.studio.string.constant";
+        node.valueType="string";
+        node.text=widgetStringValue(widget);
+        if(isStringDropdownWidget(widget)) {
+            node.enumItems=ringItems(widget);
+            node.enumSelectedValue=static_cast<std::uint32_t>(widgetNumericValue(widget));
+        }
+    }
     else if(isBooleanWidget(widget)||isButtonWidget(widget)) {
         const bool value=widgetBooleanValue(widget);node.type=value?"frog.studio.boolean.true_constant":"frog.studio.boolean.false_constant";
         node.valueType="bool";node.text=value?"true":"false";

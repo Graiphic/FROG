@@ -5,10 +5,14 @@
 #include "frog/sdk/runtime_array_value.hpp"
 #include "frog/sdk/runtime_complex_value.hpp"
 #include "frog/sdk/collection_order.hpp"
+#include <algorithm>
+#include <array>
+#include <bit>
 #include <cmath>
 #include <limits>
 #include <mutex>
 #include <atomic>
+#include <type_traits>
 
 namespace frog::sdk::runtime {
 
@@ -51,6 +55,61 @@ inline collection_order::Result compareRuntimeCollectionValues(const RuntimeValu
 inline collection_order::NormalizationResult normalizeRuntimeCollectionValues(std::span<const RuntimeValue>,const ValueType &,const RuntimeValueOwner &,collection_order::DuplicatePolicy,collection_order::Limits,collection_order::Cancelled,void *) noexcept;
 namespace compound_detail {
 inline bool validateIpe(const RuntimeIpeValue &,const RuntimeValueOwner *,unsigned,std::size_t &,std::size_t &) noexcept;
+
+enum class PackedNumericKind { None, I8, U8, I16, U16, I32, U32, I64, U64, F32, F64 };
+
+inline PackedNumericKind packedNumericKind(std::string_view name) noexcept {
+    using K=PackedNumericKind;
+    if(name=="i8")return K::I8;
+    if(name=="u8")return K::U8;
+    if(name=="i16")return K::I16;
+    if(name=="u16")return K::U16;
+    if(name=="i32")return K::I32;
+    if(name=="u32")return K::U32;
+    if(name=="i64")return K::I64;
+    if(name=="u64")return K::U64;
+    if(name=="f32")return K::F32;
+    if(name=="f64")return K::F64;
+    return K::None;
+}
+
+template<class Function>
+decltype(auto) visitPackedNumericKind(PackedNumericKind kind,Function &&function) {
+    using K=PackedNumericKind;
+    switch(kind) {
+    case K::I8: return function.template operator()<std::int8_t>();
+    case K::U8: return function.template operator()<std::uint8_t>();
+    case K::I16: return function.template operator()<std::int16_t>();
+    case K::U16: return function.template operator()<std::uint16_t>();
+    case K::I32: return function.template operator()<std::int32_t>();
+    case K::U32: return function.template operator()<std::uint32_t>();
+    case K::I64: return function.template operator()<std::int64_t>();
+    case K::U64: return function.template operator()<std::uint64_t>();
+    case K::F32: return function.template operator()<float>();
+    case K::F64: return function.template operator()<double>();
+    default: return function.template operator()<void>();
+    }
+}
+
+inline std::size_t packedNumericWidth(PackedNumericKind kind) noexcept {
+    return visitPackedNumericKind(kind,[]<class T>() -> std::size_t {
+        if constexpr(std::is_void_v<T>)return 0;
+        else return sizeof(T);
+    });
+}
+
+template<class T>
+using NumericScalarCarrier=std::conditional_t<std::is_floating_point_v<T>,double,
+    std::conditional_t<std::is_signed_v<T>,std::int64_t,std::uint64_t>>;
+
+template<class T>
+using PackedNumericWord=std::conditional_t<sizeof(T)==1,std::uint8_t,
+    std::conditional_t<sizeof(T)==2,std::uint16_t,
+    std::conditional_t<sizeof(T)==4,std::uint32_t,std::uint64_t>>>;
+
+inline std::string arrayTypeName(const ValueType &element,std::size_t rank) {
+    return "array<"+element.canonicalName+(rank==1?std::string{}:",rank="+std::to_string(rank))+">";
+}
 }
 class RuntimeIpeValue final : public CompoundRuntimeValue {
 public:
@@ -66,7 +125,8 @@ public:
         :kind_(other.kind_),type_(other.type_),owner_(other.owner_),element_(other.element_),key_(other.key_),
         shape_(other.shape_),values_(other.values_),attributes_(other.attributes_),entries_(other.entries_),
         seconds_(other.seconds_),fraction_(other.fraction_),payloadSchemaJson_(other.payloadSchemaJson_),
-        appendStorage_(other.appendStorage_),appendMetadata_(other.appendMetadata_),prefixShape_(other.prefixShape_),prefixSize_(other.prefixSize_),prefixCopies_(other.prefixCopies_),
+        appendStorage_(other.appendStorage_),appendMetadata_(other.appendMetadata_),prefixShape_(other.prefixShape_),prefixRank_(other.prefixRank_),
+        prefixSize_(other.prefixSize_),prefixCopies_(other.prefixCopies_),
         storageAllocations_(other.storageAllocations_),elementView_(appendStorage_?other.elementView_:std::span<const RuntimeValue>(values_)){}
     Kind kind()const noexcept{return kind_;}
     std::string_view canonicalType()const noexcept override{return appendMetadata_?appendMetadata_->type:type_;}
@@ -83,19 +143,29 @@ public:
     const ValueType &valueType()const noexcept{return elementType();}
     const ValueType &keyType()const noexcept{return key_;}
     const std::string &payloadSchemaJson()const noexcept{return payloadSchemaJson_;}
-    std::span<const std::uint32_t> shape()const noexcept{return appendStorage_?std::span<const std::uint32_t>(prefixShape_):std::span<const std::uint32_t>(shape_);}
+    std::span<const std::uint32_t> shape()const noexcept{return appendStorage_?std::span(prefixShape_).first(prefixRank_):std::span<const std::uint32_t>(shape_);}
     std::size_t elementCount()const noexcept{return appendStorage_?prefixSize_:values_.size();}
-    bool packedF64()const noexcept{return appendStorage_&&appendStorage_->packed;}
-    bool packedF32()const noexcept{return appendStorage_&&appendStorage_->single;}
+    bool packedF64()const noexcept{return appendStorage_&&appendStorage_->kind==compound_detail::PackedNumericKind::F64;}
+    bool packedF32()const noexcept{return appendStorage_&&appendStorage_->kind==compound_detail::PackedNumericKind::F32;}
     bool packedNumeric()const noexcept{return packedF64()||packedF32();}
-    bool packedI32()const noexcept{return appendStorage_&&appendStorage_->integer;}
-    bool packedCells()const noexcept{return packedNumeric()||packedI32();}
-    std::span<const std::int32_t> i32Elements()const noexcept {
-        return packedI32()?std::span<const std::int32_t>(appendStorage_->integers.data(),prefixSize_):std::span<const std::int32_t>{};
+    bool packedI32()const noexcept{return appendStorage_&&appendStorage_->kind==compound_detail::PackedNumericKind::I32;}
+    bool packedCells()const noexcept{return appendStorage_&&appendStorage_->kind!=compound_detail::PackedNumericKind::None;}
+    template<class T> std::span<const T> numericElements()const noexcept {
+        const auto *cells=appendStorage_?std::get_if<std::vector<T>>(&appendStorage_->numeric):nullptr;
+        return cells?std::span<const T>(cells->data(),prefixSize_):std::span<const T>{};
     }
+    RuntimeValue numericElement(std::size_t index)const {
+        if(index>=elementCount())return {};
+        if(!packedCells())return elementView_[index];
+        return compound_detail::visitPackedNumericKind(appendStorage_->kind,[&]<class T>() -> RuntimeValue {
+            if constexpr(std::is_void_v<T>)return {};
+            else return static_cast<compound_detail::NumericScalarCarrier<T>>(numericElements<T>()[index]);
+        });
+    }
+    std::span<const std::int32_t> i32Elements()const noexcept{return numericElements<std::int32_t>();}
     bool finiteNumericElements()const noexcept{return packedNumeric()&&prefixSize_<=appendStorage_->finitePrefix.load(std::memory_order_acquire);}
-    const float *f32Data()const noexcept{return packedF32()?appendStorage_->singles.get():nullptr;}
-    std::span<const double> f64Elements()const noexcept{return packedF64()?std::span<const double>(appendStorage_->numbers.data(),prefixSize_):std::span<const double>{};}
+    const float *f32Data()const noexcept{return numericElements<float>().data();}
+    std::span<const double> f64Elements()const noexcept{return numericElements<double>();}
     // Compatibility projection for consumers requiring generic cells. It is
     // allocated once per backing buffer, never on the append/charge path.
     // Every returned prefix stays immutable; failures propagate to the checked
@@ -109,10 +179,13 @@ public:
             appendStorage_->genericReady.store(true,std::memory_order_release);
             if(validation_metrics::active)++validation_metrics::active->materializations;
         }
-        for(auto i=appendStorage_->genericUsed;i<prefixSize_;++i) {
-            if(packedI32())appendStorage_->slots[i]=std::int64_t(appendStorage_->integers[i]);
-            else appendStorage_->slots[i]=packedF32()?double(appendStorage_->singles[i]):appendStorage_->numbers[i];
-        }
+        compound_detail::visitPackedNumericKind(appendStorage_->kind,[&]<class T>() {
+            if constexpr(!std::is_void_v<T>) {
+                const auto cells=numericElements<T>();
+                for(auto i=appendStorage_->genericUsed;i<prefixSize_;++i)
+                    appendStorage_->slots[i]=static_cast<compound_detail::NumericScalarCarrier<T>>(cells[i]);
+            }
+        });
         if(validation_metrics::active)validation_metrics::active->materializedElements+=prefixSize_>appendStorage_->genericUsed?prefixSize_-appendStorage_->genericUsed:0;
         appendStorage_->genericUsed=(std::max)(appendStorage_->genericUsed,prefixSize_);
         return {appendStorage_->slots.data(),prefixSize_};
@@ -130,8 +203,7 @@ public:
         if(!appendStorage_)return values_.capacity()*sizeof(RuntimeValue);
         const auto genericCapacity=!packedCells()||appendStorage_->genericReady.load(std::memory_order_acquire)?
             appendStorage_->slots.capacity():0;
-        return appendStorage_->numbers.capacity()*sizeof(double)+appendStorage_->singleCapacity*sizeof(float)+
-            appendStorage_->integers.capacity()*sizeof(std::int32_t)+genericCapacity*sizeof(RuntimeValue);
+        return appendStorage_->physicalBytes()+genericCapacity*sizeof(RuntimeValue);
     }
     // Budget the optional generic compatibility view before it can be asked
     // for. Its later materialization cannot increase a retained receipt's
@@ -141,8 +213,7 @@ public:
         const auto genericCapacity=packedCells()?
             (std::max)(appendStorage_->capacity(),appendStorage_->genericReady.load(std::memory_order_acquire)?
                 appendStorage_->slots.capacity():0):appendStorage_->slots.capacity();
-        return appendStorage_->numbers.capacity()*sizeof(double)+appendStorage_->singleCapacity*sizeof(float)+
-            appendStorage_->integers.capacity()*sizeof(std::int32_t)+genericCapacity*sizeof(RuntimeValue);
+        return appendStorage_->physicalBytes()+genericCapacity*sizeof(RuntimeValue);
     }
     std::size_t arrayPrefixCopies()const noexcept{return prefixCopies_;}
     std::size_t arrayStorageAllocations()const noexcept{return storageAllocations_;}
@@ -153,48 +224,48 @@ public:
     std::uint64_t fraction()const noexcept{return fraction_;}
 private:
     struct AppendStorage {
-        explicit AppendStorage(std::size_t capacity,bool compact,bool compactSingle=false,bool compactInteger=false)
-            :packed(compact),single(compactSingle),integer(compactInteger),
-             slots(compact||compactSingle||compactInteger?0:capacity),numbers(compact?capacity:0),
-             singles(compactSingle&&capacity?std::make_unique<float[]>(capacity):nullptr),
-             singleCapacity(compactSingle?capacity:0),integers(compactInteger?capacity:0){}
+        explicit AppendStorage(std::size_t capacity,compound_detail::PackedNumericKind kind)
+            :kind(kind),fixedCapacity(capacity),slots(kind==compound_detail::PackedNumericKind::None?capacity:0) {
+            compound_detail::visitPackedNumericKind(kind,[&]<class T>() {
+                if constexpr(!std::is_void_v<T>)numeric.emplace<std::vector<T>>(capacity);
+            });
+        }
         // Fixed allocation: neither vector size nor data changes after creation.
         // Readers use their immutable prefix and never read the writer's tail.
-        const bool packed;
-        const bool single;
-        const bool integer;
+        const compound_detail::PackedNumericKind kind;
+        const std::size_t fixedCapacity;
         std::vector<RuntimeValue> slots;
-        std::vector<double> numbers;
-        std::unique_ptr<float[]> singles;
-        const std::size_t singleCapacity;
-        std::vector<std::int32_t> integers;
+        std::variant<std::monostate,std::vector<std::int8_t>,std::vector<std::uint8_t>,
+            std::vector<std::int16_t>,std::vector<std::uint16_t>,std::vector<std::int32_t>,
+            std::vector<std::uint32_t>,std::vector<std::int64_t>,std::vector<std::uint64_t>,
+            std::vector<float>,std::vector<double>> numeric;
         std::atomic<bool> genericReady{false};
         std::atomic<std::size_t> finitePrefix{0};
         std::size_t genericUsed=0;
         std::mutex mutex;
         std::size_t used=0;
-        std::size_t capacity()const noexcept{return packed?numbers.size():single?singleCapacity:integer?integers.size():slots.size();}
+        std::size_t capacity()const noexcept{return kind==compound_detail::PackedNumericKind::None?slots.size():fixedCapacity;}
+        std::size_t physicalBytes()const noexcept{return fixedCapacity*compound_detail::packedNumericWidth(kind);}
     };
     struct AppendMetadata {
         const std::string type;const ValueType physical,element;const RuntimeValueOwner owner;
     };
     friend std::optional<RuntimeValue> makeRuntimeArray(ValueType,std::vector<std::uint32_t>,
         std::vector<RuntimeValue>,const RuntimeValueOwner &);
-    template<class ReadCell>
-    friend std::optional<RuntimeValue> readRuntimePackedRealArray(const ValueType &,std::uint32_t,
-        const RuntimeValueOwner &,ReadCell);
-    template<class ReadCell>
-    friend std::optional<RuntimeValue> readRuntimePackedI32Array(const ValueType &,std::uint32_t,
-        const RuntimeValueOwner &,ReadCell);
+    template<class T,class ReadCell>
+    friend std::optional<RuntimeValue> readRuntimePackedNumericCells(const ValueType &,
+        std::span<const std::uint32_t>,const RuntimeValueOwner &,ReadCell);
     friend class RuntimePrimitiveArrayPool;
     friend class RuntimePrimitiveArrayEdit;
     friend std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeValue &,
         std::span<const RuntimeValue>, const RuntimeValueOwner &, std::size_t, const PrimitiveArrayAppendReservation *);
     RuntimeIpeValue(std::shared_ptr<const AppendMetadata> metadata,std::shared_ptr<AppendStorage> storage,
-        std::uint32_t length,std::size_t copies,std::size_t allocations)
-        :kind_(Kind::Array),seconds_(0),fraction_(0),appendStorage_(std::move(storage)),appendMetadata_(std::move(metadata)),prefixShape_{length},
+        std::span<const std::uint32_t> shape,std::uint32_t length,std::size_t copies,std::size_t allocations)
+        :kind_(Kind::Array),seconds_(0),fraction_(0),appendStorage_(std::move(storage)),appendMetadata_(std::move(metadata)),prefixRank_(shape.size()),
         prefixSize_(length),prefixCopies_(copies),storageAllocations_(allocations),
-        elementView_(packedCells()?std::span<const RuntimeValue>{}:std::span<const RuntimeValue>(appendStorage_->slots.data(),length)){}
+        elementView_(packedCells()?std::span<const RuntimeValue>{}:std::span<const RuntimeValue>(appendStorage_->slots.data(),length)) {
+        std::copy(shape.begin(),shape.end(),prefixShape_.begin());
+    }
     const Kind kind_;const std::string type_;const RuntimeValueOwner owner_;
     const ValueType element_,key_;const std::vector<std::uint32_t> shape_;
     const std::vector<RuntimeValue> values_;const std::vector<RuntimeNamedField> attributes_;
@@ -202,7 +273,8 @@ private:
     const std::int64_t seconds_;const std::uint64_t fraction_;const std::string payloadSchemaJson_;
     const std::shared_ptr<AppendStorage> appendStorage_;
     const std::shared_ptr<const AppendMetadata> appendMetadata_;
-    const std::array<std::uint32_t,1> prefixShape_{};
+    std::array<std::uint32_t,16> prefixShape_{};
+    const std::size_t prefixRank_=0;
     const std::size_t prefixSize_=0,prefixCopies_=0,storageAllocations_=0;
     const std::span<const RuntimeValue> elementView_;
 };
@@ -493,6 +565,83 @@ inline bool validateIpe(const RuntimeIpeValue &v,const RuntimeValueOwner *owner,
 inline std::optional<RuntimeValue> sealRuntimeIpeValue(std::shared_ptr<const RuntimeIpeValue> value) {
     if(!value||!value->valid())return {};return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{std::move(value)}};
 }
+
+// Checked typed construction reads directly into the sealed buffer. Shape
+// and owner are admitted before allocation, and no draft is published on failure.
+template<class T,class ReadCell>
+std::optional<RuntimeValue> readRuntimePackedNumericCells(const ValueType &element,
+    std::span<const std::uint32_t> shape,const RuntimeValueOwner &owner,ReadCell readCell) {
+    const auto kind=compound_detail::packedNumericKind(element.canonicalName);
+    const bool matching=compound_detail::visitPackedNumericKind(kind,[]<class Cell>() {
+        return std::is_same_v<Cell,T>;
+    });
+    if(!matching||shape.empty()||shape.size()>16||
+        !compound_detail::canonicalDescriptor(element)||!runtimeValueOwnerValid(owner))return {};
+    const auto count=array_detail::elementCount(shape);
+    if(!count||*count>(std::numeric_limits<std::size_t>::max)()/sizeof(T))return {};
+    auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(*count,kind);
+    auto &cells=std::get<std::vector<T>>(storage->numeric);
+    std::size_t finitePrefix=*count;
+    for(std::uint32_t i=0;i<*count;++i) {
+        const auto cell=readCell(i);
+        if(!cell)return {};
+        cells[i]=*cell;
+        if constexpr(std::is_floating_point_v<T>)
+            if(finitePrefix==*count&&!std::isfinite(*cell))finitePrefix=i;
+    }
+    storage->used=*count;
+    storage->finitePrefix.store(finitePrefix,std::memory_order_relaxed);
+    const auto type=compound_detail::arrayTypeName(element,shape.size());
+    auto metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
+        type,valueTypeFromCanonicalName(type),element,owner});
+    return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(
+        std::move(metadata),std::move(storage),shape,static_cast<std::uint32_t>(*count),0,*count?1U:0U)}};
+}
+
+template<class T>
+std::optional<RuntimeValue> makeRuntimeArrayFromNumeric(const ValueType &element,
+    std::span<const std::uint32_t> shape,std::span<const T> cells,const RuntimeValueOwner &owner) {
+    const auto count=array_detail::elementCount(shape);
+    if(!count||*count!=cells.size())return {};
+    return readRuntimePackedNumericCells<T>(element,shape,owner,[&](std::uint32_t i) {
+        return std::optional<T>{cells[i]};
+    });
+}
+
+namespace compound_detail {
+template<class T,class NextWord>
+std::optional<RuntimeValue> readRuntimePackedNumericWords(const ValueType &element,
+    std::span<const std::uint32_t> shape,const RuntimeValueOwner &owner,NextWord &nextWord) {
+    return readRuntimePackedNumericCells<T>(element,shape,owner,[&](std::uint32_t i) -> std::optional<T> {
+        const auto word=nextWord(i);
+        if(!word)return {};
+        if constexpr(sizeof(T)<sizeof(std::uint64_t))
+            if(*word>>(sizeof(T)*8))return {};
+        return std::bit_cast<T>(static_cast<PackedNumericWord<T>>(*word));
+    });
+}
+
+template<class T>
+std::optional<RuntimeValue> readGenericNumericCells(const ValueType &element,
+    std::span<const std::uint32_t> shape,const RuntimeValueOwner &owner,std::span<const RuntimeValue> values) {
+    return readRuntimePackedNumericCells<T>(element,shape,owner,[&](std::uint32_t i) {
+        return std::optional<T>{static_cast<T>(std::get<NumericScalarCarrier<T>>(values[i]))};
+    });
+}
+}
+
+// Import rank and raw physical words without widening through generic cells.
+// Bits outside the declared element width indicate a malformed producer.
+template<class NextWord>
+std::optional<RuntimeValue> readRuntimePackedNumericArray(const ValueType &element,
+    std::vector<std::uint32_t> shape,const RuntimeValueOwner &owner,NextWord nextWord) {
+    const auto kind=compound_detail::packedNumericKind(element.canonicalName);
+    return compound_detail::visitPackedNumericKind(kind,[&]<class T>() -> std::optional<RuntimeValue> {
+        if constexpr(std::is_void_v<T>)return {};
+        else return compound_detail::readRuntimePackedNumericWords<T>(element,shape,owner,nextWord);
+    });
+}
+
 // Allocation and validation are cold relative to shared Array transfers. Keep
 // this factory out of callers to avoid duplicating its checked construction.
 #if defined(_MSC_VER)
@@ -502,26 +651,31 @@ __attribute__((noinline))
 #endif
 inline std::optional<RuntimeValue> makeRuntimeArray(ValueType element,std::vector<std::uint32_t> shape,
     std::vector<RuntimeValue> values,const RuntimeValueOwner &owner) {
-    const auto type="array<"+element.canonicalName+(shape.size()==1?std::string{}:",rank="+std::to_string(shape.size()))+">";
+    const auto type=compound_detail::arrayTypeName(element,shape.size());
+    const auto numeric=compound_detail::packedNumericKind(element.canonicalName);
     const bool primitive=element.category==ValueCategory::Boolean||element.category==ValueCategory::SignedInteger||
         element.category==ValueCategory::UnsignedInteger||element.category==ValueCategory::FloatingPoint;
-    if(primitive&&shape.size()==1) {
-        if(!runtimeValueOwnerValid(owner)||!compound_detail::canonicalDescriptor(element)||shape[0]!=values.size())return {};
+    if(primitive&&(shape.size()==1||numeric!=compound_detail::PackedNumericKind::None)) {
+        const auto count=array_detail::elementCount(shape);
+        if(shape.empty()||shape.size()>16||!count||*count!=values.size()||
+            !runtimeValueOwnerValid(owner)||!compound_detail::canonicalDescriptor(element))return {};
         for(const auto &value:values){std::size_t nodes=0,bytes=0;if(!compound_detail::validate(value,element,&owner,1,nodes,bytes))return {};}
-        std::size_t finitePrefix=0;
-        if(element.category==ValueCategory::FloatingPoint)while(finitePrefix<values.size()&&std::isfinite(std::get<double>(values[finitePrefix])))++finitePrefix;
         // Preserve non-finite F32 compatibility payloads exactly, including NaN
         // payloads that the old double carrier can represent beyond F32 bits.
-        const bool packed=element.canonicalName=="f64",single=element.canonicalName=="f32"&&finitePrefix==values.size();
-        auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(packed||single?values.size():0,packed,single);
-        if(packed)for(std::size_t i=0;i<values.size();++i)storage->numbers[i]=std::get<double>(values[i]);
-        else if(single)for(std::size_t i=0;i<values.size();++i)storage->singles[i]=static_cast<float>(std::get<double>(values[i]));
-        else storage->slots=std::move(values);
-        storage->used=shape[0];
-        storage->finitePrefix.store(finitePrefix,std::memory_order_relaxed);
+        const bool legacyF32=element.canonicalName=="f32"&&
+            std::any_of(values.begin(),values.end(),[](const auto &v){return !std::isfinite(std::get<double>(v));});
+        if(numeric!=compound_detail::PackedNumericKind::None&&!legacyF32)
+            return compound_detail::visitPackedNumericKind(numeric,[&]<class T>() -> std::optional<RuntimeValue> {
+                if constexpr(std::is_void_v<T>)return {};
+                else return compound_detail::readGenericNumericCells<T>(element,shape,owner,values);
+            });
+        auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(0,compound_detail::PackedNumericKind::None);
+        storage->slots=std::move(values);
+        storage->used=*count;
         auto metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
             type,valueTypeFromCanonicalName(type),element,owner});
-        return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(std::move(metadata),std::move(storage),shape[0],0,shape[0]?1:0)}};
+        return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(
+            std::move(metadata),std::move(storage),shape,static_cast<std::uint32_t>(*count),0,*count?1U:0U)}};
     }
     return sealRuntimeIpeValue(std::make_shared<const RuntimeIpeValue>(RuntimeIpeValue::Kind::Array,type,owner,std::move(element),ValueType{},
         std::move(shape),std::move(values),std::vector<RuntimeNamedField>{},std::vector<std::pair<RuntimeValue,RuntimeValue>>{}));
@@ -532,49 +686,25 @@ inline std::optional<RuntimeValue> makeRuntimeArray(ValueType element,std::vecto
 template<class ReadCell>
 std::optional<RuntimeValue> readRuntimePackedRealArray(const ValueType &element,std::uint32_t length,
     const RuntimeValueOwner &owner,ReadCell readCell) {
-    const bool single=element.canonicalName=="f32";
-    if((!single&&element.canonicalName!="f64")||!compound_detail::canonicalDescriptor(element)||
-       !runtimeValueOwnerValid(owner))return {};
-    auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(length,!single,single);
-    std::size_t finitePrefix=length;
-    for(std::uint32_t i=0;i<length;++i) {
+    const std::array shape{length};
+    if(element.canonicalName=="f64")return readRuntimePackedNumericCells<double>(element,shape,owner,readCell);
+    if(element.canonicalName!="f32")return {};
+    return readRuntimePackedNumericCells<float>(element,shape,owner,[&](std::uint32_t i) -> std::optional<float> {
         const auto value=readCell(i);
-        if(!value)return {};
-        if(single) {
-            if(!std::isfinite(*value))return {};
-            const auto cell=static_cast<float>(*value);
-            if(static_cast<double>(cell)!=*value)return {};
-            storage->singles[i]=cell;
-        } else {
-            if(finitePrefix==length&&!std::isfinite(*value))finitePrefix=i;
-            storage->numbers[i]=*value;
-        }
-    }
-    storage->used=length;
-    storage->finitePrefix.store(finitePrefix,std::memory_order_relaxed);
-    const auto type="array<"+element.canonicalName+">";
-    auto metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
-        type,valueTypeFromCanonicalName(type),element,owner});
-    return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(
-        std::move(metadata),std::move(storage),length,0,length?1:0)}};
+        if(!value||!std::isfinite(*value))return {};
+        const auto cell=static_cast<float>(*value);
+        return static_cast<double>(cell)==*value?std::optional{cell}:std::nullopt;
+    });
 }
 template<class ReadCell>
 std::optional<RuntimeValue> readRuntimePackedI32Array(const ValueType &element,std::uint32_t length,
     const RuntimeValueOwner &owner,ReadCell readCell) {
-    if(element.canonicalName!="i32"||!compound_detail::canonicalDescriptor(element)||
-       !runtimeValueOwnerValid(owner))return {};
-    auto storage=std::make_shared<RuntimeIpeValue::AppendStorage>(length,false,false,true);
-    for(std::uint32_t i=0;i<length;++i) {
+    const std::array shape{length};
+    return readRuntimePackedNumericCells<std::int32_t>(element,shape,owner,[&](std::uint32_t i) -> std::optional<std::int32_t> {
         const auto cell=readCell(i);
         if(!cell||*cell<INT32_MIN||*cell>INT32_MAX)return {};
-        storage->integers[i]=static_cast<std::int32_t>(*cell);
-    }
-    storage->used=length;
-    const auto type="array<"+element.canonicalName+">";
-    auto metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
-        type,valueTypeFromCanonicalName(type),element,owner});
-    return RuntimeValue{std::shared_ptr<const CompoundRuntimeValue>{new RuntimeIpeValue(
-        std::move(metadata),std::move(storage),length,0,length?1:0)}};
+        return static_cast<std::int32_t>(*cell);
+    });
 }
 inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeValue &base,
     std::span<const RuntimeValue> suffix,const RuntimeValueOwner &owner,std::size_t availableBytes,const PrimitiveArrayAppendReservation *reservation) {
@@ -598,13 +728,15 @@ inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeV
     std::unique_lock<std::mutex> lock;
     if(storage)lock=std::unique_lock(storage->mutex);
     auto copies=base.prefixCopies_,allocations=base.storageAllocations_;
-    const bool packed=base.elementType().canonicalName=="f64",single=base.elementType().canonicalName=="f32"&&base.finiteNumericElements()&&
-        std::all_of(suffix.begin(),suffix.end(),[](const auto &v){return std::isfinite(std::get<double>(v));});
-    const bool integer=base.packedI32();
-    const bool detach=!storage||!storage->capacity()||storage->used!=prefixSize||length>storage->capacity()||storage->single!=single;
+    using K=compound_detail::PackedNumericKind;
+    auto kind=compound_detail::packedNumericKind(base.elementType().canonicalName);
+    if(kind==K::F32&&(!base.finiteNumericElements()||
+        !std::all_of(suffix.begin(),suffix.end(),[](const auto &v){return std::isfinite(std::get<double>(v));})))
+        kind=K::None;
+    const bool detach=!storage||!storage->capacity()||storage->used!=prefixSize||length>storage->capacity()||storage->kind!=kind;
     const auto reserveStorage=[&](std::size_t capacity,bool shared) {
         if(!reservation)return true;
-        const auto cellBytes=sizeof(RuntimeValue)+(packed?sizeof(double):single?sizeof(float):integer?sizeof(std::int32_t):0);
+        const auto cellBytes=sizeof(RuntimeValue)+compound_detail::packedNumericWidth(kind);
         const auto cells=(std::max)(length*64,capacity*cellBytes);
         const auto credit=shared?(std::min)(reservation->retainedStorageBytes,
             (std::max)(prefixSize*64,base.arrayStorageBudgetBytes())):0;
@@ -617,20 +749,24 @@ inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeV
         while(capacity<length)capacity=capacity>limit/2?limit:capacity*2;
         capacity=(std::min)(capacity,limit);
         if(!reserveStorage(capacity,false))return {};
-        auto next=std::make_shared<RuntimeIpeValue::AppendStorage>(capacity,packed,single,integer);
-        if(packed) {
-            if(base.packedF64())std::copy(base.f64Elements().begin(),base.f64Elements().end(),next->numbers.begin());
-            else for(std::size_t i=0;i<prefixSize;++i)next->numbers[i]=std::get<double>(base.elements()[i]);
-        }else if(single) {
-            if(base.packedF32())std::copy_n(base.f32Data(),prefixSize,next->singles.get());
-            else for(std::size_t i=0;i<prefixSize;++i)next->singles[i]=static_cast<float>(std::get<double>(base.elements()[i]));
-        }else if(integer) {
-            std::copy(base.i32Elements().begin(),base.i32Elements().end(),next->integers.begin());
-        }else if(base.packedF32()) {
-            // The base mutex is held. Read its immutable numeric prefix
-            // directly; elements() would try to take that same mutex.
-            for(std::size_t i=0;i<prefixSize;++i)next->slots[i]=double(base.f32Data()[i]);
-        }else std::copy(base.elements().begin(),base.elements().end(),next->slots.begin());
+        auto next=std::make_shared<RuntimeIpeValue::AppendStorage>(capacity,kind);
+        // The base mutex is held. Read the immutable prefix without asking
+        // for the compatibility projection, which would take the same mutex.
+        compound_detail::visitPackedNumericKind(kind,[&]<class T>() {
+            if constexpr(std::is_void_v<T>) {
+                for(std::size_t i=0;i<prefixSize;++i)next->slots[i]=base.numericElement(i);
+            } else {
+                auto &destination=std::get<std::vector<T>>(next->numeric);
+                if(base.packedCells()) {
+                    const auto cells=base.numericElements<T>();
+                    std::copy(cells.begin(),cells.end(),destination.begin());
+                } else {
+                    using Carrier=compound_detail::NumericScalarCarrier<T>;
+                    for(std::size_t i=0;i<prefixSize;++i)
+                        destination[i]=static_cast<T>(std::get<Carrier>(base.numericElement(i)));
+                }
+            }
+        });
         if(base.packedNumeric())next->finitePrefix.store((std::min)(prefixSize,storage?storage->finitePrefix.load(std::memory_order_acquire):std::size_t{}),std::memory_order_relaxed);
         copies+=prefixSize;++allocations;
         if(lock.owns_lock())lock.unlock();
@@ -642,13 +778,19 @@ inline std::optional<RuntimeValue> appendRuntimePrimitiveArray(const RuntimeIpeV
     auto metadata=base.appendMetadata_;
     if(!metadata)metadata=std::make_shared<const RuntimeIpeValue::AppendMetadata>(RuntimeIpeValue::AppendMetadata{
         std::string(base.canonicalType()),valueTypeFromCanonicalName(base.canonicalType()),base.elementType(),base.owner()});
+    const std::array shape{static_cast<std::uint32_t>(length)};
     std::shared_ptr<const CompoundRuntimeValue> result{new RuntimeIpeValue(std::move(metadata),storage,
-        static_cast<std::uint32_t>(length),copies,allocations)};
+        shape,shape[0],copies,allocations)};
     if(validation_metrics::active)++validation_metrics::active->arrayEnvelopes;
-    if(packed)for(std::size_t i=0;i<suffix.size();++i)storage->numbers[prefixSize+i]=std::get<double>(suffix[i]);
-    else if(single)for(std::size_t i=0;i<suffix.size();++i)storage->singles[prefixSize+i]=static_cast<float>(std::get<double>(suffix[i]));
-    else if(integer)for(std::size_t i=0;i<suffix.size();++i)storage->integers[prefixSize+i]=static_cast<std::int32_t>(std::get<std::int64_t>(suffix[i]));
-    else std::copy(suffix.begin(),suffix.end(),storage->slots.begin()+prefixSize);
+    compound_detail::visitPackedNumericKind(kind,[&]<class T>() {
+        if constexpr(std::is_void_v<T>) {
+            std::copy(suffix.begin(),suffix.end(),storage->slots.begin()+prefixSize);
+        } else {
+            using Carrier=compound_detail::NumericScalarCarrier<T>;
+            auto &destination=std::get<std::vector<T>>(storage->numeric);
+            for(std::size_t i=0;i<suffix.size();++i)destination[prefixSize+i]=static_cast<T>(std::get<Carrier>(suffix[i]));
+        }
+    });
     if(base.elementType().category==ValueCategory::FloatingPoint&&storage->finitePrefix.load(std::memory_order_relaxed)==prefixSize){
         auto finite=prefixSize;for(const auto &value:suffix){if(!std::isfinite(std::get<double>(value)))break;++finite;}
         storage->finitePrefix.store(finite,std::memory_order_release);
@@ -729,20 +871,17 @@ inline std::string_view runtimeWidgetReferenceSymbol(const RuntimeValue &value) 
             !std::equal(ia->shape().begin(),ia->shape().end(),ib->shape().begin(),ib->shape().end())||
             ia->elementCount()!=ib->elementCount()||ia->entries().size()!=ib->entries().size()||
             ia->seconds()!=ib->seconds()||ia->fraction()!=ib->fraction()||ia->payloadSchemaJson()!=ib->payloadSchemaJson())return false;
-        if(ia->packedNumeric()||ib->packedNumeric()) {
+        if(ia->packedCells()||ib->packedCells()) {
             // Equality is noexcept and never needs a generic allocation.
             // Ordinary IEEE == preserves the existing NaN/signed-zero rule.
-            for(std::size_t i=0;i<ia->elementCount();++i) {
-                const auto x=ia->packedF64()?ia->f64Elements()[i]:ia->packedF32()?double(ia->f32Data()[i]):std::get<double>(ia->elements()[i]);
-                const auto y=ib->packedF64()?ib->f64Elements()[i]:ib->packedF32()?double(ib->f32Data()[i]):std::get<double>(ib->elements()[i]);
-                if(x!=y)return false;
-            }
-        }else if(ia->packedI32()||ib->packedI32()) {
-            for(std::size_t i=0;i<ia->elementCount();++i) {
-                const auto x=ia->packedI32()?std::int64_t(ia->i32Elements()[i]):std::get<std::int64_t>(ia->elements()[i]);
-                const auto y=ib->packedI32()?std::int64_t(ib->i32Elements()[i]):std::get<std::int64_t>(ib->elements()[i]);
-                if(x!=y)return false;
-            }
+            if(ia->packedCells()&&ib->packedCells()) {
+                const auto kind=compound_detail::packedNumericKind(ia->elementType().canonicalName);
+                if(!compound_detail::visitPackedNumericKind(kind,[&]<class T>() {
+                    if constexpr(std::is_void_v<T>)return false;
+                    else return std::ranges::equal(ia->numericElements<T>(),ib->numericElements<T>());
+                }))return false;
+            } else for(std::size_t i=0;i<ia->elementCount();++i)
+                if(ia->numericElement(i)!=ib->numericElement(i))return false;
         }else for(std::size_t i=0;i<ia->elementCount();++i)if(!runtimeValuesEqual(ia->elements()[i],ib->elements()[i],depth+1))return false;
         for(std::size_t i=0;i<ia->entries().size();++i)if(!runtimeValuesEqual(ia->entries()[i].first,ib->entries()[i].first,depth+1)||!runtimeValuesEqual(ia->entries()[i].second,ib->entries()[i].second,depth+1))return false;
     }

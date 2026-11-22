@@ -4,7 +4,7 @@
   ],
   "studio_reader_revisions": {
     "first": 0,
-    "last": 10
+    "last": 11
   },
   "studio_schema_revisions": {
     "first": 2,
@@ -51,5 +51,8 @@
       },
       "frontend_validation": false
     }
-  ]
+  ],
+  "studio_feature_schemas": {
+    "11": "Expression/Schemas/frog.studio-picture-ring.schema.json"
+  }
 }

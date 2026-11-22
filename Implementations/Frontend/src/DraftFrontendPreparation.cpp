@@ -3,7 +3,9 @@
 #include "FrogDraftJson.hpp"
 #include "FrogDocumentArrayStorage.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/DraftInterfaceInspection.hpp"
 #include "frog_native_engine/DraftSemanticPreparation.hpp"
+#include "frog_native_engine/NativeCallScalarContract.hpp"
 #include "frog_native_engine/DraftRequiredInputs.hpp"
 #include "frog_native_engine/DraftConditionalDisableSpecialization.hpp"
 #include "frog_native_engine/SequenceFramePassageProjection.hpp"
@@ -20,6 +22,45 @@
 namespace frog::native_engine {
 namespace {
 using Json=source::JsonValue;
+struct NativeCallReadRefusal {
+    std::string path;
+    std::string message;
+};
+std::optional<NativeCallReadRefusal> nativeCallReadRefusal(const Json &draft) {
+    const auto *revision=draft.member("draft_revision");
+    if(!revision || revision->type!=Json::Type::Number || (revision->string!="7" && revision->string!="11")) return {};
+    const auto *diagram=draft.member("diagram");
+    std::string diagramPath="/diagram";
+    if(!diagram) {
+        diagram=draft.member("blockDiagram");
+        diagramPath="/blockDiagram";
+    }
+    if(!diagram) return {};
+
+    std::vector<std::pair<const Json *,std::string>> pending{{diagram,std::move(diagramPath)}};
+    while(!pending.empty()) {
+        auto [scope,path]=std::move(pending.back());
+        pending.pop_back();
+        const auto *nodes=scope->member("nodes");
+        if(!nodes || nodes->type!=Json::Type::Array) continue;
+        for(std::size_t i=0;i<nodes->array.size();++i) {
+            const auto &node=nodes->array[i];
+            const auto *type=node.member("type");
+            const auto *configuration=node.member("studio_native_call");
+            if(type && type->type==Json::Type::String && type->string==kNativeCallDiagramNodeType && configuration) {
+                std::string reason;
+                if(!nativeCallScalarConfigurationPreflight(*configuration,&reason))
+                    return NativeCallReadRefusal{path+"/nodes/"+std::to_string(i)+"/studio_native_call",std::move(reason)};
+            }
+            const auto *regions=node.member("regions");
+            if(!regions || regions->type!=Json::Type::Array) continue;
+            for(std::size_t j=0;j<regions->array.size();++j)
+                if(const auto *nested=regions->array[j].member("diagram"))
+                    pending.emplace_back(nested,path+"/nodes/"+std::to_string(i)+"/regions/"+std::to_string(j)+"/diagram");
+        }
+    }
+    return {};
+}
 // One immutable source tree can have hundreds of FIR mappings. Build its
 // attribution index once instead of rescanning every JSON value per identity.
 // Duplicate IDs stay ambiguous, including duplicates in retained metadata.
@@ -207,6 +248,13 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
             DocumentDiagnosticDomain::Integrity,DocumentDiagnosticStage::Adaptation);
         return out;
     }
+    // Draft reading decodes NativeCall metadata before the migration stage.
+    // Apply its existing scalar5 bounds to the authored configuration first.
+    if(const auto refusal=nativeCallReadRefusal(*raw)) {
+        error("migration.native_call_configuration_invalid",refusal->message,refusal->path);
+        attributeDraftSourceDiagnostic(out.diagnostics.back(),FrogDraftData{},*raw);
+        return out;
+    }
     auto normalized=prepareExecutionStorageSource(bytes,&why);
     if(!normalized){
         const bool resourceLimit = why == document_internal::executionArrayStorageBudgetError;
@@ -298,6 +346,20 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
             else if(type.type.name=="string"){node.type="frog.studio.string.constant";node.text.clear();}
             else{node.type="frog.studio.numeric.numeric_constant";node.text="0";}
         }
+    }
+    if(document->declaredInterface) {
+        // An explicit widget binding must resolve before draft migration can
+        // derive a local Source with an ordinary Front Panel widget instead.
+        // Reuse the common binding check and preserve the authored identity.
+        for(auto &issue:inspectFrogDraftInterfaceBindings(
+            document->declaredInterface,document->widgets,document->diagramNodes,document->properties,context)) {
+            if(issue.code!="draft_interface.binding_id_missing" || !issue.blocksBuild)continue;
+            issue.sourceUri=uri;
+            issue.stage=DocumentDiagnosticStage::Validation;
+            attributeDraftSourceDiagnostic(issue,*document,*raw);
+            out.diagnostics.push_back(std::move(issue));
+        }
+        if(!out.diagnostics.empty())return out;
     }
     const auto inspectConnections=[&] {
         // Broken authored wires are editable program errors, not an unknown

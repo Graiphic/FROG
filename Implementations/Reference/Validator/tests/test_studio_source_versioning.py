@@ -206,3 +206,24 @@ def test_frontend_refuses_version_relabeling(cli, tmp_path, fixture_id, version,
         cli, "validate", *frontend_args(fixture, source=source, version=version), expected=outcome,
     )
     assert {item["code"] for item in diagnostics if item["severity"] == "error"} == {diagnostic}
+
+
+def test_picture_ring_current_writer_envelope():
+    from referencing import Registry, Resource
+
+    classic = SCHEMAS[DRAFT]
+    current = read_json(ROOT / "Expression/Schemas/frog.studio-picture-ring.schema.json")
+    Draft202012Validator.check_schema(current)
+    registry = Registry().with_resource(classic["$id"], Resource.from_contents(classic))
+    # Register the relative filename used by the public compatibility profile.
+    from urllib.parse import urljoin
+    registry = registry.with_resource(
+        urljoin(current["$id"], "frog.studio-document.schema.json"), Resource.from_contents(classic)
+    )
+    validator = Draft202012Validator(current, registry=registry)
+    doc = {"format": DRAFT, "draft_revision": 11, "language": "FROG", "title": "Ring",
+           "metadata": {}, "storage": {"version": 1, "array_mode": "automatic"},
+           "frontPanel": {"widgets": []}, "diagram": {"nodes": [], "edges": []}}
+    validator.validate(doc)
+    for key, bad in (("draft_revision",12), ("spec_version","0.1"), ("frontPanel",{}), ("diagram",{"nodes":1})):
+        assert not validator.is_valid({**doc, key:bad})

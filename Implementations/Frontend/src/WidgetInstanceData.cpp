@@ -11,6 +11,8 @@
 #include "frog_native_engine/NumericValueLexeme.hpp"
 #include "frog_native_engine/PreparedWidgetValueAssignment.hpp"
 #include "frog_native_engine/RingItemIdentity.hpp"
+#include "frog_native_engine/PictureRing.hpp"
+#include "frog_native_engine/WidgetDataOperations.hpp"
 #include "frog_native_engine/WidgetChoiceProperties.hpp"
 #include <algorithm>
 #include <cmath>
@@ -24,11 +26,14 @@ namespace frog::native_engine {
         return false;
     }
     for (std::size_t index = 0; index < left.size(); ++index) {
+        const auto &leftImage = left[index].imageDataUri;
+        const auto &rightImage = right[index].imageDataUri;
         if (left[index].label != right[index].label ||
             left[index].value != right[index].value ||
             left[index].disabled != right[index].disabled ||
             left[index].id != right[index].id ||
-            left[index].visible != right[index].visible) {
+            left[index].visible != right[index].visible ||
+            (leftImage != rightImage && (!leftImage || !rightImage || *leftImage != *rightImage))) {
             return false;
         }
     }
@@ -508,7 +513,7 @@ std::vector<RingItem> defaultEnumItems() {
 const std::vector<RingItem> &ringItems(const WidgetInstance &widget) noexcept {
     static const std::vector<RingItem> defaultRing = defaultRingItems();
     static const std::vector<RingItem> defaultEnum = defaultEnumItems();
-    if (!widget.ringItems.empty() || isStringDropdownWidget(widget) || isListboxWidget(widget)) {
+    if (widget.pictureRing || !widget.ringItems.empty() || isStringDropdownWidget(widget) || isListboxWidget(widget)) {
         return widget.ringItems;
     }
     return isEnumWidget(widget) ? defaultEnum : defaultRing;
@@ -564,6 +569,27 @@ bool setRingItems(WidgetInstance &widget, std::vector<RingItem> items) {
     if (isListboxWidget(widget) && (items.size() > 65536 ||
         std::any_of(items.begin(),items.end(),[](const auto &item) { return item.value>UINT16_MAX; }) ||
         !choiceItemValuesAreUnique(items))) return false;
+
+    if (widget.pictureRing) {
+        if (!isRingWidget(widget) || items.size() > kPictureRingMaximumItems ||
+            std::any_of(items.begin(), items.end(), [](const RingItem &item) {
+                return !item.imageDataUri || item.imageDataUri->empty();
+            }) || ringItemListsEqual(widget.ringItems, items)) return false;
+
+        const auto current = static_cast<std::uint32_t>(widget.numericValue.value_or(0.0));
+        auto saved = widget.defaultData ? data_operations::decode(*widget.defaultData) : std::nullopt;
+        const auto initial = saved ? static_cast<std::uint32_t>(saved->numericValue.value_or(0.0)) : 0U;
+        const auto retained = replacePictureRingItems(widget.ringItems, std::move(items), current, initial);
+        static_cast<void>(setRingSelectedValue(widget, retained.current));
+        if (saved) {
+            saved->pictureRing = true;
+            saved->ringItems.clear();
+            static_cast<void>(setRingSelectedValue(*saved, retained.initial));
+            auto encoded = data_operations::encode(*saved);
+            if (!encoded.empty()) widget.defaultData = std::move(encoded);
+        }
+        return true;
+    }
 
     for (std::size_t index = 0; index < items.size(); ++index) {
         if (!dropdown && items[index].label.empty()) {
@@ -623,6 +649,7 @@ bool setRingItems(WidgetInstance &widget, std::vector<RingItem> items) {
 }
 
 bool setChoiceItemStrings(WidgetInstance &widget,std::span<const std::string> strings) {
+    if (widget.pictureRing) return false;
     if(!isRingWidget(widget) && !isEnumWidget(widget) && !isStringDropdownWidget(widget))return false;
     if(!isStringDropdownWidget(widget) && std::any_of(strings.begin(),strings.end(),
         [](const auto &text){return text.empty();}))return false;
@@ -653,14 +680,15 @@ bool setChoiceItemStrings(WidgetInstance &widget,std::span<const std::string> st
 }
 
 bool ringAllowUndefinedValues(const WidgetInstance &widget) noexcept {
-    return (isRingWidget(widget) || isEnumWidget(widget)) && widget.ringAllowUndefinedValues.value_or(false);
+    return (isRingWidget(widget) || isEnumWidget(widget)) &&
+        (widget.pictureRing || widget.ringAllowUndefinedValues.value_or(false));
 }
 
 bool setRingAllowUndefinedValues(WidgetInstance &widget, bool allow) {
     if (!isRingWidget(widget) && !isEnumWidget(widget)) {
         return false;
     }
-    if (ringAllowUndefinedValues(widget) == allow) {
+    if (widget.pictureRing || ringAllowUndefinedValues(widget) == allow) {
         return false;
     }
     widget.ringAllowUndefinedValues = allow ? std::optional<bool>{ true } : std::optional<bool>{};
@@ -672,6 +700,7 @@ bool setRingSelectedValue(WidgetInstance &widget, std::uint32_t value) {
         return false;
     }
 
+    if (widget.pictureRing && value > UINT16_MAX) return false;
     if (!ringAllowUndefinedValues(widget)) {
         const auto &items = ringItems(widget);
         const auto found = std::find_if(
@@ -697,7 +726,7 @@ bool setRingItemDisabled(WidgetInstance &widget, std::uint32_t value, bool disab
     if (!isRingWidget(widget) && !isEnumWidget(widget) && !isStringDropdownWidget(widget)) {
         return false;
     }
-    if (widget.ringItems.empty() && !isStringDropdownWidget(widget)) {
+    if (widget.ringItems.empty() && !widget.pictureRing && !isStringDropdownWidget(widget)) {
         widget.ringItems = defaultRingItems();
     }
     for (auto &item : widget.ringItems) {
@@ -945,7 +974,8 @@ WidgetInstance makeWidgetData(
         widget.initialValue = "item_1";
         widget.numericRepresentationKind = "uint16";
     } else if (entry.family == WidgetFamily::Ring) {
-        widget.ringItems = defaultRingItems();
+        widget.pictureRing = entry.authoringPreset == WidgetAuthoringPreset::PictureRing;
+        if (!widget.pictureRing) widget.ringItems = defaultRingItems();
         widget.numericValue = 0U;
         widget.initialValue = "0";
     } else if (isListboxWidget(widget)) {

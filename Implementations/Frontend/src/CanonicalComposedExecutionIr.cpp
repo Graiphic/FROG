@@ -103,9 +103,10 @@ struct Builder {
         if(depth>32)fail("IR_CONSTANT_SCHEMA","The literal exceeds its complete schema nesting limit.",path);
         if(schema.kind==binding::TypeKind::Array&&literal.member(document_internal::composedNumericArrayField)) {
             DiagramArrayValues cells;
-            std::vector<std::pair<std::size_t,double>> spellings;
+            std::vector<std::uint32_t> shape;
+            std::vector<std::pair<std::size_t,std::uint64_t>> spellings;
             std::string error;
-            if(!document_internal::decodeComposedPackedNumericArray(literal,schema,cells,spellings,remainingPackedLiteralBytes,error))
+            if(!document_internal::decodeComposedPackedNumericArray(literal,schema,cells,shape,spellings,remainingPackedLiteralBytes,error))
                 fail("IR_CONSTANT_PACKED_ARRAY",std::move(error),path);
         }else if(schema.kind==binding::TypeKind::Cluster&&schema.fieldIds.size()==schema.children.size()) {
             for(std::size_t i=0;i<schema.fieldIds.size();++i)

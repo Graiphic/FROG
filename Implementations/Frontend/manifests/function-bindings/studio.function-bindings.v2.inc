@@ -1227,6 +1227,28 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk0(st
     }
     {
         FunctionBindingDefinition definition;
+        definition.catalogId = "numeric.picture_ring";
+        definition.definitionId = "frog.studio.numeric.picture_ring";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.editor-managed";
+        definition.providerRequirement = "";
+        definition.documentationUrl = "";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::EditorManaged;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::EditorManaged;
+        definition.evaluationOrder = FunctionEvaluationOrder::Unspecified;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
         definition.catalogId = "numeric.int_terminal";
         definition.definitionId = "frog.studio.numeric.int_terminal";
         definition.schemaVersion = 1U;
@@ -1269,6 +1291,8 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk0(st
         };
         definitions.push_back(std::move(definition));
     }
+}
+FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk1(std::vector<FunctionBindingDefinition> &definitions) {
     {
         FunctionBindingDefinition definition;
         definition.catalogId = "numeric.ring_terminal";
@@ -1291,8 +1315,6 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk0(st
         };
         definitions.push_back(std::move(definition));
     }
-}
-FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk1(std::vector<FunctionBindingDefinition> &definitions) {
     {
         FunctionBindingDefinition definition;
         definition.catalogId = "numeric.other_constants.positive_infinity";
@@ -2037,6 +2059,8 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk1(st
         };
         definitions.push_back(std::move(definition));
     }
+}
+FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk2(std::vector<FunctionBindingDefinition> &definitions) {
     {
         FunctionBindingDefinition definition;
         definition.catalogId = "numeric.data_manipulation.swap_words";
@@ -2061,8 +2085,6 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk1(st
         };
         definitions.push_back(std::move(definition));
     }
-}
-FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk2(std::vector<FunctionBindingDefinition> &definitions) {
     {
         FunctionBindingDefinition definition;
         definition.catalogId = "numeric.data_manipulation.reinterpret_number";
@@ -2837,6 +2859,8 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk2(st
         };
         definitions.push_back(std::move(definition));
     }
+}
+FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk3(std::vector<FunctionBindingDefinition> &definitions) {
     {
         FunctionBindingDefinition definition;
         definition.catalogId = "numeric.conversion.byte_array_to_string";
@@ -2861,8 +2885,6 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk2(st
         };
         definitions.push_back(std::move(definition));
     }
-}
-FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericBindingsChunk3(std::vector<FunctionBindingDefinition> &definitions) {
     {
         FunctionBindingDefinition definition;
         definition.catalogId = "numeric.conversion.number_to_decimal_string";
@@ -24518,7 +24540,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedCollectionBindings(std::
 }
 std::vector<FunctionBindingDefinition> generatedFunctionBindingDefinitions() {
     std::vector<FunctionBindingDefinition> definitions;
-    definitions.reserve(910U);
+    definitions.reserve(911U);
     appendGeneratedStructuresBindings(definitions);
     appendGeneratedNumericBindings(definitions);
     appendGeneratedBooleanBindings(definitions);
@@ -26086,6 +26108,38 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk0(s
     }
     {
         FunctionBindingContract contract;
+        contract.catalogId = "numeric.picture_ring";
+        contract.profileId = "numeric.editor-managed.v1";
+        contract.contractStatus = "editor_managed";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Places a Picture Ring preset of the existing Ring literal. Its image catalogue belongs to Studio presentation; the diagram carries the selected U16 index.";
+        contract.blockers = std::vector<std::string>{ "No standalone function-provider contract applies." };
+        contract.authorityRefs = std::vector<std::string>{  };
+        contract.overload.policy = "editor_managed";
+        contract.overload.acceptedOperands = std::vector<std::string>{  };
+        contract.overload.result = "undecided";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "undecided";
+        contract.variadicity.enabled = false;
+        contract.variadicity.description = "not_variadic";
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "none";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 0U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = false;
+        contract.runtimeAvailability.available = false;
+        contract.runtimeAvailability.implementationKind = "editor_managed";
+        contract.runtimeAvailability.implementationId = "frog.studio.editor-managed";
+        contract.runtimeAvailability.providerRequirement = "";
+        contract.runtimeAvailability.notes = "The preset lowers through the existing Ring literal. It declares no separate execution provider or image value type.";
+        contract.presentation = FunctionContractPresentation{ "ring-constant", "none" };
+        contract.portAliases = {
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
         contract.catalogId = "numeric.int_terminal";
         contract.profileId = "numeric.editor-managed.v1";
         contract.contractStatus = "editor_managed";
@@ -26148,6 +26202,8 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk0(s
         };
         contracts.push_back(std::move(contract));
     }
+}
+FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk1(std::vector<FunctionBindingContract> &contracts) {
     {
         FunctionBindingContract contract;
         contract.catalogId = "numeric.ring_terminal";
@@ -26180,8 +26236,6 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk0(s
         };
         contracts.push_back(std::move(contract));
     }
-}
-FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk1(std::vector<FunctionBindingContract> &contracts) {
     {
         FunctionBindingContract contract;
         contract.catalogId = "numeric.other_constants.positive_infinity";
@@ -27258,6 +27312,8 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk1(s
         };
         contracts.push_back(std::move(contract));
     }
+}
+FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk2(std::vector<FunctionBindingContract> &contracts) {
     {
         FunctionBindingContract contract;
         contract.catalogId = "numeric.data_manipulation.swap_words";
@@ -27294,8 +27350,6 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk1(s
         };
         contracts.push_back(std::move(contract));
     }
-}
-FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk2(std::vector<FunctionBindingContract> &contracts) {
     {
         FunctionBindingContract contract;
         contract.catalogId = "numeric.data_manipulation.reinterpret_number";
@@ -28426,6 +28480,8 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk2(s
         };
         contracts.push_back(std::move(contract));
     }
+}
+FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk3(std::vector<FunctionBindingContract> &contracts) {
     {
         FunctionBindingContract contract;
         contract.catalogId = "numeric.conversion.byte_array_to_string";
@@ -28462,8 +28518,6 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk2(s
         };
         contracts.push_back(std::move(contract));
     }
-}
-FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedNumericContractsChunk3(std::vector<FunctionBindingContract> &contracts) {
     {
         FunctionBindingContract contract;
         contract.catalogId = "numeric.conversion.number_to_decimal_string";
@@ -59374,7 +59428,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedCollectionContracts(std:
 }
 std::vector<FunctionBindingContract> generatedFunctionBindingContracts() {
     std::vector<FunctionBindingContract> contracts;
-    contracts.reserve(910U);
+    contracts.reserve(911U);
     appendGeneratedStructuresContracts(contracts);
     appendGeneratedNumericContracts(contracts);
     appendGeneratedBooleanContracts(contracts);

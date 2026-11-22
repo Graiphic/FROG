@@ -44,7 +44,10 @@ struct Dataset {binding::TypeRef datatype; source::JsonValue exactSource; std::v
 enum class Mapping {Linear,Logarithmic};
 enum class Autoscale {Manual,Once,Continuous};
 enum class Side {Bottom,Top,Left,Right};
-enum class NumberFormat {Automatic,Decimal,Scientific,Engineering,Binary,Octal,Hexadecimal,Duration,DateTime};
+// Document ordinals for existing formats remain stable.
+enum class NumberFormat {Automatic,Decimal,Scientific,Engineering,Binary,Octal,Hexadecimal,Duration,DateTime,SI,
+    RelativeTime=Duration,AbsoluteTime=DateTime};
+enum class TimeContent : std::uint8_t {DateTime,Date,Time};
 enum class Symbol {None,Circle,Disc,HollowDisc,CircleDot,Square,FilledSquare,HollowFilledSquare,SquareDot,SmallSquare,SmallDot,Plus,SmallPlus,Cross,SmallCross,Diamond,SmallHollowSquare};
 enum class LineStyle {Solid,LongDash,ShortDash,DashDot,DashDotDot};
 enum class Interpolation {None,Staircase,Linear,Horizontal,HorizontalCentered,VerticalCentered};
@@ -66,9 +69,10 @@ struct Axis {
     NumberFormat format=NumberFormat::Automatic;
     int precision=2;
     bool significantDigits=false,trailingZeros=false,looseFit=false;
-    bool majorTicks=true,minorTicks=false,majorGrid=true,minorGrid=false;
+    bool majorTicks=true,minorTicks=false,majorGrid=true,minorGrid=false,tickLabelsVisible=true;
     std::uint32_t rgb=0xDADEE3,gridRgb=0x444444;
     bool customRgb=false,customGridRgb=false;
+    TimeContent timeContent=TimeContent::DateTime;
     std::vector<Marker> markers;
     std::string timeOrigin="FROG epoch",timeUnit="s",timeZone="UTC";
     bool operator==(const Axis &)const=default;

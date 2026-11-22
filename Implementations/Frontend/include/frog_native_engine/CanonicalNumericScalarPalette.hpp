@@ -7,6 +7,7 @@
 #include "frog_native_engine/CanonicalScalePowerTwo.hpp"
 #include "frog/semantics/numeric_scalar_palette_contracts.hpp"
 #include "frog/semantics/complex_arithmetic_ports.hpp"
+#include <algorithm>
 #include <functional>
 #include <vector>
 
@@ -110,6 +111,12 @@ inline bool canonicalNumericScalarPaletteShouldUse(std::string_view authored,
         const auto id=canonicalNumericScalarPaletteMigrationIdentity(authored,includeLower,includeUpper);
         if(id.empty()||!canonicalNumericScalarPaletteSignatureValid(id,ports))return false;
         if(p::palette::supports(authored))return true;
+        // Only a primitive scalar signature may use a scalar legacy owner.
+        // Aggregate inputs have no leaf name at this level, so a later
+        // scalar operand alone cannot establish the signature's exact lane.
+        if(std::any_of(ports.begin(),ports.end(),[](const auto &port) {
+            return port.input&&(port.type.kind==binding::TypeKind::Array||port.type.kind==binding::TypeKind::Cluster);
+        }))return true;
         const auto catalog=p::catalog(authored);std::string exact;std::size_t inputs=0;
         bool uniform=true;
         for(const auto &port:ports)if(port.input&&port.type.name!="bool") {

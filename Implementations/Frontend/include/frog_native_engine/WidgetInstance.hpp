@@ -57,6 +57,9 @@ struct RingItem {
     // Tab pages may present a caption without changing their enum label.
     std::string caption{};
     bool captionMatchesLabel = true;
+    // Picture Ring assets travel with the document. Authoring copies share
+    // the immutable encoded resource and keep independent item lists.
+    std::shared_ptr<const std::string> imageDataUri{};
 };
 
 struct WidgetInstance;
@@ -288,6 +291,7 @@ struct WidgetInstance {
     std::optional<std::string> interfaceConnectionRequirement{};
     std::optional<std::string> enumDomainId{};
     std::vector<RingItem> ringItems{};
+    bool pictureRing = false;
     std::optional<bool> ringAllowUndefinedValues{};
     std::optional<WidgetEnabledState> enabledState{};
     std::optional<std::string> numericRepresentationKind{};
@@ -410,6 +414,9 @@ struct WidgetInstance {
         std::string portId;
     };
     HeapOptional<DetachedInterfaceBinding> detachedInterfaceBinding;
+
+    // Picture Ring control presentation. The image face remains interactive.
+    bool pictureRingDropdownArrowHidden = false;
 
 };
 

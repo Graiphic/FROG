@@ -11,6 +11,7 @@ namespace frog::native_engine::document_internal {
 inline constexpr std::string_view executionArrayStorageBudgetError =
     "FROG array storage: execution projection exceeds the supported JSON representation budget.";
 inline constexpr std::string_view numericWordArrayProfile = "numeric-cell-bits-le-v1";
+inline constexpr std::string_view exactNarrowNumericWordArrayProfile = "numeric-cell-bits-le-v2";
 inline constexpr std::string_view composedNumericArrayField = "studio_numeric_words";
 // Numeric envelopes carry U32 decoded byte counts. Bound the complete document
 // by that representable byte domain, independently of encoded JSON limits.
@@ -29,7 +30,8 @@ struct ArrayStorageWriteContext {
 [[nodiscard]] bool compactNumericArrayType(std::string_view type);
 [[nodiscard]] bool isPackedExecutionArrayEnvelope(const source::JsonValue &,std::string_view type);
 [[nodiscard]] bool decodeComposedPackedNumericArray(const source::JsonValue &,const binding::TypeRef &,
-    DiagramArrayValues &,std::vector<std::pair<std::size_t,double>> &,std::size_t &remainingWords,std::string &error);
+    DiagramArrayValues &,std::vector<std::uint32_t> &,
+    std::vector<std::pair<std::size_t,std::uint64_t>> &,std::size_t &remainingWords,std::string &error);
 // Null means emit the original readable representation. No numeric conversion.
 [[nodiscard]] std::optional<std::string> encodeArrayStorage(
     std::span<const std::string> cells, ArrayStorageWriteContext &context,

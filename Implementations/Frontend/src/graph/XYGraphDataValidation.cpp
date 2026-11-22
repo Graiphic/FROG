@@ -17,7 +17,19 @@ namespace data_detail {
 constexpr double ln10=2.302585092994045684;
 Coordinate logOrigin(const AxisRange&r){return r.origin.positive()?r.origin:Coordinate(1.0);}
 
-Coordinate unprojected(const Axis&a,const AxisRange&r,double v)noexcept{if(a.mapping==Mapping::Logarithmic){auto o=logOrigin(r);const double delta=o.approximate()*std::expm1(v*ln10);if(std::isfinite(delta))return shifted(o,delta);return Coordinate(std::exp(std::log(o.approximate())+v*ln10));}return shifted(r.origin,v*r.scale);}
+Coordinate unprojected(const Axis &axis,const AxisRange &range,double value)noexcept {
+    if(axis.mapping==Mapping::Logarithmic) {
+        const auto origin=logOrigin(range);
+        const double exponent=value*ln10;
+        // Subtracting nearly all of the origin loses lower decades to cancellation.
+        if(exponent>=-.5) {
+            const double delta=origin.approximate()*std::expm1(exponent);
+            if(std::isfinite(delta))return shifted(origin,delta);
+        }
+        return Coordinate(std::exp(std::log(origin.approximate())+exponent));
+    }
+    return shifted(range.origin,value*range.scale);
+}
 
 std::optional<double> timeUnit(std::string_view unit){if(unit=="s")return 1;if(unit=="ms")return .001;if(unit=="us")return 1e-6;if(unit=="ns")return 1e-9;if(unit=="min")return 60;if(unit=="h")return 3600;if(unit=="d")return 86400;return {};}
 
@@ -44,7 +56,14 @@ bool finiteRect(Rect r){return std::isfinite(r.x)&&std::isfinite(r.y)&&std::isfi
 
 }
 using namespace data_detail;
-std::string validateAxisTextFormat(const Axis&a){if(a.format!=NumberFormat::Duration&&a.format!=NumberFormat::DateTime)return {};if(!timeUnit(a.timeUnit))return "XY time unit must be s, ms, us, ns, min, h or d.";if(a.format==NumberFormat::DateTime&&(!timeOrigin(a.timeOrigin)||!timeZone(a.timeZone)))return "XY date/time needs an ISO UTC origin and UTC, local or fixed UTC+/-hh:mm zone.";return {};}
+std::string validateAxisTextFormat(const Axis &axis) {
+    if(unsigned(axis.timeContent)>unsigned(TimeContent::Time))return "Invalid XY date/time content.";
+    if(axis.format!=NumberFormat::RelativeTime&&axis.format!=NumberFormat::AbsoluteTime)return {};
+    if(!timeUnit(axis.timeUnit))return "XY time unit must be s, ms, us, ns, min, h or d.";
+    if(axis.format==NumberFormat::AbsoluteTime&&(!timeOrigin(axis.timeOrigin)||!timeZone(axis.timeZone)))
+        return "XY date/time needs an ISO UTC origin and UTC, local or fixed UTC+/-hh:mm zone.";
+    return {};
+}
 
 bool validRange(const Axis&a,const AxisRange&r)noexcept{if(!r.origin.finite()||!std::isfinite(r.scale)||r.scale<=0||!std::isfinite(r.offsets.minimum)||!std::isfinite(r.offsets.maximum)||r.offsets.minimum>=r.offsets.maximum||!std::isfinite(r.offsets.maximum-r.offsets.minimum))return false;const auto lo=unprojected(a,r,r.offsets.minimum),hi=unprojected(a,r,r.offsets.maximum);return lo.finite()&&hi.finite()&&std::isfinite(lo.approximate())&&std::isfinite(hi.approximate())&&(a.mapping!=Mapping::Logarithmic||(lo.positive()&&hi.positive()));}
 std::string validateDecorations(const Design&d){

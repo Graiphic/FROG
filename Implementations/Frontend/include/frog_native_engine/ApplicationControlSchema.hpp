@@ -22,7 +22,11 @@ struct ApplicationControlDiagnostic { std::string code, rowId, message; };
 [[nodiscard]] std::optional<ApplicationControlMemberDescriptor> applicationControlMember(
     std::string_view classId,const binding::TypeRef &valueType,std::string_view memberId,
     const WidgetInstance *presentation=nullptr);
-[[nodiscard]] binding::TypeRef applicationControlReferenceType(const ApplicationControlNode &);
+// Exact reference typing shared by authoring and the precompiled host.
+[[nodiscard]] inline binding::TypeRef applicationControlReferenceType(const ApplicationControlNode &node) {
+    return binding::TypeRef::reference(node.expectedClass,
+        node.valueType.known()?std::optional{node.valueType}:std::nullopt);
+}
 [[nodiscard]] std::string applicationControlReferenceClass(const WidgetInstance &);
 // Read-only provenance follows stable references/fields; it never reads an
 // indexed Array cell or guesses identity from a current value or a position.

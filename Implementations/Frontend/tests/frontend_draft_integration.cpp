@@ -83,6 +83,43 @@ FrogDraftData scalar(std::string type) {
     wire(document,"left-wire","left","value","add","a");wire(document,"right-wire","right","value","add","b");
     indicator(document,type,"add","result");return document;
 }
+void pictureRingRevision() {
+    const auto *entry = findWidgetCatalogEntryByClassId("frog.widgets.ring_control");
+    need(entry, "Picture Ring requires the ordinary Ring widget class");
+    auto ring = makeWidgetData("ring", *entry, {10, 10, 80, 40});
+    FrogDraftData draft;
+    draft.title = "Embedded pictures";
+    draft.widgets.addObject({"ring", ring.bounds, ring}, true);
+    need(revision(serializeFrogDraftData(draft)) == "3", "Ordinary Ring revision changed");
+    ring.pictureRing = true;
+    ring.valueType = "u16";
+    RingItem picture;
+    picture.id = "picture_1";
+    picture.label = "Green";
+    picture.imageDataUri = std::make_shared<const std::string>(
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGPQOuL9HwAEjgI52cuZrgAAAABJRU5ErkJggg==");
+    ring.ringItems = {picture};
+    const std::string nested = serializeArrayElementWidget(ring);
+    const auto reopened = deserializeArrayElementWidget(nested);
+    need(revision(nested) == "11" && reopened && reopened->pictureRing &&
+             reopened->ringItems.size() == 1 && reopened->ringItems.front().id == picture.id &&
+             reopened->ringItems.front().imageDataUri &&
+             *reopened->ringItems.front().imageDataUri == *picture.imageDataUri,
+         "Nested Picture Ring lost its presentation or revision");
+    FrogDraftData pictures;
+    pictures.title = draft.title;
+    pictures.widgets.addObject({"ring", ring.bounds, ring}, true);
+    const auto current = serializeFrogDraftData(pictures);
+    need(revision(current) == "11", "Picture Ring document requires revision 11");
+    auto old = json(current);
+    old.object["draft_revision"] = json("3");
+    const auto migrated = readFrogDraftData(canonical_json::encode(old));
+    need(migrated && revision(serializeFrogDraftData(*migrated)) == "11" &&
+             serializeFrogDraftData(*migrated).find(*picture.imageDataUri) != std::string::npos,
+         "Reading a legacy Picture Ring must retain the catalogue and save the new revision");
+    old.object["draft_revision"] = json("12");
+    need(!readFrogDraftData(canonical_json::encode(old)), "Unknown future draft revision was admitted");
+}
 void legacyStructureType(Context &context) {
     auto original=json(R"frog({
       "format":"frog.document.draft","draft_revision":2,"language":"FROG",
@@ -188,6 +225,46 @@ void packedArrayLiteral(Context &context) {
     const auto refused=call(context,invalid,revision(invalid),"{}",true);
     need(refused.outcome!=FROG_FRONTEND_SUCCESS&&refused.fir.empty()&&
         refused.diagnostics.find("IR_CONSTANT_PACKED_ARRAY")!=std::string::npos,"A non-finite authored literal became an executable packed value");
+}
+void packedIntegralArrayLiteral(Context &context) {
+    for(const auto *type:{"i8","u16","i64","u64"}) {
+        FrogDraftData document;document.title="Exact packed integral Array through canonical FIR";
+        document.properties.arrayStorageMode=FrogArrayStorageMode::CompactStandalone;
+        auto array=literal("packed",type,"0");
+        array.type="frog.studio.numeric.numeric_array_constant";
+        array.numericArrayRank=2;array.numericArrayShape={2,3};
+        array.numericArrayFirstIndices={0,0};array.numericArrayVisibleCounts={2,3};
+        need(array.numericArrayValues.resizeNumeric(6,type),"Packed integral fixture could not allocate typed pages");
+        const auto lexeme=std::string_view(type)=="i8"?"-128":std::string_view(type)=="u16"?"65535":
+            std::string_view(type)=="i64"?"-9223372036854775807":"18446744073709551615";
+        array.numericArrayValues.replaceAt(0,lexeme);
+        array.numericArrayValues.replaceAt(5,std::string{"\""}+lexeme+'"');
+        document.diagramNodes.push_back(std::move(array));
+        document.diagramNodes.push_back(operation("size","array.size"));
+        wire(document,"data","packed","value","size","array");
+        const auto bytes=serializeFrogDraftData(document);
+        const auto result=call(context,bytes,revision(bytes),"{}",true);
+        if(result.outcome!=FROG_FRONTEND_SUCCESS)std::cerr<<result.diagnostics<<'\n';
+        need(result.outcome==FROG_FRONTEND_SUCCESS&&result.fir.find("studio_numeric_words")!=std::string::npos,
+            "The canonical FIR expanded or rejected a rank-2 packed integral Array");
+        const auto copy=readFrogDraftData(bytes,nullptr,nullptr);
+        need(copy&&copy->diagramNodes.front().numericArrayValues==document.diagramNodes.front().numericArrayValues,
+            "Packed integral Save/Open lost exact words or authoring lexemes");
+    }
+}
+void numericArrayAndScalarMigration(Context &context) {
+    for(const auto *catalog:{"numeric.multiply","numeric.subtract"})for(const bool scalarFirst:{false,true}) {
+        FrogDraftData document;document.title="I32 numeric Array and scalar admission";
+        document.diagramNodes={literal("left","i32","17"),literal("right","i32","29"),
+            operation("build","array.build"),literal("scalar","i32","2"),operation("binary",catalog)};
+        wire(document,"build-a","left","value","build",buildArrayInputId(0));
+        wire(document,"build-b","right","value","build",buildArrayInputId(1));
+        wire(document,"array-wire","build","result","binary",scalarFirst?"b":"a");
+        wire(document,"scalar-wire","scalar","value","binary",scalarFirst?"a":"b");
+        const auto result=qualify(context,document);
+        need(result.fir.find("frog.studio."+std::string(catalog)+".owned.v1")!=std::string::npos,
+            "The admitted I32 Array signature selected a legacy scalar lane");
+    }
 }
 void colorBoxArrayPresentation(Context &context) {
     FrogDraftData document;document.title="Typed U32 Color Box cells";
@@ -325,9 +402,12 @@ void independentStructureDiagnostics(Context &context) {
 int main() {
     try {
         Context context;
+        pictureRingRevision();
         incompleteWireDiagnostics(context);
         independentStructureDiagnostics(context);
         packedArrayLiteral(context);
+        packedIntegralArrayLiteral(context);
+        numericArrayAndScalarMigration(context);
         colorBoxArrayPresentation(context);
         const auto exact=qualify(context,scalar("i64"));
         need(exact.fir.find("9007199254740993")!=std::string::npos&&exact.fir.find("i64")!=std::string::npos,"Exact I64 literal/type was narrowed");

@@ -3,6 +3,13 @@
   "version": 1,
   "sources": [
     {
+      "path": "include/frog_native_engine/PictureRing.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/PictureRing.hpp",
+      "ownership": "created",
+      "sha256": "13a7f3a742767d0ebb28f2e7180edfcea8d91456bfbaa14378f0c78066e1b893",
+      "bytes": 1378
+    },
+    {
       "path": "include/frog_native_engine/CompositeWidgetPackage.hpp",
       "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/CompositeWidgetPackage.hpp",
       "ownership": "created",
@@ -166,8 +173,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/build-nmake-verify/generated/WidgetCatalog.generated.hpp",
       "path": "snapshot/generated/WidgetCatalog.generated.hpp",
-      "sha256": "fceb295b3ffd63a1a7f77205a291a2cb50c527f9b7bd2605c75d9b51074c1e62",
-      "bytes": 41837,
+      "sha256": "d30ce79c2c5a468bf5d025735bc56353102758d49fb1abbcbf0f10b5021822ea",
+      "bytes": 42779,
       "ownership": "snapshot"
     },
     {
@@ -481,8 +488,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/DiagramTunnelIdentity.hpp",
       "path": "include/frog_native_engine/DiagramTunnelIdentity.hpp",
-      "sha256": "a07fff84bb1a32730bc033ff04ecee2e4410276e1d7f1182d016bb64642256e6",
-      "bytes": 505,
+      "sha256": "32a2318749643b891953de432863957842d8e4a3a4773e7d0029aae46497a09d",
+      "bytes": 1402,
       "ownership": "move"
     },
     {
@@ -845,8 +852,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/manifests/function-bindings/studio.function-bindings.v2.inc",
       "path": "manifests/function-bindings/studio.function-bindings.v2.inc",
-      "sha256": "0380047c9a60b03e697349f6528c9d450bfae8ff7f634d9ceefe83ab931b972a",
-      "bytes": 6000003,
+      "sha256": "9c7151ee64e9734c6e9ed8b87761a7e340f3093e2f4bc522d808a0ecb13ac8a9",
+      "bytes": 6003065,
       "ownership": "snapshot"
     },
     {
@@ -1139,8 +1146,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/FunctionCatalogEntries.inc",
       "path": "src/FunctionCatalogEntries.inc",
-      "sha256": "cd71f9cae4b18377f4396e4bd1dc5b9c3495d86e202a9554b3d0ebd203832ae0",
-      "bytes": 81928,
+      "sha256": "01da7308d4ba503b6b96b0b38e6f758de07a2b5331c43aa207886a5512f8b3fa",
+      "bytes": 82073,
       "ownership": "snapshot"
     },
     {
@@ -1502,8 +1509,8 @@
       "path": "src/DiagramBindingResolver.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
       "ownership": "split",
-      "sha256": "25374ef5a1aa3cb01038c68a6223d46a5aa63d82fe83ddbb64c24dc86d2b108c",
-      "bytes": 164281,
+      "sha256": "b39868c7c95837d1000a8a96e1839f355b38f344bb6b59e796b8a14c847db48a",
+      "bytes": 164815,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
@@ -5516,8 +5523,8 @@
       "path": "src/FittingBinding.cpp",
       "upstream": "FROG/Implementations/Frontend/src/FittingBinding.cpp",
       "ownership": "native",
-      "sha256": "e6ca4b9e263c2ccf629b691ad1605aa9d12ce65bd1030f391258d8552895ebcd",
-      "bytes": 46383
+      "sha256": "d3f89e14cf40c1e441827cea1925970b1a10a6e5086066dd6f63d78ae7d66d4d",
+      "bytes": 45953
     },
     {
       "path": "include/frog_native_engine/FittingBinding.hpp",
@@ -5578,8 +5585,8 @@
     {
       "upstream": "FROG/Implementations/Frontend/src/InterpolationBinding.cpp",
       "path": "src/InterpolationBinding.cpp",
-      "sha256": "decc13088b74c3690d8357a389978b5e5ddedcc3b7daaaba840a417b791e86a0",
-      "bytes": 19158,
+      "sha256": "bbc98e6111405198e4013ab27e9fe295d0e723010dbde926466e7da9a14e3cc9",
+      "bytes": 18728,
       "ownership": "native"
     },
     {
@@ -5613,8 +5620,8 @@
     {
       "upstream": "FROG/Implementations/Frontend/src/CalculusBinding.cpp",
       "path": "src/CalculusBinding.cpp",
-      "sha256": "c6dde9459a777fb57a4feb3a209641a8d9020eea97fe414afe138f8708a9b33b",
-      "bytes": 26075,
+      "sha256": "0e446958b0b74ab87aafda386c943cf66eaef2a599edca051c88c53f5f7161fb",
+      "bytes": 25646,
       "ownership": "native"
     },
     {
@@ -5639,10 +5646,17 @@
       "ownership": "native"
     },
     {
+      "upstream": "FROG/Implementations/Frontend/src/MathVariantLookup.hpp",
+      "path": "src/MathVariantLookup.hpp",
+      "sha256": "956dc67c2af9c3187c4fa3b465289292b13ddcbf715573428f005a5d2eccc4fe",
+      "bytes": 2036,
+      "ownership": "native"
+    },
+    {
       "upstream": "FROG/Implementations/Frontend/src/StatisticsBinding.cpp",
       "path": "src/StatisticsBinding.cpp",
-      "sha256": "6d8f0d475a5a93639f52744feb65e4a79682d2976a3db42bb85dcaa68ef5b73f",
-      "bytes": 71101,
+      "sha256": "43e32b5509ba25737cbad30858caa1780f82538e7d969a94ecd4215a8711cae0",
+      "bytes": 70671,
       "ownership": "native"
     },
     {
@@ -5676,8 +5690,8 @@
     {
       "upstream": "FROG/Implementations/Frontend/src/GeometryBinding.cpp",
       "path": "src/GeometryBinding.cpp",
-      "sha256": "cf19721b03703f6d90d40c5befca7bf451462639e3915005453d1a4aee49298d",
-      "bytes": 27473,
+      "sha256": "40ca9527bda4b7cc76ba9d72d832623520d4a6ad266dcf02ec8501d589bea888",
+      "bytes": 27026,
       "ownership": "native"
     },
     {

@@ -66,13 +66,16 @@ order mark, terminator or platform-dependent C++ layout.
 | `numeric-cell-text-le32-v1` | Diagram `array_constant.values` | Exact UTF-8 cell string. Shape and row order keep their existing authoring meaning. |
 | `numeric-elements-json-le32-v1` | Array widget `props.elements` | UTF-8 JSON for one existing numeric element record, retaining its `indices`, numeric `value`, `defined` and `enabled` flags. Missing cells are not synthesized. |
 | `numeric-cell-bits-le-v1` | Paged numeric diagram `array_constant.values` | `count` fixed-width little-endian words in row order, then optional text exception records. |
+| `numeric-cell-bits-le-v2` | Paged I8/U8/I16/U16 diagram `array_constant.values` | The same binary layout and text records, with 1-byte I8/U8 words and 2-byte I16/U16 words. |
 
 The field is replaced by an object with `encoding`, `count`, `decoded_bytes` and
 `chunks`. `decoded_bytes` includes all lengths and data. These bounded integers
 fit exactly in binary64. In the word profile, `element_type` must match the
-node's exact element type. I8/I16/I32 and U8/U16/U32 use 32-bit words (signed
-values are sign extended); I64/U64 use 64-bit words. F32/F64 use IEEE 754 bits,
-including the sign of zero. Type-domain validation remains at the existing
+node's exact element type. In the original word profile, I8/I16/I32 and
+U8/U16/U32 use 32-bit words (signed values are sign extended). New narrow
+integer Arrays use the second profile. The current reader still accepts the
+original narrow integer records. I64/U64 use 64-bit words. F32/F64 use IEEE
+754 bits, including the sign of zero. Type-domain validation remains at the existing
 authoring/Run boundaries. Each exception is LE32 index, LE32 UTF-8 byte length,
 then that many bytes. Exceptions must name distinct zero placeholders in
 strictly increasing order. Their exact text is restored on Open. Shape, rank

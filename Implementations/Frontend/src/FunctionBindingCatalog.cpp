@@ -242,11 +242,23 @@ std::string_view canonicalFunctionBindingPortId(
     std::string_view catalogId,
     std::string_view portId) noexcept {
     if (catalogId == "array.build" && portId == "input_2") return "array_b";
-    for (const auto &alias : kGeneratedFunctionPortAliases) {
-        if (alias.catalogId == catalogId && alias.alias == portId) {
-            return alias.portId;
-        }
-    }
+    // Index the immutable generated spellings. Preserve the original first
+    // match for duplicate rows without reordering the published table.
+    static const auto index = [] {
+        std::array<const GeneratedFunctionPortAlias *, kGeneratedFunctionPortAliases.size()> rows{};
+        for (std::size_t i = 0; i < rows.size(); ++i) rows[i] = &kGeneratedFunctionPortAliases[i];
+        std::sort(rows.begin(), rows.end(), [](const auto *left, const auto *right) {
+            const auto a = std::pair{left->catalogId, left->alias};
+            const auto b = std::pair{right->catalogId, right->alias};
+            return a == b ? left < right : a < b;
+        });
+        return rows;
+    }();
+    const auto key = std::pair{catalogId, portId};
+    const auto found = std::lower_bound(index.begin(), index.end(), key,
+        [](const auto *row, const auto &value) { return std::pair{row->catalogId, row->alias} < value; });
+    if (found != index.end() && (*found)->catalogId == catalogId && (*found)->alias == portId)
+        return (*found)->portId;
     return portId;
 }
 

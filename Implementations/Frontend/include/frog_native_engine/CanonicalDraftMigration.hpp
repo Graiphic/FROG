@@ -50,13 +50,14 @@ struct CanonicalDraftResolvedTypes {
     // the existing identity-based compatibility policy on a detached value.
     std::vector<CanonicalDraftWidgetResolution> widgets;
 };
-// One finite historical widget contract, shared by ordinary/composed migration
+// Finite historical widget contracts, shared by ordinary/composed migration
 // and the pre-projection guard. The existing model codec supplies exact facts;
 // this operation never invents a value or edits the authored source.
 struct CanonicalDraftWidgetNormalization {
     std::optional<source::JsonValue> current;
     std::vector<CanonicalDraftMigrationDiagnostic> diagnostics;
 };
+[[nodiscard]] bool canonicalDraftWidgetRequiresLegacyWitness(const source::JsonValue &) noexcept;
 [[nodiscard]] CanonicalDraftWidgetNormalization normalizeCanonicalDraftWidget(
     const source::JsonValue &,const std::string &path,const CanonicalDraftResolvedTypes *);
 // Preparing a proposal neither edits a document nor writes a file. The caller

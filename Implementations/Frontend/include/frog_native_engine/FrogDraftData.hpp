@@ -396,6 +396,7 @@ struct DiagramNode {
     std::string pathBrowseExistenceMode = "existing";
     std::string pathBrowseStartPath;
     std::vector<RingItem> enumItems;
+    bool pictureRing = false;
     std::uint32_t enumSelectedValue = 0U;
     bool enumTextOverflowVisible = true;
     bool enumDigitalDisplayVisible = false;

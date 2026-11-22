@@ -52,3 +52,22 @@ The editor retires the former annotation actions for this graph. Legacy
 `annotations` (text and X/Y) are read once as named free cursors with a small
 plus marker; text and coordinates survive, and a repeated save/open does not
 duplicate them. XY annotations remain a separate existing facility.
+
+## Optional independent axes (local common-Frontend extension, 21 November 2026)
+
+The local reader and writer accept `x_axis` and `y_axis` for presentation
+overrides. Each axis keeps its own linear or logarithmic mapping, graduation
+format, precision, trailing zeros, title, tick labels, major and minor marks,
+and major and minor grids. Unset format and major-grid overrides inherit the
+shared settings. `y_title.vertical` controls title orientation. Bounds and
+autoscale use the existing `x_min`, `x_max`, `y_min`, `y_max`, `autoscale_x`
+and `autoscale_y` fields. Manual logarithmic ranges require positive bounds.
+
+Logarithmic projection omits out-of-domain points and breaks the drawn line at
+each gap. Autoscale uses plottable coordinates and provides a valid positive
+display range when the active mapping has no plottable samples. Mapping and
+label formats do not change the original values, sample origin or step. The
+local absolute-time format defaults to seconds since 1904-01-01 UTC. Axis
+overrides are independent of whether data uses sample indices, explicit
+origin and step, or waveform timing. The `WFG-1-linear` source marker is
+retained for the local codec. These optional fields extend presentation.

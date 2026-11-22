@@ -60,6 +60,7 @@ struct TitleStyle {
     std::uint32_t rgb = 0xDADEE3;
     std::string alignment = "default";
     bool pointSizeUsesDefault = true;
+    bool vertical = false;
     bool operator==(const TitleStyle &) const = default;
 };
 enum class CursorMode {Free, SinglePlot};
@@ -79,6 +80,26 @@ struct Annotation {
     double x = 0, y = 0;
     bool operator==(const Annotation &) const = default;
 };
+enum class AxisScale { Linear, Logarithmic };
+// Keep these ordinal values aligned with the shared XY label formatter.
+enum class AxisFormat { Automatic, Decimal, Scientific, Engineering, Binary, Octal,
+    Hexadecimal, RelativeTime, AbsoluteTime, SI };
+enum class TimeContent { DateTime, Date, Time };
+struct AxisOptions {
+    AxisScale scale = AxisScale::Linear;
+    // Empty uses the original Waveform/Widget numeric formatting policy.
+    std::optional<AxisFormat> format;
+    int precision = 2;
+    bool significantDigits = false, trailingZeros = false;
+    bool titleVisible = true, tickLabelsVisible = true;
+    bool majorTicks = true, minorTicks = false;
+    // Empty inherits the historical graph-wide grid visibility.
+    std::optional<bool> majorGrid;
+    bool minorGrid = false;
+    std::string timeOrigin = "FROG epoch", timeUnit = "s", timeZone = "UTC";
+    TimeContent timeContent = TimeContent::DateTime;
+    bool operator==(const AxisOptions &) const = default;
+};
 struct Design {
     std::string xLabel = "Time";
     std::string yLabel = "Amplitude";
@@ -92,8 +113,15 @@ struct Design {
     std::vector<Plot> plots;
     std::vector<Annotation> annotations; // legacy input only; never authored by the UI
     std::vector<Cursor> cursors;
+    AxisOptions xAxis, yAxis;
     bool operator==(const Design &) const = default;
 };
+[[nodiscard]] inline const AxisOptions &axisOptions(const Design &design, bool xAxis) noexcept {
+    return xAxis ? design.xAxis : design.yAxis;
+}
+[[nodiscard]] inline AxisOptions &axisOptions(Design &design, bool xAxis) noexcept {
+    return xAxis ? design.xAxis : design.yAxis;
+}
 
 // Only design and initialData are source. Runtime snapshots and diagnostics are
 // session state; ordinary Save must never promote them to authored defaults.
@@ -141,14 +169,18 @@ void clearData(State &state);
 [[nodiscard]] Plot plotForSeries(const Design &design, const Series &series, std::size_t ordinal);
 [[nodiscard]] Range dataRange(const State &state, bool xAxis);
 [[nodiscard]] bool validRange(Range range) noexcept;
+[[nodiscard]] bool validRange(Range range,AxisScale scale) noexcept;
 
 struct DataRanges {
     Range x;
     Range y;
+    bool xLogDomainEmpty = false;
+    bool yLogDomainEmpty = false;
     bool operator==(const DataRanges &) const = default;
 };
 // Both automatic axes share one pass over finite samples.
 [[nodiscard]] DataRanges dataRanges(const State &state);
+[[nodiscard]] bool setAxisScale(Design &,const DataRanges &,bool xAxis,AxisScale,std::string *error=nullptr);
 
 enum class AxisTextPart { XLabel, YLabel, XMinimum, XMaximum, YMinimum, YMaximum };
 // The editor starts from the exact displayed bounds, not rounded tick labels or
@@ -183,11 +215,14 @@ struct Transform {
     Rect plot;
     Range x;
     Range y;
+    AxisScale xScale = AxisScale::Linear, yScale = AxisScale::Linear;
     [[nodiscard]] std::optional<Point> toPlot(double xValue, double yValue) const noexcept;
     [[nodiscard]] std::optional<Point> toData(Point point) const noexcept;
 };
-struct Tick { double value; double fraction; std::string label; };
+struct Tick { double value; double fraction; std::string label; bool major = true; };
 [[nodiscard]] std::vector<Tick> ticks(Range range, std::size_t desiredCount);
+[[nodiscard]] std::vector<Tick> ticks(Range range, const AxisOptions &, std::size_t desiredCount);
+[[nodiscard]] std::string formatAxisNumber(double value, const AxisOptions &);
 struct Vertex { Point point; std::size_t sample; };
 using Run = std::vector<Vertex>;
 // Pixel-column reduction retains first/min/max/last in ORIGINAL index order,

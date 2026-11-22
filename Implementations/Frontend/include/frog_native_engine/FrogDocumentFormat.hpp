@@ -31,7 +31,10 @@ inline constexpr std::uint32_t kFrogRecoveryDraftRevision = 9U;
 // Nominal by-value class declarations, member attribution and class operations.
 // Earlier readers must refuse rather than detach identity/private access rules.
 inline constexpr std::uint32_t kFrogClassValueDraftRevision = 10U;
-inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogClassValueDraftRevision;
+// Picture Rings persist an ordered embedded image catalogue. A reader that
+// understands only numeric Ring choices must not silently discard the images.
+inline constexpr std::uint32_t kFrogPictureRingDraftRevision = 11U;
+inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogPictureRingDraftRevision;
 inline constexpr std::string_view kFrogWidgetValueDraftFormat = "frog.widget.value.draft";
 
 [[nodiscard]] bool validFrogStudioFileVersion(std::string_view version) noexcept;

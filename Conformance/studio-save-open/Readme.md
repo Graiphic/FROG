@@ -48,3 +48,5 @@ python -B -m pytest -p no:cacheprovider -q Implementations/Reference/Validator/t
 
 Studio UI and Run results are attributed to the saved evidence. The public
 workflow runs the schema and shared Frontend gates.
+
+The current source reader supports revisions 0 through 11. Draft 11 has a separate [ordinary document schema](../../Expression/Schemas/frog.studio-picture-ring.schema.json) for embedded Picture Rings. The earlier signed examples above retain their original revision and qualification.

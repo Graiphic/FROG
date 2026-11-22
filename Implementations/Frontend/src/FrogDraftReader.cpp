@@ -327,6 +327,20 @@ void overrideStringIfPresent(std::string &target, const JsonValue &object, std::
     }
 }
 
+std::shared_ptr<const std::string> readPictureRingImage(const JsonValue &item) {
+    const auto *image = objectField(item, "image");
+    if (!image || image->type != JsonValue::Type::String) return {};
+    const std::string_view encoded = image->string;
+    constexpr std::string_view formats[] = {
+        "data:image/png;base64,", "data:image/jpeg;base64,", "data:image/bmp;base64,",
+        "data:image/gif;base64,", "data:image/tiff;base64,"
+    };
+    for (const auto prefix : formats)
+        if (encoded.starts_with(prefix) && encoded.size() > prefix.size())
+            return std::make_shared<const std::string>(image->string);
+    return {};
+}
+
 const JsonValue *studioStaticVisualObject(const JsonValue &value) noexcept {
     const auto *studio = objectField(value, "studio");
     return studio == nullptr ? nullptr : objectField(*studio, "staticVisual");
@@ -508,6 +522,12 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
         widget.collection=*state;
     }
     if (const auto *props = objectField(value, "props")) {
+        widget.pictureRing = isRingWidget(widget) && jsonBooleanField(*props, "picture_ring").value_or(false);
+        if (widget.pictureRing) {
+            widget.ringItems.clear(); // The normal Ring's palette seed is not an image.
+            widget.pictureRingDropdownArrowHidden =
+                jsonBooleanField(*props, "picture_ring.dropdown_arrow_hidden").value_or(false);
+        }
         if(const auto *link=props->member("type_definition")) {
             std::ostringstream encoded;document_internal::appendJsonValue(encoded,*link);
             const auto decoded=deserializeTypeDefinitionLink(encoded.str());
@@ -1268,6 +1288,8 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
                         parsed.disabled = jsonBooleanField(item, "disabled").value_or(false);
                     }
                     parsed.visible = jsonBooleanField(item, "visible").value_or(true);
+                    if (widget.pictureRing)
+                        parsed.imageDataUri = readPictureRingImage(item);
                     if (isTabWidget(widget)) {
                         parsed.captionMatchesLabel = jsonBooleanField(item, "caption_matches_label").value_or(true);
                         parsed.caption = jsonStringField(item, "caption").value_or(parsed.label);
@@ -1282,7 +1304,12 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
                     }
                     parsedItems.push_back(std::move(parsed));
                 }
-                if (isListboxWidget(widget)) {
+                if (widget.pictureRing) {
+                    // Opening restores the stored catalogue and default.
+                    // setRingItems is the authoring edit that remaps a live
+                    // selection and default against the preceding catalogue.
+                    widget.ringItems = std::move(parsedItems);
+                } else if (isListboxWidget(widget)) {
                     // Item identities are authored data. The Listbox validator
                     // diagnoses duplicates instead of renaming an association.
                     widget.ringItems = std::move(parsedItems);
@@ -2403,8 +2430,8 @@ std::optional<FrogDraftData> readFrogDraftData(
     }
     if(!readClassSourceDeclaration(*root,document.properties.classSource,error))return std::nullopt;
     if((!document.properties.classSource.classes.empty()||document.properties.classSource.member)&&
-        jsonUnsignedField(*root,"draft_revision").value_or(0U)!=kFrogClassValueDraftRevision) {
-        if(error)*error="By-value class source requires private draft_revision 10.";return std::nullopt;
+        jsonUnsignedField(*root,"draft_revision").value_or(0U)<kFrogClassValueDraftRevision) {
+        if(error)*error="By-value class source requires private draft_revision 10 or later.";return std::nullopt;
     }
     document.title = jsonStringField(root.value(), "title").value_or("Untitled 1");
     if (const auto *metadata = objectField(root.value(), "metadata")) {
@@ -2805,12 +2832,12 @@ std::optional<FrogDraftData> readFrogDraftData(
                 if(node.clusterConstantAutoSizing!="none" && node.clusterConstantAutoSizing!="fit" &&
                    node.clusterConstantAutoSizing!="horizontal" && node.clusterConstantAutoSizing!="vertical")
                     node.clusterConstantAutoSizing="none";
-                // These are saved expanded dimensions, not palette defaults.
-                // Size to Fit may be smaller than the ordinary cluster minimum;
-                // the Error preset is intentionally narrower as well.
-                const double minimumClusterWidth=node.clusterConstantAutoSizing=="fit" ? 1.0 :
+                // Automatic layouts measure the actual fields and can be
+                // smaller than the manual resize minimum on either axis.
+                const bool automaticClusterLayout=node.clusterConstantAutoSizing!="none";
+                const double minimumClusterWidth=automaticClusterLayout ? 1.0 :
                     node.type=="frog.studio.error.constant" ? kErrorConstantWidth : 70.0;
-                const double minimumClusterHeight=node.clusterConstantAutoSizing=="fit" ? 1.0 : 50.0;
+                const double minimumClusterHeight=automaticClusterLayout ? 1.0 : 50.0;
                 node.clusterConstantExpandedWidth=std::clamp(node.clusterConstantExpandedWidth,
                     minimumClusterWidth,100000.0);
                 node.clusterConstantExpandedHeight=std::clamp(node.clusterConstantExpandedHeight,
@@ -3282,6 +3309,11 @@ std::optional<FrogDraftData> readFrogDraftData(
                         jsonBooleanField(*choiceConstant, "digital_display_visible").value_or(false);
                     node.ringAllowUndefinedValues =
                         jsonBooleanField(*choiceConstant, "allow_undefined_values").value_or(false);
+                    node.pictureRing = (node.type == "frog.studio.numeric.ring_constant" ||
+                        node.type == "numeric.ring_constant") &&
+                        jsonBooleanField(*choiceConstant, "picture_ring").value_or(false);
+                    if (node.pictureRing)
+                        node.ringAllowUndefinedValues = true;
                     if (const auto *items = objectField(*choiceConstant, "items");
                         items != nullptr && items->type == JsonValue::Type::Array) {
                         node.enumItems.reserve((std::min)(
@@ -3303,6 +3335,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                             item.id = jsonStringField(itemValue, "id").value_or({});
                             item.visible =
                                 jsonBooleanField(itemValue, "visible").value_or(true);
+                            if (node.pictureRing) item.imageDataUri = readPictureRingImage(itemValue);
                             if (!parsedLabel.has_value()) {
                                 item.label = "Item " +
                                     std::to_string(node.enumItems.size() + 1U);
@@ -3457,8 +3490,8 @@ std::optional<FrogDraftData> readFrogDraftData(
                 if (node.kind == "frog_call" || (node.kind == "fitting_model_reference" || node.kind == "calculus_function_reference")) {
                     if (const auto *call = objectField(nodeValue, "call")) {
                         if(const auto *operation=call->member("class_operation")) {
-                            if(jsonUnsignedField(*root,"draft_revision").value_or(0U)!=kFrogClassValueDraftRevision) {
-                                if(error)*error="Class operations require private draft_revision 10.";return std::nullopt;
+                            if(jsonUnsignedField(*root,"draft_revision").value_or(0U)<kFrogClassValueDraftRevision) {
+                                if(error)*error="Class operations require private draft_revision 10 or later.";return std::nullopt;
                             }
                             node.classOperation=readClassSourceOperation(*operation,error);
                             if(!node.classOperation||node.kind!="frog_call")return std::nullopt;
@@ -3568,7 +3601,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                         node.type == "frog.studio.numeric.ring_array_constant" ||
                         node.type == "numeric.ring_array_constant";
                     if (node.valueType.empty()) {
-                        node.valueType = ringConstant ? "u8" : "u16";
+                        node.valueType = ringConstant && !node.pictureRing ? "u8" : "u16";
                     }
                     const bool arrayConstant =
                         node.type == "frog.studio.numeric.enum_array_constant" ||
@@ -3581,10 +3614,10 @@ std::optional<FrogDraftData> readFrogDraftData(
                                 ? "Ring Array Constant"
                                 : "Enum Array Constant"
                             : ringConstant
-                                ? "Ring Constant"
+                                ? (node.pictureRing ? "Picture Ring Constant" : "Ring Constant")
                                 : "Enum Constant";
                     }
-                    if (node.enumItems.empty()) {
+                    if (node.enumItems.empty() && !node.pictureRing) {
                         node.enumItems = defaultEnumItems();
                     }
                     const auto selected = std::find_if(
@@ -3593,7 +3626,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                         [&node](const RingItem &item) {
                             return item.value == node.enumSelectedValue && !item.disabled;
                         });
-                    if (selected == node.enumItems.end()) {
+                    if (selected == node.enumItems.end() && !node.pictureRing) {
                         const auto firstEnabled = std::find_if(
                             node.enumItems.begin(),
                             node.enumItems.end(),

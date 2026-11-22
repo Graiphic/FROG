@@ -1,0 +1,28 @@
+{
+  "repository": "https://github.com/mefistotelis/pylabview",
+  "revision": "5f20e23de6a386021eb955c825cc43d221f09ff1",
+  "version": "0.1.2",
+  "license": "MIT",
+  "files": {
+    "LICENSE": "184e772689fef052ff10c52eeb57e9b40f7f367a7588c494e9ae4c05ff5869ff",
+    "pylabview/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "pylabview/assets/tom-thumb.pbm": "d85bebe47df567a70e0c3292b8bc45ab52990de79d4078094627072b37920ea4",
+    "pylabview/assets/tom-thumb.pil": "a71ea4f5c41d9bae0686f55e1e7834b84f6f4a7f69c6fd951862288304cd54fb",
+    "pylabview/assets/tom-thumb.txt": "1a2a9e8f9aa15906bf5c74c505e2a78c04386002cbeb0b9615b7309422b80d61",
+    "pylabview/LVblock.py": "b3a5e23042e2bec879e2da2afee6b87dd86081ee642906dac839aa062a7040ea",
+    "pylabview/LVclasses.py": "b6479f5199cff668c2dc1254b7de7e2340ca8328f02793513234713be27aabaf",
+    "pylabview/LVcode.py": "a79ac32007bc34172b88f218de91029c25e40289f892e948d1a57cc309d473ff",
+    "pylabview/LVdatafill.py": "607fbdf9d8cbaa20bf0b678f09017fbf2e17280750ddbf60f1257f1da4ab0f1e",
+    "pylabview/LVdatatype.py": "bdfaf36af36a601066611773572c6b376ea61c7dd9d00393876d3b2fe25a672e",
+    "pylabview/LVdatatyperef.py": "f784304f5bd6a3f2a80863178ca841a5d085953e84a8ff18aef81199513574ea",
+    "pylabview/LVheap.py": "8686db3884c896429ff1cf144a5c80193bcbed00e97a8d082e67ecda7437d2ee",
+    "pylabview/LVinstrument.py": "e7202f8fc6ceea62c66efadd57e2b910830ae017e3f065ee44d2e1cfc48485ff",
+    "pylabview/LVlinkinfo.py": "dd0adc7c02cc7e316ec0d84ad9d8c671b362f91c556f2384669a68d3f448fc4f",
+    "pylabview/LVmisc.py": "ddcf9a5869bc8d0351880a402d57f3118c709faa14eb311459708c3f8bfc38a2",
+    "pylabview/LVparts.py": "ed7a37ad72ff34f989ea55abd76ff2cc2ff7b06d32a66025736b0c98d97d7d5c",
+    "pylabview/LVrsrcontainer.py": "0611a37522e31a168709818bd38f074e0585519a9ae59ffcebc50758e025be24",
+    "pylabview/LVxml.py": "e45bcef126a4224ca18479aaec944611447074dc7be3a0d99608f7690d218092",
+    "pylabview/modRSRC.py": "478e5d94bf9514019e568e1cb85d46873601ff9214f59ec1e4fe498b9da0b9e7",
+    "pylabview/readRSRC.py": "56053e60d5cd653181b1040cac3677b65b42908a0fc523d02aa946000c774b8d"
+  }
+}

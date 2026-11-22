@@ -1,6 +1,6 @@
 # Graiphic Studio authoring document profile, version 1
 
-Implementation reconciliation updated 13 November 2026. This page describes
+Source compatibility updated 22 November 2026. This page describes
 the output and admission of specific Studio producers. The
 [coverage matrix](../docs/studio-source-compatibility.md) attributes the tested
 capabilities to their Studio and Frontend identities.
@@ -44,7 +44,7 @@ select two source authorities. Changing a filename or replacing key spellings
 is not a migration. A public Source reader can preserve more constructs than
 the editing importer can materialize; reading and canvas editing are separate.
 
-The reader recognizes integers 0 through 10. The ordinary writer
+The reader recognizes integers 0 through 11. The ordinary writer
 currently emits at least revision 3 and always records `storage`, including
 when Readable is explicitly selected. The historical October writer emitted
 revision 2 without Storage. Features raise the minimum revision.
@@ -61,6 +61,21 @@ revision 2 without Storage. Features raise the minimum revision.
 | 8 | Linked standard Type Definitions on nodes and widgets |
 | 9 | Explicit Studio recovery copy carrying the retained origin |
 | 10 | Private class authoring profile with explicit composed dependency resolution |
+
+| 11 | Picture Ring catalogue on a panel widget or diagram constant, including nested presentations. The numeric choice and embedded images travel together. |
+
+Revision 11 has its own [ordinary envelope schema](Schemas/frog.studio-picture-ring.schema.json).
+The reader also accepts Picture Rings written before the feature acquired its
+own revision. Saving one with the new writer advances its declared revision.
+An ordinary numeric Ring continues to use its existing minimum. A reader with
+a maximum of 10 refuses revision 11 before projecting the document.
+
+On a Ring widget, `props.picture_ring` selects the image presentation.
+`props["picture_ring.dropdown_arrow_hidden"]` controls the dropdown arrow.
+Each picture choice retains its item ID, index and embedded image data URI.
+The diagram constant stores its picture flag and items in its Ring configuration.
+The value on the wire is a U16 index. The same file can also carry other
+features, which retain their normal type and dependency checks.
 
 Feature requirements compose: the writer selects the required revision for
 the whole document, including nested values and node configurations. A future

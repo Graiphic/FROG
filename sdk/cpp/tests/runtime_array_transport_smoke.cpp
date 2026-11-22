@@ -1,5 +1,6 @@
 #include "frog/sdk/runtime_array_value.hpp"
 #include "frog/sdk/runtime_contract_codec.hpp"
+#include "frog/sdk/runtime_primitive_array_edit.hpp"
 #include "frog/sdk/typed_event_packet.hpp"
 #include <algorithm>
 #include <array>
@@ -135,19 +136,110 @@ void aggregate() {
 }
 void genericArray() {
     phase="Generic Array8192 and atomic allocation failure";
-    std::vector<rt::RuntimeValue> elements(8192,rt::RuntimeValue{std::uint64_t{9007199254740993ULL}});
-    elements.back()=std::uint64_t{UINT64_MAX};
+    std::vector<rt::RuntimeValue> elements(8192,rt::RuntimeValue{std::string("opaque")});
+    elements.back()=std::string("last");
     const auto authority=owner();
-    const auto value=rt::makeRuntimeArray(rt::valueTypeFromCanonicalName("u64"),{64,128},std::move(elements),authority);
-    require(value&&rt::runtimeValueValidForOwner(*value,rt::valueTypeFromCanonicalName("array<u64,rank=2>"),authority),"Generic Array8192 retained its recursive4096 cap");
+    const auto value=rt::makeRuntimeArray(rt::valueTypeFromCanonicalName("string"),{64,128},std::move(elements),authority);
+    require(value&&rt::runtimeValueValidForOwner(*value,rt::valueTypeFromCanonicalName("array<string,rank=2>"),authority),"Generic Array8192 retained its recursive4096 cap");
     rt::codec_detail::Writer writer(true,false,&authority);writer.runtimeValue(*value);const auto bytes=std::move(writer).finish();
     rt::codec_detail::Reader reader(bytes);reader.typed(true);reader.arrayOwner(authority);rt::RuntimeValue decoded;
-    require(!bytes.empty()&&reader.runtimeValue(decoded)&&reader.finished()&&rt::runtimeValuesEqual(*value,decoded),"Generic Array8192 lost rank, row-major values or exact u64 data");
+    require(!bytes.empty()&&reader.runtimeValue(decoded)&&reader.finished()&&rt::runtimeValuesEqual(*value,decoded),"Generic Array8192 lost rank or row-major values");
     rt::codec_detail::Reader failed(bytes);failed.typed(true);failed.arrayOwner(authority);rt::RuntimeValue unchanged;
     const auto payload=std::size_t{8192}*sizeof(rt::RuntimeValue);allocation_fault::arm(payload);
     const bool accepted=failed.runtimeValue(unchanged);const auto failure=allocation_fault::state();allocation_fault::clear();
     require(!accepted&&std::holds_alternative<std::monostate>(unchanged)&&failure.failures==1&&failure.requested>=payload&&
         failed.error().find("Not enough memory")!=std::string_view::npos,"Generic Array allocation failure escaped or published partial state");
 }
+
+template<class T>
+void packedNumeric(std::string_view typeName,const std::array<T,4> &cells) {
+    phase="Exact packed "+std::string(typeName)+" transport";
+    const auto authority=owner();
+    const auto type=rt::valueTypeFromCanonicalName(typeName);
+    const std::array rankOne{4U};
+    const std::array rankTwo{2U,2U};
+    std::array<std::uint32_t,16> rankMaximum;
+    rankMaximum.fill(1);
+    rankMaximum.back()=4;
+    rt::RuntimePrimitiveArrayPool pool;
+    for(const std::span<const std::uint32_t> shape:{std::span<const std::uint32_t>(rankOne),
+            std::span<const std::uint32_t>(rankTwo),std::span<const std::uint32_t>(rankMaximum)}) {
+        const auto source=rt::makeRuntimeArrayFromNumeric(type,shape,std::span<const T>(cells),authority);
+        const rt::RuntimeIpeValue *array=source?rt::runtimeArray(*source):nullptr;
+        require(array&&array->packedCells()&&array->elementType()==type&&std::ranges::equal(array->shape(),shape)&&
+            array->arrayStorageBytes()==cells.size()*sizeof(T)&&!array->validForOwner(owner(2)),
+            "Element storage width, shape, or owner differs");
+        const auto physical=rt::valueTypeFromCanonicalName(array->canonicalType());
+        require(std::holds_alternative<std::monostate>(array->numericElement(cells.size())),"Out-of-range read returned a cell");
+        using Word=rt::compound_detail::PackedNumericWord<T>;
+        using Scalar=rt::compound_detail::NumericScalarCarrier<T>;
+        for(std::size_t i=0;i<cells.size();++i) {
+            require(std::bit_cast<Word>(array->numericElements<T>()[i])==std::bit_cast<Word>(cells[i])&&
+                std::get<Scalar>(array->numericElement(i))==static_cast<Scalar>(cells[i]),"Exact cell read differs");
+        }
+        require(!rt::RuntimePrimitiveArrayEdit::begin(physical,shape,authority,1,pool),
+            "Packed draft escaped the existing preparation budget");
+        auto draft=rt::RuntimePrimitiveArrayEdit::begin(physical,shape,authority,4096,pool);
+        require(draft&&draft->numeric<T>().size()==cells.size(),"Ranked packed draft unavailable");
+        std::ranges::copy(cells,draft->numeric<T>().begin());
+        const auto result=draft->seal();
+        require(result&&rt::runtimeValuesEqual(*source,*result),"Ranked packed draft changed values");
+
+        for(bool compact:{false,true}) {
+            const auto payloadBytes=cells.size()*(compact?sizeof(T):9);
+            rt::codec_detail::Writer writer(true,false,&authority,{1024,payloadBytes,compact});
+            writer.runtimeValue(*source);
+            const auto bytes=std::move(writer).finish();
+            require(!bytes.empty()&&bytes.front()==(compact?17U:8U),"Artifact tag changed without opt-in");
+            const std::size_t headerBytes=1+4+typeName.size()+1+sizeof(type.bitWidth)+sizeof(type.rank)+4+4+
+                shape.size()*sizeof(std::uint32_t)+4;
+            require(bytes.size()==headerBytes+payloadBytes,"Cell wire width differs from its active profile");
+            rt::codec_detail::Reader reader(bytes,compact);reader.typed(true);reader.arrayOwner(authority);
+            rt::RuntimeValue restored;
+            require(reader.runtimeValue(restored)&&reader.finished()&&rt::runtimeValuesEqual(*source,restored),
+                "Exact typed Array transport changed values");
+            const auto *restoredArray=rt::runtimeArray(restored);
+            require(restoredArray&&restoredArray->arrayStorageBytes()==cells.size()*sizeof(T),
+                "Decoder materialized generic cells");
+            for(std::size_t i=0;i<cells.size();++i)
+                require(std::bit_cast<Word>(restoredArray->numericElements<T>()[i])==std::bit_cast<Word>(cells[i]),
+                    "Codec changed exact bits");
+            if(compact) {
+                rt::codec_detail::Reader publicReader(bytes);publicReader.typed(true);publicReader.arrayOwner(authority);
+                require(!publicReader.runtimeValue(restored),"Private packed tag leaked into public decoder");
+                rt::codec_detail::Reader shortReader(std::span<const std::uint8_t>(bytes).first(bytes.size()-1),true);
+                shortReader.typed(true);shortReader.arrayOwner(authority);
+                rt::RuntimeValue unchanged;
+                require(!shortReader.runtimeValue(unchanged)&&std::holds_alternative<std::monostate>(unchanged),
+                    "Truncated packed payload published partial cell storage");
+            }
+        }
+        require(array->arrayStorageBytes()==cells.size()*sizeof(T),"Scalar observation forced a full projection");
+        if(shape.size()==1) {
+            const std::array suffix{rt::RuntimeValue{static_cast<Scalar>(cells[0])}};
+            const auto extended=rt::appendRuntimePrimitiveArray(*array,suffix,authority,4096);
+            const auto *grown=extended?rt::runtimeArray(*extended):nullptr;
+            require(grown&&grown->packedCells()&&grown->elementCount()==5&&array->elementCount()==4&&
+                grown->numericElement(4)==suffix[0],"Typed append changed a sealed prefix or used generic cells");
+        }
+    }
+    const std::array emptyShape{0U,5U};
+    const auto empty=rt::makeRuntimeArrayFromNumeric(type,emptyShape,std::span<const T>{},authority);
+    require(empty&&rt::runtimeArray(*empty)->packedCells()&&rt::runtimeArray(*empty)->elementCount()==0,
+        "Typed empty Array lost its owner, shape or representation");
 }
-int main(){try{legacyBytes();factories();codec();aggregate();genericArray();std::cout<<"SDK_PACKED_F64_ARRAY_PASS "<<checks<<" checks; schema3/tag7 U32 capacity, actual arrays above1M and32MiB, generic Array8192, exact owner, allocation failure, -0 codec, sealed-copy and ART1/2/tag6 preservation; no Runtime/Source/operator/UI capability claimed\n";return 0;}catch(const std::exception &e){allocation_fault::clear();std::cerr<<e.what()<<'\n';return 1;}}
+
+void packedMatrix() {
+    packedNumeric("i8",std::array<std::int8_t,4>{INT8_MIN,-7,0,INT8_MAX});
+    packedNumeric("u8",std::array<std::uint8_t,4>{0,1,128,UINT8_MAX});
+    packedNumeric("i16",std::array<std::int16_t,4>{INT16_MIN,-7,0,INT16_MAX});
+    packedNumeric("u16",std::array<std::uint16_t,4>{0,1,32768,UINT16_MAX});
+    packedNumeric("i32",std::array<std::int32_t,4>{INT32_MIN,-7,0,INT32_MAX});
+    packedNumeric("u32",std::array<std::uint32_t,4>{0,1,UINT32_C(2147483648),UINT32_MAX});
+    packedNumeric("i64",std::array<std::int64_t,4>{INT64_MIN,-INT64_C(9007199254740993),INT64_C(9007199254740993),INT64_MAX});
+    packedNumeric("u64",std::array<std::uint64_t,4>{0,1,UINT64_C(9007199254740993),UINT64_MAX});
+    packedNumeric("f32",std::array{-0.0F,0.125F,0.25F,std::numeric_limits<float>::max()});
+    packedNumeric("f64",std::array{-0.0,0.125,0.25,std::numeric_limits<double>::max()});
+}
+}
+int main(){try{legacyBytes();factories();codec();aggregate();genericArray();packedMatrix();std::cout<<"SDK_PACKED_F64_ARRAY_PASS "<<checks<<" checks; legacy ART1/2/3, generic Array8192, ten exact numeric carriers and private wire widths at ranks1/2/16, bounded pool and append; no Runtime/Source/operator/UI capability claimed\n";return 0;}catch(const std::exception &e){allocation_fault::clear();std::cerr<<e.what()<<'\n';return 1;}}

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "kind": "frog.frontend.local-provenance-and-licence-observations",
-  "observedDate": "2026-11-20",
+  "observedDate": "2026-11-22",
   "dissemination": "authorized-source-checkpoint-publication",
   "redistributionRightsGrantedForSelectedGraiphicOriginals": true,
   "thirdPartyContentRelicensed": false,
@@ -500,8 +500,8 @@
       },
       {
         "path": "include/frog_native_engine/ApplicationControlSchema.hpp",
-        "sha256": "07ef0af56c6d6177abf81b0286162a993d0860645e0673131c9260096f1519b2",
-        "size": 2887
+        "sha256": "134b3b191282718c28b268d49f8ae7f11c1b3a521c825304eed5be561fa13ed8",
+        "size": 3112
       },
       {
         "path": "include/frog_native_engine/ApplicationControlSourceCodec.hpp",
@@ -620,8 +620,8 @@
       },
       {
         "path": "include/frog_native_engine/CanonicalDraftMigration.hpp",
-        "sha256": "06454178abe5216d5f32d3df0d3adc1cd5b7ee463a1afac2e1c01a05e5b6eb8e",
-        "size": 4138
+        "sha256": "0ccc3bd125311e1e108153d3a123e2fd221739cecde8b490c879d196bc46568c",
+        "size": 4234
       },
       {
         "path": "include/frog_native_engine/CanonicalDraftPortResolution.hpp",
@@ -720,8 +720,8 @@
       },
       {
         "path": "include/frog_native_engine/CanonicalNumericScalarPalette.hpp",
-        "sha256": "43cf2f287d0f9f60e32faf37adf3150deca35c6287e06228d632f5c826b4fb9c",
-        "size": 9937
+        "sha256": "f22b76f6859f5c0ce5f1e8ad72702e29abf5116e82852ca011ace55447ae11db",
+        "size": 10398
       },
       {
         "path": "include/frog_native_engine/CanonicalNumericText.hpp",
@@ -795,8 +795,8 @@
       },
       {
         "path": "include/frog_native_engine/ClusterFunctionBinding.hpp",
-        "sha256": "874d659bd8715236db1fb00c48b976ae087a1cadd2f20bd90e4492c967e03063",
-        "size": 6127
+        "sha256": "bc4768e58427e9c05f5043028cdb43908882156eb5775bb9bd977eea23b0784e",
+        "size": 6340
       },
       {
         "path": "include/frog_native_engine/ClusterFunctionPortProjection.hpp",
@@ -870,8 +870,8 @@
       },
       {
         "path": "include/frog_native_engine/DiagramArrayValues.hpp",
-        "sha256": "cb4d9e995851a4ee02b094c648c8d2209dad5ada0c6077e87d57389c9f3dd066",
-        "size": 16613
+        "sha256": "0e18bc38f3322de179c3803d39cc6dd166236b1a61205ba3a47cca3b5d0500c5",
+        "size": 19239
       },
       {
         "path": "include/frog_native_engine/DiagramBindingResolver.hpp",
@@ -920,8 +920,8 @@
       },
       {
         "path": "include/frog_native_engine/DiagramTunnelIdentity.hpp",
-        "sha256": "a07fff84bb1a32730bc033ff04ecee2e4410276e1d7f1182d016bb64642256e6",
-        "size": 505
+        "sha256": "32a2318749643b891953de432863957842d8e4a3a4773e7d0029aae46497a09d",
+        "size": 1402
       },
       {
         "path": "include/frog_native_engine/DisabledStructureData.hpp",
@@ -1105,8 +1105,8 @@
       },
       {
         "path": "include/frog_native_engine/FrogDocumentFormat.hpp",
-        "sha256": "0a23294d083ef011dcf2b88249a424513fa30b109db7fab0ef91258cec8646fd",
-        "size": 2717
+        "sha256": "3c703f585fcf2288e20d5f8d59e026df9cdac95c931635359ea83fb82ed57d46",
+        "size": 2941
       },
       {
         "path": "include/frog_native_engine/FrogDocumentWidgetValues.hpp",
@@ -1115,8 +1115,8 @@
       },
       {
         "path": "include/frog_native_engine/FrogDraftData.hpp",
-        "sha256": "14a41449fc6b490f9254bbf7fdcec2467989b53b9612b7531e5fa354a86423eb",
-        "size": 50820
+        "sha256": "ffe2c84c26b20ce1fbdba460259df7f07715a87f70aa30b5112d9cbfb50c4b2b",
+        "size": 50851
       },
       {
         "path": "include/frog_native_engine/FrogDraftInterface.hpp",
@@ -1394,6 +1394,11 @@
         "size": 809
       },
       {
+        "path": "include/frog_native_engine/PictureRing.hpp",
+        "sha256": "13a7f3a742767d0ebb28f2e7180edfcea8d91456bfbaa14378f0c78066e1b893",
+        "size": 1378
+      },
+      {
         "path": "include/frog_native_engine/PolymorphicFrog.hpp",
         "sha256": "5967404081b190d36b63689e98b9b6983569e64119a7da489f27d73a2231c01e",
         "size": 3122
@@ -1595,8 +1600,8 @@
       },
       {
         "path": "include/frog_native_engine/WidgetCatalog.hpp",
-        "sha256": "b405f7838902584b792ae7d04336b08685edb54e9a2384a053f5165978a46acf",
-        "size": 5360
+        "sha256": "f551810e44adb5cc2cca584dbae419413929af408e93f2a5ad3d8d36b4fb918a",
+        "size": 5373
       },
       {
         "path": "include/frog_native_engine/WidgetChoiceProperties.hpp",
@@ -1620,8 +1625,8 @@
       },
       {
         "path": "include/frog_native_engine/WidgetInstance.hpp",
-        "sha256": "890526cd940ee46518fb9951988d00e296e99a5cdee6bf12b43c94172fc4d037",
-        "size": 45638
+        "sha256": "638a5dace0bb826a4710ba16d869219bdf3e4fa9ffbcb123d96095ecdeecb007",
+        "size": 46005
       },
       {
         "path": "include/frog_native_engine/WidgetNumericData.hpp",
@@ -1645,8 +1650,8 @@
       },
       {
         "path": "include/frog_native_engine/graph/WaveformGraph.hpp",
-        "sha256": "6d49da4c45ff29fbf30d198d25756e62f08adc9381615ccb7b84e3a2d059dda1",
-        "size": 8906
+        "sha256": "2975fa6b428be444b92f2b017cbf75130509a609bca256998daf2e25e2f18462",
+        "size": 10776
       },
       {
         "path": "include/frog_native_engine/graph/WaveformGraphBinding.hpp",
@@ -1655,8 +1660,8 @@
       },
       {
         "path": "include/frog_native_engine/graph/XYGraph.hpp",
-        "sha256": "3fbe7be3ad9158d973114526ab2cccdd319e43aafca90c670a73f5f546c3cdb7",
-        "size": 13218
+        "sha256": "9f88365ee878964fc317b052df204633bc63d86713ab72c2f2ab1ae359be5988",
+        "size": 13461
       },
       {
         "path": "include/frog_native_engine/graph/XYGraphDataHelpers.hpp",
@@ -1695,8 +1700,8 @@
       },
       {
         "path": "manifests/function-bindings/studio.function-bindings.v2.inc",
-        "sha256": "0380047c9a60b03e697349f6528c9d450bfae8ff7f634d9ceefe83ab931b972a",
-        "size": 6000003
+        "sha256": "9c7151ee64e9734c6e9ed8b87761a7e340f3093e2f4bc522d808a0ecb13ac8a9",
+        "size": 6003065
       },
       {
         "path": "manifests/math/entries.inc",
@@ -1730,8 +1735,8 @@
       },
       {
         "path": "snapshot/generated/WidgetCatalog.generated.hpp",
-        "sha256": "fceb295b3ffd63a1a7f77205a291a2cb50c527f9b7bd2605c75d9b51074c1e62",
-        "size": 41837
+        "sha256": "d30ce79c2c5a468bf5d025735bc56353102758d49fb1abbcbf0f10b5021822ea",
+        "size": 42779
       },
       {
         "path": "snapshot/generated/ordinary-differential-runtime.generated.inc",
@@ -1845,8 +1850,8 @@
       },
       {
         "path": "src/ApplicationControlSchema.cpp",
-        "sha256": "205e00db0e5b46a66e8cee158fef7137ba29fc1b2fcff4a4141f51097f30d27e",
-        "size": 80505
+        "sha256": "89c4fd6aa21847bb61d02514c6092e4104659d342fff5360a88f504a793ebf42",
+        "size": 81201
       },
       {
         "path": "src/ApplicationControlSourceCodec.cpp",
@@ -1895,8 +1900,8 @@
       },
       {
         "path": "src/CalculusBinding.cpp",
-        "sha256": "c6dde9459a777fb57a4feb3a209641a8d9020eea97fe414afe138f8708a9b33b",
-        "size": 26075
+        "sha256": "0e446958b0b74ab87aafda386c943cf66eaef2a599edca051c88c53f5f7161fb",
+        "size": 25646
       },
       {
         "path": "src/CalculusNodeBinding.cpp",
@@ -1925,8 +1930,8 @@
       },
       {
         "path": "src/CanonicalComposedDraftMigration.cpp",
-        "sha256": "a18806c9b84f39385ba584af1fbe45d78b60ac15881b5cef023e931dac7c0f85",
-        "size": 244787
+        "sha256": "7f4cb208b6cd29979970e2e98125af76c8836ed989dc64fc2d81ad0b55cb5c58",
+        "size": 249261
       },
       {
         "path": "src/CanonicalComposedDraftMigration.hpp",
@@ -1935,8 +1940,8 @@
       },
       {
         "path": "src/CanonicalComposedExecutionIr.cpp",
-        "sha256": "334b24a7706001759536bf3111a1eb4daa62133f8431f5344b72598270a88e0e",
-        "size": 138033
+        "sha256": "59819d15e90af3e9c7b6f5b2b7e7ae6a3f7f98725e9c801bb9a9110505b2d349",
+        "size": 138092
       },
       {
         "path": "src/CanonicalComposedExecutionIr.hpp",
@@ -1950,18 +1955,18 @@
       },
       {
         "path": "src/CanonicalDraftMigration.cpp",
-        "sha256": "48cad4c05f683fd9b6bd69beaa4ddb1e5290cb61750225bc4fe09864447d8dbb",
-        "size": 145060
+        "sha256": "3bf2a8741910f3d3fcb19d02648aed0cdfd073b0d9b6fdc77327c1e2d47098a7",
+        "size": 149421
       },
       {
         "path": "src/CanonicalDraftPortResolution.cpp",
-        "sha256": "a3de0e150fcc30e722d0e23323c0515f51d83261c89c571e3d55d7a9de8b666b",
-        "size": 21556
+        "sha256": "9d6f4ec0178c2c226bbd335d85969e6dac46bd0df595d6e57e83ee8f29677f0a",
+        "size": 21618
       },
       {
         "path": "src/CanonicalDraftPresentation.hpp",
-        "sha256": "d20f9d11674878aa0fb64dab9efce305fd83014b568f4ff10a0babb95ff1132a",
-        "size": 15168
+        "sha256": "9703176b122e03c40657c9d0faab8a0729c0745701a34237c411f5576ad9d3a6",
+        "size": 21479
       },
       {
         "path": "src/CanonicalErrorHandlingNative.cpp",
@@ -2145,8 +2150,8 @@
       },
       {
         "path": "src/DiagramBindingResolver.cpp",
-        "sha256": "f0fc2c0ea5bdbf431c787bd48e5635915c1d133ad16067f240d57f5679b07c1d",
-        "size": 164713
+        "sha256": "0d34131628cedccfe5e634ca3a86a27dbf58accd13e962976e2f8365bb94efec",
+        "size": 165156
       },
       {
         "path": "src/DiagramStructureCatalog.cpp",
@@ -2180,8 +2185,8 @@
       },
       {
         "path": "src/DraftFrontendPreparation.cpp",
-        "sha256": "6c9ef19b2d8f6ff3c48d19895e4e29929ee84445a8259cd0ef738338a3306dd4",
-        "size": 26684
+        "sha256": "3062a1bc798ddc95743d937fee406f0397280f0f29965d692343b778ab2261fe",
+        "size": 29946
       },
       {
         "path": "src/DraftInterfaceInspection.cpp",
@@ -2280,8 +2285,8 @@
       },
       {
         "path": "src/FittingBinding.cpp",
-        "sha256": "e6ca4b9e263c2ccf629b691ad1605aa9d12ce65bd1030f391258d8552895ebcd",
-        "size": 46383
+        "sha256": "d3f89e14cf40c1e441827cea1925970b1a10a6e5086066dd6f63d78ae7d66d4d",
+        "size": 45953
       },
       {
         "path": "src/FittingModelPreparation.cpp",
@@ -2305,13 +2310,13 @@
       },
       {
         "path": "src/FrogDocumentArrayStorage.cpp",
-        "sha256": "8d22bdf11861585d677c59fc53c5972441abc662e8ea78694a3c9ecd5c26a103",
-        "size": 38636
+        "sha256": "d1310a66fcefb461ca371a568b7ee83baf91eaba708f5ac97261d38838d2773a",
+        "size": 40112
       },
       {
         "path": "src/FrogDocumentArrayStorage.hpp",
-        "sha256": "e7426d122d0c4522204d0089e74e548d10005fa0ffd6230e624e39757a1b652d",
-        "size": 3546
+        "sha256": "5e7b1ac62fb79f4a8f608e9262d69eeed1f446c076b7accd7bc7cc82edf8df3a",
+        "size": 3687
       },
       {
         "path": "src/FrogDocumentCaseStructureSerialization.cpp",
@@ -2415,8 +2420,8 @@
       },
       {
         "path": "src/FrogDocumentIntegerLexeme.hpp",
-        "sha256": "c167ca6a513dc4cf782b54a2f9e7e184955c30abef7d91c999b7f9cbbd34f0e4",
-        "size": 2669
+        "sha256": "6b4fb34d965c3660b849374d75f3f0b1d08cdb091f05b544b7bfd1f7a4161011",
+        "size": 2744
       },
       {
         "path": "src/FrogDocumentJsonValue.cpp",
@@ -2485,8 +2490,8 @@
       },
       {
         "path": "src/FrogDocumentWaveformGraph.cpp",
-        "sha256": "8a1e619341668bdf30cdedced463559e2a51873cf7654b74de73d423ac55f3a6",
-        "size": 17579
+        "sha256": "4b453d8512caafe06265c569c20fbdb766aeca4b661523f2c59f5c12bfebfa5d",
+        "size": 21278
       },
       {
         "path": "src/FrogDocumentWaveformGraph.hpp",
@@ -2505,8 +2510,8 @@
       },
       {
         "path": "src/FrogDocumentXYGraph.cpp",
-        "sha256": "e21b0f13b653ac8a96e535c367550a625db96e0c89ef45249f653b9eb8cc5eb2",
-        "size": 20203
+        "sha256": "a59aeb4b0689909d251ce3bdfc34d63c4848fa779d029898b872bca9c5d18442",
+        "size": 20612
       },
       {
         "path": "src/FrogDocumentXYGraph.hpp",
@@ -2540,13 +2545,13 @@
       },
       {
         "path": "src/FrogDraftReader.cpp",
-        "sha256": "594d53ed91655a59a04286c2798d0f1b1dd8983725c68c8a8f6bb9918e5fb037",
-        "size": 249042
+        "sha256": "bdaedad4b2367357df36fcf6c0b7f2502dcd739793f6c247e7dbba46fbe76377",
+        "size": 251140
       },
       {
         "path": "src/FrogDraftWriter.cpp",
-        "sha256": "a967d383952c5676eb0c98c0b227f60aaa1874986c52cedce5178509aa1ff636",
-        "size": 175105
+        "sha256": "381dccae42d989e86628e680ef7685b4c84652611644db0f5f28e609a06b63c7",
+        "size": 176205
       },
       {
         "path": "src/FrogJson.cpp",
@@ -2595,8 +2600,8 @@
       },
       {
         "path": "src/FunctionBindingCatalog.cpp",
-        "sha256": "635abf7a9ef4757d2058ac4d4f3e17abd53f5bc12f8d89a93604aed15c5836a5",
-        "size": 16432
+        "sha256": "2ea44a9ecaa290acbe544a1591219831c15686cbcbeccc1d27dbf2cd75c986e5",
+        "size": 17305
       },
       {
         "path": "src/FunctionBindingTypeResolution.cpp",
@@ -2605,8 +2610,8 @@
       },
       {
         "path": "src/FunctionCatalogEntries.inc",
-        "sha256": "cd71f9cae4b18377f4396e4bd1dc5b9c3495d86e202a9554b3d0ebd203832ae0",
-        "size": 81928
+        "sha256": "01da7308d4ba503b6b96b0b38e6f758de07a2b5331c43aa207886a5512f8b3fa",
+        "size": 82073
       },
       {
         "path": "src/FunctionCatalogIdentity.cpp",
@@ -2620,8 +2625,8 @@
       },
       {
         "path": "src/FunctionCatalogSemantic.cpp",
-        "sha256": "a3285cf03e9e4ac299733abf3edeef504965a8f6d04e10ef18556e8f493f2031",
-        "size": 10243
+        "sha256": "92ed68e04c8a961efbdd7f7fafe6a48ef1855ca2c40447c9c5a3ad752a4f06fc",
+        "size": 10357
       },
       {
         "path": "src/FunctionPolymorphicResolution.cpp",
@@ -2660,8 +2665,8 @@
       },
       {
         "path": "src/GeometryBinding.cpp",
-        "sha256": "cf19721b03703f6d90d40c5befca7bf451462639e3915005453d1a4aee49298d",
-        "size": 27473
+        "sha256": "40ca9527bda4b7cc76ba9d72d832623520d4a6ad266dcf02ec8501d589bea888",
+        "size": 27026
       },
       {
         "path": "src/GeometryBounds.cpp",
@@ -2700,8 +2705,8 @@
       },
       {
         "path": "src/InterpolationBinding.cpp",
-        "sha256": "decc13088b74c3690d8357a389978b5e5ddedcc3b7daaaba840a417b791e86a0",
-        "size": 19158
+        "sha256": "bbc98e6111405198e4013ab27e9fe295d0e723010dbde926466e7da9a14e3cc9",
+        "size": 18728
       },
       {
         "path": "src/InterpolationNodeBinding.cpp",
@@ -2717,6 +2722,11 @@
         "path": "src/ListboxWidget.cpp",
         "sha256": "7aa0443426053d60d8cb53e8a44af065506b3e556feae674c06ba49bfda24ffb",
         "size": 15859
+      },
+      {
+        "path": "src/MathVariantLookup.hpp",
+        "sha256": "956dc67c2af9c3187c4fa3b465289292b13ddcbf715573428f005a5d2eccc4fe",
+        "size": 2036
       },
       {
         "path": "src/NativeCall.cpp",
@@ -2845,8 +2855,8 @@
       },
       {
         "path": "src/StatisticsBinding.cpp",
-        "sha256": "6d8f0d475a5a93639f52744feb65e4a79682d2976a3db42bb85dcaa68ef5b73f",
-        "size": 71101
+        "sha256": "43e32b5509ba25737cbad30858caa1780f82538e7d969a94ecd4215a8711cae0",
+        "size": 70671
       },
       {
         "path": "src/StatisticsNodeBinding.cpp",
@@ -2885,8 +2895,8 @@
       },
       {
         "path": "src/TypeDefinitionConstant.cpp",
-        "sha256": "0fb175140f1c673fcacd7faa9bda410c61ab819e4ee6e663b8436c238e4a0368",
-        "size": 16364
+        "sha256": "15afbec364a56a64a9684ce0f0e828edd57dd86e7cd7bb69ff32d14840613e30",
+        "size": 16903
       },
       {
         "path": "src/TypeDefinitionSemantics.cpp",
@@ -2925,8 +2935,8 @@
       },
       {
         "path": "src/WidgetDataOperations.cpp",
-        "sha256": "aa3e924742d390f5e927649aa7c154b50a099754268bbb0e8f6c314229ec0470",
-        "size": 16935
+        "sha256": "45e777090dfc693841f2c7b68bce008c818dd47acf9fad67b78cce13e212ea4d",
+        "size": 17054
       },
       {
         "path": "src/WidgetDataValueAssignment.cpp",
@@ -2940,13 +2950,13 @@
       },
       {
         "path": "src/WidgetInstanceData.cpp",
-        "sha256": "6292cdc673856a84689539a2941fc395fea7e21674d5005e4238c5ad725a7aa7",
-        "size": 42956
+        "sha256": "a81186c8e8063d1e7c48bfe1f69dca87624ef08e3f58413031d4b2a466c7c25c",
+        "size": 44800
       },
       {
         "path": "src/WidgetNumericData.cpp",
-        "sha256": "7d750bc546e969204db994a211ffb13d02b3c6c21e6314a1ba6c76182d6d484f",
-        "size": 66173
+        "sha256": "9830d42efb258ddde17cf6c5017d7dc4bbc04f2f980b4353d1afb73e9f25876b",
+        "size": 66305
       },
       {
         "path": "src/WidgetNumericTypography.cpp",
@@ -2995,8 +3005,8 @@
       },
       {
         "path": "src/graph/WaveformGraphData.cpp",
-        "sha256": "071b43b444673d01813f39520c920ab74aa809eb12cf543fc14b3c257b9080f1",
-        "size": 8204
+        "sha256": "fe21de3ccb7e42643d177bbe1380a437856e480c05f9634e0ad45103582a0561",
+        "size": 9969
       },
       {
         "path": "src/graph/WaveformGraphTypedValue.cpp",
@@ -3005,13 +3015,13 @@
       },
       {
         "path": "src/graph/XYGraphData.cpp",
-        "sha256": "f6df036b3a07a386ece1da5a3daabb2e2b138822d3fc93515c89ce6b6b2faed5",
-        "size": 21146
+        "sha256": "4d20b3b9346a4a21f767bc50f0577eb97311226c04b23cc86a5b1aa0a767e863",
+        "size": 21171
       },
       {
         "path": "src/graph/XYGraphDataValidation.cpp",
-        "sha256": "4d31f6ef719894aaf77ed1c07f64fbccc17a7ce7753a746fb472e5aa2c680266",
-        "size": 6574
+        "sha256": "831dbc4f68bf3c96b7b71096070a06abf56215f78707fad0bb6f579a970679bb",
+        "size": 7049
       },
       {
         "path": "third_party/zstd/lib/common/allocations.h",
@@ -3850,6 +3860,12 @@
         "line": 4,
         "include": "frog_native_engine/BindingType.hpp",
         "destination": "include/frog_native_engine/BindingType.hpp"
+      },
+      {
+        "source": "include/frog_native_engine/ClusterFunctionBinding.hpp",
+        "line": 5,
+        "include": "frog_native_engine/DiagramShapeCatalog.hpp",
+        "destination": "include/frog_native_engine/DiagramShapeCatalog.hpp"
       },
       {
         "source": "include/frog_native_engine/ClusterFunctionPortProjection.hpp",
@@ -4866,6 +4882,12 @@
         "destination": "include/frog_native_engine/BindingType.hpp"
       },
       {
+        "source": "include/frog_native_engine/PictureRing.hpp",
+        "line": 3,
+        "include": "frog_native_engine/RingItemIdentity.hpp",
+        "destination": "include/frog_native_engine/RingItemIdentity.hpp"
+      },
+      {
         "source": "include/frog_native_engine/PolymorphicFrog.hpp",
         "line": 3,
         "include": "frog_native_engine/BindingType.hpp",
@@ -5568,6 +5590,12 @@
         "destination": "include/frog_native_engine/CalculusBinding.hpp"
       },
       {
+        "source": "src/CalculusBinding.cpp",
+        "line": 2,
+        "include": "MathVariantLookup.hpp",
+        "destination": "src/MathVariantLookup.hpp"
+      },
+      {
         "source": "src/CalculusNodeBinding.cpp",
         "line": 1,
         "include": "frog_native_engine/CalculusNodeBinding.hpp",
@@ -5768,438 +5796,444 @@
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
         "line": 20,
+        "include": "frog_native_engine/PictureRing.hpp",
+        "destination": "include/frog_native_engine/PictureRing.hpp"
+      },
+      {
+        "source": "src/CanonicalComposedDraftMigration.cpp",
+        "line": 21,
         "include": "frog_native_engine/CanonicalNumericArrayReduction.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericArrayReduction.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 21,
+        "line": 22,
         "include": "frog_native_engine/CanonicalNumericRandom.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericRandom.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 22,
+        "line": 23,
         "include": "frog_native_engine/CanonicalNumericAccumulate.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericAccumulate.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 23,
+        "line": 24,
         "include": "frog_native_engine/CanonicalNumericBooleanConversion.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericBooleanConversion.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 24,
+        "line": 25,
         "include": "frog_native_engine/CanonicalNumericCalibration.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericCalibration.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 25,
+        "line": 26,
         "include": "frog_native_engine/CanonicalNumericBitReinterpretation.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericBitReinterpretation.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 26,
+        "line": 27,
         "include": "frog_native_engine/CanonicalNumericText.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericText.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 27,
+        "line": 28,
         "include": "frog_native_engine/CanonicalNumericComplex.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericComplex.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 28,
+        "line": 29,
         "include": "frog_native_engine/CanonicalScalePowerTwo.hpp",
         "destination": "include/frog_native_engine/CanonicalScalePowerTwo.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 29,
+        "line": 30,
         "include": "frog_native_engine/ExponentialFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/ExponentialFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 30,
+        "line": 31,
         "include": "CanonicalPrivateInterfaceMap.hpp",
         "destination": "src/CanonicalPrivateInterfaceMap.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 31,
+        "line": 32,
         "include": "FrogDocumentConditionalDisable.hpp",
         "destination": "src/FrogDocumentConditionalDisable.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 32,
+        "line": 33,
         "include": "frog_native_engine/ApplicationControlSourceCodec.hpp",
         "destination": "include/frog_native_engine/ApplicationControlSourceCodec.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 33,
+        "line": 34,
         "include": "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp",
         "destination": "include/frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 34,
+        "line": 35,
         "include": "frog_native_engine/FrogDocumentFormat.hpp",
         "destination": "include/frog_native_engine/FrogDocumentFormat.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 35,
+        "line": 36,
         "include": "frog_native_engine/CanonicalNativeCallScalar.hpp",
         "destination": "include/frog_native_engine/CanonicalNativeCallScalar.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 36,
+        "line": 37,
         "include": "frog_native_engine/CanonicalInPlaceDescriptor.hpp",
         "destination": "include/frog_native_engine/CanonicalInPlaceDescriptor.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 37,
+        "line": 38,
         "include": "frog_native_engine/CanonicalCollectionDescriptor.hpp",
         "destination": "include/frog_native_engine/CanonicalCollectionDescriptor.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 38,
+        "line": 39,
         "include": "frog_native_engine/CollectionAuthoringState.hpp",
         "destination": "include/frog_native_engine/CollectionAuthoringState.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 39,
+        "line": 40,
         "include": "frog_native_engine/CanonicalScalarNative.hpp",
         "destination": "include/frog_native_engine/CanonicalScalarNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 40,
+        "line": 41,
         "include": "frog_native_engine/CanonicalComposedMathNative.hpp",
         "destination": "include/frog_native_engine/CanonicalComposedMathNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 41,
+        "line": 42,
         "include": "frog_native_engine/FunctionBindingCatalog.hpp",
         "destination": "include/frog_native_engine/FunctionBindingCatalog.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 42,
+        "line": 43,
         "include": "frog_native_engine/FittingNodeBinding.hpp",
         "destination": "include/frog_native_engine/FittingNodeBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 43,
+        "line": 44,
         "include": "frog_native_engine/CalculusNodeBinding.hpp",
         "destination": "include/frog_native_engine/CalculusNodeBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 44,
+        "line": 45,
         "include": "frog_native_engine/StatisticsNodeBinding.hpp",
         "destination": "include/frog_native_engine/StatisticsNodeBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 45,
+        "line": 46,
         "include": "frog_native_engine/InterpolationNodeBinding.hpp",
         "destination": "include/frog_native_engine/InterpolationNodeBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 46,
+        "line": 47,
         "include": "frog_native_engine/GeometryNodeBinding.hpp",
         "destination": "include/frog_native_engine/GeometryNodeBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 47,
+        "line": 48,
         "include": "frog_native_engine/CanonicalStringNative.hpp",
         "destination": "include/frog_native_engine/CanonicalStringNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 48,
+        "line": 49,
         "include": "frog_native_engine/CanonicalPathNative.hpp",
         "destination": "include/frog_native_engine/CanonicalPathNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 49,
+        "line": 50,
         "include": "frog_native_engine/CanonicalTimestampNative.hpp",
         "destination": "include/frog_native_engine/CanonicalTimestampNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 50,
+        "line": 51,
         "include": "frog_native_engine/CanonicalVariantAnalysisNative.hpp",
         "destination": "include/frog_native_engine/CanonicalVariantAnalysisNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 51,
+        "line": 52,
         "include": "frog_native_engine/CanonicalFileNative.hpp",
         "destination": "include/frog_native_engine/CanonicalFileNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 52,
+        "line": 53,
         "include": "frog_native_engine/CanonicalErrorHandlingNative.hpp",
         "destination": "include/frog_native_engine/CanonicalErrorHandlingNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 53,
+        "line": 54,
         "include": "frog_native_engine/ErrorPaletteBinding.hpp",
         "destination": "include/frog_native_engine/ErrorPaletteBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 54,
+        "line": 55,
         "include": "frog_native_engine/CanonicalArrayNative.hpp",
         "destination": "include/frog_native_engine/CanonicalArrayNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 55,
+        "line": 56,
         "include": "frog_native_engine/LinearAlgebraBinding.hpp",
         "destination": "include/frog_native_engine/LinearAlgebraBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 56,
+        "line": 57,
         "include": "frog_native_engine/PolynomialBinding.hpp",
         "destination": "include/frog_native_engine/PolynomialBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 57,
+        "line": 58,
         "include": "frog_native_engine/BlasBinding.hpp",
         "destination": "include/frog_native_engine/BlasBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 58,
+        "line": 59,
         "include": "frog_native_engine/FittingBinding.hpp",
         "destination": "include/frog_native_engine/FittingBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 59,
+        "line": 60,
         "include": "frog_native_engine/CalculusBinding.hpp",
         "destination": "include/frog_native_engine/CalculusBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 60,
+        "line": 61,
         "include": "frog_native_engine/CanonicalDifferentialNative.hpp",
         "destination": "include/frog_native_engine/CanonicalDifferentialNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 61,
+        "line": 62,
         "include": "frog_native_engine/OptimizationBinding.hpp",
         "destination": "include/frog_native_engine/OptimizationBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 62,
+        "line": 63,
         "include": "frog_native_engine/CanonicalDiscreteArrayNative.hpp",
         "destination": "include/frog_native_engine/CanonicalDiscreteArrayNative.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 63,
+        "line": 64,
         "include": "frog_native_engine/StatisticsBinding.hpp",
         "destination": "include/frog_native_engine/StatisticsBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 64,
+        "line": 65,
         "include": "frog_native_engine/InterpolationBinding.hpp",
         "destination": "include/frog_native_engine/InterpolationBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 65,
+        "line": 66,
         "include": "frog_native_engine/GeometryBinding.hpp",
         "destination": "include/frog_native_engine/GeometryBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 66,
+        "line": 67,
         "include": "frog_native_engine/DocumentTextDefaults.hpp",
         "destination": "include/frog_native_engine/DocumentTextDefaults.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 67,
+        "line": 68,
         "include": "frog_native_engine/NumericValueLexeme.hpp",
         "destination": "include/frog_native_engine/NumericValueLexeme.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 68,
+        "line": 69,
         "include": "frog_native_engine/NotifierFunctionBinding.hpp",
         "destination": "include/frog_native_engine/NotifierFunctionBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 69,
+        "line": 70,
         "include": "frog_native_engine/QueueFunctionBinding.hpp",
         "destination": "include/frog_native_engine/QueueFunctionBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 70,
+        "line": 71,
         "include": "frog_native_engine/NotifierReference.hpp",
         "destination": "include/frog_native_engine/NotifierReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 71,
+        "line": 72,
         "include": "frog_native_engine/SemaphoreFunctionBinding.hpp",
         "destination": "include/frog_native_engine/SemaphoreFunctionBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 72,
+        "line": 73,
         "include": "frog_native_engine/RendezvousFunctionBinding.hpp",
         "destination": "include/frog_native_engine/RendezvousFunctionBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 73,
+        "line": 74,
         "include": "frog_native_engine/OccurrenceFunctionBinding.hpp",
         "destination": "include/frog_native_engine/OccurrenceFunctionBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 74,
+        "line": 75,
         "include": "frog_native_engine/EventFunctionBinding.hpp",
         "destination": "include/frog_native_engine/EventFunctionBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 75,
+        "line": 76,
         "include": "frog_native_engine/EventReference.hpp",
         "destination": "include/frog_native_engine/EventReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 76,
+        "line": 77,
         "include": "frog_native_engine/OccurrenceReference.hpp",
         "destination": "include/frog_native_engine/OccurrenceReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 77,
+        "line": 78,
         "include": "frog_native_engine/SemaphoreReference.hpp",
         "destination": "include/frog_native_engine/SemaphoreReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 78,
+        "line": 79,
         "include": "frog_native_engine/OccurrenceReferenceLiteral.hpp",
         "destination": "include/frog_native_engine/OccurrenceReferenceLiteral.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 79,
+        "line": 80,
         "include": "frog_native_engine/QueueReference.hpp",
         "destination": "include/frog_native_engine/QueueReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 80,
+        "line": 81,
         "include": "frog_native_engine/NotifierReference.hpp",
         "destination": "include/frog_native_engine/NotifierReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 81,
+        "line": 82,
         "include": "frog_native_engine/RendezvousReference.hpp",
         "destination": "include/frog_native_engine/RendezvousReference.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 82,
+        "line": 83,
         "include": "frog_native_engine/BuildArrayBinding.hpp",
         "destination": "include/frog_native_engine/BuildArrayBinding.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 83,
+        "line": 84,
         "include": "frog_native_engine/FrogDraftData.hpp",
         "destination": "include/frog_native_engine/FrogDraftData.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 84,
+        "line": 85,
         "include": "frog_native_engine/SequenceStructure.hpp",
         "destination": "include/frog_native_engine/SequenceStructure.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 85,
+        "line": 86,
         "include": "frog_native_engine/WidgetBindingType.hpp",
         "destination": "include/frog_native_engine/WidgetBindingType.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 86,
+        "line": 87,
         "include": "frog_native_engine/TypeDefinitionLink.hpp",
         "destination": "include/frog_native_engine/TypeDefinitionLink.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 87,
+        "line": 88,
         "include": "frog_native_engine/WidgetTypedValueSource.hpp",
         "destination": "include/frog_native_engine/WidgetTypedValueSource.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 88,
+        "line": 89,
         "include": "frog_native_engine/ListboxWidget.hpp",
         "destination": "include/frog_native_engine/ListboxWidget.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 89,
+        "line": 90,
         "include": "frog_native_engine/TimestampSourceProjection.hpp",
         "destination": "include/frog_native_engine/TimestampSourceProjection.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 90,
+        "line": 91,
         "include": "frog_native_engine/CanonicalNumericScalarPalette.hpp",
         "destination": "include/frog_native_engine/CanonicalNumericScalarPalette.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 91,
+        "line": 92,
         "include": "frog_native_engine/Sha256.hpp",
         "destination": "include/frog_native_engine/Sha256.hpp"
       },
       {
         "source": "src/CanonicalComposedDraftMigration.cpp",
-        "line": 92,
+        "line": 93,
         "include": "frog/math/formula_operation_contract.hpp",
         "destination": "snapshot/sdk/include/frog/math/formula_operation_contract.hpp"
       },
@@ -6626,186 +6660,192 @@
       {
         "source": "src/CanonicalDraftMigration.cpp",
         "line": 3,
+        "include": "frog_native_engine/DraftInterfaceInspection.hpp",
+        "destination": "include/frog_native_engine/DraftInterfaceInspection.hpp"
+      },
+      {
+        "source": "src/CanonicalDraftMigration.cpp",
+        "line": 4,
         "include": "FrogDocumentConditionalDisable.hpp",
         "destination": "src/FrogDocumentConditionalDisable.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 4,
+        "line": 5,
         "include": "frog_native_engine/CanonicalRecordConstant.hpp",
         "destination": "include/frog_native_engine/CanonicalRecordConstant.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 5,
+        "line": 6,
         "include": "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp",
         "destination": "include/frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 6,
+        "line": 7,
         "include": "frog_native_engine/CanonicalScalarNative.hpp",
         "destination": "include/frog_native_engine/CanonicalScalarNative.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 7,
+        "line": 8,
         "include": "frog_native_engine/FunctionCatalog.hpp",
         "destination": "include/frog_native_engine/FunctionCatalog.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 8,
+        "line": 9,
         "include": "frog_native_engine/DiagramStructureCatalog.hpp",
         "destination": "include/frog_native_engine/DiagramStructureCatalog.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 9,
+        "line": 10,
         "include": "frog_native_engine/CanonicalScalarSelection.hpp",
         "destination": "include/frog_native_engine/CanonicalScalarSelection.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 10,
+        "line": 11,
         "include": "frog_native_engine/ComparisonBinding.hpp",
         "destination": "include/frog_native_engine/ComparisonBinding.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 11,
+        "line": 12,
         "include": "frog_native_engine/CanonicalStringNative.hpp",
         "destination": "include/frog_native_engine/CanonicalStringNative.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 12,
+        "line": 13,
         "include": "frog_native_engine/CanonicalArrayNative.hpp",
         "destination": "include/frog_native_engine/CanonicalArrayNative.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 13,
+        "line": 14,
         "include": "frog_native_engine/CanonicalNativeCallScalar.hpp",
         "destination": "include/frog_native_engine/CanonicalNativeCallScalar.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 14,
+        "line": 15,
         "include": "frog_native_engine/ExponentialFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/ExponentialFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 15,
+        "line": 16,
         "include": "frog_native_engine/DocumentTextDefaults.hpp",
         "destination": "include/frog_native_engine/DocumentTextDefaults.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 16,
+        "line": 17,
         "include": "frog_native_engine/NumericValueLexeme.hpp",
         "destination": "include/frog_native_engine/NumericValueLexeme.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 17,
+        "line": 18,
         "include": "frog_native_engine/Sha256.hpp",
         "destination": "include/frog_native_engine/Sha256.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 18,
+        "line": 19,
         "include": "frog_native_engine/HyperbolicFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/HyperbolicFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 19,
+        "line": 20,
         "include": "frog_native_engine/GatingFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/GatingFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 20,
+        "line": 21,
         "include": "frog_native_engine/DiscreteMathFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/DiscreteMathFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 21,
+        "line": 22,
         "include": "frog_native_engine/TrigonometricFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/TrigonometricFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 22,
+        "line": 23,
         "include": "frog_native_engine/BesselFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/BesselFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 23,
+        "line": 24,
         "include": "frog_native_engine/GammaFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/GammaFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 24,
+        "line": 25,
         "include": "frog_native_engine/HypergeometricFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/HypergeometricFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 25,
+        "line": 26,
         "include": "frog_native_engine/EllipticFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/EllipticFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 26,
+        "line": 27,
         "include": "frog_native_engine/ExponentialIntegralsFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/ExponentialIntegralsFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 27,
+        "line": 28,
         "include": "frog_native_engine/ErrorFunctionsFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/ErrorFunctionsFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 28,
+        "line": 29,
         "include": "frog_native_engine/EllipticParabolicFunctionIdentity.hpp",
         "destination": "include/frog_native_engine/EllipticParabolicFunctionIdentity.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 29,
+        "line": 30,
         "include": "frog_native_engine/ButtonMechanicalAction.hpp",
         "destination": "include/frog_native_engine/ButtonMechanicalAction.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 30,
+        "line": 31,
         "include": "CanonicalJsonSupport.hpp",
         "destination": "src/CanonicalJsonSupport.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 31,
+        "line": 32,
         "include": "CanonicalPrivateInterfaceMap.hpp",
         "destination": "src/CanonicalPrivateInterfaceMap.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 32,
+        "line": 33,
         "include": "CanonicalDraftPresentation.hpp",
         "destination": "src/CanonicalDraftPresentation.hpp"
       },
       {
         "source": "src/CanonicalDraftMigration.cpp",
-        "line": 33,
+        "line": 34,
         "include": "CanonicalComposedDraftMigration.hpp",
         "destination": "src/CanonicalComposedDraftMigration.hpp"
       },
@@ -6968,30 +7008,36 @@
       {
         "source": "src/CanonicalDraftPresentation.hpp",
         "line": 3,
+        "include": "FrogDocumentArrayStorage.hpp",
+        "destination": "src/FrogDocumentArrayStorage.hpp"
+      },
+      {
+        "source": "src/CanonicalDraftPresentation.hpp",
+        "line": 4,
         "include": "frog_native_engine/FrogIconPresentation.hpp",
         "destination": "include/frog_native_engine/FrogIconPresentation.hpp"
       },
       {
         "source": "src/CanonicalDraftPresentation.hpp",
-        "line": 4,
+        "line": 5,
         "include": "frog_native_engine/CanonicalStringNative.hpp",
         "destination": "include/frog_native_engine/CanonicalStringNative.hpp"
       },
       {
         "source": "src/CanonicalDraftPresentation.hpp",
-        "line": 5,
+        "line": 6,
         "include": "frog_native_engine/DiagramCommentAttachment.hpp",
         "destination": "include/frog_native_engine/DiagramCommentAttachment.hpp"
       },
       {
         "source": "src/CanonicalDraftPresentation.hpp",
-        "line": 6,
+        "line": 7,
         "include": "frog_native_engine/DiagramCommentTextRuns.hpp",
         "destination": "include/frog_native_engine/DiagramCommentTextRuns.hpp"
       },
       {
         "source": "src/CanonicalDraftPresentation.hpp",
-        "line": 7,
+        "line": 8,
         "include": "frog_native_engine/DocumentTextDefaults.hpp",
         "destination": "include/frog_native_engine/DocumentTextDefaults.hpp"
       },
@@ -8216,48 +8262,60 @@
       {
         "source": "src/DraftFrontendPreparation.cpp",
         "line": 6,
+        "include": "frog_native_engine/DraftInterfaceInspection.hpp",
+        "destination": "include/frog_native_engine/DraftInterfaceInspection.hpp"
+      },
+      {
+        "source": "src/DraftFrontendPreparation.cpp",
+        "line": 7,
         "include": "frog_native_engine/DraftSemanticPreparation.hpp",
         "destination": "include/frog_native_engine/DraftSemanticPreparation.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 7,
+        "line": 8,
+        "include": "frog_native_engine/NativeCallScalarContract.hpp",
+        "destination": "include/frog_native_engine/NativeCallScalarContract.hpp"
+      },
+      {
+        "source": "src/DraftFrontendPreparation.cpp",
+        "line": 9,
         "include": "frog_native_engine/DraftRequiredInputs.hpp",
         "destination": "include/frog_native_engine/DraftRequiredInputs.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 8,
+        "line": 10,
         "include": "frog_native_engine/DraftConditionalDisableSpecialization.hpp",
         "destination": "include/frog_native_engine/DraftConditionalDisableSpecialization.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 9,
+        "line": 11,
         "include": "frog_native_engine/SequenceFramePassageProjection.hpp",
         "destination": "include/frog_native_engine/SequenceFramePassageProjection.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 10,
+        "line": 12,
         "include": "frog_native_engine/BindingType.hpp",
         "destination": "include/frog_native_engine/BindingType.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 11,
+        "line": 13,
         "include": "frog_native_engine/Sha256.hpp",
         "destination": "include/frog_native_engine/Sha256.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 13,
+        "line": 15,
         "include": "CanonicalComposedDraftMigration.hpp",
         "destination": "src/CanonicalComposedDraftMigration.hpp"
       },
       {
         "source": "src/DraftFrontendPreparation.cpp",
-        "line": 14,
+        "line": 16,
         "include": "CanonicalJsonSupport.hpp",
         "destination": "src/CanonicalJsonSupport.hpp"
       },
@@ -8896,6 +8954,12 @@
         "line": 1,
         "include": "frog_native_engine/FittingBinding.hpp",
         "destination": "include/frog_native_engine/FittingBinding.hpp"
+      },
+      {
+        "source": "src/FittingBinding.cpp",
+        "line": 2,
+        "include": "MathVariantLookup.hpp",
+        "destination": "src/MathVariantLookup.hpp"
       },
       {
         "source": "src/FittingModelPreparation.cpp",
@@ -10483,7 +10547,7 @@
       },
       {
         "source": "src/FunctionCatalogSemantic.cpp",
-        "line": 103,
+        "line": 106,
         "include": "FunctionCatalogLegacyAliases.inc",
         "destination": "src/FunctionCatalogLegacyAliases.inc"
       },
@@ -10698,6 +10762,12 @@
         "destination": "include/frog_native_engine/GeometryBinding.hpp"
       },
       {
+        "source": "src/GeometryBinding.cpp",
+        "line": 2,
+        "include": "MathVariantLookup.hpp",
+        "destination": "src/MathVariantLookup.hpp"
+      },
+      {
         "source": "src/GeometryBounds.cpp",
         "line": 1,
         "include": "frog_native_engine/Geometry.hpp",
@@ -10780,6 +10850,12 @@
         "line": 1,
         "include": "frog_native_engine/InterpolationBinding.hpp",
         "destination": "include/frog_native_engine/InterpolationBinding.hpp"
+      },
+      {
+        "source": "src/InterpolationBinding.cpp",
+        "line": 2,
+        "include": "MathVariantLookup.hpp",
+        "destination": "src/MathVariantLookup.hpp"
       },
       {
         "source": "src/InterpolationNodeBinding.cpp",
@@ -11200,6 +11276,12 @@
         "line": 1,
         "include": "frog_native_engine/StatisticsBinding.hpp",
         "destination": "include/frog_native_engine/StatisticsBinding.hpp"
+      },
+      {
+        "source": "src/StatisticsBinding.cpp",
+        "line": 2,
+        "include": "MathVariantLookup.hpp",
+        "destination": "src/MathVariantLookup.hpp"
       },
       {
         "source": "src/StatisticsNodeBinding.cpp",
@@ -11666,6 +11748,18 @@
       {
         "source": "src/WidgetInstanceData.cpp",
         "line": 14,
+        "include": "frog_native_engine/PictureRing.hpp",
+        "destination": "include/frog_native_engine/PictureRing.hpp"
+      },
+      {
+        "source": "src/WidgetInstanceData.cpp",
+        "line": 15,
+        "include": "frog_native_engine/WidgetDataOperations.hpp",
+        "destination": "include/frog_native_engine/WidgetDataOperations.hpp"
+      },
+      {
+        "source": "src/WidgetInstanceData.cpp",
+        "line": 16,
         "include": "frog_native_engine/WidgetChoiceProperties.hpp",
         "destination": "include/frog_native_engine/WidgetChoiceProperties.hpp"
       },
@@ -11896,6 +11990,12 @@
         "line": 3,
         "include": "frog_native_engine/graph/WaveformGraph.hpp",
         "destination": "include/frog_native_engine/graph/WaveformGraph.hpp"
+      },
+      {
+        "source": "src/graph/WaveformGraphData.cpp",
+        "line": 4,
+        "include": "frog_native_engine/graph/XYGraphDataHelpers.hpp",
+        "destination": "include/frog_native_engine/graph/XYGraphDataHelpers.hpp"
       },
       {
         "source": "src/graph/WaveformGraphTypedValue.cpp",
@@ -15125,8 +15225,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/ApplicationControlSchema.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ApplicationControl.hpp",
       "ownership": "split",
-      "current_hash": "07ef0af56c6d6177abf81b0286162a993d0860645e0673131c9260096f1519b2",
-      "current_bytes": 2887,
+      "current_hash": "134b3b191282718c28b268d49f8ae7f11c1b3a521c825304eed5be561fa13ed8",
+      "current_bytes": 3112,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -16485,8 +16585,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/CanonicalDraftMigration.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/CanonicalDraftMigration.hpp",
       "ownership": "split",
-      "current_hash": "06454178abe5216d5f32d3df0d3adc1cd5b7ee463a1afac2e1c01a05e5b6eb8e",
-      "current_bytes": 4138,
+      "current_hash": "0ccc3bd125311e1e108153d3a123e2fd221739cecde8b490c879d196bc46568c",
+      "current_bytes": 4234,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -17792,9 +17892,9 @@
       "ownership": "move",
       "original_hash": "43cf2f287d0f9f60e32faf37adf3150deca35c6287e06228d632f5c826b4fb9c",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "43cf2f287d0f9f60e32faf37adf3150deca35c6287e06228d632f5c826b4fb9c",
-      "current_bytes": 9937,
-      "capture_relation": "same-as-capture",
+      "current_hash": "f22b76f6859f5c0ce5f1e8ad72702e29abf5116e82852ca011ace55447ae11db",
+      "current_bytes": 10398,
+      "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
       "observedSpdx": [],
@@ -18707,8 +18807,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/ClusterFunctionBinding.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ClusterFunctionBinding.hpp",
       "ownership": "split",
-      "current_hash": "874d659bd8715236db1fb00c48b976ae087a1cadd2f20bd90e4492c967e03063",
-      "current_bytes": 6127,
+      "current_hash": "bc4768e58427e9c05f5043028cdb43908882156eb5775bb9bd977eea23b0784e",
+      "current_bytes": 6340,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -19521,8 +19621,8 @@
       "ownership": "created",
       "original_hash": "b36450f34615df3312d5473557df632218651c67a9c3101be9d2faebcb1248a1",
       "original_hash_basis": "Existing source-origin declaration preserved at 2026-11-15 publication",
-      "current_hash": "cb4d9e995851a4ee02b094c648c8d2209dad5ada0c6077e87d57389c9f3dd066",
-      "current_bytes": 16613,
+      "current_hash": "0e18bc38f3322de179c3803d39cc6dd166236b1a61205ba3a47cca3b5d0500c5",
+      "current_bytes": 19239,
       "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "graiphic-shared-frontend",
@@ -20040,9 +20140,9 @@
       "ownership": "move",
       "original_hash": "a07fff84bb1a32730bc033ff04ecee2e4410276e1d7f1182d016bb64642256e6",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "a07fff84bb1a32730bc033ff04ecee2e4410276e1d7f1182d016bb64642256e6",
-      "current_bytes": 505,
-      "capture_relation": "same-as-capture",
+      "current_hash": "32a2318749643b891953de432863957842d8e4a3a4773e7d0029aae46497a09d",
+      "current_bytes": 1402,
+      "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
       "observedSpdx": [],
@@ -21832,8 +21932,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/FrogDocumentFormat.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocumentFormat.hpp",
       "ownership": "split",
-      "current_hash": "0a23294d083ef011dcf2b88249a424513fa30b109db7fab0ef91258cec8646fd",
-      "current_bytes": 2717,
+      "current_hash": "3c703f585fcf2288e20d5f8d59e026df9cdac95c931635359ea83fb82ed57d46",
+      "current_bytes": 2941,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -21914,8 +22014,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/FrogDraftData.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocument.hpp",
       "ownership": "split",
-      "current_hash": "14a41449fc6b490f9254bbf7fdcec2467989b53b9612b7531e5fa354a86423eb",
-      "current_bytes": 50820,
+      "current_hash": "ffe2c84c26b20ce1fbdba460259df7f07715a87f70aa30b5112d9cbfb50c4b2b",
+      "current_bytes": 50851,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -24921,6 +25021,42 @@
       ]
     },
     {
+      "path": "include/frog_native_engine/PictureRing.hpp",
+      "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/PictureRing.hpp",
+      "earlierOrigins": [],
+      "ownership": "created",
+      "original_hash": "13a7f3a742767d0ebb28f2e7180edfcea8d91456bfbaa14378f0c78066e1b893",
+      "original_hash_basis": "Exact project source-origin entry, selected common Frontend scope under NOTICE",
+      "current_hash": "13a7f3a742767d0ebb28f2e7180edfcea8d91456bfbaa14378f0c78066e1b893",
+      "current_bytes": 1378,
+      "capture_relation": "same-as-capture",
+      "inProductionIncludeClosure": true,
+      "provenanceGroup": "studio-derived-production-input",
+      "observedSpdx": [],
+      "licenseEvidence": "Apache-2.0",
+      "evidence": [
+        "Accepted 2026-11-01 Graiphic decision for selected Frontend/API/CLI original material, including Studio/Runtime ancestry",
+        "Frontend LICENSE and NOTICE; explicit per-file declaration without changing compiled source bytes",
+        "Accepted 2026-11-01 Graiphic decision: FROG-Context/Decisions/frog-common-frontend-apache2.md",
+        "Existing exporter exact source selection and current source-origin/extraction receipts"
+      ],
+      "root": "frontend",
+      "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/PictureRing.hpp",
+      "licenseDecisionId": "frog-common-frontend-apache2-2026-11-01",
+      "declaredLicenseScope": "Graiphic-owned original portions selected for the shared Frontend; no third-party relicensing",
+      "graiphicOriginalRightsConfirmed": true,
+      "thirdPartyContentRelicensed": false,
+      "thirdPartyReviewFindingIds": [],
+      "currentReviewStatus": "Original shared Frontend source matched declared bytes and attribution",
+      "sourceOriginObservation": {
+        "path": "include/frog_native_engine/PictureRing.hpp",
+        "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/PictureRing.hpp",
+        "ownership": "created",
+        "sha256": "13a7f3a742767d0ebb28f2e7180edfcea8d91456bfbaa14378f0c78066e1b893",
+        "bytes": 1378
+      }
+    },
+    {
       "path": "include/frog_native_engine/PolymorphicFrog.hpp",
       "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/PolymorphicFrog.hpp",
       "earlierOrigins": [],
@@ -27024,9 +27160,9 @@
       "ownership": "move",
       "original_hash": "b405f7838902584b792ae7d04336b08685edb54e9a2384a053f5165978a46acf",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "b405f7838902584b792ae7d04336b08685edb54e9a2384a053f5165978a46acf",
-      "current_bytes": 5360,
-      "capture_relation": "same-as-capture",
+      "current_hash": "f551810e44adb5cc2cca584dbae419413929af408e93f2a5ad3d8d36b4fb918a",
+      "current_bytes": 5373,
+      "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
       "observedSpdx": [],
@@ -27255,8 +27391,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/WidgetInstance.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/WidgetInstance.hpp",
       "ownership": "split",
-      "current_hash": "890526cd940ee46518fb9951988d00e296e99a5cdee6bf12b43c94172fc4d037",
-      "current_bytes": 45638,
+      "current_hash": "638a5dace0bb826a4710ba16d869219bdf3e4fa9ffbcb123d96095ecdeecb007",
+      "current_bytes": 46005,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -27475,8 +27611,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/graph/WaveformGraph.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/graph/WaveformGraph.hpp",
       "ownership": "split",
-      "current_hash": "6d49da4c45ff29fbf30d198d25756e62f08adc9381615ccb7b84e3a2d059dda1",
-      "current_bytes": 8906,
+      "current_hash": "2975fa6b428be444b92f2b017cbf75130509a609bca256998daf2e25e2f18462",
+      "current_bytes": 10776,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -27545,8 +27681,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/include/frog_native_engine/graph/XYGraph.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/graph/XYGraph.hpp",
       "ownership": "split",
-      "current_hash": "3fbe7be3ad9158d973114526ab2cccdd319e43aafca90c670a73f5f546c3cdb7",
-      "current_bytes": 13218,
+      "current_hash": "9f88365ee878964fc317b052df204633bc63d86713ab72c2f2ab1ae359be5988",
+      "current_bytes": 13461,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -28134,8 +28270,8 @@
       "ownership": "snapshot",
       "original_hash": "940c4fc5189b6e51e468296363eeb216e8ceaf50dfe097dc0edef6f42deb1eb5",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "0380047c9a60b03e697349f6528c9d450bfae8ff7f634d9ceefe83ab931b972a",
-      "current_bytes": 6000003,
+      "current_hash": "9c7151ee64e9734c6e9ed8b87761a7e340f3093e2f4bc522d808a0ecb13ac8a9",
+      "current_bytes": 6003065,
       "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
@@ -28576,8 +28712,8 @@
       "ownership": "snapshot",
       "original_hash": "1c2dbf3d70927a8f1e0ebba49207b0b5c396bf426f50a301bb0e26ff6bc8b28c",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "fceb295b3ffd63a1a7f77205a291a2cb50c527f9b7bd2605c75d9b51074c1e62",
-      "current_bytes": 41837,
+      "current_hash": "d30ce79c2c5a468bf5d025735bc56353102758d49fb1abbcbf0f10b5021822ea",
+      "current_bytes": 42779,
       "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
@@ -30014,8 +30150,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/source-origin.json",
-      "current_hash": "db567f155a435a594cf8b9b1be9afbe4746dbf30ffe2caaab7fd57afb0e5780f",
-      "current_bytes": 281355,
+      "current_hash": "00da1bb9c610d9d6cb2005efbc7ed493ed2e3a38c9f16bb51dcf8484f47ccf55",
+      "current_bytes": 281923,
       "capture_relation": "no-capture",
       "inProductionIncludeClosure": false,
       "observedSpdx": [],
@@ -30218,8 +30354,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/ApplicationControlSchema.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/ApplicationControl.cpp",
       "ownership": "split",
-      "current_hash": "205e00db0e5b46a66e8cee158fef7137ba29fc1b2fcff4a4141f51097f30d27e",
-      "current_bytes": 80505,
+      "current_hash": "89c4fd6aa21847bb61d02514c6092e4104659d342fff5360a88f504a793ebf42",
+      "current_bytes": 81201,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -30739,8 +30875,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/src/CalculusBinding.cpp",
-      "current_hash": "c6dde9459a777fb57a4feb3a209641a8d9020eea97fe414afe138f8708a9b33b",
-      "current_bytes": 26075,
+      "current_hash": "0e446958b0b74ab87aafda386c943cf66eaef2a599edca051c88c53f5f7161fb",
+      "current_bytes": 25646,
       "capture_relation": "current-source-origin-declaration",
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
@@ -31077,8 +31213,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/CanonicalComposedDraftMigration.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalComposedDraftMigration.cpp",
       "ownership": "split",
-      "current_hash": "a18806c9b84f39385ba584af1fbe45d78b60ac15881b5cef023e931dac7c0f85",
-      "current_bytes": 244787,
+      "current_hash": "7f4cb208b6cd29979970e2e98125af76c8836ed989dc64fc2d81ad0b55cb5c58",
+      "current_bytes": 249261,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -31192,8 +31328,8 @@
       "ownership": "move",
       "original_hash": "f32f62542f113aa1d6292ccd4b5143806e89a475d79e9dcfde5716aa4ef47b44",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "334b24a7706001759536bf3111a1eb4daa62133f8431f5344b72598270a88e0e",
-      "current_bytes": 138033,
+      "current_hash": "59819d15e90af3e9c7b6f5b2b7e7ae6a3f7f98725e9c801bb9a9110505b2d349",
+      "current_bytes": 138092,
       "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
@@ -31403,8 +31539,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/CanonicalDraftMigration.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalDraftMigration.cpp",
       "ownership": "split",
-      "current_hash": "48cad4c05f683fd9b6bd69beaa4ddb1e5290cb61750225bc4fe09864447d8dbb",
-      "current_bytes": 145060,
+      "current_hash": "3bf2a8741910f3d3fcb19d02648aed0cdfd073b0d9b6fdc77327c1e2d47098a7",
+      "current_bytes": 149421,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -31445,8 +31581,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/CanonicalDraftPortResolution.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalDraftPortResolution.cpp",
       "ownership": "split",
-      "current_hash": "a3de0e150fcc30e722d0e23323c0515f51d83261c89c571e3d55d7a9de8b666b",
-      "current_bytes": 21556,
+      "current_hash": "9d6f4ec0178c2c226bbd335d85969e6dac46bd0df595d6e57e83ee8f29677f0a",
+      "current_bytes": 21618,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -31487,8 +31623,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/CanonicalDraftPresentation.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalDraftPresentation.hpp",
       "ownership": "split",
-      "current_hash": "d20f9d11674878aa0fb64dab9efce305fd83014b568f4ff10a0babb95ff1132a",
-      "current_bytes": 15168,
+      "current_hash": "9703176b122e03c40657c9d0faab8a0729c0745701a34237c411f5576ad9d3a6",
+      "current_bytes": 21479,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -33704,8 +33840,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/DiagramBindingResolver.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
       "ownership": "split",
-      "current_hash": "f0fc2c0ea5bdbf431c787bd48e5635915c1d133ad16067f240d57f5679b07c1d",
-      "current_bytes": 164713,
+      "current_hash": "0d34131628cedccfe5e634ca3a86a27dbf58accd13e962976e2f8365bb94efec",
+      "current_bytes": 165156,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -34070,8 +34206,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/DraftFrontendPreparation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftFrontendPreparation.cpp",
       "ownership": "created",
-      "current_hash": "6c9ef19b2d8f6ff3c48d19895e4e29929ee84445a8259cd0ef738338a3306dd4",
-      "current_bytes": 26684,
+      "current_hash": "3062a1bc798ddc95743d937fee406f0397280f0f29965d692343b778ab2261fe",
+      "current_bytes": 29946,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -35213,8 +35349,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/src/FittingBinding.cpp",
-      "current_hash": "e6ca4b9e263c2ccf629b691ad1605aa9d12ce65bd1030f391258d8552895ebcd",
-      "current_bytes": 46383,
+      "current_hash": "d3f89e14cf40c1e441827cea1925970b1a10a6e5086066dd6f63d78ae7d66d4d",
+      "current_bytes": 45953,
       "capture_relation": "current-source-origin-declaration",
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
@@ -35385,8 +35521,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDocumentArrayStorage.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentArrayStorage.cpp",
       "ownership": "split",
-      "current_hash": "8d22bdf11861585d677c59fc53c5972441abc662e8ea78694a3c9ecd5c26a103",
-      "current_bytes": 38636,
+      "current_hash": "d1310a66fcefb461ca371a568b7ee83baf91eaba708f5ac97261d38838d2773a",
+      "current_bytes": 40112,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -35427,8 +35563,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDocumentArrayStorage.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentArrayStorage.hpp",
       "ownership": "split",
-      "current_hash": "e7426d122d0c4522204d0089e74e548d10005fa0ffd6230e624e39757a1b652d",
-      "current_bytes": 3546,
+      "current_hash": "5e7b1ac62fb79f4a8f608e9262d69eeed1f446c076b7accd7bc7cc82edf8df3a",
+      "current_bytes": 3687,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -36300,8 +36436,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDocumentIntegerLexeme.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentIntegerLexeme.hpp",
       "ownership": "split",
-      "current_hash": "c167ca6a513dc4cf782b54a2f9e7e184955c30abef7d91c999b7f9cbbd34f0e4",
-      "current_bytes": 2669,
+      "current_hash": "6b4fb34d965c3660b849374d75f3f0b1d08cdb091f05b544b7bfd1f7a4161011",
+      "current_bytes": 2744,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -36320,7 +36456,7 @@
         "sha256": "c167ca6a513dc4cf782b54a2f9e7e184955c30abef7d91c999b7f9cbbd34f0e4",
         "bytes": 2669
       },
-      "capture_relation": "same-as-capture",
+      "capture_relation": "evolved-after-extraction",
       "provenanceGroup": "graiphic-shared-frontend-original",
       "licenseEvidence": "Apache-2.0",
       "licenseDecisionId": "frog-common-frontend-apache2-2026-11-01",
@@ -36888,8 +37024,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDocumentWaveformGraph.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentWaveformGraph.cpp",
       "ownership": "split",
-      "current_hash": "8a1e619341668bdf30cdedced463559e2a51873cf7654b74de73d423ac55f3a6",
-      "current_bytes": 17579,
+      "current_hash": "4b453d8512caafe06265c569c20fbdb766aeca4b661523f2c59f5c12bfebfa5d",
+      "current_bytes": 21278,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -37056,8 +37192,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDocumentXYGraph.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentXYGraph.cpp",
       "ownership": "split",
-      "current_hash": "e21b0f13b653ac8a96e535c367550a625db96e0c89ef45249f653b9eb8cc5eb2",
-      "current_bytes": 20203,
+      "current_hash": "a59aeb4b0689909d251ce3bdfc34d63c4848fa779d029898b872bca9c5d18442",
+      "current_bytes": 20612,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -37076,7 +37212,7 @@
         "sha256": "e21b0f13b653ac8a96e535c367550a625db96e0c89ef45249f653b9eb8cc5eb2",
         "bytes": 20203
       },
-      "capture_relation": "same-as-capture",
+      "capture_relation": "evolved-after-extraction",
       "provenanceGroup": "graiphic-shared-frontend-original",
       "licenseEvidence": "Apache-2.0",
       "licenseDecisionId": "frog-common-frontend-apache2-2026-11-01",
@@ -37370,8 +37506,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDraftReader.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocument.cpp",
       "ownership": "split",
-      "current_hash": "594d53ed91655a59a04286c2798d0f1b1dd8983725c68c8a8f6bb9918e5fb037",
-      "current_bytes": 249042,
+      "current_hash": "bdaedad4b2367357df36fcf6c0b7f2502dcd739793f6c247e7dbba46fbe76377",
+      "current_bytes": 251140,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -37444,8 +37580,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/FrogDraftWriter.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
       "ownership": "split",
-      "current_hash": "a967d383952c5676eb0c98c0b227f60aaa1874986c52cedce5178509aa1ff636",
-      "current_bytes": 175105,
+      "current_hash": "381dccae42d989e86628e680ef7685b4c84652611644db0f5f28e609a06b63c7",
+      "current_bytes": 176205,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -38216,9 +38352,9 @@
       "ownership": "move",
       "original_hash": "635abf7a9ef4757d2058ac4d4f3e17abd53f5bc12f8d89a93604aed15c5836a5",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "635abf7a9ef4757d2058ac4d4f3e17abd53f5bc12f8d89a93604aed15c5836a5",
-      "current_bytes": 16432,
-      "capture_relation": "same-as-capture",
+      "current_hash": "2ea44a9ecaa290acbe544a1591219831c15686cbcbeccc1d27dbf2cd75c986e5",
+      "current_bytes": 17305,
+      "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
       "observedSpdx": [],
@@ -38356,9 +38492,9 @@
       "ownership": "snapshot",
       "original_hash": "cd71f9cae4b18377f4396e4bd1dc5b9c3495d86e202a9554b3d0ebd203832ae0",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "cd71f9cae4b18377f4396e4bd1dc5b9c3495d86e202a9554b3d0ebd203832ae0",
-      "current_bytes": 81928,
-      "capture_relation": "same-as-capture",
+      "current_hash": "01da7308d4ba503b6b96b0b38e6f758de07a2b5331c43aa207886a5512f8b3fa",
+      "current_bytes": 82073,
+      "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
       "observedSpdx": [],
@@ -38566,8 +38702,8 @@
       "ownership": "move",
       "original_hash": "51c5f1189b2cea3a02e366d9c3146144cd0bcd4bd02e7f70fbd903b1984003d6",
       "original_hash_basis": "source-origin.json extraction capture",
-      "current_hash": "a3285cf03e9e4ac299733abf3edeef504965a8f6d04e10ef18556e8f493f2031",
-      "current_bytes": 10243,
+      "current_hash": "92ed68e04c8a961efbdd7f7fafe6a48ef1855ca2c40447c9c5a3ad752a4f06fc",
+      "current_bytes": 10357,
       "capture_relation": "evolved-after-extraction",
       "inProductionIncludeClosure": true,
       "provenanceGroup": "studio-derived-production-input",
@@ -38979,8 +39115,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/src/GeometryBinding.cpp",
-      "current_hash": "cf19721b03703f6d90d40c5befca7bf451462639e3915005453d1a4aee49298d",
-      "current_bytes": 27473,
+      "current_hash": "40ca9527bda4b7cc76ba9d72d832623520d4a6ad266dcf02ec8501d589bea888",
+      "current_bytes": 27026,
       "capture_relation": "current-source-origin-declaration",
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
@@ -39344,8 +39480,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/src/InterpolationBinding.cpp",
-      "current_hash": "decc13088b74c3690d8357a389978b5e5ddedcc3b7daaaba840a417b791e86a0",
-      "current_bytes": 19158,
+      "current_hash": "bbc98e6111405198e4013ab27e9fe295d0e723010dbde926466e7da9a14e3cc9",
+      "current_bytes": 18728,
       "capture_relation": "current-source-origin-declaration",
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
@@ -39458,6 +39594,43 @@
         "ownership": "created",
         "sha256": "7aa0443426053d60d8cb53e8a44af065506b3e556feae674c06ba49bfda24ffb",
         "bytes": 15859
+      }
+    },
+    {
+      "path": "src/MathVariantLookup.hpp",
+      "upstream": "FROG/Implementations/Frontend/src/MathVariantLookup.hpp",
+      "earlierOrigins": [],
+      "ownership": "native",
+      "original_hash": "956dc67c2af9c3187c4fa3b465289292b13ddcbf715573428f005a5d2eccc4fe",
+      "original_hash_basis": "Exact project source-origin entry, selected common Frontend scope under NOTICE",
+      "provenanceGroup": "frontend-autonomous-support",
+      "root": "frontend",
+      "repositoryPath": "FROG/Implementations/Frontend/src/MathVariantLookup.hpp",
+      "current_hash": "956dc67c2af9c3187c4fa3b465289292b13ddcbf715573428f005a5d2eccc4fe",
+      "current_bytes": 2036,
+      "capture_relation": "same-as-capture",
+      "inProductionIncludeClosure": true,
+      "observedSpdx": [],
+      "licenseEvidence": "Apache-2.0",
+      "licenseDecisionId": "frog-common-frontend-apache2-2026-11-01",
+      "declaredLicenseScope": "Graiphic-owned original portions selected for the shared Frontend; no third-party relicensing",
+      "graiphicOriginalRightsConfirmed": true,
+      "thirdPartyContentRelicensed": false,
+      "evidence": [
+        "Accepted 2026-11-01 Graiphic decision for selected Frontend/API/CLI original material, including Studio/Runtime ancestry",
+        "Frontend LICENSE and NOTICE; explicit per-file declaration without changing compiled source bytes",
+        "Accepted 2026-11-01 Graiphic decision: FROG-Context/Decisions/frog-common-frontend-apache2.md",
+        "Existing exporter exact source selection and current source-origin/extraction receipts",
+        "T171 explicit current semantic owner; no private numerical implementation exported"
+      ],
+      "thirdPartyReviewFindingIds": [],
+      "currentReviewStatus": "Original shared Frontend source matched declared bytes and attribution",
+      "sourceOriginObservation": {
+        "upstream": "FROG/Implementations/Frontend/src/MathVariantLookup.hpp",
+        "path": "src/MathVariantLookup.hpp",
+        "sha256": "956dc67c2af9c3187c4fa3b465289292b13ddcbf715573428f005a5d2eccc4fe",
+        "bytes": 2036,
+        "ownership": "native"
       }
     },
     {
@@ -40902,8 +41075,8 @@
       "provenanceGroup": "frontend-autonomous-support",
       "root": "frontend",
       "repositoryPath": "FROG/Implementations/Frontend/src/StatisticsBinding.cpp",
-      "current_hash": "6d8f0d475a5a93639f52744feb65e4a79682d2976a3db42bb85dcaa68ef5b73f",
-      "current_bytes": 71101,
+      "current_hash": "43e32b5509ba25737cbad30858caa1780f82538e7d969a94ecd4215a8711cae0",
+      "current_bytes": 70671,
       "capture_relation": "current-source-origin-declaration",
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
@@ -41202,8 +41375,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/TypeDefinitionConstant.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/TypeDefinitionConstant.cpp",
       "ownership": "moved",
-      "current_hash": "0fb175140f1c673fcacd7faa9bda410c61ab819e4ee6e663b8436c238e4a0368",
-      "current_bytes": 16364,
+      "current_hash": "15afbec364a56a64a9684ce0f0e828edd57dd86e7cd7bb69ff32d14840613e30",
+      "current_bytes": 16903,
       "inProductionIncludeClosure": true,
       "observedSpdx": [],
       "earlierOrigins": [],
@@ -41619,8 +41792,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/WidgetDataOperations.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/WidgetDataOperations.cpp",
       "ownership": "split",
-      "current_hash": "aa3e924742d390f5e927649aa7c154b50a099754268bbb0e8f6c314229ec0470",
-      "current_bytes": 16935,
+      "current_hash": "45e777090dfc693841f2c7b68bce008c818dd47acf9fad67b78cce13e212ea4d",
+      "current_bytes": 17054,
       "inProductionIncludeClosure": true,
       "observedSpdx": [
         "Apache-2.0"
@@ -41755,8 +41928,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/WidgetInstanceData.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/WidgetInstance.cpp",
       "ownership": "split",
-      "current_hash": "6292cdc673856a84689539a2941fc395fea7e21674d5005e4238c5ad725a7aa7",
-      "current_bytes": 42956,
+      "current_hash": "a81186c8e8063d1e7c48bfe1f69dca87624ef08e3f58413031d4b2a466c7c25c",
+      "current_bytes": 44800,
       "inProductionIncludeClosure": true,
       "observedSpdx": [
         "Apache-2.0"
@@ -41942,8 +42115,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/WidgetNumericData.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/WidgetNumericState.cpp",
       "ownership": "split",
-      "current_hash": "7d750bc546e969204db994a211ffb13d02b3c6c21e6314a1ba6c76182d6d484f",
-      "current_bytes": 66173,
+      "current_hash": "9830d42efb258ddde17cf6c5017d7dc4bbc04f2f980b4353d1afb73e9f25876b",
+      "current_bytes": 66305,
       "inProductionIncludeClosure": true,
       "observedSpdx": [
         "Apache-2.0"
@@ -42826,8 +42999,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/graph/WaveformGraphData.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/graph/WaveformGraph.cpp",
       "ownership": "split",
-      "current_hash": "071b43b444673d01813f39520c920ab74aa809eb12cf543fc14b3c257b9080f1",
-      "current_bytes": 8204,
+      "current_hash": "fe21de3ccb7e42643d177bbe1380a437856e480c05f9634e0ad45103582a0561",
+      "current_bytes": 9969,
       "inProductionIncludeClosure": true,
       "observedSpdx": [
         "Apache-2.0"
@@ -42909,8 +43082,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/graph/XYGraphData.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/graph/XYGraph.cpp",
       "ownership": "split",
-      "current_hash": "f6df036b3a07a386ece1da5a3daabb2e2b138822d3fc93515c89ce6b6b2faed5",
-      "current_bytes": 21146,
+      "current_hash": "4d20b3b9346a4a21f767bc50f0577eb97311226c04b23cc86a5b1aa0a767e863",
+      "current_bytes": 21171,
       "inProductionIncludeClosure": true,
       "observedSpdx": [
         "Apache-2.0"
@@ -42984,8 +43157,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/src/graph/XYGraphDataValidation.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/graph/XYGraphGeometry.cpp",
       "ownership": "split",
-      "current_hash": "4d31f6ef719894aaf77ed1c07f64fbccc17a7ce7753a746fb472e5aa2c680266",
-      "current_bytes": 6574,
+      "current_hash": "831dbc4f68bf3c96b7b71096070a06abf56215f78707fad0bb6f579a970679bb",
+      "current_bytes": 7049,
       "inProductionIncludeClosure": true,
       "observedSpdx": [
         "Apache-2.0"
@@ -44035,8 +44208,8 @@
       "repositoryPath": "FROG/Implementations/Frontend/tests/frontend_draft_integration.cpp",
       "upstream": "FROG/Implementations/Frontend/tests/frontend_draft_integration.cpp",
       "ownership": "created",
-      "current_hash": "c379fda4feb2f3756781eb3463086fb86314a21c1b66951e2375075dbeba701a",
-      "current_bytes": 39597,
+      "current_hash": "775bb1ee217d8ace4498fea1158f4cc4f54479813102a10bed942940d4698b13",
+      "current_bytes": 44284,
       "inProductionIncludeClosure": false,
       "observedSpdx": [
         "Apache-2.0"
@@ -46721,30 +46894,30 @@
     "Original hashes/history remain distinct from current integration snapshots; repository-base hashes are never relabeled as pre-edit captures."
   ],
   "summary": {
-    "frontendFiles": 624,
-    "hashedCurrentFrontendFiles": 623,
-    "productionClosureFiles": 562,
+    "frontendFiles": 626,
+    "hashedCurrentFrontendFiles": 625,
+    "productionClosureFiles": 564,
     "productionTranslationUnits": 192,
-    "includeEdges": 1641,
+    "includeEdges": 1656,
     "closureIssues": 0,
-    "sourceOriginCapturesPreserved": 573,
+    "sourceOriginCapturesPreserved": 575,
     "captureRelations": {
       "no-capture": 49,
-      "evolved-after-extraction": 183,
-      "same-as-capture": 359,
+      "evolved-after-extraction": 190,
+      "same-as-capture": 354,
       "self-hash-excluded": 1,
       "current-source-origin-declaration": 32
     },
     "currentLicenceDeclarations": {
-      "Apache-2.0": 561,
+      "Apache-2.0": 563,
       "GPL-2.0-only": 1,
       "BSD-3-Clause": 62
     },
     "historicalKitSupportFiles": 56,
     "knownThirdPartySourceComponentsIdentified": 1,
     "documentaryContentReviewOpen": true,
-    "currentCandidateSelectedFiles": 708,
-    "publication": "Authorized source checkpoint, 2026-11-20. Remote identity recorded separately.",
+    "currentCandidateSelectedFiles": 710,
+    "publication": "Authorized public source checkpoint, 2026-11-22.",
     "qualification": "Not inferred from inventory",
     "t298_document_codec_files_added": 30
   },
@@ -47399,10 +47572,20 @@
       "updatedCurrentHashes": 4,
       "addedFiles": [],
       "scope": "Existing widget binding metadata and draft reader/writer. File and licence scope unchanged."
+    },
+    {
+      "date": "2026-11-22",
+      "priorInventorySha256": "d1cb344cf96d5c4ed2bf99b54f487874f0719b6f8e136a0717ae9c335f53bde5",
+      "updatedCurrentHashes": 48,
+      "addedFiles": [
+        "include/frog_native_engine/PictureRing.hpp",
+        "src/MathVariantLookup.hpp"
+      ],
+      "scope": "Revision 11, shared Frontend source and public tests. Existing licence decisions retained."
     }
   ],
   "currentCandidateKitSelection": {
-    "date": "2026-11-20",
+    "date": "2026-11-22",
     "frontendSelectedFiles": 624,
     "filesWithoutInventorySelfReference": [
       {
@@ -47592,8 +47775,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/ApplicationControlSchema.hpp",
-        "sha256": "07ef0af56c6d6177abf81b0286162a993d0860645e0673131c9260096f1519b2",
-        "bytes": 2887
+        "sha256": "134b3b191282718c28b268d49f8ae7f11c1b3a521c825304eed5be561fa13ed8",
+        "bytes": 3112
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/ApplicationControlSourceCodec.hpp",
@@ -47717,8 +47900,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/CanonicalDraftMigration.hpp",
-        "sha256": "06454178abe5216d5f32d3df0d3adc1cd5b7ee463a1afac2e1c01a05e5b6eb8e",
-        "bytes": 4138
+        "sha256": "0ccc3bd125311e1e108153d3a123e2fd221739cecde8b490c879d196bc46568c",
+        "bytes": 4234
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/CanonicalDraftPortResolution.hpp",
@@ -47817,8 +48000,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/CanonicalNumericScalarPalette.hpp",
-        "sha256": "43cf2f287d0f9f60e32faf37adf3150deca35c6287e06228d632f5c826b4fb9c",
-        "bytes": 9937
+        "sha256": "f22b76f6859f5c0ce5f1e8ad72702e29abf5116e82852ca011ace55447ae11db",
+        "bytes": 10398
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/CanonicalNumericText.hpp",
@@ -47892,8 +48075,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/ClusterFunctionBinding.hpp",
-        "sha256": "874d659bd8715236db1fb00c48b976ae087a1cadd2f20bd90e4492c967e03063",
-        "bytes": 6127
+        "sha256": "bc4768e58427e9c05f5043028cdb43908882156eb5775bb9bd977eea23b0784e",
+        "bytes": 6340
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/ClusterFunctionPortProjection.hpp",
@@ -47972,8 +48155,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/DiagramArrayValues.hpp",
-        "sha256": "cb4d9e995851a4ee02b094c648c8d2209dad5ada0c6077e87d57389c9f3dd066",
-        "bytes": 16613
+        "sha256": "0e18bc38f3322de179c3803d39cc6dd166236b1a61205ba3a47cca3b5d0500c5",
+        "bytes": 19239
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/DiagramBindingResolver.hpp",
@@ -48022,8 +48205,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/DiagramTunnelIdentity.hpp",
-        "sha256": "a07fff84bb1a32730bc033ff04ecee2e4410276e1d7f1182d016bb64642256e6",
-        "bytes": 505
+        "sha256": "32a2318749643b891953de432863957842d8e4a3a4773e7d0029aae46497a09d",
+        "bytes": 1402
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/DisabledStructureData.hpp",
@@ -48207,8 +48390,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/FrogDocumentFormat.hpp",
-        "sha256": "0a23294d083ef011dcf2b88249a424513fa30b109db7fab0ef91258cec8646fd",
-        "bytes": 2717
+        "sha256": "3c703f585fcf2288e20d5f8d59e026df9cdac95c931635359ea83fb82ed57d46",
+        "bytes": 2941
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/FrogDocumentWidgetValues.hpp",
@@ -48217,8 +48400,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/FrogDraftData.hpp",
-        "sha256": "14a41449fc6b490f9254bbf7fdcec2467989b53b9612b7531e5fa354a86423eb",
-        "bytes": 50820
+        "sha256": "ffe2c84c26b20ce1fbdba460259df7f07715a87f70aa30b5112d9cbfb50c4b2b",
+        "bytes": 50851
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/FrogDraftInterface.hpp",
@@ -48501,6 +48684,11 @@
         "bytes": 809
       },
       {
+        "path": "Implementations/Frontend/include/frog_native_engine/PictureRing.hpp",
+        "sha256": "13a7f3a742767d0ebb28f2e7180edfcea8d91456bfbaa14378f0c78066e1b893",
+        "bytes": 1378
+      },
+      {
         "path": "Implementations/Frontend/include/frog_native_engine/PolymorphicFrog.hpp",
         "sha256": "5967404081b190d36b63689e98b9b6983569e64119a7da489f27d73a2231c01e",
         "bytes": 3122
@@ -48702,8 +48890,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/WidgetCatalog.hpp",
-        "sha256": "b405f7838902584b792ae7d04336b08685edb54e9a2384a053f5165978a46acf",
-        "bytes": 5360
+        "sha256": "f551810e44adb5cc2cca584dbae419413929af408e93f2a5ad3d8d36b4fb918a",
+        "bytes": 5373
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/WidgetChoiceProperties.hpp",
@@ -48727,8 +48915,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/WidgetInstance.hpp",
-        "sha256": "890526cd940ee46518fb9951988d00e296e99a5cdee6bf12b43c94172fc4d037",
-        "bytes": 45638
+        "sha256": "638a5dace0bb826a4710ba16d869219bdf3e4fa9ffbcb123d96095ecdeecb007",
+        "bytes": 46005
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/WidgetNumericData.hpp",
@@ -48752,8 +48940,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/graph/WaveformGraph.hpp",
-        "sha256": "6d49da4c45ff29fbf30d198d25756e62f08adc9381615ccb7b84e3a2d059dda1",
-        "bytes": 8906
+        "sha256": "2975fa6b428be444b92f2b017cbf75130509a609bca256998daf2e25e2f18462",
+        "bytes": 10776
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/graph/WaveformGraphBinding.hpp",
@@ -48762,8 +48950,8 @@
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/graph/XYGraph.hpp",
-        "sha256": "3fbe7be3ad9158d973114526ab2cccdd319e43aafca90c670a73f5f546c3cdb7",
-        "bytes": 13218
+        "sha256": "9f88365ee878964fc317b052df204633bc63d86713ab72c2f2ab1ae359be5988",
+        "bytes": 13461
       },
       {
         "path": "Implementations/Frontend/include/frog_native_engine/graph/XYGraphDataHelpers.hpp",
@@ -48817,8 +49005,8 @@
       },
       {
         "path": "Implementations/Frontend/manifests/function-bindings/studio.function-bindings.v2.inc",
-        "sha256": "0380047c9a60b03e697349f6528c9d450bfae8ff7f634d9ceefe83ab931b972a",
-        "bytes": 6000003
+        "sha256": "9c7151ee64e9734c6e9ed8b87761a7e340f3093e2f4bc522d808a0ecb13ac8a9",
+        "bytes": 6003065
       },
       {
         "path": "Implementations/Frontend/manifests/math/entries.inc",
@@ -48857,8 +49045,8 @@
       },
       {
         "path": "Implementations/Frontend/snapshot/generated/WidgetCatalog.generated.hpp",
-        "sha256": "fceb295b3ffd63a1a7f77205a291a2cb50c527f9b7bd2605c75d9b51074c1e62",
-        "bytes": 41837
+        "sha256": "d30ce79c2c5a468bf5d025735bc56353102758d49fb1abbcbf0f10b5021822ea",
+        "bytes": 42779
       },
       {
         "path": "Implementations/Frontend/snapshot/generated/ordinary-differential-runtime.generated.inc",
@@ -48967,8 +49155,8 @@
       },
       {
         "path": "Implementations/Frontend/source-origin.json",
-        "sha256": "db567f155a435a594cf8b9b1be9afbe4746dbf30ffe2caaab7fd57afb0e5780f",
-        "bytes": 281355
+        "sha256": "00da1bb9c610d9d6cb2005efbc7ed493ed2e3a38c9f16bb51dcf8484f47ccf55",
+        "bytes": 281923
       },
       {
         "path": "Implementations/Frontend/src/ApplicationControlMemberContract.cpp",
@@ -48977,8 +49165,8 @@
       },
       {
         "path": "Implementations/Frontend/src/ApplicationControlSchema.cpp",
-        "sha256": "205e00db0e5b46a66e8cee158fef7137ba29fc1b2fcff4a4141f51097f30d27e",
-        "bytes": 80505
+        "sha256": "89c4fd6aa21847bb61d02514c6092e4104659d342fff5360a88f504a793ebf42",
+        "bytes": 81201
       },
       {
         "path": "Implementations/Frontend/src/ApplicationControlSourceCodec.cpp",
@@ -49027,8 +49215,8 @@
       },
       {
         "path": "Implementations/Frontend/src/CalculusBinding.cpp",
-        "sha256": "c6dde9459a777fb57a4feb3a209641a8d9020eea97fe414afe138f8708a9b33b",
-        "bytes": 26075
+        "sha256": "0e446958b0b74ab87aafda386c943cf66eaef2a599edca051c88c53f5f7161fb",
+        "bytes": 25646
       },
       {
         "path": "Implementations/Frontend/src/CalculusNodeBinding.cpp",
@@ -49057,8 +49245,8 @@
       },
       {
         "path": "Implementations/Frontend/src/CanonicalComposedDraftMigration.cpp",
-        "sha256": "a18806c9b84f39385ba584af1fbe45d78b60ac15881b5cef023e931dac7c0f85",
-        "bytes": 244787
+        "sha256": "7f4cb208b6cd29979970e2e98125af76c8836ed989dc64fc2d81ad0b55cb5c58",
+        "bytes": 249261
       },
       {
         "path": "Implementations/Frontend/src/CanonicalComposedDraftMigration.hpp",
@@ -49067,8 +49255,8 @@
       },
       {
         "path": "Implementations/Frontend/src/CanonicalComposedExecutionIr.cpp",
-        "sha256": "334b24a7706001759536bf3111a1eb4daa62133f8431f5344b72598270a88e0e",
-        "bytes": 138033
+        "sha256": "59819d15e90af3e9c7b6f5b2b7e7ae6a3f7f98725e9c801bb9a9110505b2d349",
+        "bytes": 138092
       },
       {
         "path": "Implementations/Frontend/src/CanonicalComposedExecutionIr.hpp",
@@ -49082,18 +49270,18 @@
       },
       {
         "path": "Implementations/Frontend/src/CanonicalDraftMigration.cpp",
-        "sha256": "48cad4c05f683fd9b6bd69beaa4ddb1e5290cb61750225bc4fe09864447d8dbb",
-        "bytes": 145060
+        "sha256": "3bf2a8741910f3d3fcb19d02648aed0cdfd073b0d9b6fdc77327c1e2d47098a7",
+        "bytes": 149421
       },
       {
         "path": "Implementations/Frontend/src/CanonicalDraftPortResolution.cpp",
-        "sha256": "a3de0e150fcc30e722d0e23323c0515f51d83261c89c571e3d55d7a9de8b666b",
-        "bytes": 21556
+        "sha256": "9d6f4ec0178c2c226bbd335d85969e6dac46bd0df595d6e57e83ee8f29677f0a",
+        "bytes": 21618
       },
       {
         "path": "Implementations/Frontend/src/CanonicalDraftPresentation.hpp",
-        "sha256": "d20f9d11674878aa0fb64dab9efce305fd83014b568f4ff10a0babb95ff1132a",
-        "bytes": 15168
+        "sha256": "9703176b122e03c40657c9d0faab8a0729c0745701a34237c411f5576ad9d3a6",
+        "bytes": 21479
       },
       {
         "path": "Implementations/Frontend/src/CanonicalErrorHandlingNative.cpp",
@@ -49277,8 +49465,8 @@
       },
       {
         "path": "Implementations/Frontend/src/DiagramBindingResolver.cpp",
-        "sha256": "f0fc2c0ea5bdbf431c787bd48e5635915c1d133ad16067f240d57f5679b07c1d",
-        "bytes": 164713
+        "sha256": "0d34131628cedccfe5e634ca3a86a27dbf58accd13e962976e2f8365bb94efec",
+        "bytes": 165156
       },
       {
         "path": "Implementations/Frontend/src/DiagramStructureCatalog.cpp",
@@ -49312,8 +49500,8 @@
       },
       {
         "path": "Implementations/Frontend/src/DraftFrontendPreparation.cpp",
-        "sha256": "6c9ef19b2d8f6ff3c48d19895e4e29929ee84445a8259cd0ef738338a3306dd4",
-        "bytes": 26684
+        "sha256": "3062a1bc798ddc95743d937fee406f0397280f0f29965d692343b778ab2261fe",
+        "bytes": 29946
       },
       {
         "path": "Implementations/Frontend/src/DraftInterfaceInspection.cpp",
@@ -49412,8 +49600,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FittingBinding.cpp",
-        "sha256": "e6ca4b9e263c2ccf629b691ad1605aa9d12ce65bd1030f391258d8552895ebcd",
-        "bytes": 46383
+        "sha256": "d3f89e14cf40c1e441827cea1925970b1a10a6e5086066dd6f63d78ae7d66d4d",
+        "bytes": 45953
       },
       {
         "path": "Implementations/Frontend/src/FittingModelPreparation.cpp",
@@ -49437,13 +49625,13 @@
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentArrayStorage.cpp",
-        "sha256": "8d22bdf11861585d677c59fc53c5972441abc662e8ea78694a3c9ecd5c26a103",
-        "bytes": 38636
+        "sha256": "d1310a66fcefb461ca371a568b7ee83baf91eaba708f5ac97261d38838d2773a",
+        "bytes": 40112
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentArrayStorage.hpp",
-        "sha256": "e7426d122d0c4522204d0089e74e548d10005fa0ffd6230e624e39757a1b652d",
-        "bytes": 3546
+        "sha256": "5e7b1ac62fb79f4a8f608e9262d69eeed1f446c076b7accd7bc7cc82edf8df3a",
+        "bytes": 3687
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentCaseStructureSerialization.cpp",
@@ -49547,8 +49735,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentIntegerLexeme.hpp",
-        "sha256": "c167ca6a513dc4cf782b54a2f9e7e184955c30abef7d91c999b7f9cbbd34f0e4",
-        "bytes": 2669
+        "sha256": "6b4fb34d965c3660b849374d75f3f0b1d08cdb091f05b544b7bfd1f7a4161011",
+        "bytes": 2744
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentJsonValue.cpp",
@@ -49617,8 +49805,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentWaveformGraph.cpp",
-        "sha256": "8a1e619341668bdf30cdedced463559e2a51873cf7654b74de73d423ac55f3a6",
-        "bytes": 17579
+        "sha256": "4b453d8512caafe06265c569c20fbdb766aeca4b661523f2c59f5c12bfebfa5d",
+        "bytes": 21278
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentWaveformGraph.hpp",
@@ -49637,8 +49825,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentXYGraph.cpp",
-        "sha256": "e21b0f13b653ac8a96e535c367550a625db96e0c89ef45249f653b9eb8cc5eb2",
-        "bytes": 20203
+        "sha256": "a59aeb4b0689909d251ce3bdfc34d63c4848fa779d029898b872bca9c5d18442",
+        "bytes": 20612
       },
       {
         "path": "Implementations/Frontend/src/FrogDocumentXYGraph.hpp",
@@ -49672,13 +49860,13 @@
       },
       {
         "path": "Implementations/Frontend/src/FrogDraftReader.cpp",
-        "sha256": "594d53ed91655a59a04286c2798d0f1b1dd8983725c68c8a8f6bb9918e5fb037",
-        "bytes": 249042
+        "sha256": "bdaedad4b2367357df36fcf6c0b7f2502dcd739793f6c247e7dbba46fbe76377",
+        "bytes": 251140
       },
       {
         "path": "Implementations/Frontend/src/FrogDraftWriter.cpp",
-        "sha256": "a967d383952c5676eb0c98c0b227f60aaa1874986c52cedce5178509aa1ff636",
-        "bytes": 175105
+        "sha256": "381dccae42d989e86628e680ef7685b4c84652611644db0f5f28e609a06b63c7",
+        "bytes": 176205
       },
       {
         "path": "Implementations/Frontend/src/FrogJson.cpp",
@@ -49727,8 +49915,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FunctionBindingCatalog.cpp",
-        "sha256": "635abf7a9ef4757d2058ac4d4f3e17abd53f5bc12f8d89a93604aed15c5836a5",
-        "bytes": 16432
+        "sha256": "2ea44a9ecaa290acbe544a1591219831c15686cbcbeccc1d27dbf2cd75c986e5",
+        "bytes": 17305
       },
       {
         "path": "Implementations/Frontend/src/FunctionBindingTypeResolution.cpp",
@@ -49737,8 +49925,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FunctionCatalogEntries.inc",
-        "sha256": "cd71f9cae4b18377f4396e4bd1dc5b9c3495d86e202a9554b3d0ebd203832ae0",
-        "bytes": 81928
+        "sha256": "01da7308d4ba503b6b96b0b38e6f758de07a2b5331c43aa207886a5512f8b3fa",
+        "bytes": 82073
       },
       {
         "path": "Implementations/Frontend/src/FunctionCatalogIdentity.cpp",
@@ -49752,8 +49940,8 @@
       },
       {
         "path": "Implementations/Frontend/src/FunctionCatalogSemantic.cpp",
-        "sha256": "a3285cf03e9e4ac299733abf3edeef504965a8f6d04e10ef18556e8f493f2031",
-        "bytes": 10243
+        "sha256": "92ed68e04c8a961efbdd7f7fafe6a48ef1855ca2c40447c9c5a3ad752a4f06fc",
+        "bytes": 10357
       },
       {
         "path": "Implementations/Frontend/src/FunctionPolymorphicResolution.cpp",
@@ -49792,8 +49980,8 @@
       },
       {
         "path": "Implementations/Frontend/src/GeometryBinding.cpp",
-        "sha256": "cf19721b03703f6d90d40c5befca7bf451462639e3915005453d1a4aee49298d",
-        "bytes": 27473
+        "sha256": "40ca9527bda4b7cc76ba9d72d832623520d4a6ad266dcf02ec8501d589bea888",
+        "bytes": 27026
       },
       {
         "path": "Implementations/Frontend/src/GeometryBounds.cpp",
@@ -49832,8 +50020,8 @@
       },
       {
         "path": "Implementations/Frontend/src/InterpolationBinding.cpp",
-        "sha256": "decc13088b74c3690d8357a389978b5e5ddedcc3b7daaaba840a417b791e86a0",
-        "bytes": 19158
+        "sha256": "bbc98e6111405198e4013ab27e9fe295d0e723010dbde926466e7da9a14e3cc9",
+        "bytes": 18728
       },
       {
         "path": "Implementations/Frontend/src/InterpolationNodeBinding.cpp",
@@ -49849,6 +50037,11 @@
         "path": "Implementations/Frontend/src/ListboxWidget.cpp",
         "sha256": "7aa0443426053d60d8cb53e8a44af065506b3e556feae674c06ba49bfda24ffb",
         "bytes": 15859
+      },
+      {
+        "path": "Implementations/Frontend/src/MathVariantLookup.hpp",
+        "sha256": "956dc67c2af9c3187c4fa3b465289292b13ddcbf715573428f005a5d2eccc4fe",
+        "bytes": 2036
       },
       {
         "path": "Implementations/Frontend/src/NativeCall.cpp",
@@ -49977,8 +50170,8 @@
       },
       {
         "path": "Implementations/Frontend/src/StatisticsBinding.cpp",
-        "sha256": "6d8f0d475a5a93639f52744feb65e4a79682d2976a3db42bb85dcaa68ef5b73f",
-        "bytes": 71101
+        "sha256": "43e32b5509ba25737cbad30858caa1780f82538e7d969a94ecd4215a8711cae0",
+        "bytes": 70671
       },
       {
         "path": "Implementations/Frontend/src/StatisticsNodeBinding.cpp",
@@ -50017,8 +50210,8 @@
       },
       {
         "path": "Implementations/Frontend/src/TypeDefinitionConstant.cpp",
-        "sha256": "0fb175140f1c673fcacd7faa9bda410c61ab819e4ee6e663b8436c238e4a0368",
-        "bytes": 16364
+        "sha256": "15afbec364a56a64a9684ce0f0e828edd57dd86e7cd7bb69ff32d14840613e30",
+        "bytes": 16903
       },
       {
         "path": "Implementations/Frontend/src/TypeDefinitionSemantics.cpp",
@@ -50057,8 +50250,8 @@
       },
       {
         "path": "Implementations/Frontend/src/WidgetDataOperations.cpp",
-        "sha256": "aa3e924742d390f5e927649aa7c154b50a099754268bbb0e8f6c314229ec0470",
-        "bytes": 16935
+        "sha256": "45e777090dfc693841f2c7b68bce008c818dd47acf9fad67b78cce13e212ea4d",
+        "bytes": 17054
       },
       {
         "path": "Implementations/Frontend/src/WidgetDataValueAssignment.cpp",
@@ -50072,13 +50265,13 @@
       },
       {
         "path": "Implementations/Frontend/src/WidgetInstanceData.cpp",
-        "sha256": "6292cdc673856a84689539a2941fc395fea7e21674d5005e4238c5ad725a7aa7",
-        "bytes": 42956
+        "sha256": "a81186c8e8063d1e7c48bfe1f69dca87624ef08e3f58413031d4b2a466c7c25c",
+        "bytes": 44800
       },
       {
         "path": "Implementations/Frontend/src/WidgetNumericData.cpp",
-        "sha256": "7d750bc546e969204db994a211ffb13d02b3c6c21e6314a1ba6c76182d6d484f",
-        "bytes": 66173
+        "sha256": "9830d42efb258ddde17cf6c5017d7dc4bbc04f2f980b4353d1afb73e9f25876b",
+        "bytes": 66305
       },
       {
         "path": "Implementations/Frontend/src/WidgetNumericTypography.cpp",
@@ -50127,8 +50320,8 @@
       },
       {
         "path": "Implementations/Frontend/src/graph/WaveformGraphData.cpp",
-        "sha256": "071b43b444673d01813f39520c920ab74aa809eb12cf543fc14b3c257b9080f1",
-        "bytes": 8204
+        "sha256": "fe21de3ccb7e42643d177bbe1380a437856e480c05f9634e0ad45103582a0561",
+        "bytes": 9969
       },
       {
         "path": "Implementations/Frontend/src/graph/WaveformGraphTypedValue.cpp",
@@ -50137,13 +50330,13 @@
       },
       {
         "path": "Implementations/Frontend/src/graph/XYGraphData.cpp",
-        "sha256": "f6df036b3a07a386ece1da5a3daabb2e2b138822d3fc93515c89ce6b6b2faed5",
-        "bytes": 21146
+        "sha256": "4d20b3b9346a4a21f767bc50f0577eb97311226c04b23cc86a5b1aa0a767e863",
+        "bytes": 21171
       },
       {
         "path": "Implementations/Frontend/src/graph/XYGraphDataValidation.cpp",
-        "sha256": "4d31f6ef719894aaf77ed1c07f64fbccc17a7ce7753a746fb472e5aa2c680266",
-        "bytes": 6574
+        "sha256": "831dbc4f68bf3c96b7b71096070a06abf56215f78707fad0bb6f579a970679bb",
+        "bytes": 7049
       },
       {
         "path": "Implementations/Frontend/tests/class_definition_smoke.cpp",
@@ -50267,8 +50460,8 @@
       },
       {
         "path": "Implementations/Frontend/tests/frontend_draft_integration.cpp",
-        "sha256": "c379fda4feb2f3756781eb3463086fb86314a21c1b66951e2375075dbeba701a",
-        "bytes": 39597
+        "sha256": "775bb1ee217d8ace4498fea1158f4cc4f54479813102a10bed942940d4698b13",
+        "bytes": 44284
       },
       {
         "path": "Implementations/Frontend/tests/frontend_integration.cpp",
@@ -50961,5 +51154,5 @@
       "sha256": "0d675a04be4b1caa2ae7ed08ea4f3c9c8a85cdacafddf9a2bb85918abb7f5d02"
     }
   ],
-  "currentCandidateSelectionSha256": "e7716ee88ae59b8e37fe77de21590a14dacf0cbcd5cfaf59e73a870da43acf74"
+  "currentCandidateSelectionSha256": "61f5f1185f2c9e8958e438832835ccecf08fe370bf6cc2011e7cba7579718b06"
 }

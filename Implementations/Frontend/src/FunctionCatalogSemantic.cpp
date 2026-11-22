@@ -72,6 +72,9 @@ std::string functionDiagramNodeType(const FunctionCatalogEntry &entry) {
     if (entry.catalogId == "numeric.int_terminal") {
         return "frog.studio.numeric.numeric_terminal";
     }
+    if (entry.catalogId == "numeric.picture_ring") {
+        return "frog.studio.numeric.ring_constant";
+    }
     return "frog.studio." + entry.catalogId;
 }
 

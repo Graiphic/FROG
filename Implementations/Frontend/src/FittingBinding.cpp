@@ -1,4 +1,5 @@
 #include "frog_native_engine/FittingBinding.hpp"
+#include "MathVariantLookup.hpp"
 #include <algorithm>
 #include <array>
 #include <set>
@@ -162,20 +163,9 @@ const std::array<FunctionLaw,28> &laws() {
     }();
     return value;
 }
-std::string_view canonical(std::string_view id) {
-    if(id.starts_with("frog.studio."))id.remove_prefix(12);
-    if(id.ends_with(".owned.v1"))id.remove_suffix(9);
-    return id;
-}
-struct Match { std::size_t function=28,variant=0;bool explicitVariant=false; };
-Match match(std::string_view id) {
-    id=canonical(id);
-    for(std::size_t i=0;i<descriptions.size();++i) {
-        if(descriptions[i].catalogId==id)return {i,0,false};
-        for(std::size_t j=0;j<laws()[i].variants.size();++j)
-            if(canonical(laws()[i].variants[j].descriptor.operationId)==id)return {i,j,true};
-    }
-    return {};
+math_variant::Match match(std::string_view id) {
+    static const math_variant::Lookup lookup(descriptions, laws());
+    return lookup.find(id);
 }
 const VariantLaw *select(std::string_view id,std::string_view variant) {
     const auto found=match(id);if(found.function==descriptions.size())return nullptr;

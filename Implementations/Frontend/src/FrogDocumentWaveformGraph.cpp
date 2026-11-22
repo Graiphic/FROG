@@ -53,6 +53,53 @@ void checkKeys(const JsonValue &v, std::initializer_list<std::string_view> known
         if (std::find(known.begin(), known.end(), key) == known.end())
             throw std::runtime_error("Unsupported field: " + key);
 }
+int readAxisInteger(const JsonValue &value, std::string_view key, int maximum, int fallback) {
+    const double setting = number(value, key, fallback);
+    if (!std::isfinite(setting) || setting < 0 || setting > maximum || std::floor(setting) != setting)
+        throw std::runtime_error("Invalid Waveform Graph axis setting: " + std::string(key));
+    return static_cast<int>(setting);
+}
+void readAxisOptions(const JsonValue &value, std::string_view key, graph::AxisOptions &axis) {
+    const auto *v = field(value, key, JsonValue::Type::Object);
+    if (!v) return;
+    checkKeys(*v, {"scale", "format", "precision", "significant_digits", "trailing_zeros",
+        "title_visible", "tick_labels_visible", "major_ticks", "minor_ticks", "major_grid", "minor_grid",
+        "time_origin", "time_unit", "time_zone", "time_content"});
+    axis.scale = static_cast<graph::AxisScale>(
+        readAxisInteger(*v, "scale", static_cast<int>(graph::AxisScale::Logarithmic), static_cast<int>(axis.scale)));
+    if (v->member("format"))
+        axis.format = static_cast<graph::AxisFormat>(
+            readAxisInteger(*v, "format", static_cast<int>(graph::AxisFormat::SI), 0));
+    axis.precision = readAxisInteger(*v, "precision", 17, axis.precision);
+    axis.significantDigits = flag(*v, "significant_digits", axis.significantDigits);
+    axis.trailingZeros = flag(*v, "trailing_zeros", axis.trailingZeros);
+    axis.titleVisible = flag(*v, "title_visible", axis.titleVisible);
+    axis.tickLabelsVisible = flag(*v, "tick_labels_visible", axis.tickLabelsVisible);
+    axis.majorTicks = flag(*v, "major_ticks", axis.majorTicks);
+    axis.minorTicks = flag(*v, "minor_ticks", axis.minorTicks);
+    if (v->member("major_grid")) axis.majorGrid = flag(*v, "major_grid", false);
+    axis.minorGrid = flag(*v, "minor_grid", axis.minorGrid);
+    axis.timeOrigin = text(*v, "time_origin", axis.timeOrigin);
+    axis.timeUnit = text(*v, "time_unit", axis.timeUnit);
+    axis.timeZone = text(*v, "time_zone", axis.timeZone);
+    axis.timeContent = static_cast<graph::TimeContent>(
+        readAxisInteger(*v, "time_content", static_cast<int>(graph::TimeContent::Time), static_cast<int>(axis.timeContent)));
+}
+void writeAxisOptions(std::ostringstream &out, const char *key, const graph::AxisOptions &axis) {
+    if (axis == graph::AxisOptions{}) return;
+    out << ",\"" << key << "\":{\"scale\":" << static_cast<int>(axis.scale);
+    if (axis.format) out << ",\"format\":" << static_cast<int>(*axis.format);
+    out << ",\"precision\":" << axis.precision << ",\"significant_digits\":" << axis.significantDigits
+        << ",\"trailing_zeros\":" << axis.trailingZeros << ",\"title_visible\":" << axis.titleVisible
+        << ",\"tick_labels_visible\":" << axis.tickLabelsVisible
+        << ",\"major_ticks\":" << axis.majorTicks << ",\"minor_ticks\":" << axis.minorTicks;
+    if (axis.majorGrid.has_value()) out << ",\"major_grid\":" << *axis.majorGrid;
+    out << ",\"minor_grid\":" << axis.minorGrid << ",\"time_origin\":";
+    appendJsonString(out, axis.timeOrigin);
+    out << ",\"time_unit\":"; appendJsonString(out, axis.timeUnit);
+    out << ",\"time_zone\":"; appendJsonString(out, axis.timeZone);
+    out << ",\"time_content\":" << static_cast<int>(axis.timeContent) << '}';
+}
 bool sameProjection(const graph::Dataset &a,const graph::Dataset &b) {
     const auto defaultEmpty=[](const auto &data){return data.series.size()==1 && data.series[0].y.empty() && data.series[0].origin==0 && data.series[0].step==1;};
     // The original empty WFG-1 profile has zero plots; an empty numeric Y
@@ -70,7 +117,7 @@ bool sameProjection(const graph::Dataset &a,const graph::Dataset &b) {
 void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
     try {
         checkKeys(value, {"profile", "x_label", "y_label", "autoscale_x", "autoscale_y", "grid_visible", "legend_visible",
-            "x_min", "x_max", "y_min", "y_max", "plots", "initial_data", "x_title", "y_title", "annotations",
+            "x_min", "x_max", "y_min", "y_max", "x_axis", "y_axis", "plots", "initial_data", "x_title", "y_title", "annotations",
             "datatype", "datatype_explicit", "typed_initial_data", "cursors"});
         if (text(value, "profile", "") != "WFG-1-linear") throw std::runtime_error("Unsupported Waveform Graph profile.");
         graph::State candidate;
@@ -78,7 +125,8 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         d.xLabel = text(value, "x_label", d.xLabel); d.yLabel = text(value, "y_label", d.yLabel);
         const auto readTitle = [&](std::string_view key, graph::TitleStyle &title) {
             if (const auto *v = field(value, key, JsonValue::Type::Object)) {
-                checkKeys(*v, {"positioned", "x", "y", "width", "height", "point_size", "use_default_size", "family", "style", "rgb", "alignment"});
+                checkKeys(*v, {"positioned", "x", "y", "width", "height", "point_size", "use_default_size", "family", "style", "rgb",
+                    "alignment", "vertical"});
                 title.positioned = flag(*v, "positioned", false);
                 title.x = number(*v, "x", 0); title.y = number(*v, "y", 0);
                 title.width = number(*v, "width", 120); title.height = number(*v, "height", 24);
@@ -86,6 +134,7 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
                 title.pointSizeUsesDefault = flag(*v, "use_default_size", std::abs(title.pointSize - 9.0) < 0.001);
                 title.family = text(*v, "family", title.family); title.style = text(*v, "style", title.style);
                 title.alignment = text(*v, "alignment", title.alignment);
+                title.vertical = flag(*v, "vertical", title.vertical);
                 const double rgb = number(*v, "rgb", title.rgb);
                 if (!std::isfinite(rgb) || rgb < 0 || rgb > 0xFFFFFF || std::floor(rgb) != rgb) throw std::runtime_error("Invalid title color.");
                 title.rgb = static_cast<std::uint32_t>(rgb);
@@ -122,6 +171,8 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         d.gridVisible = flag(value, "grid_visible", true); d.legendVisible = flag(value, "legend_visible", true);
         d.xRange = {number(value, "x_min", 0), number(value, "x_max", 100)};
         d.yRange = {number(value, "y_min", -10), number(value, "y_max", 10)};
+        readAxisOptions(value, "x_axis", d.xAxis);
+        readAxisOptions(value, "y_axis", d.yAxis);
         if (auto *plots = field(value, "plots", JsonValue::Type::Array)) {
             if (plots->array.size() > graph::maximumSeries) throw std::runtime_error("Plot quota exceeded.");
             for (const auto &p : plots->array) {
@@ -207,9 +258,13 @@ std::string serializeWaveformGraph(const graph::State &state) {
           << ",\"width\":" << title.width << ",\"height\":" << title.height << ",\"point_size\":" << title.pointSize
           << ",\"use_default_size\":" << (title.pointSizeUsesDefault ? "true" : "false") << ",\"family\":";
         appendJsonString(o, title.family); o << ",\"style\":"; appendJsonString(o, title.style);
-        o << ",\"rgb\":" << title.rgb << ",\"alignment\":"; appendJsonString(o, title.alignment); o << '}';
+        o << ",\"rgb\":" << title.rgb << ",\"alignment\":"; appendJsonString(o, title.alignment);
+        if (title.vertical) o << ",\"vertical\":true";
+        o << '}';
     };
     writeTitle("x_title", d.xTitle); writeTitle("y_title", d.yTitle);
+    writeAxisOptions(o, "x_axis", d.xAxis);
+    writeAxisOptions(o, "y_axis", d.yAxis);
     if (!d.annotations.empty()) {
         o << ",\"annotations\":[";
         for (std::size_t i=0; i<d.annotations.size(); ++i) {

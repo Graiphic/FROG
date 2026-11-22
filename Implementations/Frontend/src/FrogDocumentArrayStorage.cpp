@@ -21,6 +21,9 @@ constexpr std::size_t chunkBytes = 64U * 1024U;
 constexpr std::string_view textProfile = "numeric-cell-text-le32-v1";
 constexpr std::string_view elementsProfile = "numeric-elements-json-le32-v1";
 using Json = source::JsonValue;
+bool isNumericWordArrayProfile(std::string_view profile) noexcept {
+    return profile==numericWordArrayProfile || profile==exactNarrowNumericWordArrayProfile;
+}
 std::size_t valueCount(const Json &root) {
     if(root.type!=Json::Type::Object&&root.type!=Json::Type::Array)return 1;
     std::size_t count=1;std::vector<const Json *> pending{&root};
@@ -287,19 +290,17 @@ std::optional<std::string> encodeNumericWords(const DiagramArrayValues &cells,
             throw std::runtime_error("FROG array storage: numeric spelling exceeds the compact byte budget or contains invalid text.");
         byteCount+=spelling.size()+8U;
     });
-    auto encoded=encodeChunks(cells.size(),byteCount,numericWordArrayProfile,scalar,context.compress,[&](const auto &append) {
+    const auto profile=width<4 ? exactNarrowNumericWordArrayProfile : numericWordArrayProfile;
+    auto encoded=encodeChunks(cells.size(),byteCount,profile,scalar,context.compress,[&](const auto &append) {
         static constexpr std::array<std::uint8_t,chunkBytes> zeros{};
-        cells.visitNumericWords([&](std::size_t count,auto narrow,auto wide) {
+        cells.visitNumericWords([&](std::size_t count,auto page) {
             source::pollJsonReadCheckpoint();
-            if (narrow.empty() && wide.empty()) append(std::span(zeros).first(count*width));
+            if (page.empty()) append(std::span(zeros).first(count*width));
             else if constexpr (std::endian::native==std::endian::little) {
-                const auto *data=narrow.empty() ? reinterpret_cast<const std::uint8_t *>(wide.data()) :
-                    reinterpret_cast<const std::uint8_t *>(narrow.data());
+                const auto *data=reinterpret_cast<const std::uint8_t *>(page.data());
                 append(std::span(data,count*width));
-            } else if (!narrow.empty()) {
-                for (auto word:narrow.first(count)) append(littleEndian<4>(word));
             } else {
-                for (auto word:wide.first(count)) append(littleEndian<8>(word));
+                for (auto word:page.first(count)) append(littleEndian<sizeof(word)>(word));
             }
         });
         cells.visitNumericSpellings([&](std::size_t index,std::string_view spelling) {
@@ -349,13 +350,17 @@ bool decodeDiagramArrayStorage(const Json &configuration, DiagramArrayValues &ou
     if (!envelope || envelope->type != Json::Type::Object) return fail("invalid numeric Array envelope.");
     const auto profile = jsonStringField(*envelope, "encoding").value_or("");
     if (profile == elementsProfile) return fail("encoding does not match the array value field.");
-    const bool words = profile == numericWordArrayProfile;
+    const bool words = isNumericWordArrayProfile(profile);
     if (!words && profile != textProfile) return fail("unsupported encoding '" + profile + "'.");
     const auto parsedType = binding::parseType(type);
     const auto elementType = numericElementType(parsedType);
     if (elementType.empty()) return fail("encoding does not match the Array element type.");
-    const auto width = words ? DiagramArrayValues::numericWordBytes(elementType) : 4U;
-    if (words && (!width || jsonStringField(*envelope,"element_type").value_or("")!=elementType))
+    const auto exactWidth=DiagramArrayValues::numericWordBytes(elementType);
+    const bool legacyNarrow=profile==numericWordArrayProfile && exactWidth && exactWidth<4;
+    const bool signedLane=elementType.starts_with('i');
+    const auto width = words && !legacyNarrow ? exactWidth : 4U;
+    if (words && (!width || (profile==exactNarrowNumericWordArrayProfile && exactWidth>=4) ||
+        jsonStringField(*envelope,"element_type").value_or("")!=elementType))
         return fail("encoding does not match the exact Array element type.");
     auto &budget = words && remainingNumericWordsBytes ? *remainingNumericWordsBytes : remainingBytes;
     std::uint32_t count = 0, byteCount = 0;
@@ -400,8 +405,18 @@ bool decodeDiagramArrayStorage(const Json &configuration, DiagramArrayValues &ou
         std::size_t cursor = 0;
         if (words && bytesRead < wordsBytes) {
             cursor=(std::min)(raw.size(),wordsBytes-bytesRead);
-            if (!prepared.loadNumericWords(bytesRead/width,std::span(raw).first(cursor)))
+            if (legacyNarrow) {
+                // v1 wrote narrow integer cells in four-byte lanes. Preserve
+                // old out-of-range authoring text so execution can refuse it.
+                for (std::size_t offset=0;offset<cursor;offset+=4) {
+                    std::uint32_t word=0;
+                    for (unsigned byte=0;byte<4;++byte) word|=std::uint32_t(raw[offset+byte])<<(8*byte);
+                    if (word) prepared.replaceAt((bytesRead+offset)/4,signedLane ?
+                        std::to_string(std::bit_cast<std::int32_t>(word)) : std::to_string(word));
+                }
+            } else if (!prepared.loadNumericWords(bytesRead/width,std::span(raw).first(cursor))) {
                 return fail("invalid numeric word block.");
+            }
         }
         bytesRead += raw.size();
         while (cursor < raw.size()) {
@@ -423,6 +438,8 @@ bool decodeDiagramArrayStorage(const Json &configuration, DiagramArrayValues &ou
             if (cell.size() != length) break;
             if (!validUtf8(cell)) return fail("invalid UTF-8 cell text.");
             if (words) {
+                if (legacyNarrow&&DiagramArrayValues::numericWordFromToken(signedLane?"i32":"u32",cell,true))
+                    return fail("numeric spelling conflicts with its word.");
                 if (!prepared.loadNumericSpelling(index,std::move(cell))) return fail("numeric spelling conflicts with its word.");
                 previousSpelling=index;
             } else if (typed) {
@@ -443,61 +460,70 @@ bool decodeDiagramArrayStorage(const Json &configuration, DiagramArrayValues &ou
 bool isPackedExecutionArrayEnvelope(const Json &configuration,std::string_view type) {
     const auto *payload=configuration.member("values");
     std::uint32_t rank=0;
-    if(!payload||jsonStringField(*payload,"encoding")!=numericWordArrayProfile||!u32(configuration,"rank",rank)||rank!=1)
+    if(!payload||!isNumericWordArrayProfile(jsonStringField(*payload,"encoding").value_or(""))||
+        !u32(configuration,"rank",rank)||!rank||rank>16)
         return false;
     const auto schema=binding::parseType(type);
     const auto element=numericElementType(schema);
-    return (element=="i32"||element=="f32"||element=="f64")&&
-        (schema.type.kind==binding::TypeKind::Primitive||schema.type.rank==1);
+    return DiagramArrayValues::numericWordBytes(element)!=0&&
+        (schema.type.kind==binding::TypeKind::Primitive||schema.type.rank==rank);
 }
 
 bool decodeComposedPackedNumericArray(const Json &value,const binding::TypeRef &type,
-    DiagramArrayValues &cells,std::vector<std::pair<std::size_t,double>> &spellings,
+    DiagramArrayValues &cells,std::vector<std::uint32_t> &extents,
+    std::vector<std::pair<std::size_t,std::uint64_t>> &spellings,
     std::size_t &remainingWords,std::string &error) {
     const auto *shape=value.member("shape"),*payload=value.member(composedNumericArrayField);
     const auto fail=[&](std::string reason){error=std::move(reason);return false;};
     const auto element=type.children.size()==1&&type.children[0].kind==binding::TypeKind::Primitive?
         std::string_view(type.children[0].name):std::string_view{};
-    if(!payload||!shape||shape->type!=Json::Type::Array||shape->array.size()!=1||
-       type.kind!=binding::TypeKind::Array||type.rank!=1||value.object.size()!=2)
-        return fail("Packed numeric literals require one explicit extent and an exact I32, F32 or F64 Array schema.");
+    if(!payload||!shape||shape->type!=Json::Type::Array||shape->array.size()!=type.rank||
+       type.kind!=binding::TypeKind::Array||type.rank<1||type.rank>16||value.object.size()!=2||
+       !DiagramArrayValues::numericWordBytes(element))
+        return fail("Packed numeric literals require explicit extents and an exact primitive numeric Array schema.");
+    std::vector<std::uint32_t> decodedExtents;
+    decodedExtents.reserve(type.rank);
+    for (const auto &extent:shape->array) {
+        std::uint32_t size=0;
+        if(!exactU32(&extent,size))return fail("Packed numeric literals require exact Array extents.");
+        decodedExtents.push_back(size);
+    }
     Json configuration;
     configuration.type=Json::Type::Object;
-    Json rank;rank.type=Json::Type::Number;rank.number=1;rank.string="1";
+    Json rank;rank.type=Json::Type::Number;rank.number=type.rank;rank.string=std::to_string(type.rank);
     configuration.object={{"rank",std::move(rank)},{"shape",*shape},{"values",*payload}};
     if(!isPackedExecutionArrayEnvelope(configuration,type.canonical()))return fail("Invalid packed numeric Array encoding.");
     auto unusedTextBudget=kMaximumFrogDocumentBytes;
-    if(!decodeDiagramArrayStorage(configuration,cells,type.canonical(),unusedTextBudget,error,&remainingWords))return false;
-    const auto parse=[]<class T>(std::string_view token)->std::optional<double>{
-        T result{};
-        const auto end=token.data()+token.size();
-        const auto parsed=std::from_chars(token.data(),end,result);
-        if(parsed.ec!=std::errc{}||parsed.ptr!=end)return {};
-        if constexpr(std::is_floating_point_v<T>)if(!std::isfinite(result))return {};
-        return static_cast<double>(result);
+    auto availableWords=remainingWords;
+    DiagramArrayValues decoded;
+    if(!decodeDiagramArrayStorage(configuration,decoded,type.canonical(),unusedTextBudget,error,&availableWords))return false;
+    const bool single=element=="f32",real=single||element=="f64";
+    const auto finiteWord=[&](std::uint64_t bits) {
+        return !real||(single?std::isfinite(std::bit_cast<float>(static_cast<std::uint32_t>(bits))):
+            std::isfinite(std::bit_cast<double>(bits)));
     };
-    const bool single=element=="f32",integer=element=="i32";
     bool finite=true;
-    if(!integer)cells.visitNumericWords([&](std::size_t count,auto narrow,auto wide){
+    if(real)decoded.visitNumericWords([&](std::size_t count,auto words){
         source::pollJsonReadCheckpoint();
-        if(!finite)return;
-        for(std::size_t i=0;i<count;++i) {
-            if(single ? (!narrow.empty()&&!std::isfinite(std::bit_cast<float>(narrow[i]))) :
-                (!wide.empty()&&!std::isfinite(std::bit_cast<double>(wide[i])))) {finite=false;break;}
-        }
+        if(finite&&!words.empty())finite=std::all_of(words.begin(),words.begin()+count,finiteWord);
     });
     if(!finite)return fail("A packed Array literal contains a non-finite cell.");
-    cells.visitNumericSpellings([&](std::size_t index,std::string_view spelling){
+    std::vector<std::pair<std::size_t,std::uint64_t>> decodedSpellings;
+    decoded.visitNumericSpellings([&](std::size_t index,std::string_view spelling){
         if(!finite)return;
         source::pollJsonReadCheckpoint();
         auto token=source::parseJson(spelling,nullptr,source::JsonNumberPolicy::PreserveLexeme);
         const auto number=token&&(token->type==Json::Type::Number||token->type==Json::Type::String)?
-            (integer?parse.template operator()<std::int32_t>(token->string):
-                single?parse.template operator()<float>(token->string):parse.template operator()<double>(token->string)):std::nullopt;
-        if(!number) {error="Packed Array cell "+std::to_string(index)+" is outside its exact numeric representation.";finite=false;return;}
-        spellings.emplace_back(index,*number);
+            DiagramArrayValues::numericWordFromToken(element,token->string):std::nullopt;
+        if(!number||!finiteWord(*number)) {error="Packed Array cell "+std::to_string(index)+" is outside its exact numeric representation.";finite=false;return;}
+        decodedSpellings.emplace_back(index,*number);
     });
-    return finite;
+    if(!finite)return false;
+    cells.swap(decoded);
+    extents=std::move(decodedExtents);
+    spellings=std::move(decodedSpellings);
+    remainingWords=availableWords;
+    return true;
 }
 
 std::size_t boundedDocumentJsonValueCount(const Json &root){return valueCount(root);}
@@ -581,7 +607,7 @@ static bool inflateArrayStorageImpl(Json &root, std::string &error, bool allowCo
                 const auto *configuration=objectField(*value,"array_constant");
                 const auto *envelope=configuration ? objectField(*configuration,"values") : nullptr;
                 if (envelope && envelope->type==Json::Type::Object &&
-                    jsonStringField(*envelope,"encoding")==numericWordArrayProfile) {
+                    isNumericWordArrayProfile(jsonStringField(*envelope,"encoding").value_or(""))) {
                     if (!allowCompact) {error="FROG compact arrays require private draft_revision 3.";return false;}
                     const auto type=jsonStringField(*value,"value_type").value_or("");
                     if(keptPackedArrays&&isPackedExecutionArrayEnvelope(*configuration,type)) {

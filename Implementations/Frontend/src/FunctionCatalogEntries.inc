@@ -70,6 +70,7 @@ FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.int_constant", "INT Consta
 FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.color_box_constant", "Color Box Constant", "functions/numeric/color-box-constant.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.enum_constant", "Enum Constant", "functions/numeric/26-constante-enum.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.ring_constant", "Ring Constant", "functions/numeric/27-constante-ring.svg", "")
+FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.picture_ring", "Picture Ring Constant", "functions/numeric/picture-ring-constant.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.numeric_terminal", "Float Terminal", "diagram/numeric-terminals/lecture/float64.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.int_terminal", "INT Terminal", "diagram/numeric-terminals/lecture/int32.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Numeric, "numeric.ring_terminal", "Ring Terminal", "functions/numeric/29-terminal-ring.svg", "")

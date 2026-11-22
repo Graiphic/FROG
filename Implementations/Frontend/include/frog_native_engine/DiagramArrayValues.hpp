@@ -8,6 +8,7 @@
 #include <cstring>
 #include <iterator>
 #include <map>
+#include <optional>
 
 namespace frog::native_engine {
 
@@ -16,8 +17,10 @@ namespace frog::native_engine {
 // (including incomplete edits) are retained verbatim on their own page.
 class DiagramArrayValues {
     static constexpr std::size_t cellsPerPage = 4096;
-    enum class Representation : std::uint8_t { Text, I32, U32, I64, U64, F32, F64 };
+    enum class Representation : std::uint8_t { Text, I8, U8, I16, U16, I32, U32, I64, U64, F32, F64 };
     struct Page {
+        std::vector<std::uint8_t> bytes;
+        std::vector<std::uint16_t> shorts;
         std::vector<std::uint32_t> narrow;
         std::vector<std::uint64_t> wide;
         std::map<std::size_t, std::string> text;
@@ -79,8 +82,7 @@ public:
         const auto offset = index % cellsPerPage;
         if (const auto spelling = page->text.find(offset); spelling != page->text.end())
             return spelling->second;
-        const auto bits = page->narrow.empty() ? page->wide[offset] : page->narrow[offset];
-        return format(numeric_->representation, bits);
+        return format(numeric_->representation, pageWord(*page, offset));
     }
     [[nodiscard]] std::string front() const { return (*this)[0]; }
     [[nodiscard]] std::string back() const { return (*this)[size() - 1]; }
@@ -127,8 +129,11 @@ public:
     // Storage codecs consume the immutable pages directly. A missing page is
     // an implicit run of zero words. Text exceptions remain separate.
     [[nodiscard]] static unsigned numericWordBytes(std::string_view scalarType) noexcept {
-        const auto representation = storageFor(scalarType);
-        return representation == Representation::Text ? 0U : narrow(representation) ? 4U : 8U;
+        return wordBytes(storageFor(scalarType));
+    }
+    [[nodiscard]] static std::optional<std::uint64_t> numericWordFromToken(
+        std::string_view scalarType, std::string_view token,bool canonical=false) {
+        return parse(storageFor(scalarType), token, canonical);
     }
     [[nodiscard]] bool hasNumericWords(std::string_view scalarType) const noexcept {
         return numeric_ && storageFor(scalarType) == numeric_->representation;
@@ -137,15 +142,17 @@ public:
     [[nodiscard]] std::uint64_t numericWordAt(std::size_t index) const noexcept {
         const auto &page=numeric_->pages[index/cellsPerPage];
         if(!page)return 0;
-        const auto offset=index%cellsPerPage;
-        return page->narrow.empty()?page->wide[offset]:page->narrow[offset];
+        return pageWord(*page,index%cellsPerPage);
     }
     template<class Visit> void visitNumericWords(Visit &&visit) const {
         for (std::size_t i = 0; i < numeric_->pages.size(); ++i) {
             const auto &page = numeric_->pages[i];
             const auto count = (std::min)(cellsPerPage,size()-i*cellsPerPage);
-            visit(count,page ? std::span<const std::uint32_t>(page->narrow) : std::span<const std::uint32_t>{},
-                page ? std::span<const std::uint64_t>(page->wide) : std::span<const std::uint64_t>{});
+            if (!page) visit(count, std::span<const std::uint8_t>{});
+            else if (!page->bytes.empty()) visit(count, std::span<const std::uint8_t>(page->bytes));
+            else if (!page->shorts.empty()) visit(count, std::span<const std::uint16_t>(page->shorts));
+            else if (!page->narrow.empty()) visit(count, std::span<const std::uint32_t>(page->narrow));
+            else visit(count, std::span<const std::uint64_t>(page->wide));
         }
     }
     template<class Visit> void visitNumericSpellings(Visit &&visit) const {
@@ -158,7 +165,7 @@ public:
     // Validate exact word width first; preserve demand allocation for zeros.
     bool loadNumericWords(std::size_t start,std::span<const std::uint8_t> bytes) {
         if (!numeric_ || numeric_.use_count()!=1) return false;
-        const auto width = narrow(numeric_->representation) ? 4U : 8U;
+        const auto width = wordBytes(numeric_->representation);
         if (bytes.size()%width || start>size() || bytes.size()/width>size()-start) return false;
         for (std::size_t cursor = 0; cursor < bytes.size();) {
             const auto first = start+cursor/width;
@@ -171,22 +178,15 @@ public:
                 continue;
             }
             if (page && page.use_count()!=1) return false;
-            if (!page) {
-                page = std::make_shared<Page>();
-                if (width==4) page->narrow.resize(cellsPerPage);
-                else page->wide.resize(cellsPerPage);
-            }
+            if (!page) page = makePage(width);
             if constexpr (std::endian::native == std::endian::little) {
-                void *destination = width == 4 ? static_cast<void *>(page->narrow.data()+offset) :
-                    static_cast<void *>(page->wide.data()+offset);
-                std::memcpy(destination,section.data(),section.size());
+                std::memcpy(pageWordAddress(*page,offset),section.data(),section.size());
                 cursor += section.size();
             } else {
                 for (std::size_t i=0;i<count;++i) {
                     std::uint64_t bits = 0;
                     for (unsigned byte=0;byte<width;++byte) bits |= std::uint64_t(bytes[cursor++])<<(8*byte);
-                    if (width==4) page->narrow[offset+i]=static_cast<std::uint32_t>(bits);
-                    else page->wide[offset+i]=bits;
+                    setPageWord(*page,offset+i,bits);
                 }
             }
         }
@@ -197,7 +197,7 @@ public:
         const auto &page = numeric_->pages[index/cellsPerPage];
         if (page) {
             const auto offset = index%cellsPerPage;
-            if (page->text.contains(offset) || (page->narrow.empty() ? page->wide[offset] : page->narrow[offset]))
+            if (page->text.contains(offset) || pageWord(*page,offset))
                 return false;
         }
         writeNumeric(index,std::move(text));
@@ -229,8 +229,9 @@ public:
         visit(numeric_.get(), sizeof(Storage) + 32 + numeric_->pages.capacity() * sizeof(std::shared_ptr<Page>));
         for (const auto &page : numeric_->pages) {
             if (!page) continue;
-            std::size_t bytes = sizeof(Page) + 32 + page->narrow.capacity() * sizeof(std::uint32_t) +
-                page->wide.capacity() * sizeof(std::uint64_t);
+            std::size_t bytes = sizeof(Page) + 32 + page->bytes.capacity() +
+                page->shorts.capacity() * sizeof(std::uint16_t) +
+                page->narrow.capacity() * sizeof(std::uint32_t) + page->wide.capacity() * sizeof(std::uint64_t);
             for (const auto &entry : page->text) bytes += sizeof(entry) + 32 + entry.second.capacity() + 1;
             visit(page.get(), bytes);
         }
@@ -253,36 +254,80 @@ public:
 
 private:
     static Representation storageFor(std::string_view type) noexcept {
-        if (type == "i8" || type == "i16" || type == "i32") return Representation::I32;
-        if (type == "u8" || type == "u16" || type == "u32") return Representation::U32;
+        if (type == "i8") return Representation::I8;
+        if (type == "u8") return Representation::U8;
+        if (type == "i16") return Representation::I16;
+        if (type == "u16") return Representation::U16;
+        if (type == "i32") return Representation::I32;
+        if (type == "u32") return Representation::U32;
         if (type == "i64") return Representation::I64;
         if (type == "u64") return Representation::U64;
         if (type == "f32") return Representation::F32;
         if (type == "f64") return Representation::F64;
         return Representation::Text;
     }
-    static bool narrow(Representation type) noexcept {
-        return type == Representation::I32 || type == Representation::U32 || type == Representation::F32;
+    static unsigned wordBytes(Representation type) noexcept {
+        switch (type) {
+        case Representation::I8: case Representation::U8: return 1;
+        case Representation::I16: case Representation::U16: return 2;
+        case Representation::I32: case Representation::U32: case Representation::F32: return 4;
+        case Representation::I64: case Representation::U64: case Representation::F64: return 8;
+        default: return 0;
+        }
     }
-    template<class T> static std::optional<std::uint64_t> parseExact(std::string_view text) {
+    static std::shared_ptr<Page> makePage(unsigned width) {
+        auto page=std::make_shared<Page>();
+        if (width==1) page->bytes.resize(cellsPerPage);
+        else if (width==2) page->shorts.resize(cellsPerPage);
+        else if (width==4) page->narrow.resize(cellsPerPage);
+        else page->wide.resize(cellsPerPage);
+        return page;
+    }
+    static std::uint64_t pageWord(const Page &page,std::size_t offset) noexcept {
+        if (!page.bytes.empty()) return page.bytes[offset];
+        if (!page.shorts.empty()) return page.shorts[offset];
+        if (!page.narrow.empty()) return page.narrow[offset];
+        return page.wide[offset];
+    }
+    static void *pageWordAddress(Page &page,std::size_t offset) noexcept {
+        if (!page.bytes.empty()) return page.bytes.data()+offset;
+        if (!page.shorts.empty()) return page.shorts.data()+offset;
+        if (!page.narrow.empty()) return page.narrow.data()+offset;
+        return page.wide.data()+offset;
+    }
+    static void setPageWord(Page &page,std::size_t offset,std::uint64_t bits) noexcept {
+        if (!page.bytes.empty()) page.bytes[offset]=static_cast<std::uint8_t>(bits);
+        else if (!page.shorts.empty()) page.shorts[offset]=static_cast<std::uint16_t>(bits);
+        else if (!page.narrow.empty()) page.narrow[offset]=static_cast<std::uint32_t>(bits);
+        else page.wide[offset]=bits;
+    }
+    template<class T> static std::optional<std::uint64_t> parseExact(std::string_view text,bool canonical) {
         if (text.empty()) return {};
         T value{};
         const auto parsed = std::from_chars(text.data(), text.data() + text.size(), value);
         if (parsed.ec != std::errc{} || parsed.ptr != text.data() + text.size()) return {};
-        char buffer[64];
-        const auto written = std::to_chars(buffer, buffer + sizeof(buffer), value);
-        if (written.ec != std::errc{} || text != std::string_view(buffer, written.ptr)) return {};
-        if constexpr (sizeof(T) == 4) return std::bit_cast<std::uint32_t>(value);
+        if (canonical) {
+            char buffer[64];
+            const auto written = std::to_chars(buffer, buffer + sizeof(buffer), value);
+            if (written.ec != std::errc{} || text != std::string_view(buffer, written.ptr)) return {};
+        }
+        if constexpr (sizeof(T) == 1) return std::bit_cast<std::uint8_t>(value);
+        else if constexpr (sizeof(T) == 2) return std::bit_cast<std::uint16_t>(value);
+        else if constexpr (sizeof(T) == 4) return std::bit_cast<std::uint32_t>(value);
         else return std::bit_cast<std::uint64_t>(value);
     }
-    static std::optional<std::uint64_t> parse(Representation type, std::string_view value) {
+    static std::optional<std::uint64_t> parse(Representation type, std::string_view value,bool canonical=true) {
         switch (type) {
-        case Representation::I32: return parseExact<std::int32_t>(value);
-        case Representation::U32: return parseExact<std::uint32_t>(value);
-        case Representation::I64: return parseExact<std::int64_t>(value);
-        case Representation::U64: return parseExact<std::uint64_t>(value);
-        case Representation::F32: return parseExact<float>(value);
-        case Representation::F64: return parseExact<double>(value);
+        case Representation::I8: return parseExact<std::int8_t>(value,canonical);
+        case Representation::U8: return parseExact<std::uint8_t>(value,canonical);
+        case Representation::I16: return parseExact<std::int16_t>(value,canonical);
+        case Representation::U16: return parseExact<std::uint16_t>(value,canonical);
+        case Representation::I32: return parseExact<std::int32_t>(value,canonical);
+        case Representation::U32: return parseExact<std::uint32_t>(value,canonical);
+        case Representation::I64: return parseExact<std::int64_t>(value,canonical);
+        case Representation::U64: return parseExact<std::uint64_t>(value,canonical);
+        case Representation::F32: return parseExact<float>(value,canonical);
+        case Representation::F64: return parseExact<double>(value,canonical);
         default: return {};
         }
     }
@@ -294,6 +339,10 @@ private:
     static std::string format(Representation type, std::uint64_t bits) {
         if (bits == 0) return "0";
         switch (type) {
+        case Representation::I8: return formatBits(std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(bits)));
+        case Representation::U8: return formatBits(static_cast<std::uint8_t>(bits));
+        case Representation::I16: return formatBits(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(bits)));
+        case Representation::U16: return formatBits(static_cast<std::uint16_t>(bits));
         case Representation::I32: return formatBits(std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(bits)));
         case Representation::U32: return formatBits(static_cast<std::uint32_t>(bits));
         case Representation::I64: return formatBits(std::bit_cast<std::int64_t>(bits));
@@ -310,15 +359,11 @@ private:
         if (bits == 0 && !numeric_->pages[pageIndex]) return;
         auto owner = numeric_.use_count() == 1 ? numeric_ : std::make_shared<Storage>(*numeric_);
         auto &current = owner->pages[pageIndex];
-        auto page = current ? (current.use_count() == 1 ? current : std::make_shared<Page>(*current)) : std::make_shared<Page>();
-        if (!current) {
-            if (narrow(owner->representation)) page->narrow.resize(cellsPerPage);
-            else page->wide.resize(cellsPerPage);
-        }
+        auto page = current ? (current.use_count() == 1 ? current : std::make_shared<Page>(*current)) :
+            makePage(wordBytes(owner->representation));
         if (bits) page->text.erase(offset);
         else page->text.insert_or_assign(offset, std::move(value));
-        if (page->narrow.empty()) page->wide[offset] = bits.value_or(0);
-        else page->narrow[offset] = static_cast<std::uint32_t>(bits.value_or(0));
+        setPageWord(*page,offset,bits.value_or(0));
         current = std::move(page);
         numeric_ = std::move(owner);
     }

@@ -54,6 +54,44 @@ Repeat `--include` for explicit include directories when needed.
 
 See [NOTICE](NOTICE) for dependency versions and licenses.
 
+## Import LabVIEW RSRC files
+
+In Studio use **File → Import → LabVIEW…**. Choose a `.vi`, `.ctl` or `.llb`
+to inspect its resources. **Import** is available when a VI has a supported
+source diagram and the common Frontend admits its editable FROG projection.
+The result contains `model.frog`, a resource report and a mapping of original
+object, terminal and wire UIDs. The selected file is read-only throughout.
+
+The scalar profile covers a standalone diagram with decoded `BDHb`
+and `FPHb`, scalar panel terminals, literal connections and the verified DBL
+Multiply primitive. I32 and String constants and the DBL multiply path have
+been exercised on LabVIEW 2020 files. The converter reads the graph and types
+from the source heaps and checks the file digest again at import. Studio
+measures its own objects and routes the new diagram with its native layout.
+
+The structured profile also reads the timed Build Array pattern from the
+source heaps. It projects three Flat Sequence frames, a counted For Loop,
+its iteration terminal, the I32 array shift register and Build Array, and the
+two millisecond Tick Counts feeding a U32 subtraction. The editable graph
+retains the uninitialized register between runs of the loaded program. A
+fresh load starts with an empty I32 array. The report maps terminals and
+wires to their source scopes and identifies any unsupported stored values.
+
+Conversion requires a fully recognized graph within one of these profiles.
+Implicit coercions, other unrecognized diagrams, subVI calls, stripped
+diagrams and library conversion remain outside their scope. Studio uses
+its normal widget appearance. Connector-pane
+layout and LabVIEW window customization stay in the source file. The reader
+is pylabview `5f20e23de6a386021eb955c825cc43d221f09ff1` with the original MIT
+notice. The installed Studio uses an isolated bundled Python. For the public
+CLI use the pinned [Pillow dependency](requirements-labview.txt).
+
+```powershell
+python -m pip install -r requirements-labview.txt
+python Import-LabView.py --source sample.vi --analyze --frontend frog-frontend.exe --report labview-report.json
+python Import-LabView.py --source sample.vi --frontend frog-frontend.exe --output new-labview-folder
+```
+
 ## Import a CMake C project
 
 The C Project importer reads an existing Ninja or Ninja Multi-Config build.

@@ -1,0 +1,16 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-22",
+  "frontend": {
+    "software_version": "0.2.0-local",
+    "api_version": 3,
+    "base_revision": "32c8fee2f22a1231a21de7bc1965652d1e6b3f17",
+    "content_sha256": "44cf6a1f430a25e10d5876ae5e057aca04691830654c7738e965f84b3128571a"
+  },
+  "qualification": {
+    "basis": "Source checkpoint for the retained Picture Ring authoring revision 11. Kit integrity and standalone draft tests are recorded separately.",
+    "limits": [
+      "No signed Studio or general runtime qualification is inferred."
+    ]
+  }
+}
