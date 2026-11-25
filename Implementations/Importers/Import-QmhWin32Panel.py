@@ -352,6 +352,8 @@ def main():
     try:
         ast = json.loads(result.stdout)
         document, receipt = derive(ast, data, source.name)
+        metadata = document["metadata"]
+        metadata["description"] = f"Source (C): {source}\n{metadata['description']}"
     except (KeyError, ValueError, IndexError, TypeError) as error:
         if isinstance(error, BindingRefusal):
             parser.exit(2, json.dumps(error.diagnostic, ensure_ascii=False) + "\n")

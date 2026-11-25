@@ -209,7 +209,9 @@ def import_call(args):
             raise Refusal("source_changed", "The C source changed during import.")
         call, declaration, params, returned = read_call(json.loads(result.stdout), args.entry, args.symbol)
         document = stage / f"{args.entry}.frog"
-        write_json(document, emit(args.entry, args.symbol, library.name, args.sha256, params, returned))
+        draft = emit(args.entry, args.symbol, library.name, args.sha256, params, returned)
+        draft["metadata"]["description"] = f"Source (C): {args.source.resolve()}\n{args.entry} → {library.name} / {args.symbol}"
+        write_json(document, draft)
         validation = invoke([str(args.frontend.resolve(strict=True)), "validate", "--source", str(document),
                              "--source-uri", "import:/c/nativecall.frog", "--source-format", "frog.document.draft",
                              "--source-version", "7", "--fir-version", "0.1",

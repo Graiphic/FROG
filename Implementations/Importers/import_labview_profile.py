@@ -1,8 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Translate the decoded, standalone scalar LabVIEW diagram profile."""
 
-from dataclasses import dataclass
-import json
+from pathlib import Path
 import math
 import struct
 
@@ -21,12 +20,18 @@ TYPES = {
     "NumUInt8": "u8", "NumUInt16": "u16", "NumUInt32": "u32", "NumUInt64": "u64",
     "NumFloat32": "f32", "NumFloat64": "f64", "Boolean": "bool", "String": "string",
 }
-OPERATIONS = {
-    (1052, 105): ("frog.core.mul", "numeric.multiply"),
-}
 ATTR_CLASS = LVheap.attributeNameToId("class")
 ATTR_UID = LVheap.attributeNameToId("uid")
 ATTR_COUNT = LVheap.attributeNameToId("elements")
+
+UNPROJECTED_NODES = {
+    "commentNode": ("disable_structure", "Disable structure selection and its region boundaries have no verified translation."),
+    "select": ("case_structure", "Case selectors, regions and tunnels have no verified translation."),
+    "iUse": ("subvi_call", "The LabVIEW connector pattern and call execution have no verified SubFROG translation."),
+    "propNode": ("property_node", "The saved LabVIEW reference class, property and error flow require a verified translation."),
+    "invokeNode": ("invoke_node", "The saved LabVIEW reference class, method and error flow require a verified translation."),
+    "mergeErrors": ("merge_errors", "The source ordering and precedence of the error merge have no verified translation."),
+}
 
 
 def require(condition, code, message, resource):
@@ -104,6 +109,81 @@ def heap_root(vi, resource):
     return roots[0]
 
 
+def unprojected_node(item):
+    category = kind(item)
+    if category == "select" and not children(item, "diagramList"):
+        return None
+    return UNPROJECTED_NODES.get(category)
+
+
+def diagnostic_label(node, name):
+    values = children(node, name)
+    if len(values) == 1:
+        value = values[0].content
+        if isinstance(value, bytes) and len(value) <= 128 and value.isascii():
+            value = value.decode("ascii")
+            if value.isprintable():
+                return value
+    return None
+
+
+def projection_requirement_diagnostics(vi):
+    """Attribute unsupported semantics after a projection refusal, without deriving a graph."""
+    groups = {}
+
+    def record(family, item, resource, code, message):
+        uid = item.attribs.get(ATTR_UID)
+        if type(uid) is not int or uid <= 0:
+            return
+        source = f"{resource}/uid:{uid}"
+        diagnostic = groups.setdefault(family, {"code": "labview_import." + code, "resource": source,
+                                               "source": source, "message": message, "occurrences": []})
+        location = {"uid": uid, "source": source}
+        scope = item.parent
+        while scope is not None and kind(scope) != "diag":
+            scope = scope.parent
+        if scope is not None and ATTR_UID in scope.attribs:
+            location["diagram_uid"] = scope.attribs[ATTR_UID]
+        for field_name, key in (("nodeName", "reference_class"), ("methName", "method")):
+            if value := diagnostic_label(item, field_name):
+                location[key] = value
+        if family == "propNode":
+            names = []
+            for bindings in children(item, "dcoList"):
+                for binding in children(bindings, "SL__arrayElement"):
+                    definition = property_definitions.get(binding.attribs.get(ATTR_UID))
+                    if definition is None:
+                        continue
+                    for prop_list in children(definition, "propList"):
+                        for prop in children(prop_list, "SL__arrayElement"):
+                            if kind(prop) == "propItemInfo" and (name := diagnostic_label(prop, "PropItemName")):
+                                names.append(name)
+            if names:
+                location["property"] = ", ".join(names)
+        diagnostic["occurrences"].append(location)
+
+    section = one_section(vi, b"BDHb")
+    objects = [item for item in section.objects if item.getScopeInfo() != LVheap.NODE_SCOPE.TagClose]
+    property_definitions = {item.attribs[ATTR_UID]: item for item in objects
+                            if kind(item) == "propItem" and ATTR_UID in item.attribs}
+    for item in objects:
+        if requirement := unprojected_node(item):
+            record(kind(item), item, "BDHb", *requirement)
+
+    section = one_section(vi, b"FPHb")
+    for item in section.objects:
+        if item.getScopeInfo() == LVheap.NODE_SCOPE.TagClose or kind(item) != "fPDCO":
+            continue
+        displays = children(item, "ddo")
+        if len(displays) == 1 and kind(displays[0]) == "stdClust":
+            record("panel_cluster", item, "FPHb", "panel_cluster",
+                   "Front Panel clusters and their saved element types need a verified widget projection.")
+
+    for diagnostic in groups.values():
+        diagnostic["count"] = len(diagnostic["occurrences"])
+    return list(groups.values())
+
+
 class Types:
     def __init__(self, vi):
         self.slice = one_section(vi, b"DTHP")
@@ -119,57 +199,18 @@ class Types:
         return TYPES[family]
 
 
-@dataclass(frozen=True)
-class PanelObject:
-    label: str
-    dtype: str
-    role: str
-    source_bounds: tuple[int, int, int, int]
-
-
-@dataclass(frozen=True)
-class Port:
-    node: str
-    name: str
-    dtype: str
-    source: bool
-
-
-def panel(vi, types):
-    root = field(heap_root(vi, b"FPHb"), "root", "FPHb")
-    pane = field(root, "paneHierarchy", "FPHb")
-    require(kind(pane) == "pane", "panel_pane", "This profile requires a single panel pane.", "FPHb")
-    members = items(field(pane, "zPlaneList", "FPHb"), "FPHb")
-    result = {}
-    for widget in members:
-        uid = identity(widget, "FPHb")
-        location = f"FPHb/uid:{uid}"
-        require(kind(widget) == "fPDCO" and uid not in result, "panel_object",
-                "The panel contains an unsupported object or duplicate UID.", location)
-        body = field(widget, "ddo", location)
-        dtype = types.of(widget, location)
-        family = "stdString" if dtype == "string" else "stdBool" if dtype == "bool" else "stdNum"
-        require(kind(body) == family, "panel_widget", f"Unsupported display class '{kind(body)}'.", location)
-        parts = items(field(body, "partsList", location), location)
-        labels = [part for part in parts if kind(part) == "label" and number(part, "partID", location) == 16]
-        require(len(labels) == 1, "panel_label", "The control has no unique readable label.", location)
-        record = field(labels[0], "textRec", location)
-        name = text(field(record, "text", location).content, location)
-        rectangle = field(body, "bounds", location)
-        require(rectangle.format == "inline" and isinstance(rectangle, LVheap.HeapNodeRect),
-                "panel_bounds", "The control has no decoded bounds.", location)
-        role = "indicator" if number(widget, "objFlags", location) & 1 else "control"
-        result[uid] = PanelObject(name, dtype, role, (rectangle.left, rectangle.top, rectangle.right, rectangle.bottom))
-    require(1 <= len(result) <= 16, "panel_count", "This profile requires one to sixteen scalar panel objects.", "FPHb")
-    aliases = [identity(item, "FPHb/ddoList") for item in items(field(root, "ddoList", "FPHb"), "FPHb/ddoList")]
-    require(set(aliases) == result.keys() and len(aliases) == len(result), "panel_coverage",
-            "Panel references and objects do not match.", "FPHb/ddoList")
-    return result
-
-
 def constant_value(descriptor, dtype, location):
     data = field(descriptor, "ConstValue", location).content
+    return decode_constant_value(data, dtype, location)
+
+
+def decode_constant_value(data, dtype, location):
     require(isinstance(data, bytes), "constant_payload", "A constant has no readable data bytes.", location)
+    # LV20 can append a NUL to the all-zero heap literal, including an empty
+    # string's 32-bit length. Leave non-zero or differently sized data strict.
+    width = 4 if dtype == "string" else 1 if dtype == "bool" else int(dtype[1:]) // 8 if dtype in TYPES.values() else 0
+    if width and data == bytes(width + 1):
+        data = data[:width]
     if dtype == "string":
         require(len(data) >= 4 and int.from_bytes(data[:4], "big") == len(data) - 4,
                 "constant_payload", "The stored string length does not match its data.", location)
@@ -190,7 +231,9 @@ def initial_value(dtype):
         return ""
     if dtype == "bool":
         return False
-    return 0.0 if dtype[0] == "f" else 0
+    # The common widget codec serializes intrinsic zero as the JSON number 0
+    # even for DBL. The explicit widget type still retains its F64 meaning.
+    return 0
 
 
 def convert_constant(uid, dtype, value, x, y):
@@ -209,161 +252,95 @@ def convert_constant(uid, dtype, value, x, y):
 
 
 def project(vi, source, source_sha256):
+    document, mapping = _project_dataflow(vi, source, source_sha256)
+    if "presentation" not in mapping:
+        from import_labview_bundle import member_presentation
+
+        presentation, evidence, _ = member_presentation(vi, document["frontPanel"]["widgets"], source.stem)
+        document.update(presentation)
+        mapping["presentation"] = evidence
+    return document, mapping
+
+
+def _project_dataflow(vi, source, source_sha256):
     diagram = field(heap_root(vi, b"BDHb"), "root", "BDHb")
     require(kind(diagram) == "diag", "diagram_root", "A source diagram is required.", "BDHb")
     plane = items(field(diagram, "zPlaneList", "BDHb"), "BDHb")
-    if any(kind(item) in ("flatSequence", "forLoop", "aBuild") for item in plane):
-        from import_labview_heap_graph import decode_graph
-        from import_labview_structured import project as project_structured
-
-        return project_structured(decode_graph(vi), source, source_sha256)
-    if b"DFDS" in vi.blocks:
-        defaults = one_section(vi, b"DFDS")
-        require(not defaults.content, "stored_defaults",
-                "Stored default values are outside the standalone scalar profile.", "DFDS")
-    types = Types(vi)
-    widgets = panel(vi, types)
     definitions = {identity(item, "BDHb/zPlaneList"): item for item in plane if kind(item) is not None}
     root_nodes = items(field(diagram, "nodeList", "BDHb"), "BDHb")
     physical = [definitions.get(identity(item, "BDHb/nodeList"), item) if kind(item) is None else item
                 for item in root_nodes]
-    require(len(physical) <= 2 and sum(kind(item) == "sRN" for item in physical) == 1,
-            "diagram_topology", "Only a standalone root diagram with at most one scalar primitive is supported.", "BDHb/nodeList")
+    if len(physical) == 1 and kind(physical[0]) == "sRN" and plane and not items(field(diagram, "signalList", "BDHb"), "BDHb"):
+        terms = items(field(physical[0], "termList", "BDHb"), "BDHb")
+        if terms and all(kind(term) == "fPTerm" for term in terms):
+            return _project_unwired_panel(vi, source, source_sha256, plane, terms)
+    if any(kind(item) in ("flatSequence", "forLoop", "aBuild") for item in plane) or any(
+            kind(item) == "prim" and (number(item, "primResID", "BDHb"), number(item, "primIndex", "BDHb"))
+            in {(1053, 106), (1201, 73)} for item in physical):
+        from import_labview_heap_graph import decode_graph
+        from import_labview_structured import project as project_structured
 
-    port_by_uid, node_by_uid = {}, {}
-    mapped_widgets = set()
+        return project_structured(decode_graph(vi), source, source_sha256)
+    if {kind(item) for item in physical} <= {"sRN", "prim", "nMux", "mergeErrors"} and any(
+            kind(item) == "prim" and (number(item, "primResID", "BDHb"), number(item, "primIndex", "BDHb"))
+            in {(9108, 479), (9113, 485)} for item in physical):
+        from import_labview_editable import project_editable
+        documents, mapping = project_editable(source, vi)
+        require(mapping.get("execution_profile"), "queue_service",
+                "The Queue wrapper has unverified operations, bindings or defaults.", "BDHb")
+        mapping.update(profile=mapping["execution_profile"], source_sha256=source_sha256)
+        return documents[Path("model.frog")], mapping
     for item in physical:
-        uid = identity(item, "BDHb/nodeList")
-        location = f"BDHb/uid:{uid}"
-        category = kind(item)
-        require(category in ("prim", "sRN"), "diagram_node", f"Unsupported diagram class '{category}'.", location)
-        terms = items(field(item, "termList", location), location)
-        if category == "prim":
-            op = (number(item, "primResID", location), number(item, "primIndex", location))
-            require(op in OPERATIONS and len(terms) == 3, "primitive", f"Unqualified LabVIEW primitive {op}.", location)
-            operation, palette_id = OPERATIONS[op]
-            op_id = f"lv-operation-{uid}"
-            node_by_uid[uid] = {"id": op_id, "kind": "primitive", "type": operation,
-                                "palette_catalog_id": palette_id, "label_visible": False,
-                                "layout": bounds(380, 110, 48, 48)}
-        for term in terms:
-            term_uid = identity(term, location)
-            term_location = f"BDHb/uid:{term_uid}"
-            require(term_uid not in port_by_uid, "diagram_uid", "Duplicate terminal UID.", term_location)
-            dco = field(term, "dco", term_location)
-            if category == "prim":
-                dtype = types.of(dco, term_location)
-                require(dtype == "f64" and kind(term) == "term", "primitive_type",
-                        "The qualified Multiply requires three DBL terminals.", term_location)
-                incoming = bool(number(term, "objFlags", term_location) & 0x8000)
-                if incoming:
-                    parameter = number(dco, "parmIndex", term_location)
-                    require(kind(dco) == "parm" and parameter in (1, 2), "primitive_port",
-                            "Unexpected Multiply input parameter.", term_location)
-                    port = "a" if parameter == 1 else "b"
-                else:
-                    require(kind(dco) == "overridableParm" and number(dco, "override", term_location) == 3,
-                            "primitive_port", "Unsupported Multiply output configuration.", term_location)
-                    port = "result"
-                port_by_uid[term_uid] = Port(op_id, port, dtype, not incoming)
-            elif kind(term) == "fPTerm" and kind(dco) is None:
-                widget_uid = identity(dco, term_location)
-                require(widget_uid in widgets and widget_uid not in mapped_widgets, "terminal_reference",
-                        "The terminal does not identify one unique panel control.", term_location)
-                mapped_widgets.add(widget_uid)
-                widget = widgets[widget_uid]
-                incoming = bool(number(term, "objFlags", term_location) & 0x8000)
-                require(incoming == (widget.role == "indicator"), "terminal_direction",
-                        "The panel role and diagram terminal direction disagree.", term_location)
-                node_id = f"lv-terminal-{term_uid}"
-                node_by_uid[term_uid] = {"id": node_id, "kind": "widget_value", "type": widget.dtype,
-                                         "widget": f"lv-widget-{widget_uid}", "label_visible": True,
-                                         "layout": bounds(200 if widget.role == "control" else 500, 110, 66.3, 29.75)}
-                port_by_uid[term_uid] = Port(node_id, "value", widget.dtype, widget.role == "control")
-            else:
-                require(kind(term) == "term" and kind(dco) == "bDConstDCO", "diagram_terminal",
-                        "Unsupported root terminal or data object.", term_location)
-                dtype = types.of(dco, term_location)
-                value = constant_value(dco, dtype, term_location)
-                node_by_uid[term_uid] = convert_constant(term_uid, dtype, value, 200, 110)
-                port_by_uid[term_uid] = Port(f"lv-constant-{term_uid}", "value", dtype, True)
+        requirement = unprojected_node(item)
+        if requirement is not None:
+            code, message = requirement
+            raise ProfileRefusal(code, message, f"BDHb/uid:{identity(item, 'BDHb/nodeList')}")
+    require(len(physical) <= 2 and sum(kind(item) == "sRN" for item in physical) == 1
+            and all(kind(item) in ("sRN", "prim") for item in physical),
+            "diagram_topology", "Expected a standalone root with at most one scalar primitive.", "BDHb/nodeList")
+    # Use the same default-value reader, NI parameter identities and typed
+    # operations as the corresponding graph inside a sequence or loop.
+    from import_labview_heap_graph import decode_graph
+    from import_labview_structured import project as project_structured
 
-    # Validate both lists. An ignored z-plane entry could otherwise conceal a
-    # diagram object absent from this projection.
-    visible_uids = [identity(item, "BDHb/zPlaneList") for item in plane]
-    require(set(visible_uids) == set(node_by_uid) and len(visible_uids) == len(node_by_uid)
-            and mapped_widgets == widgets.keys(), "diagram_coverage",
-            "Diagram objects, terminal references and panel declarations do not match.", "BDHb")
-    require(len(set(port_by_uid.values())) == len(port_by_uid), "diagram_port",
-            "Several LabVIEW terminals resolve to the same FROG binding.", "BDHb")
+    graph = decode_graph(vi)
+    signals = graph.diagrams[graph.root].signals
+    endpoints = [uid for signal in signals for uid in (signal.source, *signal.targets)]
+    require(len(endpoints) == len(set(endpoints)) and set(endpoints) == graph.terms.keys(),
+            "signal_coverage", "Each standalone terminal must belong to exactly one saved signal.", "BDHb/signalList")
+    document, mapping = project_structured(graph, source, source_sha256)
+    mapping.update(profile="labview-standalone-scalar-v1", scope="Editable standalone scalar dataflow.")
+    return document, mapping
 
-    edges, edge_sources, used, signal_uids = [], [], set(), set()
-    signals = items(field(diagram, "signalList", "BDHb"), "BDHb/signalList")
-    for signal in signals:
-        uid = identity(signal, "BDHb/signalList")
-        location = f"BDHb/uid:{uid}"
-        require(kind(signal) == "signal" and uid not in signal_uids,
-                "signal_class", "Unsupported signal record or duplicate signal UID.", location)
-        require(number(signal, "state", location) in (1, 33), "signal_state",
-                "The saved wire state is outside the verified profile.", location)
-        signal_uids.add(uid)
-        endpoints = [identity(item, location) for item in items(field(signal, "termList", location), location)]
-        require(len(endpoints) >= 2 and len(set(endpoints)) == len(endpoints) and not (used & set(endpoints))
-                and all(endpoint in port_by_uid for endpoint in endpoints), "signal_reference",
-                "Signal endpoints are missing, reused, or not distinct.", location)
-        used.update(endpoints)
-        producers = [endpoint for endpoint in endpoints if port_by_uid[endpoint].source]
-        require(len(producers) == 1, "signal_direction", "Each signal must have one producer.", location)
-        producer = producers[0]
-        origin = port_by_uid[producer]
-        for sink in endpoints:
-            if sink == producer:
-                continue
-            target = port_by_uid[sink]
-            require(origin.dtype == target.dtype and origin.node != target.node,
-                    "signal_semantics", "Implicit coercions and self-connections are outside the profile.", location)
-            edge_id = f"lv-signal-{uid}-{sink}"
-            edges.append({"id": edge_id, "from": {"node": origin.node, "port": origin.name},
-                          "to": {"node": target.node, "port": target.name}})
-            edge_sources.append({"id": edge_id, "signal_uid": uid, "producer_uid": producer, "consumer_uid": sink})
-    require(used == port_by_uid.keys() and len({edge["id"] for edge in edges}) == len(edges), "signal_coverage",
-            "Each supported terminal must belong to exactly one decoded signal.", "BDHb/signalList")
 
-    source_nodes = [node_by_uid[uid] for uid in visible_uids if uid in port_by_uid and port_by_uid[uid].source]
-    sink_nodes = [node_by_uid[uid] for uid in visible_uids if uid in port_by_uid and not port_by_uid[uid].source]
-    input_order = {edge["from"]["node"]: edge["to"]["port"] for edge in edges if edge["to"]["port"] in ("a", "b")}
-    source_nodes.sort(key=lambda node: input_order.get(node["id"], "value"))
-    for row, node in enumerate(source_nodes):
-        node["layout"]["y"] = 70 + 70 * row
-    for row, node in enumerate(sink_nodes):
-        node["layout"]["y"] = 121 + 70 * row
+def _project_unwired_panel(vi, source, source_sha256, plane, terms):
+    """An unwired panel returns immediately, preserving each control and indicator."""
+    from import_labview_bundle import member_presentation
+    from import_labview_editable import project_document
+    from import_labview_panel import project_panel
+    from import_labview_source_diagram import decode_source_diagram
 
-    declarations, source_widgets = [], []
-    rows = {"control": 0, "indicator": 0}
-    for uid, widget in widgets.items():
-        position = rows[widget.role]
-        rows[widget.role] += 1
-        family = {"bool": "boolean", "string": "string"}.get(widget.dtype, "numeric")
-        initial = initial_value(widget.dtype)
-        properties = {"text.value" if family == "string" else "value": initial}
-        if family == "numeric":
-            properties["data_type.representation"] = widget.dtype
-        declaration = {"id": f"lv-widget-{uid}", "classId": f"frog.widgets.{family}_{widget.role}",
-                       "label": widget.label, "role": widget.role, "valueType": widget.dtype,
-                       "bounds": bounds(32 if widget.role == "control" else 350, 55 + position * 74, 152, 32),
-                       "props": properties}
-        if family != "string":
-            declaration["state"] = {"value": initial}
-        properties["data.default"] = json.dumps(declaration, ensure_ascii=False)
-        declarations.append(declaration)
-        source_widgets.append({"id": declaration["id"], "uid": uid, "label": widget.label, "role": widget.role,
-                               "value_type": widget.dtype, "source_bounds": widget.source_bounds,
-                               "initial_origin": "implicit_labview_scalar_default"})
-    document = {"format": "frog.document.draft", "draft_revision": 2, "language": "FROG", "title": source.stem,
-                "metadata": {"name": source.stem, "description": f"Standalone LabVIEW scalar diagram. Source SHA-256 {source_sha256}."},
-                "frontPanel": {"widgets": declarations}, "diagram": {"zoom_percent": 100,
-                             "nodes": list(node_by_uid.values()), "edges": edges}}
-    mapping = {"profile": "labview-standalone-scalar-v1", "source_sha256": source_sha256, "widgets": source_widgets,
-               "nodes": [{"id": node["id"], "uid": uid} for uid, node in node_by_uid.items()], "edges": edge_sources,
-               "scope": "Editable local dataflow; original appearance and connector pane were not translated."}
+    graph = decode_source_diagram(vi)
+    widgets, issues = project_panel(vi)
+    # A LabVIEW grouper belongs to front-panel editing. Each grouped DCO
+    # must still be accounted for by the terminal checks below.
+    groups = [issue for issue in issues if issue.get("kind") == "grouper"]
+    issues = [issue for issue in issues if issue.get("kind") != "grouper"]
+    terminal_ids = {identity(term, "BDHb") for term in terms}
+    widget_ids = {identity(field(term, "dco", "BDHb"), "BDHb") for term in terms}
+    require(not issues and not graph.issues and len(graph.diagrams) == 1 and len(graph.nodes) == 1
+            and not graph.signals and len(terms) == len(terminal_ids) == len(widget_ids) == len(plane)
+            and terminal_ids == graph.terminals.keys() == {identity(obj, "BDHb") for obj in plane}
+            and widget_ids == widgets.keys() == graph.bindings.keys(),
+            "panel_coverage", "The unwired terminals and saved panel controls do not match exactly.", "BDHb")
+    document, mapping, regions = project_document(source, vi, widgets, issues, {}, graph, Path("model.frog"))
+    presentation, evidence, problems = member_presentation(vi, list(widgets.values()), source.stem)
+    require(not regions and not mapping["notes"] and not problems
+            and len(document["diagram"]["nodes"]) == len(terms)
+            and all(node["kind"] == "widget_value" for node in document["diagram"]["nodes"]),
+            "panel_coverage", "A panel object or connector has unverified semantics.", "FPHb")
+    document.update(presentation)
+    mapping.update(profile="labview-unwired-panel-v1", presentation=evidence, source_sha256=source_sha256)
+    if groups:
+        mapping["panel_groups"] = groups
     return document, mapping

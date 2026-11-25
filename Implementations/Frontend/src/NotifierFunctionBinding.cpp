@@ -90,7 +90,8 @@ NotifierTypeResult resolveNotifierFunctionPort(std::string_view operationId,std:
         bool accepted=false;
         if(input.portId=="notifier")accepted=hasElement&&binding::fullTypeEqual(*actual,notifierReferenceType(element));
         else if(input.portId=="notifiers")accepted=hasElement&&binding::fullTypeEqual(*actual,TypeRef::array(notifierReferenceType(element),1));
-        else if(input.portId=="notification"||input.portId=="element_type")accepted=hasElement&&binding::fullTypeEqual(*actual,element);
+        else if(input.portId=="notification"||input.portId=="element_type")accepted=hasElement&&
+            (binding::fullTypeEqual(*actual,element)||binding::requiresVariantBoxing(*actual,element));
         else {
             const auto expected=binding::parseType(input.typeExpression).type;
             accepted=binding::connect(*actual,expected,input.connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit?
@@ -114,6 +115,8 @@ NotifierTypeResult resolveNotifierFunctionPort(std::string_view operationId,std:
         if(!hasElement)return unresolved("binding.notifier_element_unresolved","Multiple Wait requires the complete notification schema.");
         resolved=notifierMultipleNotificationType(element);
     }
+    if(const auto *actual=supplied(requested);actual && binding::requiresVariantBoxing(*actual,resolved))
+        return {binding::connectValue(*actual,resolved),complete};
     return {{ResolutionStatus::Compatible,std::move(resolved),{},{}},complete};
 }
 NotifierTypeResult resolveNotifierFunctionPort(const DiagramNode &node,

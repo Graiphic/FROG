@@ -6,6 +6,11 @@
 namespace frog::native_engine {
 // Local versioned Studio profile, not new public Core semantics.
 inline constexpr std::string_view exponentialReal64SemanticVersion="frog.studio.exponential.real64-ieee@1";
+// Every value of these scalar types is exactly representable by the provider.
+// In particular, an I64 odd root or exponent above 2^53 must retain its parity.
+inline constexpr bool exponentialReal64LosslessInput(std::string_view type) noexcept {
+    return type=="i8"||type=="u8"||type=="i16"||type=="u16"||type=="i32"||type=="u32"||type=="f32";
+}
 struct CanonicalExponentialContract {
     std::string_view catalogId,operationId;
     ExponentialReal64Operation operation;

@@ -32,6 +32,13 @@ public:
     // must have the same direction and type; binding never changes its meaning.
     [[nodiscard]] bool declarePort(bool input, std::string_view id,
         std::string_view type, std::string_view connection = {});
+    // Ports created by an Interface Map binding follow that widget. A
+    // pre-existing, independently declared port is never adopted implicitly.
+    [[nodiscard]] bool declareMapWidgetPort(bool input, std::string_view id,
+        std::string_view type, std::string_view connection, std::string_view widgetId);
+    [[nodiscard]] bool mapPortIdReserved(std::string_view id) const;
+    [[nodiscard]] bool retireMapWidgetPort(bool input, std::string_view id, std::string_view widgetId);
+    [[nodiscard]] bool restoreMapWidgetPort(bool input, std::string_view id, std::string_view widgetId);
     // Explicit private authoring only. Refusal preserves all retained bytes,
     // including the independent historical root-map companion.
     [[nodiscard]] bool editPortForAuthoring(std::string_view id,
@@ -46,6 +53,7 @@ public:
     [[nodiscard]] std::string withMap(std::string_view mapJson) const;
 
 private:
+    [[nodiscard]] bool moveMapWidgetPort(bool input, std::string_view id, std::string_view widgetId, bool restore);
     explicit FrogDraftInterface(std::string json);
     std::shared_ptr<const std::string> bytes_;
     std::shared_ptr<const std::string> legacyRootMapBytes_;

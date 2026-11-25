@@ -1,9 +1,11 @@
 #include "frog_native_engine/EventNotificationContract.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
+#include <charconv>
 #include <initializer_list>
 
 namespace frog::native_engine {
 namespace {
+constexpr std::string_view originPrefix = "@frog:user-event-origin:1/";
 constexpr std::uint32_t scopeBit(EventSourceScope scope) noexcept {
     return 1U << static_cast<unsigned>(scope);
 }
@@ -97,6 +99,24 @@ EventSourceScope eventBindingSourceScope(const DiagramEventBinding &binding) noe
             EventSourceScope::Pane, EventSourceScope::Control, EventSourceScope::Dynamic})
         if (binding.sourceScope == eventSourceScopeName(scope)) return scope;
     return binding.source.empty() ? EventSourceScope::Application : EventSourceScope::Control;
+}
+EventSourceIdentityParts eventSourceIdentityParts(std::string_view stored) noexcept {
+    if (!stored.starts_with(originPrefix)) return {stored, {}};
+    const auto value = stored.substr(originPrefix.size());
+    const auto colon = value.find(':');
+    if (colon == std::string_view::npos || !colon) return {stored, {}};
+    std::size_t size = 0;
+    const auto length = std::from_chars(value.data(), value.data() + colon, size);
+    const auto tail = value.substr(colon + 1);
+    if (length.ec != std::errc{} || length.ptr != value.data() + colon ||
+        !size || size >= tail.size() || !tail.substr(size).starts_with("dynamic:"))
+        return {stored, {}};
+    return {tail.substr(size), tail.substr(0, size)};
+}
+std::string storedEventSourceIdentity(const DiagramEventBinding &binding) {
+    if (binding.originNodeId.empty()) return binding.source;
+    return std::string(originPrefix) + std::to_string(binding.originNodeId.size()) +
+        ":" + binding.originNodeId + binding.source;
 }
 std::vector<DiagramEventBinding> eventCaseBindings(const DiagramEventCase &eventCase) {
     return eventCase.eventBindings.empty() ?

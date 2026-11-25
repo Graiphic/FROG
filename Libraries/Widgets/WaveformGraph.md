@@ -12,7 +12,16 @@ The linear profile admits 1D and rectangular row-major 2D arrays of f32/f64/i8/u
 
 Source geometry uses the existing widget layout. Default size 640 x 400, minimum 240 x 160 and aura 4 are source units. Resizing reflows axes and the plot rectangle without changing samples or stretching font size.
 
-Local instance projection: `props.waveform_graph`, object with `profile: "WFG-1-linear"`; keys `x_label`, `y_label`, `autoscale_x`, `autoscale_y`, `grid_visible`, `legend_visible`, `x_min`, `x_max`, `y_min`, `y_max`, `plots`, `initial_data`. Defaults are Time/Amplitude, both autoscale on, grid/legend visible, X [0,100], Y [-10,10], no plots or data. Each plot override contains `id`, `name`, `rgb`, `visible`, `lines`, `points`, `width`; each initial series contains `id`, `name`, `origin`, `step`, `y`. JSON non-finite Y values use the strings `NaN`, `Inf`, `-Inf`; they are not bare JSON numbers.
+The local instance stores its settings in `props.waveform_graph` with
+`profile: "WFG-1-linear"`. The base fields are `x_label`, `y_label`,
+`autoscale_x`, `autoscale_y`, `grid_visible`, `legend_visible`, `x_min`,
+`x_max`, `y_min`, `y_max`, `plots` and `initial_data`. Optional presentation
+fields include the [axis and legend visibility settings](#axis-and-legend-visibility).
+Defaults are Time/Amplitude, both axes on autoscale, grid and legend visible,
+X [0,100], Y [-10,10], and no plots or data. Each plot override contains
+`id`, `name`, `rgb`, `visible`, `lines`, `points` and `width`. Each initial
+series contains `id`, `name`, `origin`, `step` and `y`. Encode non-finite Y
+values as the JSON strings `NaN`, `Inf` and `-Inf`.
 
 Only explicit initial data/configuration is persisted. Accepted runtime snapshots, revisions, caches, device handles and diagnostics are not defaults. Unknown profile/fields or invalid payloads are preserved and block support claims; they are never silently converted to an empty linear graph.
 
@@ -71,3 +80,20 @@ local absolute-time format defaults to seconds since 1904-01-01 UTC. Axis
 overrides are independent of whether data uses sample indices, explicit
 origin and step, or waveform timing. The `WFG-1-linear` source marker is
 retained for the local codec. These optional fields extend presentation.
+
+## Axis and legend visibility
+
+Within `props.waveform_graph`, `x_axis.visible` and `y_axis.visible` each
+accept a boolean. An absent flag defaults to `true`, including when other
+settings for that axis are present. Hiding an axis preserves its title,
+range, mapping and graduation settings for the next time it is shown.
+
+`legend_visible` controls the whole plot legend. `legend_rows` is an integer
+from 1 to 64 giving the number of visible rows, including unoccupied slots.
+Increasing it leaves the dataset unchanged. The optional `legend_position`
+object stores the legend's top-left corner as numeric `x` and `y` in logical
+units relative to the widget's top-left corner. Omitting it places the legend
+beside the right edge. Moving the widget carries its legend with it.
+Existing documents without `legend_rows` use four rows. Each plot retains
+its own `plots[].visible` and stable ID when the legend is folded or hidden.
+The widget label has its own visibility setting outside this graph object.

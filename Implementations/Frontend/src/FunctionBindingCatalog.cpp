@@ -292,6 +292,9 @@ bool functionPortAcceptsValueType(
     };
     switch (binding.connectionPolicy) {
     case FunctionPortConnectionPolicy::Exact:
+        if (binding.typeExpression == "variant")
+            return frog::native_engine::binding::connectValue(source.type,
+                frog::native_engine::binding::TypeRef::primitive("variant")).accepted();
         return frog::native_engine::binding::connect(source.type,
             frog::native_engine::binding::parseType(binding.defaultValueType).type).accepted();
     case FunctionPortConnectionPolicy::NumericImplicit:

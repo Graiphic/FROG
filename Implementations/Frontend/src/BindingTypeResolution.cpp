@@ -223,6 +223,15 @@ TypeResolution connect(const TypeRef &source, const TypeRef &target, ConnectionP
     }
     return mismatch("binding.type_mismatch", "Expected " + target.canonical() + ", received " + source.canonical() + ".");
 }
+bool requiresVariantBoxing(const TypeRef &source, const TypeRef &target) {
+    return target.kind == TypeKind::Primitive && target.name == "variant" && target.known() &&
+        !(source.kind == TypeKind::Primitive && source.name == "variant") && source.known();
+}
+TypeResolution connectValue(const TypeRef &source, const TypeRef &target, ConnectionPolicy policy) {
+    if (requiresVariantBoxing(source, target))
+        return {ResolutionStatus::Coercion, target, "binding.variant_box", "The complete source value is boxed as a Variant."};
+    return connect(source, target, policy);
+}
 TypeResolution constrain(const TypeRef &source, const TypeExpr &expression) {
     if (!source.known()) return {ResolutionStatus::Unresolved, {}, "binding.type_unresolved", "A source type is required."};
     const TypeRef *value = &source;
@@ -234,6 +243,8 @@ TypeResolution constrain(const TypeRef &source, const TypeExpr &expression) {
     }
     switch (expression.kind) {
     case ConstraintKind::Concrete: {
+        if (expression.minimumRank == 0 && requiresVariantBoxing(source, expression.concrete))
+            return connectValue(source, expression.concrete);
         auto result = connect(*value, expression.concrete);
         if (result.accepted()) result.type = source;
         return result;

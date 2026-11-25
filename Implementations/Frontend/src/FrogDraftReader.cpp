@@ -37,6 +37,7 @@
 #include "frog_native_engine/WidgetCatalog.hpp"
 #include "frog_native_engine/WidgetPlacementContract.hpp"
 #include "frog_native_engine/WidgetInstance.hpp"
+#include "frog_native_engine/HorizontalSlider.hpp"
 #include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/TabControl.hpp"
 #include "frog_native_engine/WidgetFamilyEngine.hpp"
@@ -66,6 +67,13 @@
 #include <vector>
 namespace frog::native_engine {
 namespace {
+
+DiagramWireRouteIntent readDiagramWireRouteIntent(const document_internal::JsonValue &value) {
+    const auto intent = document_internal::jsonStringField(value, "route_intent");
+    if (intent == "automatic") return DiagramWireRouteIntent::Automatic;
+    if (intent == "manual") return DiagramWireRouteIntent::Manual;
+    return DiagramWireRouteIntent::Unspecified;
+}
 using document_internal::base64Decode;
 using document_internal::formatNumber;
 using document_internal::normalizedInterfaceConnectionRequirement;
@@ -898,7 +906,9 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
                             jsonStringField(fieldValue, "technical_name")
                                 .value_or("field_" + std::to_string(order)),
                             order,
-                            std::move(contained)
+                            std::move(contained),
+                            jsonUnsignedField(fieldValue, "stack_order"),
+                            jsonUnsignedField(fieldValue, "visual_group").value_or(0)
                         });
                     }
                     std::stable_sort(
@@ -1524,6 +1534,22 @@ SceneObject sceneObjectFromJsonImpl(const JsonValue &value, int fallbackIndex,st
         }
     }
 
+    const auto instrument = numeric_instrument::kind(widget.assetRef);
+    if (const auto *props = objectField(value, "props"); props && instrument != numeric_instrument::Kind::None) {
+        const auto ticks = jsonUnsignedField(*props, "instrument.tick_count").value_or(5U);
+        widget.instrumentTickCount = static_cast<int>(std::clamp(ticks, 2U, 32U));
+        widget.instrumentScaleVisible = jsonBooleanField(*props, "instrument.scale_visible").value_or(true);
+        if (numeric_instrument::isSingleSlider(instrument)) {
+            widget.instrumentCursorVisible = jsonBooleanField(*props, "instrument.cursor_visible").value_or(true);
+        }
+        if (numeric_instrument::isRange(instrument)) {
+            widget.instrumentFillOutside = jsonBooleanField(*props, "instrument.fill_outside").value_or(false);
+            widget.numericMinimum = jsonNumberField(*props, "data_entry.minimum").value_or(0);
+            widget.numericMaximum = jsonNumberField(*props, "data_entry.maximum").value_or(100);
+            widget.numericIncrementStep = jsonNumberField(*props, "data_entry.increment_step").value_or(1);
+        }
+    }
+
     if (const auto *state = objectField(value, "state")) {
         if (const auto minimum = jsonNumberField(*state, "minimum")) {
             widget.numericMinimum = minimum.value();
@@ -1834,7 +1860,12 @@ bool exactUnsignedJsonArray(const JsonValue &owner,std::string_view key,
     }
     return true;
 }
-std::optional<FrogDocumentReadDiagnostic> arrayShapeReadDiagnostic(const JsonValue &root) {
+std::optional<FrogDocumentReadDiagnostic> widgetStructureReadDiagnostic(const JsonValue &root) {
+    // A bare widget is also decoded inside an already admitted document.
+    // Only a real envelope can declare an incompatible reader revision.
+    const auto format = jsonStringField(root, "format");
+    const bool versioned = format == kFrogDraftDocumentFormat || format == kFrogWidgetValueDraftFormat;
+    const auto revision = jsonNumberField(root, "draft_revision").value_or(0.0);
     using ObjectIterator=decltype(JsonValue{}.object)::const_iterator;
     struct Frame {const JsonValue *value;std::string path;ObjectIterator member;std::size_t index=0;bool visited=false;};
     std::vector<Frame> pending{{&root,{},root.object.begin()}};
@@ -1859,6 +1890,29 @@ std::optional<FrogDocumentReadDiagnostic> arrayShapeReadDiagnostic(const JsonVal
         if(!frame.visited && value.type==JsonValue::Type::Object) {
             frame.visited=true;
             const auto classId=jsonStringField(value,"classId").value_or(jsonStringField(value,"class_ref").value_or(""));
+            if (classId == "frog.widgets.cluster_control" || classId == "frog.widgets.cluster_indicator") {
+                const auto *props = value.member("props");
+                const auto *fields = props ? props->member("cluster.elements") : nullptr;
+                if (fields && fields->type == JsonValue::Type::Array) {
+                    for (std::size_t i = 0; i < fields->array.size(); ++i) {
+                        for (const auto key : {"stack_order", "visual_group"}) {
+                            const auto *member = fields->array[i].member(key);
+                            if (!member) continue;
+                            const auto path = currentPath() + "/props/cluster.elements/" + std::to_string(i) + "/" + key;
+                            if (versioned && revision < kFrogClusterPresentationDraftRevision)
+                                return FrogDocumentReadDiagnostic{FrogDocumentReadErrorKind::InvalidPresentation, path,
+                                    "Cluster presentation requires private draft_revision 13 or later."};
+                            std::uint32_t ordinal{};
+                            const auto &number = member->string;
+                            const auto parsed = std::from_chars(number.data(), number.data() + number.size(), ordinal);
+                            if (member->type != JsonValue::Type::Number || parsed.ec != std::errc{} ||
+                                parsed.ptr != number.data() + number.size())
+                                return FrogDocumentReadDiagnostic{FrogDocumentReadErrorKind::InvalidPresentation, path,
+                                    "Cluster presentation indices must be unsigned 32-bit integers."};
+                        }
+                    }
+                }
+            }
             if(classId=="frog.widgets.array_control" || classId=="frog.widgets.array_indicator")
                 if(const auto *props=objectField(value,"props"))
                     if(auto failure=check(*props,"dimensions.shape",{})){failure->path=childPath(childPath(currentPath(),"props"),"dimensions.shape");return failure;}
@@ -2134,17 +2188,17 @@ bool validateStoredArrayCellValues(WidgetInstance &root) {
 }
 } // namespace
 
-std::optional<WidgetInstance> deserializeArrayElementWidget(std::string_view source,const WidgetInstance *prototype,
-    bool migrateSurvivingFields,bool *compactValueOnly) {
+static std::optional<WidgetInstance> deserializeWidgetPayload(std::string_view source,const WidgetInstance *prototype,
+    bool migrateSurvivingFields,bool *compactValueOnly,std::size_t byteLimit) {
     if(compactValueOnly)*compactValueOnly=false;
-    if (source.size() > 8U * 1024U * 1024U) return std::nullopt;
+    if (source.size() > byteLimit) return std::nullopt;
     auto root = frog::native_engine::source::internal::parseAuthoringJsonCandidate(source);
     struct Cleanup { std::optional<JsonValue> &root; ~Cleanup() {
         if (root) frog::native_engine::source::internal::clearJsonTree(*root);
     } } cleanup{root};
     if (!root || root->type != JsonValue::Type::Object) return std::nullopt;
     if(root->member("format") && !document_internal::privateWidgetValueObject(*root))return std::nullopt;
-    if(arrayShapeReadDiagnostic(*root))return std::nullopt;
+    if(widgetStructureReadDiagnostic(*root))return std::nullopt;
     std::string error;
     if (!document_internal::inflateArrayStorage(*root, error)) return std::nullopt;
     try{if((prototype&&!unavailableComplexNumericIdentity(prototype->valueType).empty())||
@@ -2176,6 +2230,17 @@ std::optional<WidgetInstance> deserializeArrayElementWidget(std::string_view sou
     auto value=sceneObjectFromJson(*root, 1,source).widget;
     if(value && !validateStoredArrayCellValues(*value))return std::nullopt;
     return value;
+}
+
+std::optional<WidgetInstance> deserializeArrayElementWidget(std::string_view source,const WidgetInstance *prototype,
+    bool migrateSurvivingFields,bool *compactValueOnly) {
+    return deserializeWidgetPayload(source,prototype,migrateSurvivingFields,compactValueOnly,8U*1024U*1024U);
+}
+
+std::optional<WidgetInstance> deserializeTypeDefinitionWidget(std::string_view source) {
+    // A full definition can own several embedded images; the bound for a
+    // single Array cell is unrelated to this top-level document payload.
+    return deserializeWidgetPayload(source,nullptr,false,nullptr,kMaximumFrogDocumentBytes);
 }
 
 std::optional<FrogDraftInterfaceMapSettings> readFrogDraftInterfaceMapSettings(
@@ -2287,7 +2352,7 @@ std::optional<FrogDraftData> readFrogDraftData(
         }
         return std::nullopt;
     }
-    if(const auto failure=arrayShapeReadDiagnostic(*root)) {
+    if(const auto failure=widgetStructureReadDiagnostic(*root)) {
         if(error)*error=failure->path+": "+failure->message;
         if(readDiagnostic)*readDiagnostic=*failure;
         return std::nullopt;
@@ -2368,8 +2433,11 @@ std::optional<FrogDraftData> readFrogDraftData(
     while(!typeDefinitionValues.empty()) {
         const auto *value=typeDefinitionValues.back();typeDefinitionValues.pop_back();
         if(const auto *link=value->member("type_definition")) {
-            if(publicSource || jsonUnsignedField(*root,"draft_revision").value_or(0U)<kFrogTypeDefinitionDraftRevision) {
-                if(error)*error="Type Definition links require private draft_revision 8.";return std::nullopt;
+            const auto *baseline=link->member("baseline_widget");
+            const bool extended=link->member("tab_members")||(baseline&&baseline->type==JsonValue::Type::Object);
+            const auto minimum=extended?kFrogExtendedTypeDefinitionDraftRevision:kFrogTypeDefinitionDraftRevision;
+            if(publicSource || jsonUnsignedField(*root,"draft_revision").value_or(0U)<minimum) {
+                if(error)*error="Type Definition link requires private draft_revision "+std::to_string(minimum)+" or later.";return std::nullopt;
             }
             std::ostringstream encoded;document_internal::appendJsonValue(encoded,*link);
             if(!deserializeTypeDefinitionLink(encoded.str(),error))return std::nullopt;
@@ -3487,7 +3555,9 @@ std::optional<FrogDraftData> readFrogDraftData(
                         node.staticVisual = std::move(visual);
                     }
                 }
-                if (node.kind == "frog_call" || (node.kind == "fitting_model_reference" || node.kind == "calculus_function_reference")) {
+                const bool untranslatedLabView = isUntranslatedLabViewNode(node);
+                if (node.kind == "frog_call" || node.kind == "fitting_model_reference" ||
+                    node.kind == "calculus_function_reference" || untranslatedLabView) {
                     if (const auto *call = objectField(nodeValue, "call")) {
                         if(const auto *operation=call->member("class_operation")) {
                             if(jsonUnsignedField(*root,"draft_revision").value_or(0U)<kFrogClassValueDraftRevision) {
@@ -3496,9 +3566,12 @@ std::optional<FrogDraftData> readFrogDraftData(
                             node.classOperation=readClassSourceOperation(*operation,error);
                             if(!node.classOperation||node.kind!="frog_call")return std::nullopt;
                         }
-                        loadedFrogCall = true;
-                        node.callDocumentPath =
-                            jsonStringField(*call, "document_path").value_or({});
+                        loadedFrogCall = !untranslatedLabView;
+                        if (!untranslatedLabView) {
+                            node.callDocumentPath = jsonStringField(*call, "document_path").value_or({});
+                            node.callDocumentTitle = jsonStringField(*call, "document_title").value_or({});
+                            node.callIconSvgText = jsonStringField(*call, "icon_svg").value_or({});
+                        }
                         if (const auto *selection = call->member("polymorphic");
                             node.kind == "frog_call" && selection) {
                             const auto *manual = selection->member("manual_member_id");
@@ -3517,10 +3590,6 @@ std::optional<FrogDraftData> readFrogDraftData(
                             if (visible) node.polymorphicFrogSelection->showSelector = visible->boolean;
                             if (lastAutomatic) node.polymorphicFrogSelection->lastAutomaticMemberId = lastAutomatic->string;
                         }
-                        node.callDocumentTitle =
-                            jsonStringField(*call, "document_title").value_or({});
-                        node.callIconSvgText =
-                            jsonStringField(*call, "icon_svg").value_or({});
                         if (const auto *ports = objectField(*call, "ports");
                             ports != nullptr && ports->type == JsonValue::Type::Array) {
                             node.callPorts.reserve((std::min)(
@@ -3823,6 +3892,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                 }
                 DiagramEdge edge;
                 edge.id = jsonStringField(edgeValue, "id").value_or({});
+                edge.routeIntent = readDiagramWireRouteIntent(edgeValue);
                 edge.from.nodeId = jsonStringField(*from, "node").value_or({});
                 edge.from.portId = jsonStringField(*from, "port").value_or({});
                 edge.to.nodeId = jsonStringField(*to, "node").value_or({});
@@ -3898,6 +3968,7 @@ std::optional<FrogDraftData> readFrogDraftData(
                 }
                 DiagramWireFragment fragment;
                 fragment.id = jsonStringField(fragmentValue, "id").value_or({});
+                fragment.routeIntent = readDiagramWireRouteIntent(fragmentValue);
                 fragment.detachedEdgeId = jsonStringField(fragmentValue, "detached_edge_id").value_or({});
                 if (const auto *label = objectField(fragmentValue, "label")) {
                     fragment.label = jsonStringField(*label, "text").value_or({});

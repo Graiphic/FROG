@@ -9,6 +9,7 @@ inline constexpr std::size_t maximumBytes=8U*1024U*1024U;
 bool assign(WidgetInstance &,const WidgetInstance &);
 std::string encode(const WidgetInstance &);
 std::optional<WidgetInstance> decode(std::string_view);
+std::optional<WidgetInstance> decodeStoredDefault(const WidgetInstance &owner,std::string_view bytes);
 std::optional<WidgetInstance> read(const WidgetInstance &,const ContainedWidgetPath &);
 WidgetInstance defaultValue(const WidgetInstance &);
 namespace widget_data_detail {

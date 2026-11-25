@@ -39,7 +39,8 @@ inline const source::JsonValue *privateWidgetValueObject(const source::JsonValue
         *revisionLexeme!=std::to_string(kFrogApplicationControlDraftRevision) &&
         *revisionLexeme!=std::to_string(kFrogConnectivityDraftRevision) &&
         *revisionLexeme!=std::to_string(kFrogTypeDefinitionDraftRevision) &&
-        *revisionLexeme!=std::to_string(kFrogPictureRingDraftRevision)))return nullptr;
+        *revisionLexeme!=std::to_string(kFrogPictureRingDraftRevision) &&
+        *revisionLexeme!=std::to_string(kFrogClusterPresentationDraftRevision)))return nullptr;
     const auto *classId=widget->member("classId");
     if(!classId)classId=widget->member("class_ref");
     if(!classId || classId->type!=source::JsonValue::Type::String || classId->string.empty())return nullptr;

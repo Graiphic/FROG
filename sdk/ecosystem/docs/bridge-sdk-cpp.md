@@ -8,6 +8,14 @@ depending only on the standard library. Existing CMake target
 creates no process and executes no program. The third-party binary contract remains
 UTF-8 IPC, not this header's C++ ABI.
 
+The bridge accepts Frontend provenance for private draft revisions 0 through
+11 and revision 13. Revision 13 adds Cluster field grouping and stacking. The
+Frontend resolves the ordered field types and emits the same typed FIR as for
+an ungrouped Cluster. The bridge still requires the exact Source projection
+hash, complete dependency closure and supported target operations. Revision 12
+(extended Type Definitions) and unknown future revisions have separate
+admission requirements.
+
 The local E5 rebuild used a standalone SDK + Frontend copy, without Studio, private
 Runtime or LLVM build dependencies. The consumer below and protocol test passed
 (2/2). Evidence:

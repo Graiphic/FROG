@@ -93,15 +93,22 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
              canonicalObjectReferenceFullTypeEqual(type.children.front(),cfg->valueType));
         const bool genericControlView=type.kind==binding::TypeKind::Reference&&type.children.empty()&&
             (type.name=="frog.control"||type.name=="frog.object")&&!cfg->valueType.known();
-        if(!synchronizationNull&&!genericControlView&&(type.kind!=binding::TypeKind::Reference||!type.known()||type.children.size()!=1||!valueType(type.children.front(),false)))
+        const bool applicationKind=type.kind==binding::TypeKind::Reference && type.name=="frog.application" &&
+            cfg->expectedClass==type.name && type.children.empty() && !cfg->valueType.known() &&
+            cfg->kind==ApplicationControlKind::Property && !cfg->properties.empty() &&
+            std::all_of(cfg->properties.begin(),cfg->properties.end(),[](const auto &row){
+                return row.memberId=="kind" && row.mode==ApplicationControlPropertyMode::Read;
+            });
+        if(!synchronizationNull&&!genericControlView&&!applicationKind&&(type.kind!=binding::TypeKind::Reference||!type.known()||type.children.size()!=1||!valueType(type.children.front(),false)))
             return fail("canonical.object_reference.type_unavailable","The local profile requires a complete exact scalar/String/Record value schema and a typed borrowed reference.",true);
         if(!binding::referenceClassAssignable(type.name,cfg->expectedClass))return fail("canonical.object_reference.class_invalid","The actual reference view is not assignable to the configured expected class.");
-        if(!synchronizationNull&&!genericControlView&&!canonicalObjectReferenceFullTypeEqual(type.children.front(),cfg->valueType))return fail("canonical.object_reference.schema_invalid","The effective target and saved complete value schema differ.");
+        if(!synchronizationNull&&!genericControlView&&!applicationKind&&!canonicalObjectReferenceFullTypeEqual(type.children.front(),cfg->valueType))return fail("canonical.object_reference.schema_invalid","The effective target and saved complete value schema differ.");
         // An explicitly generic Control/Object reference keeps its nominal
         // view. Value crosses that view as a typed Variant; the actual target
         // schema and capabilities are checked by the instance registry.
         const auto valueSchema=type.children.empty()?binding::TypeRef::primitive("variant"):type.children.front();
-        if(cfg->target.kind!=ApplicationControlTargetKind::Widget&&cfg->target.kind!=ApplicationControlTargetKind::Unbound)
+        if(cfg->target.kind!=ApplicationControlTargetKind::Widget&&cfg->target.kind!=ApplicationControlTargetKind::Unbound&&
+           !(applicationKind && cfg->target.kind==ApplicationControlTargetKind::ThisApplication))
             return fail("canonical.object_reference.target_unavailable","Value and Reinitialize require an actual declared widget target or a typed input reference.",true);
         if(cfg->target.kind==ApplicationControlTargetKind::Widget&&cfg->target.widgetId.empty())
             return fail("canonical.object_reference.target_invalid","The typed reference has no actual target identity.");
@@ -119,6 +126,7 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
                 const bool signaling=row.memberId=="value_signaling";
                 const bool colors=row.memberId=="colors"&&applicationControlBooleanColorsAvailable(type.name)&&
                     valueSchema==binding::TypeRef::primitive("bool");
+                const bool appearance=applicationControlWidgetAppearanceMember(type.name,row.memberId);
                 if(signaling) {
                     if(row.mode!=ApplicationControlPropertyMode::Write)
                         return fail("canonical.object_reference.write_only","Value (Signaling) is write only.");
@@ -128,8 +136,8 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;
                 const bool graphProperty=xy_reference::supported(row.memberId) && graph && graph->kind==ApplicationControlMemberKind::Property && graph->runtimeAvailable &&
                     (row.mode==ApplicationControlPropertyMode::Read?graph->readable:graph->writable);
-                if(row.memberId!="value"&&!signaling&&!label&&!graphProperty&&!colors)return fail("canonical.object_reference.member_unavailable","The declared class has no native executor for this property.",true);
-                const std::string effect=colors?"boolean_colors_presentation":label?"read_declared_label":signaling?"write_value_signaling":graphProperty?"xy_presentation":row.mode==ApplicationControlPropertyMode::Read?"read_value":"write_value_silent";
+                if(row.memberId!="value"&&!signaling&&!label&&!graphProperty&&!colors&&!applicationKind&&!appearance)return fail("canonical.object_reference.member_unavailable","The declared class has no native executor for this property.",true);
+                const std::string effect=applicationKind?"read_application_kind":colors?"boolean_colors_presentation":appearance?"widget_appearance":label?"read_declared_label":signaling?"write_value_signaling":graphProperty?"xy_presentation":row.mode==ApplicationControlPropertyMode::Read?"read_value":"write_value_silent";
                 if(std::find(result.effects.begin(),result.effects.end(),effect)==result.effects.end())result.effects.push_back(effect);
                 if(signaling&&std::find(result.effects.begin(),result.effects.end(),"publish_value_change")==result.effects.end())
                     result.effects.push_back("publish_value_change");
@@ -158,7 +166,9 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
             for(const auto &row:cfg->properties) {
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;
                 const auto schema=row.memberId=="colors"?applicationControlBooleanColorsType():
-                    graph?graph->type:row.memberId=="label.text"?binding::TypeRef::primitive("string"):valueSchema;
+                    row.memberId=="interaction.visible"?binding::TypeRef::primitive("bool"):
+                    row.memberId=="boolean_text.text"?binding::TypeRef::primitive("string"):
+                    graph?graph->type:(applicationKind||row.memberId=="label.text")?binding::TypeRef::primitive("string"):valueSchema;
                 port("property:"+row.id,schema,row.mode==ApplicationControlPropertyMode::Write,row.mode==ApplicationControlPropertyMode::Write);
             }
             if(cfg->kind==ApplicationControlKind::Invoke && xyTarget && cfg->methodId!="reinitialize") {

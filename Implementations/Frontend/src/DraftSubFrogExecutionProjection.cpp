@@ -16,6 +16,8 @@
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/WidgetBindingType.hpp"
 #include <iterator>
+#include <deque>
+#include <mutex>
 #include <cmath>
 #include <algorithm>
 #include <charconv>
@@ -29,6 +31,26 @@ using Json=source::JsonValue;
 namespace cj=canonical_json;
 constexpr std::size_t maximumPrograms=1024, maximumNodes=1024, maximumEdges=4096;
 constexpr std::size_t maximumClosureBytes=64U*1024U*1024U, maximumDepth=32;
+// Only successful raw-field checks for ordinary callees are reusable across
+// edits. They depend solely on these exact bytes. Context-sensitive checks,
+// dependency reads, call boundaries and whole-graph admission always run.
+struct ValidatedCalleeFields {
+    std::mutex mutex;
+    std::deque<std::shared_ptr<const std::string>> sources;
+    bool contains(const std::string &bytes) {
+        std::lock_guard lock(mutex);
+        return std::any_of(sources.begin(),sources.end(),[&](const auto &entry){return *entry==bytes;});
+    }
+    void remember(const std::shared_ptr<const std::string> &bytes) {
+        std::lock_guard lock(mutex);
+        if(sources.size()==16)sources.pop_front();
+        sources.push_back(bytes);
+    }
+};
+ValidatedCalleeFields &validatedCalleeFields() {
+    static ValidatedCalleeFields cache;
+    return cache;
+}
 struct Refusal { DraftSubFrogExecutionDiagnostic diagnostic; };
 [[noreturn]] void refuse(std::string code,std::string uri,std::string path,std::string message,
     std::string callsite={},bool unsupported=false,std::optional<DocumentDiagnosticDomain> domain=std::nullopt) {
@@ -47,6 +69,23 @@ void fields(const Json &value,std::initializer_list<std::string_view> names,
     for(const auto &[key,_]:value.object)if(std::find(names.begin(),names.end(),key)==names.end())
         refuse("subfrog.source.unknown_field",uri,cj::pointer(path,key),"This field has no Sub-FROG projection contract.",callsite,true,DocumentDiagnosticDomain::Compatibility);
 }
+// The type spelling of a primitive output may omit display names when its
+// field identities already supply those names. A front-panel Cluster saves
+// them explicitly. Keep nominal domains, field order and custom labels exact.
+bool sameCallBoundaryType(const binding::TypeRef &producer,const binding::TypeRef &port) {
+    if(producer!=port)return false;
+    std::vector<std::pair<const binding::TypeRef*,const binding::TypeRef*>> pending{{&producer,&port}};
+    while(!pending.empty()) {
+        const auto [a,b]=pending.back();pending.pop_back();
+        if(a->choiceKind!=b->choiceKind||a->choices!=b->choices)return false;
+        const auto &left=a->fieldNames.empty()?a->fieldIds:a->fieldNames;
+        const auto &right=b->fieldNames.empty()?b->fieldIds:b->fieldNames;
+        if(left!=right)return false;
+        for(std::size_t i=0;i<a->children.size();++i)pending.emplace_back(&a->children[i],&b->children[i]);
+    }
+    return true;
+}
+
 struct SourceIndex {
     std::map<std::string,std::string> nodes,edges;
     std::map<std::string,const Json*> rawNodes;
@@ -64,7 +103,10 @@ void indexSource(const Json &scope,const std::string &path,SourceIndex &index,un
     if(const auto *edges=scope.member("edges");edges&&edges->type==Json::Type::Array)
         for(std::size_t e=0;e<edges->array.size();++e)index.edges.emplace(text(edges->array[e].member("id")),path+"/edges/"+std::to_string(e));
 }
+using NominalClusterPorts=std::map<std::string,std::string,std::less<>>;
 struct Frozen {
+    NominalClusterPorts nominalPorts;
+    std::map<std::string,NominalClusterPorts,std::less<>> nominalCalls;
     DraftSubFrogFrozenSource source;
     FrogDraftData active;
     Json raw;
@@ -80,6 +122,7 @@ struct Expanded {
 struct Projection {
     const DraftSubFrogExecutionInput &input;
     DraftSubFrogExecutionProjection &out;
+    const Json *normalizedRoot;
     std::map<std::string,Frozen> frozen;
     std::map<std::string,DraftSubFrogFrozenSource> frozenTypes;
     std::map<std::string,DraftSubFrogFrozenSource> frozenFamilies;
@@ -108,29 +151,56 @@ struct Projection {
             refuse("subfrog.dependency.limit",uri,"/diagram","The frozen dependency closure exceeds1024 programs or64MiB.");
         if(source.bytes->empty())refuse("subfrog.source.invalid",uri,"/","A frozen source requires its exact current bytes.");
         bytes+=source.bytes->size();
-        std::string error;auto normalized=prepareExecutionStorageSource(*source.bytes,&error);
-        if(!normalized)refuse("subfrog.source.invalid",uri,"/storage",error);
-        auto parsed=readFrogDraftJson(*normalized,&error);
-        auto owner=readFrogDraftData(*normalized,&error);
-        if(!parsed||!owner)refuse("subfrog.source.invalid",uri,"/",error.empty()?"The source has no recognized document model.":error);
-        if(owner->publicSourceAuthority||owner->privateSourceAwaitingDiagramMigration)
-            refuse("subfrog.source.unsupported_profile",uri,"/","Only a recognized authored Diagram is admitted by this projection.",{},true);
+        std::string error;
+        std::optional<std::string> storage;
+        std::optional<FrogDraftData> owner;
+        std::optional<Json> parsed;
+        std::string_view normalized=*source.bytes;
+        if(root && normalizedRoot) {
+            parsed=*normalizedRoot;
+        } else {
+            storage=prepareExecutionStorageSource(*source.bytes,&error);
+            if(!storage)refuse("subfrog.source.invalid",uri,"/storage",error);
+            normalized=*storage;
+            parsed=readFrogDraftJson(normalized,&error);
+            owner=readFrogDraftData(normalized,&error);
+            if(!parsed||!owner)refuse("subfrog.source.invalid",uri,"/",error.empty()?"The source has no recognized document model.":error);
+            if(owner->publicSourceAuthority||owner->privateSourceAwaitingDiagramMigration)
+                refuse("subfrog.source.unsupported_profile",uri,"/","Only a recognized authored Diagram is admitted by this projection.",{},true);
+        }
         const auto &authority=root?*input.rootDocument:*owner;
+        const auto untranslated = std::find_if(authority.diagramNodes.begin(), authority.diagramNodes.end(),
+            isUntranslatedLabViewNode);
+        if (untranslated != authority.diagramNodes.end()) {
+            SourceIndex index;
+            if (const auto *diagram = parsed->member("diagram")) indexSource(*diagram, "/diagram", index);
+            const auto path = index.nodes.find(untranslated->id);
+            refuse(kUntranslatedLabViewNodeDiagnostic, uri,
+                path == index.nodes.end() ? "/diagram" : path->second,
+                untranslatedLabViewNodeMessage(*untranslated));
+        }
         auto selected=specializeConditionalDisableData(authority,input.compilationContext);
         if(!selected.diagnostics.empty()) {
             const auto &issue=selected.diagnostics.front();refuse(issue.code,uri,"/diagram",issue.message,{},false,issue.incomplete?DocumentDiagnosticDomain::Control:DocumentDiagnosticDomain::Semantics);
         }
         DraftResolvedTypeDefinitionSource typeDefinitions;
         if(draftHasTypeDefinitionLinks(authority)) {
-            typeDefinitions=prepareDraftTypeDefinitionSource(*normalized,uri,input.resolver,false,false);
+            typeDefinitions=prepareDraftTypeDefinitionSource(normalized,uri,input.resolver,false,false);
             if(!typeDefinitions.accepted()) {
                 const auto &issue=typeDefinitions.resolution.diagnostics.front();refuse(issue.code,uri,issue.fieldPath,issue.message,{},false,DocumentDiagnosticDomain::Dependency);
             }
         }
         if(!(root&&input.rootSourceFieldsValidated)) {
-            for(const auto &issue:validateCanonicalSubFrogProjectionSource(*normalized,selected.document,
-                typeDefinitions.accepted()&&typeDefinitions.linked))if(issue.blocking)
-                refuse(issue.code,uri,issue.path,issue.message,{},issue.domain==DocumentDiagnosticDomain::FrontendCapability,issue.domain);
+            const bool reusable=!root && source.bytes->size()<=128U*1024U && !typeDefinitions.linked &&
+                !draftHasClasses(authority) && std::none_of(authority.diagramNodes.begin(),authority.diagramNodes.end(),[](const auto &node) {
+                    return node.type=="frog.studio.structures.conditional_disable_structure" || node.type=="frog.studio.structures.disabled_structure";
+                });
+            if(!reusable || !validatedCalleeFields().contains(*source.bytes)) {
+                for(const auto &issue:validateCanonicalSubFrogProjectionSource(normalized,selected.document,
+                    typeDefinitions.accepted()&&typeDefinitions.linked))if(issue.blocking)
+                    refuse(issue.code,uri,issue.path,issue.message,{},issue.domain==DocumentDiagnosticDomain::FrontendCapability,issue.domain);
+                if(reusable)validatedCalleeFields().remember(source.bytes);
+            }
         }
         if(typeDefinitions.linked) {
             auto execution=readFrogDraftData(typeDefinitions.sourceUtf8,&error);
@@ -142,10 +212,23 @@ struct Projection {
         }
         std::map<std::string,std::string,std::less<>> classOrigins;
         std::map<std::string,ClassCallTarget,std::less<>> memberCalls;
+        Frozen entry;
         SourceIndex originalIndex;
         if(draftHasClasses(selected.document)) {
             if(!classes)refuse("class.closure_required",uri,"/classes","The root program must explicitly capture its class closure.");
             if(const auto *diagram=parsed->member("diagram"))indexSource(*diagram,"/diagram",originalIndex);
+            if(selected.document.declaredInterface) {
+                const auto signature=inspectFrogDraftInterface(*selected.document.declaredInterface);
+                for(const auto &p:signature.ports)if(clusterContainsClassValue(p.parsedType.type))
+                    entry.nominalPorts.emplace(p.id,p.parsedType.type.canonical());
+            }
+            for(const auto &n:selected.document.diagramNodes)if(n.kind=="frog_call" && !n.classOperation) {
+                for(const auto &p:n.callPorts) {
+                    const auto type=binding::parseType(p.valueType);
+                    if(type.valid() && clusterContainsClassValue(type.type))
+                        entry.nominalCalls[n.id].emplace(p.sourcePortId.empty()?p.id:p.sourcePortId,type.type.canonical());
+                }
+            }
             auto lowered=projectDraftClassOperations(selected.document,*parsed,*classes,uri,source.sha256,input.resolver,root);
             if(!lowered.accepted()) {
                 const auto &issue=lowered.issues.front();refuse(issue.code,issue.sourceUri,issue.pointer,issue.message);
@@ -166,7 +249,7 @@ struct Projection {
             }
             const auto definition=captured.bytes?deserializeTypeDefinition(*captured.bytes,&error):std::nullopt;
             if(!definition||definition->id!=dependency.definitionId||definition->revision!=dependency.revision||
-               typeDefinitionSchemaFingerprint(definition->root)!=dependency.schemaFingerprint)
+               typeDefinitionSchemaFingerprint(*definition)!=dependency.authoredSchemaFingerprint)
                 refuse("subfrog.source.invalid",typeKey,"/","The Type Definition's frozen source and resolved schema disagree.");
             if(captured.bytes->size()>maximumClosureBytes-bytes)refuse("subfrog.dependency.limit",uri,"/","Frozen definitions exceed the closure byte budget.");
             bytes+=captured.bytes->size();
@@ -185,7 +268,7 @@ struct Projection {
         const auto passages=projectSequenceFramePassagesForExecution(selected.document);
         if(!passages.error.empty())refuse("sequence.passage_provenance_invalid",uri,"/diagram",passages.error);
         selected.document.properties.arrayStorageMode=FrogArrayStorageMode::Readable;
-        Frozen entry;entry.source={std::move(source),typeDefinitions.resolution.schemaFingerprint};
+        entry.source={std::move(source),typeDefinitions.resolution.schemaFingerprint};
         entry.memberCalls=std::move(memberCalls);
         entry.active=std::move(selected.document);entry.raw=std::move(*parsed);entry.identity=key;
         auto [it,inserted]=frozen.emplace(key,std::move(entry));
@@ -353,12 +436,22 @@ struct Projection {
                 const bool initialized=std::any_of(doc.diagramEdges.begin(),doc.diagramEdges.end(),[&](const auto &edge) {
                     return edge.to.nodeId==node.id&&edge.to.portId==inputPort&&edge.diagramOwnerStructureId==node.diagramOwnerStructureId&&edge.diagramOwnerRegionId==node.diagramOwnerRegionId;
                 });
-                if(!initialized)refuse("subfrog.projection.state_unavailable",source.source.source.canonicalUri,at(source,node),
-                    "An uninitialized callee shift register needs its explicit instance sharing/lifetime contract.",callsite,true);
+                if(!initialized&&std::count_if(node.caseStructureTunnels.begin(),node.caseStructureTunnels.end(),
+                    [&](const auto &face){return face.side=="left"&&face.shiftRegisterPairId==tunnel.shiftRegisterPairId;})!=1)
+                    refuse("subfrog.projection.state_unavailable",source.source.source.canonicalUri,at(source,node),
+                        "A shared multi-stage register needs atomic history transfer.",callsite,true);
             }
             // NativeCall keeps the authored node's source identity below.
             // Admission and path resolution still belong to the scalar host.
-            if(node.applicationControl||t=="frog.studio.structures.event_structure"||
+            // A wired Property Node obtains the target instance from its reference
+            // operand, including after a call boundary or an indexing tunnel.
+            // The normal required-input and type checks below validate that wire.
+            // An implicit or explicitly named target still needs the callee's owner.
+            const auto &control=node.applicationControl;
+            const bool propertyViaReference=control&&control->kind==ApplicationControlKind::Property&&
+                control->target.kind==ApplicationControlTargetKind::Unbound&&
+                control->target.ownerDocumentId.empty()&&control->target.widgetId.empty();
+            if((control&&!propertyViaReference)||t=="frog.studio.structures.event_structure"||
                 t=="frog.studio.error.build_cluster"||t=="frog.studio.error.translate_code"||t=="frog.studio.error.write_current_call_chain"||
                 t=="frog.studio.path.current_frog_path"||t=="frog.studio.path.default_directory"||
                 t=="frog.studio.path.temporary_directory"||t=="frog.studio.path.application_directory"||
@@ -437,6 +530,10 @@ struct Projection {
                 resolveFamilyCall(call,result.document,source,pointer,ancestry):
                 resolve(call.callDocumentPath,source.source.source.canonicalUri,source.source.source.canonicalUri,pointer+"/call/document_path",callId);
             auto &callee=load(resolution);
+            const auto nominal=source.nominalCalls.find(call.id);
+            if(nominal==source.nominalCalls.end() ? !callee.nominalPorts.empty() : nominal->second!=callee.nominalPorts)
+                refuse("subfrog.interface.type_mismatch",source.source.source.canonicalUri,pointer+"/call/ports",
+                    "The call and callee disagree on a nominal class within a Cluster.",callId);
             if(classes) {
                 const auto member=classes->attributeMember(callee.source.source.canonicalUri,callee.source.source.sha256);
                 const auto requested=source.memberCalls.find(call.id);
@@ -508,11 +605,15 @@ struct Projection {
             // endpoint is rewritten. A call boundary never guesses a promotion.
             binding::TypeResolver resolver(result.document.diagramNodes,result.document.diagramEdges,result.document.widgets);
             std::vector<DiagramNode> defaults;std::vector<DiagramEdge> defaultEdges;
+            std::map<std::string,std::string> boxesByDriver;
             for(const auto &b:boundaries)if(b.declared->input) {
                 std::vector<const DiagramEdge*> drivers;
                 for(const auto &edge:result.document.diagramEdges)if(edge.to.nodeId==callId&&edge.to.portId==b.call->id)drivers.push_back(&edge);
                 if(drivers.size()>1)refuse("subfrog.interface.invalid",source.source.source.canonicalUri,pointer+"/call/ports","An input has multiple actual producers.",callId);
                 if(drivers.empty()) {
+                    if(callee.nominalPorts.contains(b.declared->id))
+                        refuse("class.object_factory_required",source.source.source.canonicalUri,pointer+"/call/ports",
+                            "A class-bearing Cluster requires a producer for its nominal value.",callId);
                     if(b.declared->connection=="required")
                         refuse("subfrog.interface.required_unwired",source.source.source.canonicalUri,pointer+"/call/ports","A required call input has no actual parent producer.",callId);
                     const auto id=fresh(site,"optional_value",b.declared->id);
@@ -522,9 +623,13 @@ struct Projection {
                     edge.diagramOwnerStructureId=call.diagramOwnerStructureId;edge.diagramOwnerRegionId=call.diagramOwnerRegionId;defaultEdges.push_back(std::move(edge));
                 } else {
                     const auto actual=resolver.resolveSource(*drivers.front());
+                    const bool boxes=binding::requiresVariantBoxing(actual.resolution.type,b.type);
                     if(!actual.resolution.accepted()||!actual.complete||!actual.resolution.type.known()||
-                        !canonicalObjectReferenceFullTypeEqual(actual.resolution.type,b.type))
-                        refuse("subfrog.interface.type_mismatch",source.source.source.canonicalUri,pointer+"/call/ports","The actual parent producer differs from the callee's complete nominal schema; no boundary conversion is invented.",callId);
+                        (!sameCallBoundaryType(actual.resolution.type,b.type)&&!boxes))
+                        refuse("subfrog.interface.type_mismatch",source.source.source.canonicalUri,pointer+"/call/ports","Input "+b.declared->id+" expects "+b.type.canonical()+"; producer "+drivers.front()->from.nodeId+
+                            "/"+drivers.front()->from.portId+" resolves to "+actual.resolution.type.canonical()+
+                            (actual.complete?" (complete).":" (incomplete).")+" "+actual.resolution.code,callId);
+                    if(boxes)boxesByDriver.emplace(drivers.front()->id,b.declared->id);
                 }
             }
             Expanded body;
@@ -610,6 +715,24 @@ struct Projection {
                 }
                 const auto old=node.id;node.id=nodeIds.at(old);
                 const auto remapNode=[&](std::string &id) {if(!id.empty()) {const auto mapped=nodeIds.find(id);if(mapped!=nodeIds.end())id=mapped->second;}};
+                for(auto &face:node.caseStructureTunnels) {
+                    using State=DiagramCaseStructureTunnel::InvocationState;
+                    if(face.invocationState) {
+                        auto state=*face.invocationState;
+                        state.frame=nodeIds.at(state.frame);
+                        face.invocationState=std::make_shared<const State>(std::move(state));
+                    } else if(!face.shiftRegisterPairId.empty()&&face.side=="left"&&body.nodes.at(old).callsiteId.empty()) {
+                        const auto port=diagram_identity::tunnelInputId(face.id);
+                        const bool initialized=std::any_of(body.document.diagramEdges.begin(),body.document.diagramEdges.end(),
+                            [&](const auto &e){return e.to.nodeId==old&&e.to.portId==port&&
+                                e.diagramOwnerStructureId==node.diagramOwnerStructureId&&e.diagramOwnerRegionId==node.diagramOwnerRegionId;});
+                        if(!initialized) {
+                            const auto owner=hashing::sha256Hex(callee.source.source.canonicalUri);
+                            std::string identity;frame(identity,owner);frame(identity,old);frame(identity,face.shiftRegisterPairId);
+                            face.invocationState=std::make_shared<const State>(State{owner,hashing::sha256Hex(identity),callId});
+                        }
+                    }
+                }
                 if(node.diagramOwnerStructureId.empty()){node.diagramOwnerStructureId=callId;node.diagramOwnerRegionId="body";}
                 else remapNode(node.diagramOwnerStructureId);
                 remapNode(node.constantOwnerNodeId);remapNode(node.feedbackInitializerLoopId);
@@ -637,10 +760,29 @@ struct Projection {
                 if(const auto mapped=nodeIds.find(origin.projectedId);mapped!=nodeIds.end())origin.projectedId=mapped->second;
                 origin.callsiteId=callId;result.retired.push_back(std::move(origin));
             }
+            std::vector<DiagramEdge> boxedBoundaryEdges;
             for(auto &edge:result.document.diagramEdges) {
                 if(edge.to.nodeId==callId)for(const auto &b:boundaries)if(b.declared->input&&edge.to.portId==b.call->id)edge.to.portId=diagram_identity::tunnelInputId(b.tunnel);
                 if(edge.from.nodeId==callId)for(const auto &b:boundaries)if(!b.declared->input&&edge.from.portId==b.call->id)edge.from.portId=diagram_identity::tunnelOutputId(b.tunnel);
+                const auto boxing=boxesByDriver.find(edge.id);
+                if(boxing==boxesByDriver.end())continue;
+                // A sequence input tunnel infers its type from its parent wire.
+                // Box only the branch crossing this declared Variant boundary.
+                DiagramNode box;box.id=fresh(site,"variant_input",boxing->second);
+                box.kind="primitive";box.type="frog.studio.variant.to_variant";box.paletteCatalogId="variant.to_variant";
+                box.layout=call.layout;box.diagramOwnerStructureId=edge.diagramOwnerStructureId;box.diagramOwnerRegionId=edge.diagramOwnerRegionId;
+                DiagramEdge boxed;boxed.id=fresh(site,"variant_wire",boxing->second);
+                boxed.from={box.id,"variant"};boxed.to=edge.to;edge.to={box.id,"data"};
+                boxed.diagramOwnerStructureId=edge.diagramOwnerStructureId;boxed.diagramOwnerRegionId=edge.diagramOwnerRegionId;
+                auto origin=result.edges.at(edge.id);
+                origin.callsiteId=callId;origin.callPath=site;origin.generated=true;origin.projectedId=box.id;
+                result.nodes.emplace(box.id,origin);
+                origin.projectedId=boxed.id;result.edges.emplace(boxed.id,std::move(origin));
+                result.document.diagramNodes.push_back(std::move(box));
+                boxedBoundaryEdges.push_back(std::move(boxed));
             }
+            result.document.diagramEdges.insert(result.document.diagramEdges.end(),
+                std::make_move_iterator(boxedBoundaryEdges.begin()),std::make_move_iterator(boxedBoundaryEdges.end()));
             DiagramNode wrapper=call;wrapper.kind="primitive";wrapper.type=std::string(kSequenceStructureType);
             wrapper.callDocumentPath.clear();wrapper.callDocumentTitle.clear();wrapper.callIconSvgText.clear();wrapper.callPorts.clear();
             wrapper.polymorphicFrogSelection.reset();
@@ -701,18 +843,23 @@ std::optional<std::string> prepareExecutionStorageSource(std::string_view bytes,
         if(!version||version->type!=Json::Type::Number||version->string!="1"||!mode||mode->type!=Json::Type::String)
             return fail("Storage requires exact version1 and an explicit array_mode string.");
     }
-    const auto canonicalBefore=cj::encode(*root);
+    const bool mayPreserveBytes=!storage&&rev!=kFrogArrayStorageDraftRevision;
+    const auto canonicalBefore=mayPreserveBytes?cj::encode(*root):std::string{};
     FrogArrayStorageMode mode=FrogArrayStorageMode::Readable;
     bool keptPackedArrays=false;
     if(!document_internal::readArrayStorageMode(*root,mode,reason)||
        !document_internal::inflateExecutionArrayStorage(*root,reason,rev>=kFrogArrayStorageDraftRevision,keptPackedArrays))return fail(reason);
-    if(!storage&&rev!=kFrogArrayStorageDraftRevision&&cj::encode(*root)==canonicalBefore)return std::string(bytes);
+    if(mayPreserveBytes&&cj::encode(*root)==canonicalBefore)return std::string(bytes);
     root->object.erase("storage");
     if(rev==kFrogArrayStorageDraftRevision&&!keptPackedArrays) {auto &next=root->object.at("draft_revision");next.string="2";}
     return cj::encode(*root);
 }
 
 DraftSubFrogExecutionProjection projectDraftSubFrogExecution(const DraftSubFrogExecutionInput &input) {
+    return projectPreparedSubFrogExecution(input,nullptr);
+}
+
+DraftSubFrogExecutionProjection projectPreparedSubFrogExecution(const DraftSubFrogExecutionInput &input,const Json *normalizedRoot) {
     DraftSubFrogExecutionProjection out;
     try {
         if(!input.rootDocument||input.rootDocument->publicSourceAuthority||input.sourceUtf8.empty()||input.sourceUri.empty())
@@ -721,7 +868,7 @@ DraftSubFrogExecutionProjection projectDraftSubFrogExecution(const DraftSubFrogE
         // An unchanged root without calls needs no disk reference, closure or
         // extra dialect admission. Ordinary preparation remains its owner.
         if(!draftHasClasses(out.document)&&std::none_of(out.document.diagramNodes.begin(),out.document.diagramNodes.end(),[](const auto &n){return n.kind=="frog_call";}))return out;
-        Projection projection{input,out};
+        Projection projection{input,out,normalizedRoot};
         if(draftHasClasses(out.document)) {
             projection.classes=captureDraftClassProgram(out.document,input.sourceUri,input.resolver);
             if(!projection.classes->accepted()) {

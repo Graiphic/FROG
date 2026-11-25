@@ -116,6 +116,9 @@ struct DiagramCaseStructureTunnel {
     // when projected for execution; ordinary authored transfers leave it empty.
     std::string sequenceLegacyFrameId;
     std::string sequenceLegacyEdgeId;
+    // Derived from the frozen non-reentrant VI during execution projection.
+    struct InvocationState { std::string owner, cell, frame; };
+    std::shared_ptr<const InvocationState> invocationState;
 };
 
 struct DiagramDisabledRegion {
@@ -139,6 +142,9 @@ struct DiagramEventBinding {
     // Optional Studio authoring metadata. Empty preserves legacy Application
     // (empty source) / widget (nonempty source) identities without migration.
     std::string sourceScope;
+    // Create User Event which supplied the selected registration row, when
+    // known at authoring time. Historical row-only bindings leave this empty.
+    std::string originNodeId;
     bool operator==(const DiagramEventBinding &) const = default;
 };
 
@@ -650,6 +656,21 @@ struct DiagramNode {
 
 };
 
+inline constexpr char kUntranslatedLabViewNodeType[] = "frog.studio.import.labview.untranslated";
+inline constexpr char kUntranslatedLabViewNodeDiagnostic[] = "labview_import.untranslated_node";
+
+[[nodiscard]] inline bool isUntranslatedLabViewNode(const DiagramNode &node) noexcept {
+    return node.kind == "primitive" && node.type == kUntranslatedLabViewNodeType;
+}
+
+[[nodiscard]] inline std::string untranslatedLabViewNodeMessage(const DiagramNode &node) {
+    std::string message = "LabVIEW node " + node.id;
+    if (!node.label.empty()) message += " (" + node.label + ")";
+    message += " has no executable FROG translation.";
+    if (!node.documentationSummary.empty()) message += " " + node.documentationSummary;
+    return message;
+}
+
 [[nodiscard]] inline std::string_view normalizeFeedbackNodeConfiguration(
     std::string_view configuration) noexcept {
     if (configuration == "inverse_activated" ||
@@ -734,6 +755,12 @@ struct DiagramNode {
 
 [[nodiscard]] std::string formatDiagramNumericValue(const DiagramNode &node);
 
+enum class DiagramWireRouteIntent : unsigned char {
+    Unspecified,
+    Automatic,
+    Manual
+};
+
 struct DiagramEdge {
     std::string id;
     DiagramEdgeEndpoint from;
@@ -747,7 +774,15 @@ struct DiagramEdge {
     double labelNormalizedPosition = 0.5;
     double labelOffsetX = 0.0;
     double labelOffsetY = 0.0;
+    // Only an explicit route or segment gesture may lock authored geometry.
+    // Older files carry bends without recording what created them.
+    DiagramWireRouteIntent routeIntent = DiagramWireRouteIntent::Unspecified;
 };
+
+[[nodiscard]] inline bool diagramWireRouteIsAutomatic(const DiagramEdge &edge) {
+    return edge.routeIntent == DiagramWireRouteIntent::Automatic ||
+        (edge.routeIntent == DiagramWireRouteIntent::Unspecified && edge.bends.empty());
+}
 
 struct DiagramWireFragment {
     std::string id;
@@ -765,6 +800,7 @@ struct DiagramWireFragment {
     double labelOffsetY = 0.0;
     // Private provenance only; never a live connection or an execution input.
     std::string detachedEdgeId;
+    DiagramWireRouteIntent routeIntent = DiagramWireRouteIntent::Unspecified;
 };
 
 struct DiagramWidgetCopySource {

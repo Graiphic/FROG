@@ -1,0 +1,171 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Édition uniquement — Attendre le prochain multiple de 10 ms",
+  "metadata": {
+    "name": "Édition uniquement — Attendre le prochain multiple de 10 ms",
+    "name_source": "document",
+    "description": "Le délai est fourni en millisecondes au terminal de temporisation. Montage éditable avec des données d’exercice. La sauvegarde et la réouverture sont vérifiées. Le Run de ce scénario reste non qualifié.",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["editor-only", "synthetic-data", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000008866814061796868100000017430760634479723408_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 48 48\"\n\t style=\"enable-background:new 0 0 48 48;\" xml:space=\"preserve\" data-frog-shape-standard=\"square\">\n<style type=\"text/css\">\r\n\t.st0{fill:#4B5563;stroke:#AAB4C0;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}\r\n\t.st1{fill:#E3AA63;}\r\n</style>\r\n<rect x=\"1\" y=\"1\" width=\"46\" height=\"46\" rx=\"4.5\" class=\"st0\"/>\n<g transform=\"translate(1 1) scale(1.113424) translate(-1.622 -2.818)\" data-frog-body-glyph-profile=\"square-v1\">\n<g>\r\n\t<path class=\"st1\" d=\"M16.973,37.098h10.853v1.249h2.289l-1.185-9.493H16.013l-1.569,9.493h2.529\r\n\t\tC16.973,38.347,17.005,37.098,16.973,37.098z\"/>\r\n\t<g>\r\n\t\t<g>\r\n\t\t\t<polygon class=\"st1\" points=\"17.245,21.426 16.141,27.349 21.599,27.349 \t\t\t\"/>\r\n\t\t\t<polygon class=\"st1\" points=\"28.403,27.349 25.041,9.629 22.768,8.604 21.727,8.604 19.47,9.581 17.597,19.618 21.615,25.284\n\t\t\t\t21.615,12.094 22.768,12.094 22.768,27.349 \t\t\t\"/>\r\n\t\t</g>\r\n\t</g>\r\n\n\t\t<ellipse transform=\"matrix(0.836 -0.5487 0.5487 0.836 -8.1365 12.3733)\" class=\"st1\" cx=\"16.632\" cy=\"19.799\" rx=\"1.553\" ry=\"2.513\"/>\r\n</g>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -25
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.structures.wait_until_next",
+        "label": "Wait Until Next Multiple",
+        "label_visible": true,
+        "palette_catalog_id": "structures.wait_until_next",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-millisecond_multiple",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "u32",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "10",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 175,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Édition uniquement — Attendre le prochain multiple de 10 ms\nLe délai est fourni en millisecondes au terminal de temporisation.",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -5,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-millisecond_multiple",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "millisecond_multiple"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

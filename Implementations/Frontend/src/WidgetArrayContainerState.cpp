@@ -111,7 +111,8 @@ ClusterContainerState::ClusterContainerState(const ClusterContainerState &other)
             element.logicalOrder,
             element.widget == nullptr
                 ? nullptr
-                : std::make_shared<WidgetInstance>(*element.widget)
+                : std::make_shared<WidgetInstance>(*element.widget),
+            element.stackOrder, element.visualGroup
         });
     }
 }
@@ -134,7 +135,8 @@ ClusterContainerState &ClusterContainerState::operator=(const ClusterContainerSt
             element.logicalOrder,
             element.widget == nullptr
                 ? nullptr
-                : std::make_shared<WidgetInstance>(*element.widget)
+                : std::make_shared<WidgetInstance>(*element.widget),
+            element.stackOrder, element.visualGroup
         });
     }
     return *this;

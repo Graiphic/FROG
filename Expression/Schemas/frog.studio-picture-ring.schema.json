@@ -6,6 +6,7 @@
   "type": "object",
   "required": ["format", "draft_revision", "language", "title", "metadata", "storage", "frontPanel", "diagram"],
   "not": {"required": ["spec_version"]},
+  "allOf": [{"$ref": "frog.studio-document.schema.json#/$defs/legacyTypeDefinitionLinks"}, {"$ref": "frog.studio-document.schema.json#/$defs/noClusterPresentation"}],
   "properties": {
     "format": {"const": "frog.document.draft"},
     "draft_revision": {"const": 11},

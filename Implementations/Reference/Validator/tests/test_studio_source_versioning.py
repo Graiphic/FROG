@@ -227,3 +227,48 @@ def test_picture_ring_current_writer_envelope():
     validator.validate(doc)
     for key, bad in (("draft_revision",12), ("spec_version","0.1"), ("frontPanel",{}), ("diagram",{"nodes":1})):
         assert not validator.is_valid({**doc, key:bad})
+
+@pytest.mark.parametrize(("fixture", "revision"), [
+    ("typedef-tab-link", 12),
+    ("cluster-presentation", 13),
+])
+def test_extended_studio_revision_boundaries(fixture, revision):
+    sample = read_json(ROOT / "Conformance/studio-save-open/format-boundaries" / (fixture + ".frog"))
+    validator = Draft202012Validator(SCHEMAS[DRAFT])
+    assert sample["draft_revision"] == revision
+    validator.validate(sample)
+    assert not validator.is_valid({**sample, "draft_revision": 8 if revision == 12 else 12})
+    assert not validator.is_valid({**sample, "draft_revision": 14})
+    if revision == 13:
+        presentation = sample["frontPanel"]["widgets"][0]["props"]["cluster.elements"][0]
+        for key in ("stack_order", "visual_group"):
+            previous = presentation[key]
+            for invalid in (-1, 2 ** 32, "1", True):
+                presentation[key] = invalid
+                assert not validator.is_valid(sample)
+            presentation[key] = previous
+
+
+@pytest.mark.parametrize(("fixture", "revision", "previous_error"), [
+    ("typedef-tab-link", 12, "preparation.source.unreadable"),
+    ("cluster-presentation", 13, "migration.presentation_invalid"),
+])
+def test_extended_frontend_derives_complete_fixture(cli, tmp_path, fixture, revision, previous_error):
+    folder = ROOT / "Conformance/studio-save-open/format-boundaries"
+    path = folder / (fixture + ".frog")
+    manifest = {"id": fixture, "format": DRAFT, "version": str(revision)}
+    args = ["--dependencies", folder / "dependencies.json"] if revision == 12 else []
+    result = tmp_path / "result.fir"
+    diagnostics = run_frontend(cli, "derive", *frontend_args(manifest, source=path),
+                               *args, "--output", result)
+    assert all(item["severity"] != "error" for item in diagnostics)
+    assert read_json(result)["schema_version"] == "0.1"
+    for version, exit_code, diagnostic in ((revision - 1, 2, previous_error),
+                                           (14, 3, "frontend.format_unsupported")):
+        altered = tmp_path / f"revision-{version}.frog"
+        source = read_json(path)
+        source["draft_revision"] = version
+        altered.write_text(json.dumps(source), encoding="utf-8")
+        failures = run_frontend(cli, "validate", *frontend_args(manifest, source=altered, version=str(version)),
+                                *args, expected=exit_code)
+        assert {item["code"] for item in failures if item["severity"] == "error"} == {diagnostic}

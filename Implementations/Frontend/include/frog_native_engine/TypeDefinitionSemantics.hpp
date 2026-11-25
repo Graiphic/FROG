@@ -1,6 +1,6 @@
 #pragma once
 
-#include "frog_native_engine/WidgetInstance.hpp"
+#include "frog_native_engine/FrogWidgetData.hpp"
 #include <cstdint>
 #include <optional>
 #include <string>
@@ -16,6 +16,8 @@ struct TypeDefinitionDocument {
     std::uint64_t revision = 1;
     WidgetInstance root;
     std::string iconSvgText;
+    // Tab contents remain scene objects with their own page and terminal identities.
+    std::vector<SceneObject> tabChildren;
 };
 struct TypeDefinitionDiagnostic {
     std::string code;
@@ -34,12 +36,17 @@ struct TypeDefinitionMigration {
 };
 
 [[nodiscard]] bool typeDefinitionSupported(const WidgetInstance &, std::string *error = nullptr);
+[[nodiscard]] bool typeDefinitionSameWidgetFamily(const WidgetInstance &, const WidgetInstance &);
+[[nodiscard]] bool typeDefinitionHasChoiceCatalog(const WidgetInstance &);
+[[nodiscard]] std::vector<SceneObject> typeDefinitionTabChildren(FrogWidgetDataView, std::string_view rootId);
+[[nodiscard]] std::string typeDefinitionSchemaFingerprint(const TypeDefinitionDocument &);
 [[nodiscard]] bool typeDefinitionSchemaEquivalent(const WidgetInstance &, const WidgetInstance &);
 // Explicit first association only: corresponding local fields may adopt the
 // common identities after the complete ordered schema has been checked.
 [[nodiscard]] bool typeDefinitionCanAssociate(const WidgetInstance &, const WidgetInstance &);
 [[nodiscard]] std::string typeDefinitionSchemaFingerprint(const WidgetInstance &);
 [[nodiscard]] std::string serializeTypeDefinition(const TypeDefinitionDocument &, std::string *error = nullptr);
+[[nodiscard]] std::optional<WidgetInstance> deserializeTypeDefinitionWidget(std::string_view);
 [[nodiscard]] std::optional<TypeDefinitionDocument> deserializeTypeDefinition(std::string_view, std::string *error = nullptr);
 // Pure preparation: no publication, file write or mutation of the input.
 // Diagnostics retain the old value and the proposed replacement explicitly.

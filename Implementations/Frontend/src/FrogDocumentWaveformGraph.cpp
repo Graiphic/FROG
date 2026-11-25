@@ -1,4 +1,5 @@
 #include "FrogDocumentWaveformGraph.hpp"
+#include "graph/WaveformSampleProjection.hpp"
 #include "FrogDocumentStructureSerializationHelpers.hpp"
 #include "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
 #include <algorithm>
@@ -63,7 +64,7 @@ void readAxisOptions(const JsonValue &value, std::string_view key, graph::AxisOp
     const auto *v = field(value, key, JsonValue::Type::Object);
     if (!v) return;
     checkKeys(*v, {"scale", "format", "precision", "significant_digits", "trailing_zeros",
-        "title_visible", "tick_labels_visible", "major_ticks", "minor_ticks", "major_grid", "minor_grid",
+        "visible", "title_visible", "tick_labels_visible", "major_ticks", "minor_ticks", "major_grid", "minor_grid",
         "time_origin", "time_unit", "time_zone", "time_content"});
     axis.scale = static_cast<graph::AxisScale>(
         readAxisInteger(*v, "scale", static_cast<int>(graph::AxisScale::Logarithmic), static_cast<int>(axis.scale)));
@@ -73,6 +74,7 @@ void readAxisOptions(const JsonValue &value, std::string_view key, graph::AxisOp
     axis.precision = readAxisInteger(*v, "precision", 17, axis.precision);
     axis.significantDigits = flag(*v, "significant_digits", axis.significantDigits);
     axis.trailingZeros = flag(*v, "trailing_zeros", axis.trailingZeros);
+    axis.visible = flag(*v, "visible", true);
     axis.titleVisible = flag(*v, "title_visible", axis.titleVisible);
     axis.tickLabelsVisible = flag(*v, "tick_labels_visible", axis.tickLabelsVisible);
     axis.majorTicks = flag(*v, "major_ticks", axis.majorTicks);
@@ -89,6 +91,7 @@ void writeAxisOptions(std::ostringstream &out, const char *key, const graph::Axi
     if (axis == graph::AxisOptions{}) return;
     out << ",\"" << key << "\":{\"scale\":" << static_cast<int>(axis.scale);
     if (axis.format) out << ",\"format\":" << static_cast<int>(*axis.format);
+    if (!axis.visible) out << ",\"visible\":false";
     out << ",\"precision\":" << axis.precision << ",\"significant_digits\":" << axis.significantDigits
         << ",\"trailing_zeros\":" << axis.trailingZeros << ",\"title_visible\":" << axis.titleVisible
         << ",\"tick_labels_visible\":" << axis.tickLabelsVisible
@@ -100,24 +103,11 @@ void writeAxisOptions(std::ostringstream &out, const char *key, const graph::Axi
     out << ",\"time_zone\":"; appendJsonString(out, axis.timeZone);
     out << ",\"time_content\":" << static_cast<int>(axis.timeContent) << '}';
 }
-bool sameProjection(const graph::Dataset &a,const graph::Dataset &b) {
-    const auto defaultEmpty=[](const auto &data){return data.series.size()==1 && data.series[0].y.empty() && data.series[0].origin==0 && data.series[0].step==1;};
-    // The original empty WFG-1 profile has zero plots; an empty numeric Y
-    // value has one empty plot. No timed or independently indexed plot is lost.
-    if((a.series.empty() && defaultEmpty(b)) || (b.series.empty() && defaultEmpty(a)))return true;
-    if(a.series.size()!=b.series.size())return false;
-    for(std::size_t i=0;i<a.series.size();++i) {
-        const auto &left=a.series[i],&right=b.series[i];
-        if(left.origin!=right.origin || left.step!=right.step || left.y.size()!=right.y.size())return false;
-        for(std::size_t j=0;j<left.y.size();++j)if(left.y[j]!=right.y[j] && !(std::isnan(left.y[j]) && std::isnan(right.y[j])))return false;
-    }
-    return true;
-}
 }
 void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
     try {
-        checkKeys(value, {"profile", "x_label", "y_label", "autoscale_x", "autoscale_y", "grid_visible", "legend_visible",
-            "x_min", "x_max", "y_min", "y_max", "x_axis", "y_axis", "plots", "initial_data", "x_title", "y_title", "annotations",
+        checkKeys(value, {"profile", "x_label", "y_label", "autoscale_x", "autoscale_y", "grid_visible", "legend_visible", "legend_rows",
+            "legend_position", "x_min", "x_max", "y_min", "y_max", "x_axis", "y_axis", "plots", "initial_data", "x_title", "y_title", "annotations",
             "datatype", "datatype_explicit", "typed_initial_data", "cursors"});
         if (text(value, "profile", "") != "WFG-1-linear") throw std::runtime_error("Unsupported Waveform Graph profile.");
         graph::State candidate;
@@ -169,6 +159,18 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         d.annotations.clear();
         d.autoscaleX = flag(value, "autoscale_x", true); d.autoscaleY = flag(value, "autoscale_y", true);
         d.gridVisible = flag(value, "grid_visible", true); d.legendVisible = flag(value, "legend_visible", true);
+        const double legendRows = number(value, "legend_rows", d.legendRows);
+        if (!(legendRows >= 1 && legendRows <= graph::maximumSeries && std::floor(legendRows) == legendRows))
+            throw std::runtime_error("Invalid Waveform Graph legend row count.");
+        d.legendRows = static_cast<std::uint8_t>(legendRows);
+        if (const auto *position = field(value, "legend_position", JsonValue::Type::Object)) {
+            checkKeys(*position, {"x", "y"});
+            const auto *x = field(*position, "x", JsonValue::Type::Number);
+            const auto *y = field(*position, "y", JsonValue::Type::Number);
+            if (!x || !y || !std::isfinite(x->number) || !std::isfinite(y->number))
+                throw std::runtime_error("Invalid Waveform Graph legend position.");
+            d.legendPosition = Point{x->number, y->number};
+        }
         d.xRange = {number(value, "x_min", 0), number(value, "x_max", 100)};
         d.yRange = {number(value, "y_min", -10), number(value, "y_max", 10)};
         readAxisOptions(value, "x_axis", d.xAxis);
@@ -228,7 +230,7 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         std::string issue;const auto decoded=graph::decodeTypedValue(candidate.datatype,exact,&issue);
         if(!decoded)throw std::runtime_error(issue);
         if(value.member("initial_data")) {
-            if(!sameProjection(candidate.initialData,*decoded))throw std::runtime_error("Typed and legacy Waveform Graph initial data disagree.");
+            if(!graph::sameSampleProjection(candidate.initialData,*decoded))throw std::runtime_error("Typed and legacy Waveform Graph initial data disagree.");
         } else candidate.initialData=*decoded;
         // Retain legacy IDs/names/styles while recording the exact typed value.
         candidate.initialData.datatype=candidate.datatype;candidate.initialData.exactSource=decoded->exactSource;
@@ -263,6 +265,8 @@ std::string serializeWaveformGraph(const graph::State &state) {
         o << '}';
     };
     writeTitle("x_title", d.xTitle); writeTitle("y_title", d.yTitle);
+    if (d.legendPosition)
+        o << ",\"legend_position\":{\"x\":" << d.legendPosition->x << ",\"y\":" << d.legendPosition->y << '}';
     writeAxisOptions(o, "x_axis", d.xAxis);
     writeAxisOptions(o, "y_axis", d.yAxis);
     if (!d.annotations.empty()) {
@@ -286,6 +290,7 @@ std::string serializeWaveformGraph(const graph::State &state) {
     }
     o << ",\"autoscale_x\":" << d.autoscaleX << ",\"autoscale_y\":" << d.autoscaleY
       << ",\"grid_visible\":" << d.gridVisible << ",\"legend_visible\":" << d.legendVisible
+      << ",\"legend_rows\":" << static_cast<unsigned>(d.legendRows)
       << ",\"x_min\":" << d.xRange.minimum << ",\"x_max\":" << d.xRange.maximum
       << ",\"y_min\":" << d.yRange.minimum << ",\"y_max\":" << d.yRange.maximum << ",\"plots\":[";
     for (std::size_t i = 0; i < d.plots.size(); ++i) {

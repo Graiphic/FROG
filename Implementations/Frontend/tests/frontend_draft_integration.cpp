@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 #include <frog/frontend.h>
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/DraftTypedConnections.hpp"
 #include "frog_native_engine/FunctionCatalog.hpp"
 #include "frog_native_engine/FunctionPortIdentities.hpp"
@@ -117,7 +118,7 @@ void pictureRingRevision() {
     need(migrated && revision(serializeFrogDraftData(*migrated)) == "11" &&
              serializeFrogDraftData(*migrated).find(*picture.imageDataUri) != std::string::npos,
          "Reading a legacy Picture Ring must retain the catalogue and save the new revision");
-    old.object["draft_revision"] = json("12");
+    old.object["draft_revision"] = json(std::to_string(kMaximumSupportedFrogDraftRevision+1U));
     need(!readFrogDraftData(canonical_json::encode(old)), "Unknown future draft revision was admitted");
 }
 void legacyStructureType(Context &context) {
@@ -324,10 +325,13 @@ void incompleteWireDiagnostics(Context &context) {
     DiagramWireFragment fragment;fragment.id="loose-wire";
     fragment.source=DiagramEdgeEndpoint{"left","value"};
     fragment.points={{0,0},{20,0}};fragment.typeHint="f64";fragment.typeHintAuthoritative=true;
+    fragment.routeIntent = DiagramWireRouteIntent::Manual;
     document.diagramWireFragments.push_back(fragment);
     const auto bytes=serializeFrogDraftData(document);
     const auto loaded=readFrogDraftData(bytes);
-    need(loaded&&loaded->diagramWireFragments.size()==1,"Read discarded an intentionally incomplete wire");
+    need(loaded && loaded->diagramWireFragments.size() == 1 &&
+         loaded->diagramWireFragments.front().routeIntent == DiagramWireRouteIntent::Manual,
+         "Read discarded an intentionally incomplete wire or its saved routing policy");
     const auto prepared=prepareDraftFrontend(bytes,"memory:/broken-wire.frog",{},{});
     need(std::any_of(prepared.diagnostics.begin(),prepared.diagnostics.end(),[](const auto &d) {
         return d.code=="incomplete_wire_fragment"&&d.domain==DocumentDiagnosticDomain::Topology&&
@@ -343,6 +347,48 @@ void incompleteWireDiagnostics(Context &context) {
     }
     need(serializeFrogDraftData(document)==bytes,"Inspection mutated the authored broken wire");
     std::cout<<"INCOMPLETE_WIRE_FRONTEND_PASS localized_topology=1 read_retained=1 validate_derive_refused=1 source_immutable=1\n";
+}
+void wireRouteIntentPresentation(Context &context) {
+    FrogDraftData document;
+    document.title = "Route intent on a composed String conversion";
+    auto input = operation("text", "string.constant");
+    input.valueType = "string";
+    input.text = "12.5tail";
+    auto decimal = operation("decimal-selector", "boolean.false_constant");
+    decimal.valueType = "bool";
+    decimal.text = "false";
+    document.diagramNodes = {std::move(input), std::move(decimal), literal("default", "f64", "0"),
+        operation("conversion", "string.conversion.floating_string_to_number")};
+    wire(document, "value-wire", "text", "value", "conversion", "value");
+    wire(document, "decimal-wire", "decimal-selector", "value", "conversion", "use_system_decimal_point");
+    wire(document, "default-wire", "default", "value", "conversion", "default_value");
+    indicator(document, "f64", "conversion", "result");
+    const auto originalBytes = serializeFrogDraftData(document);
+    const auto original = prepareDraftFrontend(originalBytes, "memory:/route-intent.frog", {}, {});
+    need(original.accepted(), "The baseline route-intent fixture did not prepare");
+    const auto &baselineDiagram = *original.source->root().member("diagram");
+    need(baselineDiagram.member("profile") && baselineDiagram.member("profile")->string == "frog.studio.composed-program@1",
+         "The route-intent fixture must use the composed Source profile");
+    const auto baselineFir = json(qualify(context, document).fir);
+
+    document.diagramEdges[0].routeIntent = DiagramWireRouteIntent::Automatic;
+    document.diagramEdges[1].routeIntent = DiagramWireRouteIntent::Manual;
+    const auto saved = serializeFrogDraftData(document);
+    const auto reopened = readFrogDraftData(saved);
+    need(reopened && reopened->diagramEdges.size() == document.diagramEdges.size() &&
+         reopened->diagramEdges[0].routeIntent == DiagramWireRouteIntent::Automatic &&
+         reopened->diagramEdges[1].routeIntent == DiagramWireRouteIntent::Manual,
+         "Save and Open did not retain the automatic and manual routing policies");
+    const auto prepared = prepareDraftFrontend(saved, "memory:/route-intent.frog", {}, {});
+    need(prepared.accepted() && prepared.originalDraft && *prepared.originalDraft == saved,
+         "Saved wire policies blocked preparation or lost their authoring source");
+    need(canonical_json::exact(baselineDiagram, *prepared.source->root().member("diagram")),
+         "Private wire editing policies changed the composed Source diagram");
+    const auto routedFir = json(qualify(context, *reopened).fir);
+    need(canonical_json::exact(*baselineFir.member("unit")->member("connections"),
+                               *routedFir.member("unit")->member("connections")),
+         "Private wire editing policies changed executable connections");
+    std::cout << "WIRE_ROUTE_INTENT_FRONTEND_PASS saved_and_reopened=1 composed_source=1 same_fir_connections=1\n";
 }
 void independentStructureDiagnostics(Context &context) {
     auto document=scalar("f64");
@@ -377,6 +423,19 @@ void independentStructureDiagnostics(Context &context) {
             rejected.diagnostics.find("structure.output_unwired")!=std::string::npos &&
             rejected.diagnostics.find("structure.unresolved_tunnel")!=std::string::npos,
             "Public validate/derive suppressed an independent structure diagnostic");
+        const auto diagnostics = json(rejected.diagnostics);
+        const auto output = std::find_if(diagnostics.array.begin(), diagnostics.array.end(), [](const auto &entry) {
+            const auto *code = entry.member("code");
+            return code && code->string == "structure.output_unwired";
+        });
+        need(output != diagnostics.array.end(), "The public output diagnostic has no record");
+        const auto *location = output->member("source");
+        const auto *pointer = location ? location->member("pointer") : nullptr;
+        const auto *object = location ? location->member("object_id") : nullptr;
+        const auto *region = location ? location->member("region_id") : nullptr;
+        need(pointer && pointer->string.ends_with("/regions/0") && object && object->string == "event" &&
+            region && region->string == "change",
+            "The public diagnostic must point to the actual region of the boundary owner");
     }
     need(serializeFrogDraftData(document)==bytes,"Validation repaired or mutated the incomplete Event");
     // Repair only the actual sources and wires, then use the same inspector.
@@ -405,6 +464,7 @@ int main() {
         pictureRingRevision();
         incompleteWireDiagnostics(context);
         independentStructureDiagnostics(context);
+        wireRouteIntentPresentation(context);
         packedArrayLiteral(context);
         packedIntegralArrayLiteral(context);
         numericArrayAndScalarMigration(context);

@@ -6,6 +6,7 @@
 #include "frog_native_engine/WidgetDataCompatibility.hpp"
 #include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/WidgetTypedValueSource.hpp"
+#include "graph/WaveformSampleProjection.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -194,6 +195,20 @@ bool apply(WidgetInstance &target,const values::Tree &tree,std::size_t index,con
             const auto &samples=*value.graph->samples;
             if(samples.datatype && samples.exactSource) {
                 if(!graph::setTypedInitialData(graph,graph.datatype,*samples.exactSource))return false;
+                if (binding::fullTypeEqual(graph.datatype,*samples.datatype)) {
+                    auto &projection = graph.initialData;
+                    if (!graph::sameSampleProjection(projection,samples)) return false;
+                    // Identity and source names belong to this validated source dataset.
+                    // The typed numeric value itself only carries samples and timing.
+                    if (projection.series.size() != samples.series.size()) {
+                        projection.series = samples.series; // equivalent legacy empty representation
+                    } else {
+                        for (std::size_t i = 0; i < samples.series.size(); ++i) {
+                            projection.series[i].id = samples.series[i].id;
+                            projection.series[i].name = samples.series[i].name;
+                        }
+                    }
+                }
             } else if(!graph::setInitialData(graph,samples))return false;
             graph.preservedSource.reset();graph.diagnostic.clear();
         }

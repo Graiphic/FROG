@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 40" data-frog-template="frog.realizations.default.numeric.meter" data-frog-variant="meter">
+  <g data-frog-part="root">
+  <path data-frog-part="scale" d="M3 32a21 21 0 1 1 42 0M5 31h4m2 -14 3 3m10 -9v5m14 2 -4 3m5 10h5" fill="none" stroke="#a6b2bc" stroke-width="2.4" stroke-linecap="round"/>
+  <path data-frog-part="pointer" d="M24 32l10 -15" fill="none" stroke="#0084c8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="24" cy="32" r="2" fill="#a6b2bc" stroke="#a6b2bc" stroke-width="2"/>
+  </g>
+</svg>

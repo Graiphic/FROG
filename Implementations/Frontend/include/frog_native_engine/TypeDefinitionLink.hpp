@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <map>
 #include <string>
 #include <optional>
 #include <string_view>
@@ -18,9 +19,15 @@ struct TypeDefinitionLink {
     std::string baselineWidgetJson;
     std::string unresolvedReason;
     std::string iconSvgText;
+    // The definition owns each member ID. The consumer owns its corresponding
+    // front-panel object ID and any wires or references targeting that object.
+    std::map<std::string, std::string, std::less<>> tabChildBindings;
     bool operator==(const TypeDefinitionLink &) const = default;
 };
 [[nodiscard]] std::string serializeTypeDefinitionLink(const TypeDefinitionLink &);
+[[nodiscard]] inline bool typeDefinitionUsesStructuredBaseline(const TypeDefinitionLink &link) noexcept {
+    return link.baselineWidgetJson.size()>8U*1024U*1024U;
+}
 [[nodiscard]] std::optional<TypeDefinitionLink> deserializeTypeDefinitionLink(
     std::string_view, std::string *error = nullptr);
 }

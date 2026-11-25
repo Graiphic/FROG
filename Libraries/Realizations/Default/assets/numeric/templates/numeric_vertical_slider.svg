@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 40" data-frog-template="frog.realizations.default.numeric.vertical_slider" data-frog-variant="vertical_slider">
+  <g data-frog-part="root">
+  <rect data-frog-part="track" x="22" y="3" width="4" height="34" rx="2" fill="#687583" stroke="none" stroke-width="2"/>
+  <rect data-frog-part="fill" x="22" y="14" width="4" height="23" rx="2" fill="#0084c8" stroke="none" stroke-width="2"/>
+  <rect data-frog-part="thumb" x="15" y="11" width="18" height="6" rx="2" fill="#344250" stroke="#a6b2bc" stroke-width="2"/>
+  </g>
+</svg>

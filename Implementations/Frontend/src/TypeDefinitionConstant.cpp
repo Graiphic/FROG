@@ -24,11 +24,12 @@ std::optional<WidgetInstance> decode(const std::vector<DiagramNode> &nodes,const
     };
     const bool array=node.type.find("array_constant")!=std::string::npos;
     const bool enumeration=node.type.find("enum")!=std::string::npos;
+    const bool ring=node.type=="numeric.ring_constant" || node.type=="frog.studio.numeric.ring_constant";
     const bool boolean=node.type.find("boolean.")!=std::string::npos || node.valueType=="bool";
     const bool string=node.type.find("string.")!=std::string::npos || node.valueType=="string";
     const bool cluster=isDiagramClusterConstant(node);
     const std::string_view klass=cluster?"frog.widgets.cluster_control":array?"frog.widgets.array_control":
-        enumeration?"frog.widgets.enum_control":string?"frog.widgets.string_control":
+        enumeration?"frog.widgets.enum_control":ring?"frog.widgets.ring_control":string?"frog.widgets.string_control":
         boolean?"frog.widgets.boolean_control":"frog.widgets.numeric_control";
     const auto *entry=findWidgetCatalogEntryByClassId(klass);
     if(!entry || !isDiagramLiteralConstant(node)){error="This Diagram object is not a supported typed constant.";return finish({});}
@@ -97,6 +98,19 @@ std::optional<WidgetInstance> decode(const std::vector<DiagramNode> &nodes,const
         // zero is already selected when a surviving Enum item moves to zero.
         if(!present || (widgetNumericValue(widget)!=node.enumSelectedValue&&!setRingSelectedValue(widget,node.enumSelectedValue))) {
             error="An Enum constant value is absent from its declared domain.";return finish({});
+        }
+    } else if(ring) {
+        widget.pictureRing=node.pictureRing;
+        static_cast<void>(setRingRepresentationKind(widget,node.valueType));
+        if(ringRepresentationValueType(widget)!=node.valueType) {
+            error="The Ring constant representation could not be restored.";return finish({});
+        }
+        widget.ringItems=node.enumItems;
+        static_cast<void>(setRingAllowUndefinedValues(widget,node.ringAllowUndefinedValues));
+        // Clear the palette selection so the setter validates even an authored zero.
+        widget.numericValue.reset();
+        if(!setRingSelectedValue(widget,node.enumSelectedValue)) {
+            error="The Ring constant value is not admitted by its catalogue.";return finish({});
         }
     } else if(string) {
         if(node.type.ends_with("string.dropdown_constant")) {
@@ -184,6 +198,11 @@ bool install(std::vector<DiagramNode> &nodes,const std::string &id,const WidgetI
         node.type="frog.studio.numeric.enum_constant";node.valueType=enumRepresentationValueType(widget);
         node.enumDomainId=widget.enumDomainId.value_or("");node.enumItems=ringItems(widget);
         node.enumSelectedValue=static_cast<std::uint32_t>(widgetNumericValue(widget));
+    } else if(isRingWidget(widget)) {
+        node.type="frog.studio.numeric.ring_constant";node.valueType=ringRepresentationValueType(widget);
+        node.pictureRing=widget.pictureRing;
+        node.ringAllowUndefinedValues=ringAllowUndefinedValues(widget);
+        node.enumItems=ringItems(widget);node.enumSelectedValue=static_cast<std::uint32_t>(widgetNumericValue(widget));
     } else if(isStringWidget(widget)) {
         node.type=isStringDropdownWidget(widget)?"frog.studio.string.dropdown_constant":"frog.studio.string.constant";
         node.valueType="string";

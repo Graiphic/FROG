@@ -1,0 +1,262 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Boolean Array To Number",
+  "metadata": {
+    "name": "Boolean Array To Number",
+    "name_source": "document",
+    "description": "Read the least-significant bit first. The array [true, false, true] represents 5.\n\nRead the least-significant bit first. The array [true, false, true] represents 5.\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nnumber (u32) = 5\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "array", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 47.8 24.8\">\n  <defs>\n    <style>\n      .cls-1 {\n        fill: #4b5563;\n        stroke: #aab4c0;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n\n      .cls-2 {\n        fill: #f8fafc;\n      }\n    </style>\n  </defs>\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g shape-rendering=\"geometricPrecision\">\n      <path class=\"cls-1\" d=\"M.9.9h40.83c2.86,0,5.17,2.32,5.17,5.17v12.65c0,2.86-2.32,5.17-5.17,5.17H.9C5.81,17,5.81,7.8.9.9Z\"/>\n      <g>\n        <g>\n          <path class=\"cls-2\" d=\"M14.63,17.51h-2.75V7.19h2.75v1.18h-1.22v7.96h1.22v1.18Z\"/>\n          <path class=\"cls-2\" d=\"M16.85,15.73c-.3,0-.56-.09-.76-.28s-.3-.42-.3-.69.1-.51.3-.69.46-.27.76-.27.58.09.78.27.3.41.3.69-.1.52-.3.7-.47.27-.79.27ZM20.5,15.73c-.3,0-.56-.09-.76-.28s-.3-.42-.3-.69.1-.51.3-.69.46-.27.76-.27.58.09.78.27.3.41.3.69-.1.52-.3.7-.46.27-.79.27ZM24.14,15.73c-.3,0-.56-.09-.76-.28s-.3-.42-.3-.69.1-.51.31-.69.46-.27.77-.27.58.09.78.27.3.41.3.69-.1.52-.3.7-.47.27-.79.27Z\"/>\n          <path class=\"cls-2\" d=\"M29.15,17.51h-2.76v-1.18h1.24v-7.96h-1.24v-1.18h2.76v10.31Z\"/>\n        </g>\n        <path class=\"cls-2\" d=\"M40.61,10.6l-.23,1.05h-1.08l-.32,1.45h1.21l-.26,1.05h-1.17l-.46,2.03h-1.17l.43-2.03h-1.34l-.43,2.03h-1.17l.42-2.03h-1.09l.22-1.05h1.1l.31-1.45h-1.18l.2-1.05h1.2l.43-2.09h1.2l-.43,2.09h1.34l.45-2.09h1.19l-.43,2.09h1.08ZM38.12,11.65h-1.36l-.32,1.45h1.35l.33-1.45Z\"/>\n      </g>\n    </g>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "number",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "u32",
+        "label": "number",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "u32",
+          "data_type.named_numeric_size": "UInt32",
+          "representation.kind": "uint32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.array.conversion.boolean_array_to_number",
+        "label": "Boolean Array To Number",
+        "label_visible": true,
+        "palette_catalog_id": "array.conversion.boolean_array_to_number",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-array",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_array_constant",
+        "value_type": "bool",
+        "label": "input-array",
+        "label_visible": true,
+        "array_element_template": "{\n  \"id\": \"input-array-element\",\n  \"classId\": \"frog.widgets.boolean_control\",\n  \"role\": \"control\",\n  \"valueType\": \"bool\",\n  \"label\": \"Boolean Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 46.2,\n    \"height\": 46.2\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"state_text.visible\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n    \"asset\": \"asset:boolean_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": false\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"stateTextFontFamily\": \"\",\n    \"stateTextStyle\": \"plain\"\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [3],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["true", "false", "true"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 185,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "number-terminal",
+        "kind": "widget_value",
+        "type": "u32",
+        "widget": "number",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Boolean Array To Number\nRead the least-significant bit first. The array [true, false, true] represents 5.\nEntrées -> opération -> indicateurs. Résultat attendu : number (u32) = 5\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-array",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "array"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "operation",
+          "port": "number"
+        },
+        "to": {
+          "node": "number-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

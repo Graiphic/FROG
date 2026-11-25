@@ -54,13 +54,17 @@
       "frog.realizations.default.cluster"
     ],
     "variants": [
-      "frog.realizations.default.cluster.rectangular_group"
+      "frog.realizations.default.cluster.rectangular_group",
+      "frog.realizations.default.cluster.horizontal_range_slider",
+      "frog.realizations.default.cluster.vertical_range_slider"
     ],
     "resources": [
       "frog.realizations.default.cluster.assets.shell_svg",
       "frog.realizations.default.cluster.assets.content_region_svg",
       "frog.realizations.default.cluster.assets.field_slot_svg",
-      "frog.realizations.default.cluster.assets.field_label_svg"
+      "frog.realizations.default.cluster.assets.field_label_svg",
+      "frog.realizations.default.cluster.assets.horizontal_range_slider_svg",
+      "frog.realizations.default.cluster.assets.vertical_range_slider_svg"
     ]
   },
   "realizations": [
@@ -71,7 +75,9 @@
       "variant_property": "realization.variant",
       "default_variant": "rectangular_group",
       "supported_variants": [
-        "rectangular_group"
+        "rectangular_group",
+        "horizontal_range_slider",
+        "vertical_range_slider"
       ],
       "supported_parts": [
         "root",
@@ -104,6 +110,32 @@
         "uses_subobject_slots": true
       },
       "fallback": "host_rectangle_cluster_group"
+    },
+    {
+      "id": "frog.realizations.default.cluster.horizontal_range_slider",
+      "variant": "horizontal_range_slider",
+      "target_class": "frog.widgets.cluster",
+      "shell_resource_ref": "frog.realizations.default.cluster.assets.horizontal_range_slider_svg",
+      "geometry_posture": {
+        "shape_family": "horizontal_range_slider",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "uses_subobject_slots": false
+      },
+      "fallback": "host_rectangle_cluster_group"
+    },
+    {
+      "id": "frog.realizations.default.cluster.vertical_range_slider",
+      "variant": "vertical_range_slider",
+      "target_class": "frog.widgets.cluster",
+      "shell_resource_ref": "frog.realizations.default.cluster.assets.vertical_range_slider_svg",
+      "geometry_posture": {
+        "shape_family": "vertical_range_slider",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "uses_subobject_slots": false
+      },
+      "fallback": "host_rectangle_cluster_group"
     }
   ],
   "resources": [
@@ -130,6 +162,20 @@
       "kind": "svg",
       "path": "./assets/cluster/subobjects/field_label.svg",
       "target_part": "field_label"
+    },
+    {
+      "id": "frog.realizations.default.cluster.assets.horizontal_range_slider_svg",
+      "kind": "svg",
+      "path": "./assets/cluster/templates/numeric_horizontal_range_slider.svg",
+      "role": "assembly_shell",
+      "target_variant": "horizontal_range_slider"
+    },
+    {
+      "id": "frog.realizations.default.cluster.assets.vertical_range_slider_svg",
+      "kind": "svg",
+      "path": "./assets/cluster/templates/numeric_vertical_range_slider.svg",
+      "role": "assembly_shell",
+      "target_variant": "vertical_range_slider"
     }
   ],
   "composition": {

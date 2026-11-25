@@ -11,6 +11,8 @@ struct DraftTypeDefinitionDependency {
     std::string definitionId;
     std::uint64_t revision = 0;
     std::string schemaFingerprint;
+    // Captured declaration, before applying revisions of its own dependencies.
+    std::string authoredSchemaFingerprint;
 };
 struct DraftTypeDefinitionResolution {
     std::vector<TypeDefinitionDiagnostic> diagnostics;
@@ -26,6 +28,9 @@ struct DraftResolvedTypeDefinitionSource {
     [[nodiscard]] bool accepted() const noexcept {return resolution.accepted();}
 };
 [[nodiscard]] bool draftHasTypeDefinitionLinks(const FrogDraftDataView &);
+[[nodiscard]] DraftTypeDefinitionResolution reconcileTypeDefinitionTabChildren(
+    FrogWidgetData &scene, std::string_view rootId, const TypeDefinitionDocument &definition,
+    bool acceptProposed = false);
 [[nodiscard]] DraftTypeDefinitionResolution resolveDraftTypeDefinitionLinks(
     FrogDraftData &, std::string_view ownerUri, const DraftDependencyResolver &,
     bool acceptProposed = false, std::string_view acceptedInstanceId = {});

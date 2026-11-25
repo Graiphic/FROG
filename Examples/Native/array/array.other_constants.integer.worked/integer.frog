@@ -1,0 +1,283 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Integer Array Constant",
+  "metadata": {
+    "name": "Integer Array Constant",
+    "name_source": "document",
+    "description": "Run displays the built-in value value = [3, -2, 7].\n\nRun displays the built-in value value = [3, -2, 7].\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nvalue (array<i32>) = [3,-2,7]\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "array", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" data-frog-shape-standard=\"fixed-constant\">\n<defs>\n    <style>\n      .cls-1 {\n        fill: #2563eb;\n        stroke: #aab4c0;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n\n      .cls-2 {\n        isolation: isolate;\n      }\n\n      .cls-3 {\n        fill: #f8fafc;\n      }\n    </style>\n  </defs>\n<rect x=\"6.75\" y=\"12.5\" width=\"34.5\" height=\"23\" rx=\"11.5\" fill=\"#2563eb\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/>\n<g transform=\"translate(5.85 11.6)\">\n<g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n\n      <g class=\"cls-2\">\n        <path class=\"cls-3\" d=\"M8.44,17.97V6.97h2.92v1.29h-1.35v8.41h1.35v1.29h-2.92Z\"/>\n        <path class=\"cls-3\" d=\"M12.26,16v-7.16h1.45v7.16h-1.45Z\"/>\n        <path class=\"cls-3\" d=\"M14.73,14.1l1.33-.16c.04.34.16.6.34.78s.41.27.67.27c.28,0,.52-.11.72-.32.19-.21.29-.5.29-.87,0-.34-.09-.62-.28-.82s-.41-.3-.68-.3c-.18,0-.39.03-.63.1l.15-1.12c.37,0,.65-.07.85-.24.2-.17.29-.4.29-.68,0-.24-.07-.43-.21-.58-.14-.14-.33-.21-.57-.21s-.43.08-.6.24-.27.4-.3.71l-1.26-.21c.09-.43.22-.78.4-1.04.18-.26.42-.46.74-.61.32-.15.67-.22,1.07-.22.67,0,1.21.21,1.62.64.34.35.5.75.5,1.19,0,.63-.34,1.13-1.03,1.5.41.09.74.29.98.59.25.31.37.68.37,1.11,0,.63-.23,1.16-.69,1.61s-1.03.66-1.71.66c-.65,0-1.18-.19-1.61-.56-.43-.37-.67-.86-.74-1.46Z\"/>\n        <path class=\"cls-3\" d=\"M24.97,14.73v1.27h-4.81c.05-.48.21-.94.47-1.37.26-.43.78-1,1.54-1.72.62-.58,1-.97,1.14-1.17.19-.28.28-.56.28-.84,0-.31-.08-.54-.25-.71s-.39-.25-.68-.25-.51.09-.68.26c-.17.17-.27.46-.29.86l-1.37-.14c.08-.75.34-1.3.77-1.63s.97-.49,1.61-.49c.71,0,1.26.19,1.67.57.4.38.61.85.61,1.42,0,.32-.06.63-.17.92-.12.29-.3.6-.55.92-.17.21-.46.52-.9.91-.43.4-.71.66-.82.79-.12.13-.21.26-.28.38h2.72Z\"/>\n        <path class=\"cls-3\" d=\"M28.62,6.97v11h-2.92v-1.29h1.35v-8.42h-1.35v-1.28h2.92Z\"/>\n      </g>\n    </g>\n  </g>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "value",
+        "classId": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "valueType": "frog.array<i32,rank=1>",
+        "label": "value",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 182,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "dimensions.rank": 1,
+          "dimensions.shape": [0],
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [0],
+          "viewport.visible_counts": [1],
+          "viewport.orientation": "vertical",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.index_display.container_padding": "4px",
+          "style.index_display.container_border_width": "1px",
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "element.cell_width": 96,
+          "element.cell_height": 32,
+          "element.gap": 0,
+          "element.class_id": "frog.widgets.numeric_indicator",
+          "element.value_type": "i32",
+          "element.role": "indicator",
+          "element.icon": false
+,
+          "element.template":           {
+            "id": "value.element",
+            "classId": "frog.widgets.numeric_indicator",
+            "role": "indicator",
+            "valueType": "i32",
+            "label": "Numeric Indicator",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 96,
+              "height": 32
+            },
+            "props": {
+              "layout.aura_band_px": 4,
+              "label.visible": false,
+              "data_type.representation": "i32",
+              "data_type.named_numeric_size": "Int32",
+              "representation.kind": "int32",
+              "data_entry.use_type_defaults": true
+            },
+            "runtime": {
+              "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+              "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+              "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+              "asset": "asset:numeric_rectangular_svg",
+              "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+            },
+            "state": {
+              "value": 0
+            },
+            "typography": {
+              "inheritanceVersion": 1
+            }
+          }
+
+        },
+        "runtime": {
+          "sourceExample": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+          "wfrog": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/array.default.wfrog",
+          "asset": "asset:array_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.array.other_constants.integer",
+        "value_type": "i32",
+        "label": "Array Constant",
+        "label_visible": false,
+        "array_element_template": "{\n  \"id\": \"operation-element\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"i32\",\n  \"label\": \"Numeric Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 96,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"i32\",\n    \"data_type.named_numeric_size\": \"Int32\",\n    \"representation.kind\": \"int32\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.other_constants.integer",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [3],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["3", "-2", "7"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 100,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "value-terminal",
+        "kind": "widget_value",
+        "type": "array:i32",
+        "widget": "value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Integer Array Constant\nRun displays the built-in value value = [3, -2, 7].\nEntrées -> opération -> indicateurs. Résultat attendu : value (array<i32>) = [3,-2,7]\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

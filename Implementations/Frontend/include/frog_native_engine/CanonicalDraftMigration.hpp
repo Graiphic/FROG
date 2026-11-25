@@ -36,6 +36,8 @@ struct CanonicalDraftPortResolution {
     bool input=false;
     std::string fullTypeJson;
     std::string sourceNodeId,sourcePortId;
+    // An Event Data output belongs to the selected case of this structure.
+    std::string eventRegionId;
 };
 struct CanonicalDraftWidgetResolution {
     std::string widgetId,fullTypeJson,currentWidgetJson,defaultWidgetJson;

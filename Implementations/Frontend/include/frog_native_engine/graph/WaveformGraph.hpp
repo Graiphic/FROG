@@ -98,6 +98,7 @@ struct AxisOptions {
     bool minorGrid = false;
     std::string timeOrigin = "FROG epoch", timeUnit = "s", timeZone = "UTC";
     TimeContent timeContent = TimeContent::DateTime;
+    bool visible = true;
     bool operator==(const AxisOptions &) const = default;
 };
 struct Design {
@@ -108,12 +109,15 @@ struct Design {
     bool autoscaleY = true;
     bool gridVisible = true;
     bool legendVisible = true;
+    std::uint8_t legendRows = 4;
     Range xRange;
     Range yRange{-10.0, 10.0};
     std::vector<Plot> plots;
     std::vector<Annotation> annotations; // legacy input only; never authored by the UI
     std::vector<Cursor> cursors;
     AxisOptions xAxis, yAxis;
+    // Logical top-left of the legend relative to its widget. Empty uses the default placement.
+    std::optional<Point> legendPosition;
     bool operator==(const Design &) const = default;
 };
 [[nodiscard]] inline const AxisOptions &axisOptions(const Design &design, bool xAxis) noexcept {

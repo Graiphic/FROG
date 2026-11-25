@@ -1,0 +1,171 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Édition uniquement — Câbler une attente de 10 ms",
+  "metadata": {
+    "name": "Édition uniquement — Câbler une attente de 10 ms",
+    "name_source": "document",
+    "description": "Le délai est fourni en millisecondes au terminal de temporisation. Montage éditable avec des données d’exercice. La sauvegarde et la réouverture sont vérifiées. Le Run de ce scénario reste non qualifié.",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["editor-only", "synthetic-data", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000080189407372877830440000009244154056850082183_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 48 48\"\n\t style=\"enable-background:new 0 0 48 48;\" xml:space=\"preserve\" data-frog-shape-standard=\"square\">\n<style type=\"text/css\">\r\n\t.st0{fill:#4B5563;stroke:#AAB4C0;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}\r\n\t.st1{fill:#E3AA63;}\r\n</style>\r\n<rect x=\"1\" y=\"1\" width=\"46\" height=\"46\" rx=\"4.5\" class=\"st0\"/>\n<g transform=\"translate(1 1) scale(1.113424) translate(-3.229 -2.935)\" data-frog-body-glyph-profile=\"square-v1\">\n<path class=\"st1\" d=\"M15.718,7.51v0.626c0,1.454-0.237,3.636-0.592,5.885c2.148-1.759,4.853-2.841,7.677-2.807\r\n\tc0.355,0,0.727,0,1.082,0.034c2.537,0.152,4.955,1.167,6.899,2.756c-0.355-2.249-0.592-4.43-0.575-5.851V7.527H15.701L15.718,7.51z\r\n\t M22.973,12.516c-6.121,0-11.076,4.972-11.076,11.076s4.972,11.076,11.076,11.076s11.076-4.972,11.076-11.076\r\n\tS29.077,12.516,22.973,12.516 M22.973,13.75c5.445,0,9.842,4.397,9.842,9.842s-4.397,9.842-9.842,9.842s-9.842-4.397-9.842-9.842\r\n\tS17.528,13.75,22.973,13.75 M17.325,17.065l-0.879,0.879l5.276,5.293c-0.034,0.118-0.051,0.254-0.051,0.372\r\n\tc0,0.727,0.592,1.302,1.302,1.302c0.473,0,0.93-0.271,1.15-0.693h4.075v-1.234h-4.075c-0.22-0.423-0.676-0.693-1.15-0.693\r\n\tc-0.118,0-0.254,0.017-0.372,0.051l-5.276-5.293V17.065z M34.81,21.292v4.414l1.065-0.879v-4.414\r\n\tC35.875,20.413,34.81,21.292,34.81,21.292z M30.802,33.231c-3.382,2.773-8.269,3.517-12.361,1.894\r\n\tc-1.218-0.44-2.317-1.082-3.297-1.894c0.355,2.232,0.575,4.397,0.558,5.817v0.626H30.21v-0.626c0-1.437,0.237-3.602,0.575-5.834l0,0\r\n\tL30.802,33.231z M32.138,23.507c0,5.056-4.092,9.148-9.148,9.148s-9.148-4.092-9.148-9.148s4.092-9.148,9.148-9.148\n\tS32.138,18.451,32.138,23.507z\"/>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -25
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.structures.wait",
+        "label": "Wait",
+        "label_visible": true,
+        "palette_catalog_id": "structures.wait",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-milliseconds_to_wait",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "u32",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "10",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 175,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Édition uniquement — Câbler une attente de 10 ms\nLe délai est fourni en millisecondes au terminal de temporisation.",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -5,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-milliseconds_to_wait",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "milliseconds_to_wait"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

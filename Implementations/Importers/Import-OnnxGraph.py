@@ -418,6 +418,8 @@ def main():
         model = load_model(data, args.onnx_file.parent)
         checked = time.perf_counter()
         draft, receipt = convert(model, digest, args.language)
+        metadata = draft["metadata"]
+        metadata["description"] = f"Source (ONNX): {args.onnx_file.resolve()}\n{metadata['description']}"
         converted = time.perf_counter()
         output.parent.mkdir(parents=True, exist_ok=True)
         stage = Path(tempfile.mkdtemp(prefix=".onnx-import-", dir=output.parent))

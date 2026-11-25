@@ -64,9 +64,9 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
     std::vector<CanonicalDraftMigrationDiagnostic> diagnostics;
     const auto projected=projectClusterFunctionPorts(document.diagramNodes,document.diagramEdges,document.canvas);
     binding::TypeResolver resolver(projected,document.diagramEdges,document.canvas);
-    using Key=std::tuple<std::string,std::string,bool>;
+    using Key=std::tuple<std::string,std::string,bool,std::string>;
     std::map<Key,binding::TypeRef> schemas;
-    std::set<std::tuple<std::string,std::string,bool,std::string,std::string>> emitted;
+    std::set<std::tuple<Key,std::string,std::string>> emitted;
     std::map<std::string,const DiagramNode*> nodes;
     for(const auto &node:projected)nodes.emplace(node.id,&node);
     const auto diagnostic=[&](const std::string &id,const std::string &port,const std::string &message) {
@@ -75,14 +75,14 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
     auto widgetDiagnostics=appendCanonicalDraftWidgetResolutions(document,result);
     diagnostics.insert(diagnostics.end(),std::make_move_iterator(widgetDiagnostics.begin()),std::make_move_iterator(widgetDiagnostics.end()));
     const auto append=[&](const std::string &id,const std::string &port,bool input,const binding::TypeRef &schema,
-        const std::string &sourceNode=std::string{},const std::string &sourcePort=std::string{}) {
+        const std::string &sourceNode=std::string{},const std::string &sourcePort=std::string{},const std::string &eventRegion=std::string{}) {
         if(!schema.known())return;
-        const Key key{id,port,input};const auto [found,inserted]=schemas.emplace(key,schema);
+        const Key key{id,port,input,eventRegion};const auto [found,inserted]=schemas.emplace(key,schema);
         if(!inserted&&!canonicalObjectReferenceFullTypeEqual(found->second,schema)) {
-            diagnostic(id,port,"One connector has different complete types in distinct regions; this admission needs explicitly regional connector schemas.");return;
+            diagnostic(id,port,"The same connector has conflicting complete types within its scope.");return;
         }
-        if(!emitted.emplace(id,port,input,sourceNode,sourcePort).second)return;
-        result.ports.push_back({id,port,input,canonical_json::encode(canonicalObjectReferenceWriteType(schema)),sourceNode,sourcePort});
+        if(!emitted.emplace(key,sourceNode,sourcePort).second)return;
+        result.ports.push_back({id,port,input,canonical_json::encode(canonicalObjectReferenceWriteType(schema)),sourceNode,sourcePort,eventRegion});
     };
     // Real wire sources are resolved first in the edge's ACTUAL semantic case.
     // This neither selects the visible case nor promotes a source to its sink.
@@ -99,14 +99,15 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
         if(!sourceDirection||!targetDirection||*sourceDirection!=FunctionPortDirection::Output||*targetDirection!=FunctionPortDirection::Input) {
             diagnostic(edge.to.nodeId,edge.to.portId,"The real edge contradicts the common connector directions.");continue;
         }
-        append(edge.from.nodeId,edge.from.portId,false,source.resolution.type);
+        const bool eventData=edge.from.nodeId==edge.diagramOwnerStructureId && edge.from.portId.starts_with("event_data.");
+        append(edge.from.nodeId,edge.from.portId,false,source.resolution.type,{},{},eventData?edge.diagramOwnerRegionId:std::string{});
         append(edge.to.nodeId,edge.to.portId,true,target.resolution.type,edge.from.nodeId,edge.from.portId);
     }
     const auto addEndpoint=[&](const DiagramNode &node,const std::string &port,bool input,
         const binding::TypeRef &declared=binding::TypeRef{}) {
         // A wired input already has every actual regional driver. Adding an
         // unbound duplicate would discard its source provenance.
-        if(schemas.contains({node.id,port,input}))return;
+        if(schemas.contains({node.id,port,input,{}}))return;
         const auto resolved=resolver.resolveInRegion({node.id,port},node.diagramOwnerStructureId,node.diagramOwnerRegionId);
         if(resolved.resolution.accepted()&&resolved.resolution.type.known())append(node.id,port,input,resolved.resolution.type);
         else if(declared.known())append(node.id,port,input,declared);
@@ -188,7 +189,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
                     if(!schema.valid()){diagnostic(node.id,region.id,schema.error);continue;}
                     for(const auto &field:schema.fields)if(field.type.known()&&
                         std::find(region.eventDataFields.begin(),region.eventDataFields.end(),field.id)!=region.eventDataFields.end())
-                        append(node.id,"event_data."+field.id,false,field.type);
+                        append(node.id,"event_data."+field.id,false,field.type,{},{},region.id);
                     for(const auto &field:schema.responses)if(field.type.known())
                         addEndpoint(node,"event_response."+field.id,true,field.type);
                 }
@@ -271,7 +272,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
             // owns the actual signature, including its historical second alias.
             for(int index=0;index<buildArrayInputCount(node);++index) {
                 auto id=buildArrayInputId(index);
-                if(index==1&&schemas.contains({node.id,"input_2",true}))id="input_2";
+                if(index==1&&schemas.contains({node.id,"input_2",true,{}}))id="input_2";
                 addEndpoint(node,id,true);
             }
             addEndpoint(node,"result",false);

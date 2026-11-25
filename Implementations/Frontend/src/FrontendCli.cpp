@@ -3,6 +3,7 @@
 // All Source admission and FIR generation go through the public C ABI.
 #include <frog/frontend.h>
 #include "frog_native_engine/FrogJson.hpp"
+#include "frog_native_engine/TypeDefinitionSemantics.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include <algorithm>
 #include <atomic>
@@ -120,6 +121,23 @@ struct Result {frog_frontend_result *value=nullptr;~Result(){frog_frontend_resul
 int run(const std::vector<std::string> &args) {
     if(args.size()==2&&(args[1]=="--help"||args[1]=="-h")){usage();return 0;}
     if(args.size()<2)throw Failure(64,"An explicit operation is required.");const auto &operation=args[1];
+    if(operation=="typedef-link") {
+        // Importers must use the authoring owner's schema correspondence and
+        // fingerprint when a source control refers to a separate definition.
+        if(args.size()!=5)throw Failure(64,"Usage: typedef-link <definition.ftype> <widget.json> <relative-reference>");
+        using namespace frog::native_engine;
+        std::string error;
+        const auto definition=deserializeTypeDefinition(read(path(args[2])),&error);
+        if(!definition)throw Failure(2,error);
+        const auto widget=deserializeTypeDefinitionWidget(read(path(args[3])));
+        if(!widget||!typeDefinitionCanAssociate(*widget,definition->root))
+            throw Failure(2,"The imported widget and its Type Definition have different schemas.");
+        const auto migration=linkWidgetToTypeDefinition(*widget,*definition,args[4]);
+        if(!migration.accepted()||!migration.proposedWidget.typeDefinition)
+            throw Failure(2,"The Type Definition could not be associated without changing the widget.");
+        std::cout<<serializeTypeDefinitionLink(*migration.proposedWidget.typeDefinition)<<'\n';
+        return 0;
+    }
     if(operation!="describe"&&operation!="validate"&&operation!="derive")throw Failure(64,"Unknown frontend operation.");
     frog_frontend_config config{};config.struct_size=sizeof(config);std::map<std::string,std::uint64_t *> limits{
         {"--max-source-bytes",&config.limits.max_source_bytes},{"--max-dependency-bytes",&config.limits.max_dependency_bytes},

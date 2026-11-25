@@ -69,11 +69,17 @@ Signature describe(const DiagramNode &node,const CollectionInputResolver &resolv
         const auto actualKey=input("key");if(key.known()&&actualKey.known()&&!collectionTypesEqual(key,actualKey))s.fail("The Map key connector requires the exact complete K schema.");
         s.add("key",key,true);
         if(op=="collection.map.insert") {
-            const auto actualValue=input("value");if(value.known()&&actualValue.known()&&!collectionTypesEqual(value,actualValue))s.fail("The Map value connector requires the exact complete V schema.");
+            const auto actualValue=input("value");
+            if(value.known()&&actualValue.known()&&!collectionTypesEqual(value,actualValue)&&
+                !binding::requiresVariantBoxing(actualValue,value))
+                s.fail("The Map value connector requires the exact complete V schema.");
             s.add("value",value,true);s.add("map_out",map,false);s.add("key_already_included",boolean,false);s.add("value_unchanged",boolean,false);
         }else if(op=="collection.map.remove") {s.add("map_out",map,false);s.add("key_not_found",boolean,false);s.add("value",value,false);}
         else if(op=="collection.map.look") {
-            const auto fallback=input("default",false);if(fallback.known()&&value.known()&&!collectionTypesEqual(fallback,value))s.fail("The optional default must retain the exact complete V schema.");
+            const auto fallback=input("default",false);
+            if(fallback.known()&&value.known()&&!collectionTypesEqual(fallback,value)&&
+                !binding::requiresVariantBoxing(fallback,value))
+                s.fail("The optional default must retain the exact complete V schema.");
             s.add("default",value,true,false);s.add("value",value,false);s.add("key_not_found",boolean,false);
         }
         return s;
@@ -144,6 +150,7 @@ binding::TypeResolution checkCollectionConnection(const DiagramNode &node,std::s
     const auto actual=resolveCollectionPort(node,port,candidate);
     if(actual.resolution.status==Status::Incompatible)return actual.resolution;
     if(!source.known()||!actual.resolution.type.known())return {Status::Unresolved,{},"binding.collection_unresolved","The Collection connector has not acquired its complete type."};
+    if(binding::requiresVariantBoxing(source,actual.resolution.type))return binding::connectValue(source,actual.resolution.type);
     if(!collectionTypesEqual(source,actual.resolution.type))return {Status::Incompatible,actual.resolution.type,"binding.collection_exact","Collection connectors preserve their complete invariant schemas; no implicit numeric or nominal conversion is performed."};
     return {Status::Compatible,actual.resolution.type,{},{}};
 }

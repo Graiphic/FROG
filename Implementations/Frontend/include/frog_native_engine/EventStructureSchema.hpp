@@ -24,6 +24,9 @@ struct EventSourceSpec {
     // Dynamic is an editor grouping, never an object-reference class.
     std::string registeredKind;
     EventSourceScope registeredSourceScope = EventSourceScope::Dynamic;
+    // Authoring identity of the producing Create User Event, when the wire
+    // leads to one. Captions are display data and may be changed or duplicated.
+    std::string originNodeId;
 };
 enum class EventResponseUnwiredPolicy { PreserveIncoming, False, NativeFeedback, Undeclared };
 struct EventDataAuthoringField {
@@ -55,6 +58,7 @@ bool eventNotificationAllowsNewBinding(const EventNotificationSpec &,EventSource
 bool eventNotificationAllowsNewBinding(const EventNotificationSpec &,const EventSourceSpec &) noexcept;
 bool eventNotificationSupportsSource(const EventNotificationSpec &,const EventSourceSpec &) noexcept;
 std::vector<EventSourceSpec> eventSources(FrogWidgetDataView,bool resolveTypes=true);
+bool eventBindingMatchesSource(const DiagramEventBinding &, const EventSourceSpec &) noexcept;
 std::vector<EventSourceSpec> eventStructureSources(const DiagramNode &,const binding::TypeRef &,FrogWidgetDataView,bool resolveTypes=true);
 std::string validateEventBindingSources(const std::vector<DiagramEventBinding> &,std::span<const EventSourceSpec>);
 bool isPublicEventDescriptorKind(std::string_view) noexcept;

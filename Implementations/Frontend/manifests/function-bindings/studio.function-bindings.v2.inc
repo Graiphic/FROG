@@ -22957,6 +22957,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedSynchronizationBindingsC
             FunctionPortBinding{ "queue", "queue", FunctionPortDirection::Input, "ref<frog.sync.queue>", "ref<frog.sync.queue>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "element", "element", FunctionPortDirection::Input, "T:any", "f64", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "timeout_ms", "timeout (ms, -1)", FunctionPortDirection::Input, "i32", "i32", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::NumericImplicit },
+            FunctionPortBinding{ "at_front", "at opposite end? (false)", FunctionPortDirection::Input, "bool", "bool", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "error_in", "error in", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "queue_out", "queue out", FunctionPortDirection::Output, "ref<frog.sync.queue>", "ref<frog.sync.queue>", FunctionPortRequirement::Recommended, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "timed_out", "timed out?", FunctionPortDirection::Output, "bool", "bool", FunctionPortRequirement::Recommended, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
@@ -57196,20 +57197,20 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedSynchronizationContracts
         contract.profileId = "frog.studio.palette.synchronization.queue.enqueue.v1";
         contract.contractStatus = "partial";
         contract.authorityScope = "studio_authoring_profile";
-        contract.behaviorSummary = "Adds one element at the tail. A full bounded FIFO waits cooperatively for space: timeout -1 waits indefinitely, 0 attempts immediately. Expiration inserts nothing. It never silently evicts an element; invalidation interrupts the wait with an error.";
+        contract.behaviorSummary = "Adds one element at the tail by default, or at the head when at_front is true. Waiting writers retain their insertion choice. A full bounded FIFO waits cooperatively for space: timeout -1 waits indefinitely, 0 attempts immediately. Expiration inserts nothing. It never silently evicts an element; invalidation interrupts the wait with an error.";
         contract.blockers = std::vector<std::string>{ "No published FROG Queue Source contract, lowering or target Runtime provider is declared." };
         contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/functions/enqueue-element.html" };
         contract.overload.policy = "custom_resolver";
-        contract.overload.acceptedOperands = std::vector<std::string>{ "ref<frog.sync.queue>", "T:any", "i32", "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.acceptedOperands = std::vector<std::string>{ "ref<frog.sync.queue>", "T:any", "i32", "bool", "cluster<status:bool,code:i32,source:string>" };
         contract.overload.result = "resolve:frog.studio.synchronization.queue.type-resolution@1";
         contract.overload.implicitCoercion = false;
         contract.overload.description = "Queue<T> is a nominal execution-resource reference distinct from object/File references. The complete T is invariant; only the collection output adds an outer rank-1 Array.";
         contract.variadicity.enabled = false;
-        contract.variadicity.portOrder = std::vector<std::string>{ "queue", "element", "timeout_ms", "error_in" };
+        contract.variadicity.portOrder = std::vector<std::string>{ "queue", "element", "timeout_ms", "at_front", "error_in" };
         contract.arrayPolicy.lifting = "none";
         contract.arrayPolicy.description = "One queued element may itself be an Array, Cluster or Enum; preserve its complete schema and message boundary. No element-wise lifting or array flattening.";
         contract.variadicity.inputCount.declared = true;
-        contract.variadicity.inputCount.value = 4U;
+        contract.variadicity.inputCount.value = 5U;
         contract.arrayPolicy.accepted.declared = true;
         contract.arrayPolicy.accepted.value = true;
         contract.runtimeAvailability.available = false;
@@ -57222,6 +57223,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedSynchronizationContracts
             FunctionPortAliases{ "queue", std::vector<std::string>{  } },
             FunctionPortAliases{ "element", std::vector<std::string>{  } },
             FunctionPortAliases{ "timeout_ms", std::vector<std::string>{  } },
+            FunctionPortAliases{ "at_front", std::vector<std::string>{  } },
             FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
             FunctionPortAliases{ "queue_out", std::vector<std::string>{  } },
             FunctionPortAliases{ "timed_out", std::vector<std::string>{  } },

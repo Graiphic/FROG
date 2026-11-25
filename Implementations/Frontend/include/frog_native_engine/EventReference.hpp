@@ -8,6 +8,10 @@ namespace frog::native_engine {
 // are neither object references nor Synchronization Queue resources.
 inline constexpr std::string_view kUserEventReferenceClass="frog.events.user";
 inline constexpr std::string_view kEventRegistrationReferenceClass="frog.events.registration";
+[[nodiscard]] inline constexpr bool isEventStructureRegistrationPort(std::string_view port) noexcept {
+    return port=="event_registration" || port=="event_registration_out" ||
+        port=="event_registration_value" || port=="event_registration_update";
+}
 // Data-field paths use '/' as hierarchy and '#' for repeated port rows. Escape
 // authored field IDs injectively so neither character can rebind another field.
 [[nodiscard]] inline std::string eventPayloadFieldComponent(std::string_view id) {
@@ -60,7 +64,7 @@ struct EventRegistrationSource {
         }
         return true;
     }
-    return type.kind==binding::TypeKind::Cluster && type.known() &&
+    return type.kind==binding::TypeKind::Cluster && !type.children.empty() && type.known() &&
         std::all_of(type.children.begin(),type.children.end(),[](const auto &child){return isEventRegistrationCollection(child);});
 }
 [[nodiscard]] inline std::vector<EventRegistrationSource> eventRegistrationSources(const binding::TypeRef &type) {

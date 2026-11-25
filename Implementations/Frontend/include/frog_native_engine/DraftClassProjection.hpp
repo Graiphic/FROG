@@ -12,6 +12,7 @@ struct DraftClassProjection {
     bool changed=false;
     [[nodiscard]] bool accepted() const noexcept {return issues.empty();}
 };
+[[nodiscard]] bool clusterContainsClassValue(const binding::TypeRef &type);
 [[nodiscard]] bool draftHasClasses(const FrogDraftData &);
 [[nodiscard]] CapturedClassProgram captureDraftClassProgram(const FrogDraftData &,std::string_view uri,
     const DraftDependencyResolver &);

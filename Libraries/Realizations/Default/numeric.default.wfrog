@@ -69,10 +69,22 @@
       "frog.realizations.default.numeric_indicator"
     ],
     "variants": [
-      "frog.realizations.default.numeric.rectangular"
+      "frog.realizations.default.numeric.rectangular",
+      "frog.realizations.default.numeric.horizontal_slider",
+      "frog.realizations.default.numeric.knob",
+      "frog.realizations.default.numeric.meter",
+      "frog.realizations.default.numeric.gauge",
+      "frog.realizations.default.numeric.vertical_slider",
+      "frog.realizations.default.numeric.tank"
     ],
     "resources": [
-      "frog.realizations.default.numeric.assets.rectangular_svg"
+      "frog.realizations.default.numeric.assets.rectangular_svg",
+      "frog.realizations.default.numeric.assets.horizontal_slider_svg",
+      "frog.realizations.default.numeric.assets.knob_svg",
+      "frog.realizations.default.numeric.assets.meter_svg",
+      "frog.realizations.default.numeric.assets.gauge_svg",
+      "frog.realizations.default.numeric.assets.vertical_slider_svg",
+      "frog.realizations.default.numeric.assets.tank_svg"
     ]
   },
   "realizations": [
@@ -83,7 +95,13 @@
       "variant_property": "realization.variant",
       "default_variant": "rectangular",
       "supported_variants": [
-        "rectangular"
+        "rectangular",
+        "horizontal_slider",
+        "knob",
+        "meter",
+        "gauge",
+        "vertical_slider",
+        "tank"
       ],
       "supported_parts": [
         "root",
@@ -121,7 +139,13 @@
       "variant_property": "realization.variant",
       "default_variant": "rectangular",
       "supported_variants": [
-        "rectangular"
+        "rectangular",
+        "horizontal_slider",
+        "knob",
+        "meter",
+        "gauge",
+        "vertical_slider",
+        "tank"
       ],
       "supported_parts": [
         "root",
@@ -166,6 +190,102 @@
         "supports_caption": true
       },
       "fallback": "host_rectangle_numeric"
+    },
+    {
+      "id": "frog.realizations.default.numeric.horizontal_slider",
+      "variant": "horizontal_slider",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.horizontal_slider_svg",
+      "geometry_posture": {
+        "shape_family": "horizontal_slider",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true
+      },
+      "fallback": "host_rectangle_numeric"
+    },
+    {
+      "id": "frog.realizations.default.numeric.knob",
+      "variant": "knob",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.knob_svg",
+      "geometry_posture": {
+        "shape_family": "knob",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true
+      },
+      "fallback": "host_rectangle_numeric"
+    },
+    {
+      "id": "frog.realizations.default.numeric.meter",
+      "variant": "meter",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.meter_svg",
+      "geometry_posture": {
+        "shape_family": "meter",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true
+      },
+      "fallback": "host_rectangle_numeric"
+    },
+    {
+      "id": "frog.realizations.default.numeric.gauge",
+      "variant": "gauge",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.gauge_svg",
+      "geometry_posture": {
+        "shape_family": "gauge",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true
+      },
+      "fallback": "host_rectangle_numeric"
+    },
+    {
+      "id": "frog.realizations.default.numeric.vertical_slider",
+      "variant": "vertical_slider",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.vertical_slider_svg",
+      "geometry_posture": {
+        "shape_family": "vertical_slider",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true
+      },
+      "fallback": "host_rectangle_numeric"
+    },
+    {
+      "id": "frog.realizations.default.numeric.tank",
+      "variant": "tank",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "resource_ref": "frog.realizations.default.numeric.assets.tank_svg",
+      "geometry_posture": {
+        "shape_family": "tank",
+        "layout_source": "front_panel_layout_rectangle",
+        "scales_to_layout": true,
+        "supports_caption": true
+      },
+      "fallback": "host_rectangle_numeric"
     }
   ],
   "resources": [
@@ -181,6 +301,114 @@
       "template_markers": {
         "template": "frog.realizations.default.numeric.rectangular",
         "variant": "rectangular",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    },
+    {
+      "id": "frog.realizations.default.numeric.assets.horizontal_slider_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_horizontal_slider.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "horizontal_slider",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.horizontal_slider",
+        "variant": "horizontal_slider",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    },
+    {
+      "id": "frog.realizations.default.numeric.assets.knob_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_knob.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "knob",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.knob",
+        "variant": "knob",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    },
+    {
+      "id": "frog.realizations.default.numeric.assets.meter_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_meter.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "meter",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.meter",
+        "variant": "meter",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    },
+    {
+      "id": "frog.realizations.default.numeric.assets.gauge_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_gauge.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "gauge",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.gauge",
+        "variant": "gauge",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    },
+    {
+      "id": "frog.realizations.default.numeric.assets.vertical_slider_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_vertical_slider.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "vertical_slider",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.vertical_slider",
+        "variant": "vertical_slider",
+        "part_attribute": "data-frog-part",
+        "binding_attribute": "data-frog-bind",
+        "member_attribute": "data-frog-member",
+        "anchor_attribute": "data-frog-anchor"
+      }
+    },
+    {
+      "id": "frog.realizations.default.numeric.assets.tank_svg",
+      "kind": "svg",
+      "path": "./assets/numeric/templates/numeric_tank.svg",
+      "target_classes": [
+        "frog.widgets.numeric_control",
+        "frog.widgets.numeric_indicator"
+      ],
+      "target_variant": "tank",
+      "template_markers": {
+        "template": "frog.realizations.default.numeric.tank",
+        "variant": "tank",
         "part_attribute": "data-frog-part",
         "binding_attribute": "data-frog-bind",
         "member_attribute": "data-frog-member",

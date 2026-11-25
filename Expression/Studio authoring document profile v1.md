@@ -1,6 +1,6 @@
 # Graiphic Studio authoring document profile, version 1
 
-Source compatibility updated 22 November 2026. This page describes
+Source compatibility updated 25 November 2026. This page describes
 the output and admission of specific Studio producers. The
 [coverage matrix](../docs/studio-source-compatibility.md) attributes the tested
 capabilities to their Studio and Frontend identities.
@@ -23,7 +23,7 @@ describes the captured producers and evidence from that date.
 
 The [structural schema](Schemas/frog.studio-document.schema.json) describes
 ordinary writer-shaped documents from revision 2 through the revision 9
-recovery envelope. The private class profile at revision 10 is outside this
+recovery envelope and the Type Definition and Cluster presentation extensions in revisions 12 and 13. The private class profile at revision 10 is outside this
 structural schema. Historical input 0/1 is handled by the reader and Studio
 migration. Full types, nested provider payloads, dependency resolution, repair
 and execution require the implementation validators.
@@ -44,7 +44,7 @@ select two source authorities. Changing a filename or replacing key spellings
 is not a migration. A public Source reader can preserve more constructs than
 the editing importer can materialize; reading and canvas editing are separate.
 
-The reader recognizes integers 0 through 11. The ordinary writer
+The reader recognizes integers 0 through 13. The ordinary writer
 currently emits at least revision 3 and always records `storage`, including
 when Readable is explicitly selected. The historical October writer emitted
 revision 2 without Storage. Features raise the minimum revision.
@@ -61,8 +61,9 @@ revision 2 without Storage. Features raise the minimum revision.
 | 8 | Linked standard Type Definitions on nodes and widgets |
 | 9 | Explicit Studio recovery copy carrying the retained origin |
 | 10 | Private class authoring profile with explicit composed dependency resolution |
-
 | 11 | Picture Ring catalogue on a panel widget or diagram constant, including nested presentations. The numeric choice and embedded images travel together. |
+| 12 | Linked Tab members or a structured recovery baseline for a large Type Definition. |
+| 13 | Cluster elements can store unsigned 32-bit presentation fields `stack_order` and `visual_group`, including inside nested controls. `logical_order` still identifies the field order in the Cluster value. |
 
 Revision 11 has its own [ordinary envelope schema](Schemas/frog.studio-picture-ring.schema.json).
 The reader also accepts Picture Rings written before the feature acquired its
@@ -190,8 +191,13 @@ be flattened internally, but serialization follows the explicit owner and
 region. Literal Cluster children retain `constant_owner_node_id`,
 `constant_field_id` and `constant_field_order`.
 
-For/While index terminals remain I64 and conditional terminals Boolean. Their
-saved normalized positions are geometry, never a special scheduling rule.
+For/While index terminals remain I64. A loop's conditional terminal evaluates a
+Boolean at the end of the iteration. When wired to an error cluster, it reads
+the Boolean `status` field on that branch. Other destinations on the wire receive
+the complete cluster. Stop on Error stops on true, and Continue while Error stops
+on false, including a warning with a nonzero code. A conditional For still
+honors its count and auto-indexing limits. The terminals' normalized positions
+describe their geometry.
 Typed tunnels retain their identities and modes. The common resolver owns
 derived selector and tunnel type hints. A future tunnel preview is
 not a connection until committed, and existing tunnels cannot be moved by the
@@ -259,6 +265,27 @@ Studio Save requires the definition to be saved first. The linked
 dependency handoff. Preserve the baseline, the instance values and its saved
 defaults when the link is unresolved. The baseline supports recovery and
 comparison. Execution still needs the applicable resolution and lowering.
+
+Studio Save and Save As write a definition path relative to the consumer
+when the files share a filesystem root. Moving a folder containing both
+files preserves that link. A Picture Ring definition carries the image
+resources and their ordered identities. Reordering the catalogue preserves
+each occurrence's selected image by identity and updates its numeric index.
+Removing its selected image requires reviewing that occurrence.
+
+Revision 12 preserves Tab membership by storing `tab_members` on the link.
+Each key identifies a child in the definition, and its value identifies the
+corresponding Front Panel object in that consumer. Child terminals and their
+wires keep the consumer's identities when the definition changes. A recovery
+widget above 8 MiB is stored as a JSON object in `baseline_widget`. The
+ordinary document and embedded-resource limits apply to this payload.
+
+A standalone `.ftype` keeps its identity and publication revision. Its file
+format is `frog.type_definition.draft`. File revision 1 stores the native
+widget in `root`, including the ordered image resources of a Picture Ring.
+File revision 2 stores a populated Tab in `tab_panel`, using an ordinary
+Studio panel document. The `tab_root_id` names its root. Each descendant
+retains its definition identity, page membership and bounds.
 
 Revision 9 is written by Studio recovery. The required
 `ide.recoverability.frog_document_recovery` object has `version: 1`,

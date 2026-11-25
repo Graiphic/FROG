@@ -14,6 +14,7 @@
 #include "frog_native_engine/CanonicalInPlaceDescriptor.hpp"
 #include "frog_native_engine/CanonicalCollectionDescriptor.hpp"
 #include "frog_native_engine/CanonicalNumericAggregate.hpp"
+#include "frog_native_engine/CanonicalVariantAnalysisNative.hpp"
 #include "frog_native_engine/CanonicalNumericFixedConstants.hpp"
 #include "frog_native_engine/CanonicalNumericArrayReduction.hpp"
 #include "frog_native_engine/CanonicalNumericRandom.hpp"
@@ -66,6 +67,7 @@
 #include <deque>
 #include <map>
 #include <set>
+#include <tuple>
 
 namespace frog::native_engine::structured_ir {
 namespace {
@@ -121,6 +123,7 @@ struct Builder {
     std::map<std::string,std::string> widgetPaths;
     std::set<std::string> edgeIds,regionIds;
     std::map<std::string,std::string> edgeRegions;
+    std::map<std::tuple<std::string,std::string,std::string>,CanonicalIrPort> eventPorts;
     // Borrowed only during this Builder's lifetime, after rawEdges is sealed.
     // Keys are synthetic FIR identities; sourceNodeId remains the real receiver.
     std::map<std::string,const RawEdge*> coercionOrigins;
@@ -190,12 +193,65 @@ struct Builder {
         if(!input&&sid==edge.owner&&pid.starts_with("event_data."))return pid+"@"+edge.region;
         return pid;
     }
+    bool scalarShiftRegisterReceiver(const CanonicalIrNode &target,const std::string &pid,
+        const binding::TypeRef &sourceType,const binding::TypeRef &targetType,const RawEdge &edge)const {
+        // Only the existing private Studio source profile reaches this Builder.
+        // A plain numeric state face has the resolver's initializer-priority
+        // contract; ordinary tunnels and public Source keep exact schemas.
+        if(target.family!="structure" ||
+           !((target.kind=="for_loop"&&target.authoredKind=="frog.studio.structures.for_loop") ||
+             (target.kind=="while_loop"&&target.authoredKind=="frog.studio.structures.while_loop") ||
+             (target.kind=="timed_loop"&&target.authoredKind=="frog.studio.structures.timed_loop")) ||
+           !canonicalNumericScalarCoercionSupported(sourceType,targetType))return false;
+        const auto raw=rawNodes.find(target.sourceNodeId);if(raw==rawNodes.end())return false;
+        const auto *boundary=raw->second.raw->member("boundary");
+        if(!boundary||boundary->type!=Json::Type::Object)return false;
+        const auto token=[](const Json *v)->std::string_view {
+            return v&&v->type==Json::Type::String?std::string_view(v->string):std::string_view{};
+        };
+        const Json *face=nullptr;bool writer=false;
+        for(const auto side:{"inputs","outputs"}) {
+            const auto *entries=boundary->member(side);if(!entries||entries->type!=Json::Type::Array)return false;
+            for(const auto &entry:entries->array) {
+                const auto id=token(entry.member("id"));if(id.empty())return false;
+                if(diagram_identity::tunnelInputId(id)==pid) {
+                    if(face)return false;face=&entry;writer=std::string_view(side)=="outputs";
+                }
+            }
+        }
+        if(!face)return false;
+        const auto pair=token(face->member("shift_register_pair_id"));if(pair.empty())return false;
+        if(writer) {
+            if(edge.owner!=target.sourceNodeId || std::none_of(out.regions.begin(),out.regions.end(),
+                [&](const auto &r){return r.ownerNodeId==target.id&&r.id==edge.region;}))return false;
+        } else if(edge.region!=target.regionId||edge.owner!=raw->second.owner)return false;
+        unsigned readers=0,writers=0;std::set<std::string> identities;
+        for(const auto side:{"inputs","outputs"})for(const auto &entry:boundary->member(side)->array) {
+            if(token(entry.member("shift_register_pair_id"))!=pair)continue;
+            const auto id=token(entry.member("id"));
+            if(id.empty()||!identities.insert(std::string(id)).second||token(entry.member("type"))!=targetType.canonical())return false;
+            if(const auto *mode=entry.member("tunnel_mode");mode&&token(mode)!="last_value")return false;
+            if(const auto *condition=entry.member("conditional");condition&&
+                (condition->type!=Json::Type::Boolean||condition->boolean))return false;
+            // Both declared faces retain the same complete state schema.
+            for(const bool input:{false,true}) {
+                const auto identity=input?diagram_identity::tunnelInputId(id):diagram_identity::tunnelOutputId(id);
+                const auto port=std::find_if(target.ports.begin(),target.ports.end(),[&](const auto &p){return p.id==identity&&p.input==input;});
+                if(port==target.ports.end())return false;
+                const auto schema=canonicalObjectReferenceReadType(parse(port->fullTypeJson));
+                if(!schema||!binding::fullTypeEqual(*schema,targetType))return false;
+            }
+            if(std::string_view(side)=="outputs")++writers;else ++readers;
+        }
+        return readers!=0&&writers==1;
+    }
     bool numericImplicitReceiver(const CanonicalIrNode &target,const std::string &pid,
-        const binding::TypeRef &sourceType,const binding::TypeRef &targetType,
+        const binding::TypeRef &sourceType,const binding::TypeRef &targetType,const RawEdge &edge,
         bool *declaredNumericArray=nullptr)const {
         if(declaredNumericArray)*declaredNumericArray=false;
         if(target.family=="widget_value")return target.role=="indicator"&&pid=="value";
         if(target.family=="structure") {
+            if(scalarShiftRegisterReceiver(target,pid,sourceType,targetType,edge))return true;
             // This Builder is selected only by the explicit Studio composed
             // Source profile. Public Source 0.1 retains its separate exact
             // corridor; its truncate-to-zero rule is not CoercionV1.
@@ -211,9 +267,13 @@ struct Builder {
             return declared&&declared->direction==FunctionPortDirection::Input&&declared->defaultValueType=="i64"&&
                 declared->connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit;
         }
-        // All other structure boundaries/state and Feedback retain their own
-        // exact contracts; this admission does not widen their scalar rules.
+        // Other structure boundaries and Feedback retain their own exact
+        // contracts; only the declared scalar state faces above may adapt.
         if(target.family!="primitive"||target.feedback)return false;
+        if(const auto *exponential=canonicalExponentialContract(target.kind))
+            return (pid=="x"||(exponential->binary&&pid=="y"))&&exponentialReal64LosslessInput(sourceType.name)&&
+                canonicalObjectReferenceFullTypeEqual(targetType,binding::TypeRef::primitive("f64"))&&
+                canonicalNumericScalarCoercionSupported(sourceType,targetType);
         const FunctionCatalogEntry *catalog=findFunctionCatalogEntryByDiagramNodeType(target.authoredKind);
         if(!catalog)catalog=findFunctionCatalogEntry(target.authoredKind);
         if(!catalog)if(const auto *scalar=canonicalScalarNativeContract(target.kind))catalog=findFunctionCatalogEntry(scalar->catalogId);
@@ -330,17 +390,35 @@ struct Builder {
             if(const auto *type=v.member("studio_authored_type"))n.authoredKind=text(type,p);
             if(const auto *config=v.member("studio_configuration"))n.configurationJson=encode(*config);
             if(const auto *schema=v.member("studio_type_schema"))n.fullTypeJson=encode(*schema);
-            std::set<std::pair<std::string,bool>> unique;
+            std::set<std::tuple<std::string,bool,std::string>> unique;
+            std::set<std::string> regionalOutputs,globalOutputs;
             for(const auto &entry:arrayAt(v.member("studio_ports"),p+"/studio_ports")) {
-                fields(entry,{"id","direction","type","studio_type_schema"},p+"/studio_ports");
+                fields(entry,{"id","direction","type","studio_type_schema","event_region"},p+"/studio_ports");
                 const auto id=text(entry.member("id"),p),direction=text(entry.member("direction"),p);
                 if(direction!="input"&&direction!="output")fail("IR_PORT_DIRECTION","Port direction is not declared.",p);
                 const auto schema=canonicalObjectReferenceReadType(objectAt(entry.member("studio_type_schema"),p));
                 if(!schema||!schema->known())fail("IR_PORT_TYPE","Port needs a complete admitted source type schema.",p);
                 const auto physical=canonicalObjectReferencePhysicalType(*schema).canonical();
                 if(physical!=text(entry.member("type"),p))fail("IR_PORT_TYPE","Physical port type differs from its sealed nominal representation.",p);
-                if(id.size()>options.limits.maximumSourceIdBytes||id.find('@')!=std::string::npos||!unique.emplace(id,direction=="input").second)fail("IR_PORT_ID","Source connector identities must be distinct, bounded and cannot use the reserved physical-region separator.",p);
-                n.ports.push_back({id,direction=="input",physical,encode(*entry.member("studio_type_schema"))});
+                const auto *region=entry.member("event_region");
+                const auto local=region?text(region,p):std::string{};
+                if(id.size()>options.limits.maximumSourceIdBytes||id.find('@')!=std::string::npos||!unique.emplace(id,direction=="input",local).second)fail("IR_PORT_ID","Source connector identities must be distinct within their scope, bounded and cannot use the reserved physical-region separator.",p);
+                CanonicalIrPort port{id,direction=="input",physical,encode(*entry.member("studio_type_schema"))};
+                if(region) {
+                    const auto rid=encodedId("region",sid)+":"+encodedId("",local).substr(1);
+                    const auto *structureKind=v.member("structure_type");
+                    if(local.empty()||n.family!="structure"||!structureKind||structureKind->string!="event_structure"||
+                        port.input||!id.starts_with("event_data.")||!regionIds.contains(rid)||globalOutputs.contains(id))
+                        fail("IR_EVENT_PORT_REGION","An Event Data output must name an actual case of its declaring Event Structure.",p);
+                    regionalOutputs.insert(id);
+                    eventPorts.emplace(std::tuple{sid,id,rid},std::move(port));
+                } else {
+                    if(!port.input) {
+                        if(regionalOutputs.contains(id))fail("IR_EVENT_PORT_REGION","An Event Data output cannot be both global and case-specific.",p);
+                        globalOutputs.insert(id);
+                    }
+                    n.ports.push_back(std::move(port));
+                }
             }
             if(n.family=="constant") {
                 if(text(v.member("constant_profile"),p)!=composedSourceProfile)fail("IR_CONSTANT_PROFILE","A composed constant requires its explicit profile.",p);
@@ -944,7 +1022,9 @@ struct Builder {
                 if(!relocated)fail("IR_FEEDBACK_INITIALIZER_SCOPE","Loop Entry captures its initializer before that loop starts; its producer must belong to the loop's external scope.",e.path);
             }
             if((a.region!=e.region&&source!=e.owner)||(b.region!=e.region&&sink!=e.owner&&!relocated))fail("IR_SCOPE_ESCAPE","A connection crosses a region without its actual owning structure's boundary or declared relocated initializer.",e.path);
-            const auto &originalA=port(na,ap,false,e.path),&originalB=port(nb,bp,true,e.path);
+            const auto regional=source==e.owner?eventPorts.find({source,ap,e.region}):eventPorts.end();
+            const auto &originalA=regional!=eventPorts.end()?regional->second:port(na,ap,false,e.path);
+            const auto &originalB=port(nb,bp,true,e.path);
             const auto typeA=canonicalObjectReferenceReadType(parse(originalA.fullTypeJson)),typeB=canonicalObjectReferenceReadType(parse(originalB.fullTypeJson));
             // Display field names and choice presentation remain attributed to
             // their own ports. They do not make a valid typed wire incompatible.
@@ -952,19 +1032,23 @@ struct Builder {
             // semantic label/value order, as the editor's binding contract does.
             const bool same=originalA.typeRef==originalB.typeRef&&typeA&&typeB&&*typeA==*typeB;
             bool declaredNumericArray=false;
-            const bool receiver=!same&&typeA&&typeB&&numericImplicitReceiver(nb,bp,*typeA,*typeB,&declaredNumericArray)&&
+            const bool receiver=!same&&typeA&&typeB&&numericImplicitReceiver(nb,bp,*typeA,*typeB,e,&declaredNumericArray)&&
                 binding::connect(*typeA,*typeB,binding::ConnectionPolicy::NumericImplicit).status==binding::ResolutionStatus::Coercion;
             const bool scalarCoercion=receiver&&canonicalNumericScalarCoercionSupported(*typeA,*typeB);
             // Reuse the existing finite typed conversion operators only for
             // Array contracts which actually require this receiver schema.
-            // Public/Core, structure state, Enum and reference rules stay exact.
+            // Public/Core, aggregate state, Enum and reference rules stay exact.
             const bool arrayReceiver=(nb.family=="primitive"&&(nb.authoredKind.starts_with("frog.studio.array.")||nb.authoredKind.starts_with("array.")))||
                 (declaredNumericArray&&typeA&&typeB&&plainNumericArray(*typeA)&&plainNumericArray(*typeB));
             const auto treeCoercion=receiver&&!scalarCoercion&&arrayReceiver?canonicalNumericTreeCoercionRecipe(*typeA,*typeB):std::nullopt;
-            const bool coerce=scalarCoercion||treeCoercion.has_value();
+            const bool boxVariant=!same&&typeA&&typeB&&binding::requiresVariantBoxing(*typeA,*typeB);
+            const bool loopStatus=typeA&&typeB&&scalarErrorRoles(*typeA)&&*typeB==binding::TypeRef::primitive("bool")&&
+                nb.family=="structure"&&(nb.kind=="for_loop"||nb.kind=="while_loop"||nb.kind=="timed_loop")&&
+                bp=="condition"&&sink==e.owner;
+            const bool coerce=scalarCoercion||treeCoercion.has_value()||boxVariant||loopStatus;
             const bool errorBridge=!same&&typeA&&typeB&&scalarErrorRoles(*typeA)&&scalarErrorRoles(*typeB)&&
                 binding::connect(*typeA,*typeB,binding::ConnectionPolicy::Exact).accepted();
-            if(!same&&!coerce&&!errorBridge)fail("IR_EDGE_TYPE","Connection loses its semantic type or declared representation; no admitted typed NumericImplicit receiver permits adaptation.",e.path);
+            if(!same&&!coerce&&!errorBridge)fail("IR_EDGE_TYPE","Connection loses its semantic type or declared representation; the receiver does not admit this conversion.",e.path);
             const auto qa=qualified(e,source,ap,false),qb=qualified(e,sink,bp,true);
             const auto clone=[&](CanonicalIrNode &n,const CanonicalIrPort &old,const std::string &id) {
                 if(id==old.id)return;
@@ -981,24 +1065,41 @@ struct Builder {
                 scalarErrorBridge(e,a,b,id,source,sink,fromId,qa,toId,qb,ca,cb,*typeA,*typeB);
             } else if(coerce) {
                 if(out.nodes.size()>=options.limits.maximumNodes||out.connections.size()+2>options.limits.maximumEdges)
-                    fail("IR_RESOURCE_LIMIT","Derived numeric coercions exceed the existing FIR node/edge budget.",e.path,true);
+                    fail("IR_RESOURCE_LIMIT","Derived connector conversions exceed the existing FIR node/edge budget.",e.path,true);
                 CanonicalIrNode cast;cast.id=encodedId("node-coercion",id);cast.sourceNodeId=sink;
-                cast.family="primitive";cast.kind=treeCoercion?std::string(treeCoercion->operationId):std::string(canonicalNumericCoercionId);cast.role="data";cast.regionId=e.region;
+                cast.family="primitive";cast.role="data";cast.regionId=e.region;
                 cast.valueType=cb.typeRef;cast.fullTypeJson=cb.fullTypeJson;
-                const auto castInput=treeCoercion?std::string(treeCoercion->inputPort):std::string("in");
-                cast.ports={{castInput,true,ca.typeRef,ca.fullTypeJson},{"result",false,cb.typeRef,cb.fullTypeJson}};
-                auto configuration=object();configuration.object={{"profile",string(std::string(canonicalNumericCoercionProfile))},
-                    {"source_edge_id",string(id)},{"source_type",string(ca.typeRef)},{"target_type",string(cb.typeRef)},
-                    {"receiver_node_id",string(sink)},{"receiver_port_id",string(bp)}};
-                cast.configurationJson=encode(configuration);
-                std::vector<CanonicalNumericAggregatePort> signature{{castInput,*typeA,true,true},{"result",*typeB,false,true}};
-                std::string why,at;if(!(canonicalNumericComplexContract(cast.kind)?canonicalNumericComplexSignatureValid(cast.kind,signature,&why):canonicalNumericAggregateSignatureValid(cast.kind,signature,&why,&at)))
-                    fail("IR_NUMERIC_COERCION_SIGNATURE",why,e.path);
+                std::string castInput,castOutput;
+                if(loopStatus) {
+                    // Project only this receiving branch. A second consumer of the source sees the whole Error record.
+                    castInput="cluster";castOutput="element1";
+                    const auto operation=CanonicalObjectReferenceKind::Select;
+                    cast.kind=canonicalObjectReferenceOperation(operation);
+                    CanonicalObjectReferenceDiagnostic diagnostic;
+                    cast.objectReference=canonicalObjectReferenceRecordDescriptor(operation,*typeA,
+                        {{castInput,ca.typeRef,ca.fullTypeJson,true,true,{}},{castOutput,cb.typeRef,cb.fullTypeJson,false,false,{}}},
+                        {{typeA->fieldIds.front()}},nullptr,e.path,&diagnostic);
+                    if(!cast.objectReference)fail("IR_LOOP_STATUS_PROJECTION",diagnostic.message,e.path);
+                } else if(boxVariant) {
+                    cast.kind=canonicalVariantPrimitiveMigrationIdentity("variant.to_variant");
+                    castInput="data";castOutput="variant";
+                } else {
+                    cast.kind=treeCoercion?std::string(treeCoercion->operationId):std::string(canonicalNumericCoercionId);
+                    castInput=treeCoercion?std::string(treeCoercion->inputPort):std::string("in");castOutput="result";
+                    auto configuration=object();configuration.object={{"profile",string(std::string(canonicalNumericCoercionProfile))},
+                        {"source_edge_id",string(id)},{"source_type",string(ca.typeRef)},{"target_type",string(cb.typeRef)},
+                        {"receiver_node_id",string(sink)},{"receiver_port_id",string(bp)}};
+                    cast.configurationJson=encode(configuration);
+                    std::vector<CanonicalNumericAggregatePort> signature{{castInput,*typeA,true,true},{castOutput,*typeB,false,true}};
+                    std::string why,at;if(!(canonicalNumericComplexContract(cast.kind)?canonicalNumericComplexSignatureValid(cast.kind,signature,&why):canonicalNumericAggregateSignatureValid(cast.kind,signature,&why,&at)))
+                        fail("IR_NUMERIC_COERCION_SIGNATURE",why,e.path);
+                }
+                cast.ports={{castInput,true,ca.typeRef,ca.fullTypeJson},{castOutput,false,cb.typeRef,cb.fullTypeJson}};
                 const auto inputEdge=encodedId("edge-coercion-input",id),outputEdge=encodedId("edge",id),castId=cast.id;
                 if(castId.size()>options.limits.maximumIrIdBytes||inputEdge.size()>options.limits.maximumIrIdBytes)
                     fail("IR_RESOURCE_LIMIT","Derived coercion identities exceed the existing FIR identity budget.",e.path,true);
                 out.connections.push_back({inputEdge,id,{fromId,qa},{castId,castInput}});
-                out.connections.push_back({outputEdge,id,{castId,"result"},{toId,qb}});
+                out.connections.push_back({outputEdge,id,{castId,castOutput},{toId,qb}});
                 map(encodedId("map-coercion-input",id),"diagram_edge",e.path,inputEdge,"connection","support_only");
                 map(encodedId("map-edge",id),"diagram_edge",e.path,outputEdge,"connection");
                 map(encodedId("map-coercion",id),"diagram_edge",e.path,castId,"support_object","support_only");
@@ -1209,14 +1310,25 @@ void Builder::structures() {
         } else if(s.kind=="for_loop") {
             if(s.regionIds.size()!=1)fail("IR_LOOP_REGION","A For has exactly one explicit body.",p);
             s.iterationPortId=terminal("index",true);s.countPortId=terminal("count",false);s.countValuePortId=terminal("count",true);
+            if(const auto *condition=terminals.member("condition")) {
+                s.conditionPortId=terminal("condition",true);
+                const auto role=text(condition->member("role"),p);
+                if(s.conditionPortId!="condition"||text(condition->member("type"),p)!="bool"||
+                   flag(condition->member("outer_visible"))||!flag(condition->member("exposed_in_body"))||
+                   flag(condition->member("read_only"))||(role!="stop_if_true"&&role!="continue_while_true"))
+                    fail("IR_FOR_CONDITION","The For condition requires a Boolean body input with an explicit stop mode.",p);
+                s.stopIfTrue=role=="stop_if_true";
+            }
         } else if(s.kind=="case") {s.selectorPortId=terminal("selector",false);s.selectedCasePortId=terminal("selector",true);}
         else if(s.kind=="event_structure")s.timeoutPortId=terminal("timeout",false);
         std::map<std::string,CanonicalIrShiftRegister> groups;
         const auto &boundary=objectAt(v.member("boundary"),p);
         fields(boundary,{"inputs","outputs"},p+"/boundary");std::set<std::string> boundaryIds;
         for(const auto side:{"inputs","outputs"})for(const auto &entry:arrayAt(boundary.member(side),p+"/boundary/"+side)) {
-            fields(entry,{"id","type","shift_register_pair_id","shift_register_history_index","tunnel_mode","indexing_policy","conditional","use_default_if_unwired"},p+"/boundary/"+side);
+            fields(entry,{"id","type","shift_register_pair_id","shift_register_history_index","tunnel_mode","indexing_policy","conditional","use_default_if_unwired","invocation_state"},p+"/boundary/"+side);
             const bool output=std::string_view(side)=="outputs";const auto tid=text(entry.member("id"),p);
+            if(entry.member("invocation_state")&&(output||!entry.member("shift_register_pair_id")))
+                fail("IR_SHIFT_REGISTER_OWNER","Invocation state belongs to a callee register input.",p);
             if(!boundaryIds.insert(tid).second)fail("IR_TUNNEL_ID","Each logical tunnel must have one distinct identity.",p);
             const auto input=diagram_identity::tunnelInputId(tid),read=diagram_identity::tunnelOutputId(tid);
             auto inputPort=std::find_if(n.ports.begin(),n.ports.end(),[&](const auto &p){return p.input&&p.id==input;});
@@ -1248,7 +1360,22 @@ void Builder::structures() {
             if(const auto *pair=entry.member("shift_register_pair_id")) {
                 if(s.kind!="while_loop"&&s.kind!="timed_loop"&&s.kind!="for_loop")fail("IR_SHIFT_REGISTER_OWNER","A shift register must belong to its actual loop.",p);
                 auto &g=groups[text(pair,p)];g.pairId=text(pair,p);
-                if(output) {if(!g.writePortId.empty())fail("IR_SHIFT_REGISTER_PAIR","A shift register has one writer.",p);g.writePortId=input;g.resultPortId=read;}
+                if(const auto *state=entry.member("invocation_state")){
+                    fields(objectAt(state,p),{"owner","cell","frame"},p);
+                    g.invocationOwner=text(state->member("owner"),p);
+                    g.invocationCell=text(state->member("cell"),p);
+                    g.invocationFrame=encodedId("node",text(state->member("frame"),p));
+                }
+                if(output) {
+                    if(!g.writePortId.empty())fail("IR_SHIFT_REGISTER_PAIR","A shift register has one writer.",p);
+                    const auto writer=std::find_if(out.connections.begin(),out.connections.end(),
+                        [&](const auto &edge){return edge.to.objectId==n.id&&edge.to.portId==input;});
+                    if(writer==out.connections.end())fail("IR_SHIFT_REGISTER_MISSING_WRITER",
+                        "Shift register "+tid+" has no body wire to its write port "+input+".",p);
+                    if(edgeRegions.at(writer->sourceEdgeId)!=s.regionIds.front())
+                        fail("IR_SHIFT_REGISTER_SCOPE","Shift register "+tid+" must be written in its owning loop body.",p);
+                    g.writePortId=input;g.resultPortId=read;
+                }
                 else {
                     std::size_t history=0;if(const auto *h=entry.member("shift_register_history_index")) {const auto parsed=std::from_chars(h->string.data(),h->string.data()+h->string.size(),history);if(parsed.ec!=std::errc{}||parsed.ptr!=h->string.data()+h->string.size()||history>1024)fail("IR_SHIFT_REGISTER_HISTORY","History index must remain exact and bounded.",p);}
                     g.stages.push_back({tid,input,read,known.typeRef,history});
@@ -1331,7 +1458,17 @@ void Builder::structures() {
                 if(original==rs.end()||!c.member("event")||!original->member("event")||!exact(*c.member("event"),*original->member("event")))fail("IR_EVENT_CASES","Event subscription metadata differs from its actual region.",p);
                 c.object["fir_region_id"]=string(rid);auto fields=array();
                 for(const auto &np:n.ports)if(!np.input&&np.id.starts_with("event_data.")&&np.id.ends_with("@"+rid)) {
-                    const auto end=np.id.rfind('@');const auto field=np.id.substr(11,end-11);auto entry=object();
+                    const auto end=np.id.size()-rid.size()-1;
+                    auto field=np.id.substr(11,end-11);
+                    if(const auto occurrence=field.find('#');occurrence!=std::string::npos) {
+                        const auto suffix=std::string_view(field).substr(occurrence+1);
+                        std::size_t row=0;
+                        const auto parsed=std::from_chars(suffix.data(),suffix.data()+suffix.size(),row);
+                        if(parsed.ec!=std::errc{}||parsed.ptr!=suffix.data()+suffix.size())
+                            fail("IR_EVENT_FIELD","An Event Data row occurrence must be a numeric index.",p);
+                        field.resize(occurrence);
+                    }
+                    auto entry=object();
                     entry.object={{"id",string(field)},{"port",string(np.id)},{"type",string(np.typeRef)},{"studio_type_schema",parse(np.fullTypeJson)}};fields.array.push_back(std::move(entry));
                 }
                 c.object["fir_fields"]=std::move(fields);

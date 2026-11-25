@@ -233,6 +233,15 @@ void appendStructureBoundary(
                 output << ", \"shift_register_pair_id\": ";
                 appendJsonString(output, tunnel.shiftRegisterPairId);
             }
+            if (tunnel.invocationState) {
+                output << ", \"invocation_state\": { \"owner\": ";
+                appendJsonString(output, tunnel.invocationState->owner);
+                output << ", \"cell\": ";
+                appendJsonString(output, tunnel.invocationState->cell);
+                output << ", \"frame\": ";
+                appendJsonString(output, tunnel.invocationState->frame);
+                output << " }";
+            }
             if (tunnel.shiftRegisterHistoryIndex != 0)
                 output << ", \"shift_register_history_index\": " << tunnel.shiftRegisterHistoryIndex;
             if (tunnel.outputFromStructure && tunnel.useDefaultIfUnwired) {

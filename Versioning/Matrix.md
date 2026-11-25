@@ -301,6 +301,18 @@ The widget layer is organized as a standard-facing surface rather than a collect
 The current implementation priority remains to keep the bounded Examples 01–15 executable corridor, reference checks, widget validation, and version-governance posture coherent. The separate 47-directory example inventory must not be used as a runtime coverage count.
 </p>
 
+## Corpus 0.1-draft.2 — syntax release of 25 November 2026
+
+| Retained feature | Minimum Studio draft revision | Compatible reader behavior |
+| --- | --- | --- |
+| Tab member identity mapping or object-form Type Definition recovery baseline | 12 | Readers supporting up to 11 refuse the higher revision. Existing, simpler links keep their prior minimum. |
+| Cluster field presentation with `stack_order` or `visual_group` | 13 | Readers supporting up to 12 refuse the higher revision. Each field's logical order and value remain independent of display order and grouping. |
+| Typed wire reaching a Variant input or an error wire reaching a loop condition | Existing revision required by the graph | Binding is resolved on the receiver. A conditional For may stop after a completed iteration within its count or auto-indexing limit. |
+
+The shared reader admits revisions 0–13. Canonical Source and FIR retain their
+0.1 compatibility identifiers. See the [Studio writer profile](../Expression/Studio%20authoring%20document%20profile%20v1.md)
+and the [format conformance tests](../Implementations/Reference/Validator/tests/test_studio_source_versioning.py).
+
 ## Corpus 0.1-draft.1 — syntax release of 22 November 2026
 
 The [Studio authoring profile](../Expression/Studio%20authoring%20document%20profile%20v1.md#envelopes-and-revision-admission)

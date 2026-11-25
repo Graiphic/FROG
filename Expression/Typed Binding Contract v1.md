@@ -114,6 +114,13 @@ implicit connections preserve the declared target type; aggregate rank/contractu
 must match. Cluster fields and resolved enum definitions use exact identity. Execution conversion rules
 remain separately enforced by the target/provider.
 
+A receiver declared as `Variant` accepts a resolved source value of any type.
+The conversion belongs to the receiving connection. It preserves the source's
+complete type and value inside the Variant, including cluster field identities
+and array dimensions. Other destinations keep the original wire type. Studio
+marks this conversion with a red dot at the receiver. An existing Variant
+passes through directly, with its attributes and payload intact.
+
 ## 4. Structure contract and Case equivalence classes
 
 The first manifest is [case.bindings.v1.json](../Libraries/Structures/case.bindings.v1.json).

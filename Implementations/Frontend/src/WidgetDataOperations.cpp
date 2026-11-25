@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "frog_native_engine/WidgetDataOperations.hpp"
+#include "frog_native_engine/HorizontalSlider.hpp"
 #include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
@@ -118,6 +119,14 @@ void intrinsic(WidgetInstance &widget) {
             static_cast<void>(assignCollectionData(*widget.collection,*collectionValue(*empty)));
     }else if (auto *cluster = clusterContainerState(widget)) {
         for (auto &field : cluster->elements) if (field.widget) *field.widget = defaultValue(*field.widget);
+        if (numeric_instrument::isRange(numeric_instrument::kind(widget.assetRef)) && cluster->elements.size() == 2) {
+            const double low = widget.numericMinimum.value_or(0), high = widget.numericMaximum.value_or(100);
+            for (const bool upper : {true, false}) {
+                const auto &field = cluster->elements[upper ? 1U : 0U].widget;
+                if (field && !field->defaultData)
+                    static_cast<void>(numeric_instrument::setValue(widget, std::lerp(low, high, upper ? 0.75 : 0.25), upper));
+            }
+        }
     } else if (auto *array = arrayContainerState(widget)) {
         array->shape.assign(array->rank, 0); array->elements.clear();
     } else if(widget.xyGraph) {
@@ -252,6 +261,17 @@ std::optional<WidgetInstance> decode(std::string_view value) {
     auto result = deserializeArrayElementWidget(value);
     if (!result || !supported(*result)) return {};
     sanitize(*result); return result;
+}
+
+std::optional<WidgetInstance> decodeStoredDefault(const WidgetInstance &owner,std::string_view bytes) {
+    if(!isPictureIndicatorWidget(owner))return decode(bytes);
+    // Picture Display persists the ordinary widget snapshot, although its
+    // read-only image is outside the user-facing Copy/Paste Data command.
+    if(bytes.empty()||bytes.size()>maximumBytes)return {};
+    auto saved=deserializeArrayElementWidget(bytes);
+    if(!saved||!isPictureIndicatorWidget(*saved)||saved->valueType!=owner.valueType)return {};
+    sanitize(*saved);
+    return saved;
 }
 
 std::optional<WidgetInstance> read(const WidgetInstance &root, const ContainedWidgetPath &path) {

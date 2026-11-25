@@ -4,9 +4,16 @@
 #include "frog_native_engine/WidgetBindingType.hpp"
 #include "frog_native_engine/WidgetDataOperations.hpp"
 #include "frog_native_engine/FrogDocumentWidgetValues.hpp"
+#include "frog_native_engine/ApplicationControlSourceCodec.hpp"
+#include "frog_native_engine/ListboxWidget.hpp"
+#include "frog_native_engine/PictureRing.hpp"
+#include "frog_native_engine/ReferenceWidget.hpp"
+#include "frog_native_engine/TabControl.hpp"
+#include "frog_native_engine/WidgetFamilyEngine.hpp"
 #include "frog_native_engine/Sha256.hpp"
 #include "FrogDocumentJsonValue.hpp"
 #include "FrogDocumentJsonWriter.hpp"
+#include "FrogDocumentStructureSerializationHelpers.hpp"
 #include <algorithm>
 #include <array>
 #include <charconv>
@@ -15,6 +22,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <unordered_set>
+#include <unordered_map>
 
 namespace frog::native_engine {
 namespace {
@@ -50,15 +58,47 @@ std::vector<const ClusterElement *> ordered(const ClusterContainerState &cluster
     std::vector<const ClusterElement *> result;for(const auto &field:cluster.elements)result.push_back(&field);
     std::stable_sort(result.begin(),result.end(),[](auto *a,auto *b){return a->logicalOrder<b->logicalOrder;});return result;
 }
+std::string_view schemaFamily(const WidgetInstance &widget) {
+    if(widget.pictureRing)return "picture-ring";
+    if(isStringDropdownWidget(widget))return "string-dropdown";
+    if(isTabWidget(widget))return "tab";
+    if(isButtonWidget(widget)||isBooleanWidget(widget))return "boolean";
+    const auto *definition=widgetDefinition(widget);
+    if(!definition)return widget.classId;
+    auto id=definition->classId;
+    for(const std::string_view suffix:{"_control","_indicator"})
+        if(id.ends_with(suffix)) {id.remove_suffix(suffix.size());break;}
+    return id;
+}
+void framed(std::ostream &out,std::string_view value) {out<<value.size()<<':'<<value;}
 void schemaText(std::ostringstream &out,const WidgetInstance &widget) {
     const auto type=binding::widgetType(widget);out<<type.type.canonical()<<';';
+    // Keep V1 fingerprints for the original scalar, cluster and Array shapes.
+    if(widget.pictureRing||isTabWidget(widget)||isStringDropdownWidget(widget)||
+        !(isNumericWidget(widget)||isBooleanWidget(widget)||isButtonWidget(widget)||isStringWidget(widget)||
+          isEnumWidget(widget)||isArrayWidget(widget)||isClusterWidget(widget)))framed(out,schemaFamily(widget));
+    if(widget.referenceValue||widget.collection||widget.xyGraph||widget.waveformGraph) {
+        framed(out,jsonText(application_control_source::writeType(type.type)));
+    }
+    if(widget.collection) {
+        framed(out,hashing::sha256Hex(widget.collection->keyPresentation));
+        framed(out,hashing::sha256Hex(widget.collection->valuePresentation));
+    }
+    if(isListboxWidget(widget)) {
+        const auto state=listbox_widget::state(widget);
+        out<<static_cast<int>(state.selection.mode)<<';'<<static_cast<int>(state.projection)<<';';
+    }
     if(isNumericWidget(widget)) {
         const auto representation=numericRepresentationKind(widget);out<<representation<<';';
         if(representation=="fixed_point") {const auto fixed=fixedPointConfiguration(widget);
             out<<fixed.signedEncoding<<':'<<fixed.complex<<':'<<fixed.wordLength<<':'<<fixed.integerWordLength<<':'<<fixed.roundingMode<<':'<<fixed.overflowMode<<';';}
     }
-    if(isEnumWidget(widget))for(const auto &item:widget.ringItems)
+    if(typeDefinitionHasChoiceCatalog(widget))for(const auto &item:widget.ringItems) {
         out<<item.id.size()<<':'<<item.id<<item.label.size()<<':'<<item.label<<'='<<item.value<<';';
+        if(item.disabled||!item.visible)out<<"flags:"<<item.disabled<<','<<item.visible<<';';
+        if(widget.pictureRing)framed(out,item.imageDataUri?hashing::sha256Hex(*item.imageDataUri):std::string{});
+        if(isTabWidget(widget)) {framed(out,tabPageCaption(item));out<<item.captionMatchesLabel<<';';}
+    }
     if(const auto *cluster=clusterContainerState(widget))for(const auto *field:ordered(*cluster)) {
         out<<field->fieldId.size()<<':'<<field->fieldId;
         if(field->widget) {out<<field->widget->label.size()<<':'<<field->widget->label;schemaText(out,*field->widget);}
@@ -86,7 +126,7 @@ void refreshNestedLinks(WidgetInstance &local,const WidgetInstance &source,bool 
     }
 }
 bool associationShape(const WidgetInstance &local,const WidgetInstance &source,unsigned depth=0) {
-    if(depth>128)return false;
+    if(depth>128||!typeDefinitionSameWidgetFamily(local,source))return false;
     if(const auto *cluster=clusterContainerState(local)) {
         const auto *other=clusterContainerState(source);if(!other || cluster->elements.size()!=other->elements.size())return false;
         const auto a=ordered(*cluster),b=ordered(*other);
@@ -98,12 +138,14 @@ bool associationShape(const WidgetInstance &local,const WidgetInstance &source,u
         const auto *other=arrayContainerState(source);return other && array->rank==other->rank &&
             array->elementTemplate && other->elementTemplate && associationShape(*array->elementTemplate,*other->elementTemplate,depth+1);
     }
-    if(isEnumWidget(local) || isEnumWidget(source)) {
-        if(!isEnumWidget(local)||!isEnumWidget(source)||local.ringItems.size()!=source.ringItems.size())return false;
+    if(typeDefinitionHasChoiceCatalog(local)) {
+        if(local.ringItems.size()!=source.ringItems.size())return false;
         for(std::size_t i=0;i<local.ringItems.size();++i)
             if(local.ringItems[i].label!=source.ringItems[i].label || local.ringItems[i].value!=source.ringItems[i].value)return false;
         return true;
     }
+    if(isReferenceWidget(local)&&isReferenceWidget(source))
+        return binding::connect(referenceWidgetType(local),referenceWidgetType(source)).accepted();
     return binding::widgetType(local).type==binding::widgetType(source).type ||
         (isNumericWidget(local)&&isNumericWidget(source));
 }
@@ -132,14 +174,30 @@ bool alignAssociation(WidgetInstance &local,const WidgetInstance &source,bool de
             prepared->defined=cell.defined;prepared->enabled=cell.enabled;preparedCells.push_back(std::move(*prepared));
         }
         array=arrayContainerState(local);array->elements=std::move(preparedCells);
-    } else if(isEnumWidget(local)) {
-        const auto id=ringSelectedItemId(local);const auto found=std::find_if(local.ringItems.begin(),local.ringItems.end(),[&](const auto &item){return item.id==id;});
-        if(found==local.ringItems.end())return false;const auto index=static_cast<std::size_t>(found-local.ringItems.begin());
+    } else if(typeDefinitionHasChoiceCatalog(local)) {
+        // First association may match equivalent independently authored items.
+        // Later revisions always migrate by the adopted stable identity.
+        if(!local.ringItems.empty() && local.ringItems.size()!=source.ringItems.size())return false;
+        const auto previous=local.ringItems;
+        auto state=isListboxWidget(local)?std::optional{listbox_widget::state(local)}:std::nullopt;
+        const auto alignedId=[&](const std::string &id) {
+            const auto it=std::find_if(previous.begin(),previous.end(),[&](const auto &item){return item.id==id;});
+            return it==previous.end()?id:source.ringItems[static_cast<std::size_t>(it-previous.begin())].id;
+        };
+        if(local.tabContainer)local.tabContainer->editorPageId=alignedId(local.tabContainer->editorPageId);
         local.ringItems=source.ringItems;local.enumDomainId=source.enumDomainId;local.valueType=source.valueType;
-        local.numericValue=double(source.ringItems[index].value);local.initialValue=source.ringItems[index].id;
+        if((isEnumWidget(local)||isTabWidget(local)) && local.initialValue)
+            local.initialValue=alignedId(*local.initialValue);
+        if(state) {
+            for(auto &id:state->selection.selected)id=alignedId(id);
+            state->selection.active=alignedId(state->selection.active);
+            state->selection.anchor=alignedId(state->selection.anchor);
+            if(!listbox_widget::validate(local,*state).empty())return false;
+            static_cast<void>(listbox_widget::setState(local,*state));
+        }
     }
     if(defaults && saved) {
-        auto value=data_operations::decode(*saved);if(!value || !alignAssociation(*value,source,false,depth+1))return false;
+        auto value=data_operations::decodeStoredDefault(local,*saved);if(!value || !alignAssociation(*value,source,false,depth+1))return false;
         const auto encoded=data_operations::encode(*value);if(encoded.empty())return false;local.defaultData=encoded;
     }
     return refreshContainedWidgetSchemaMetadata(local);
@@ -166,21 +224,76 @@ struct Migration {
         result.supportTextValue=next.supportTextValue;
         result.numericRepresentationKind=next.numericRepresentationKind;result.numericFixedPointConfiguration=next.numericFixedPointConfiguration;
         result.enumDomainId=next.enumDomainId;result.ringItems=next.ringItems;
+        result.pictureRing=next.pictureRing;result.stringDropdown=next.stringDropdown;
+        result.numericColorBox=next.numericColorBox;result.ringAllowUndefinedValues=next.ringAllowUndefinedValues;
+        result.collection=next.collection;result.xyGraph=next.xyGraph;result.waveformGraph=next.waveformGraph;
+        result.pictureDisplay=next.pictureDisplay;result.referenceValue=next.referenceValue;
+        result.tabContainer=next.tabContainer;result.listboxState=next.listboxState;
         result.arrayContainer=next.arrayContainer;result.clusterContainer=next.clusterContainer;
-        remapChildIdentity(result,old.instanceId);result.role=old.role;result.bounds=old.bounds;
-        const bool indicator=old.role=="indicator";
-        if(isClusterWidget(result))static_cast<void>(setClusterWidgetIndicatorRole(result,indicator));
-        else if(isArrayWidget(result))static_cast<void>(setArrayWidgetIndicatorRole(result,indicator));
-        else if(isEnumWidget(result))static_cast<void>(setEnumWidgetIndicatorRole(result,indicator));
-        else if(isBooleanWidget(result))static_cast<void>(setBooleanWidgetIndicatorRole(result,indicator));
-        else if(isButtonWidget(result))static_cast<void>(setButtonWidgetIndicatorRole(result,indicator));
-        else if(isStringWidget(result))static_cast<void>(setStringWidgetIndicatorRole(result,indicator));
-        else if(isNumericWidget(result))static_cast<void>(setNumericWidgetIndicatorRole(result,indicator));
+        remapChildIdentity(result,old.instanceId);result.role=next.role;result.bounds=old.bounds;
+        static_cast<void>(setWidgetRole(result,old.role=="indicator"?WidgetRole::Indicator:WidgetRole::Control));
         result.label=old.label;result.caption=old.caption;result.captionVisible=old.captionVisible;
         result.labelOffsetX=old.labelOffsetX;result.labelOffsetY=old.labelOffsetY;
         result.publicInputId=old.publicInputId;result.publicOutputId=old.publicOutputId;
         result.interfaceMapSlotId=old.interfaceMapSlotId;result.interfaceConnectionRequirement=old.interfaceConnectionRequirement;
         return result;
+    }
+    void choices(WidgetInstance &result,const WidgetInstance &old,const WidgetInstance &previous,
+        const WidgetInstance &next,const std::string &path) {
+        result.ringItems=next.ringItems;
+        result.enumDomainId=next.enumDomainId;
+        result.valueType=next.valueType;
+        result.numericRepresentationKind=next.numericRepresentationKind;
+        result.ringAllowUndefinedValues=next.ringAllowUndefinedValues;
+        // Retain per-occurrence presentation changes, while inheriting a new
+        // flag when the occurrence still has its previous definition's value.
+        for(auto &item:result.ringItems) {
+            const auto find=[&](const auto &list){return std::find_if(list.begin(),list.end(),
+                [&](const RingItem &candidate){return candidate.id==item.id;});};
+            const auto local=find(old.ringItems),base=find(previous.ringItems);
+            if(local!=old.ringItems.end()&&base!=previous.ringItems.end()) {
+                if(local->disabled!=base->disabled)item.disabled=local->disabled;
+                if(local->visible!=base->visible)item.visible=local->visible;
+            }
+        }
+        if(isListboxWidget(old)) {
+            auto selection=listbox_widget::state(old);
+            const auto edited=listbox_widget::state(next);
+            selection.projection=edited.projection;selection.selection.mode=edited.selection.mode;
+            if(const auto reason=listbox_widget::validate(result,selection);!reason.empty()) {
+                conflict("typedef.listbox_selection",reason,old,next,path);
+                selection=edited;
+            }
+            static_cast<void>(listbox_widget::setState(result,std::move(selection)));return;
+        }
+        if(isTabWidget(result)&&result.tabContainer&&next.tabContainer) {
+            result.tabContainer->nextPageSerial=next.tabContainer->nextPageSerial;
+            if(!tabPageIndex(result,result.tabContainer->editorPageId))
+                result.tabContainer->editorPageId=tabEditorPageId(next);
+        }
+        // Picture Ring saved defaults hold the U16 index alone. Resolve it
+        // against the previous catalogue before substituting the new one.
+        const auto &prior=old.pictureRing&&old.ringItems.empty()?previous.ringItems:ringItems(old);
+        const auto selected=std::find_if(prior.begin(),prior.end(),
+            [&](const auto &item){return old.numericValue==double(item.value);});
+        if(isStringDropdownWidget(old)&&(selected==prior.end()||widgetStringValue(old)!=selected->label))
+            return; // A String assigned independently of the choices is still its local value.
+        if(selected==prior.end() && (prior.empty()||ringAllowUndefinedValues(old)))return;
+        if(selected!=prior.end()) {
+            const auto item=std::find_if(result.ringItems.begin(),result.ringItems.end(),
+                [&](const auto &choice){return choice.id==selected->id;});
+            if(item!=result.ringItems.end()) {
+                result.numericValue=double(item->value);
+                if(isStringDropdownWidget(result))static_cast<void>(setWidgetStringValue(result,item->label));
+                else if(isEnumWidget(result)||isTabWidget(result))result.initialValue=item->id;
+                else result.initialValue=std::to_string(item->value);
+                return;
+            }
+        }
+        conflict(isEnumWidget(old)?"typedef.enum_item_removed":"typedef.choice_item_removed",
+            "The selected item no longer exists in this Type Def.",old,next,path);
+        result.initialValue=next.initialValue;result.numericValue=next.numericValue;
+        result.supportTextValue=next.supportTextValue;
     }
     bool numeric(WidgetInstance &result,const WidgetInstance &old,const WidgetInstance &next) {
         result.valueType=next.valueType;result.numericRepresentationKind=next.numericRepresentationKind;
@@ -279,20 +392,11 @@ struct Migration {
                 result.bounds.width=(std::max)(result.bounds.width,minimum.width);
                 result.bounds.height=(std::max)(result.bounds.height,minimum.height);
             }
-        } else if(isEnumWidget(old) && isEnumWidget(next)) {
-            const auto id=ringSelectedItemId(old);
-            result.ringItems=next.ringItems;result.valueType=next.valueType;
-            for(auto &item:result.ringItems) {
-                const auto prior=std::find_if(old.ringItems.begin(),old.ringItems.end(),[&](const auto &candidate){return candidate.id==item.id;});
-                if(prior!=old.ringItems.end()) {item.disabled=prior->disabled;item.visible=prior->visible;}
-            }
-            result.numericRepresentationKind=next.numericRepresentationKind;result.enumDomainId=next.enumDomainId;
-            const auto item=std::find_if(next.ringItems.begin(),next.ringItems.end(),[&](const auto &v){return v.id==id;});
-            if(item==next.ringItems.end()) {
-                conflict("typedef.enum_item_removed","The selected Enum identity no longer exists.",old,next,path);
-                result.initialValue=next.initialValue;result.numericValue=next.numericValue;
-            } else {result.initialValue=item->id;result.numericValue=double(item->value);}
-        } else if(isNumericWidget(old) && !isEnumWidget(old) && isNumericWidget(next) && !isEnumWidget(next)) {
+        } else if(!typeDefinitionSameWidgetFamily(old,next)) {
+            conflict("typedef.incompatible_type","Replacing this control family requires approval.",old,next,path);result=replacement(old,next);
+        } else if(typeDefinitionHasChoiceCatalog(old)) {
+            choices(result,old,previous,next,path);
+        } else if(isNumericWidget(old) && isNumericWidget(next)) {
             const auto fixedKey=[](const WidgetInstance &widget) {
                 if(!widget.numericFixedPointConfiguration)return std::string{};const auto &f=*widget.numericFixedPointConfiguration;
                 return std::to_string(f.signedEncoding)+":"+std::to_string(f.complex)+":"+std::to_string(f.wordLength)+":"+std::to_string(f.integerWordLength)+":"+f.roundingMode+":"+f.overflowMode;
@@ -300,11 +404,28 @@ struct Migration {
             if((old.valueType!=next.valueType || old.numericRepresentationKind!=next.numericRepresentationKind || fixedKey(old)!=fixedKey(next)) && !numeric(result,old,next)) {
                 conflict("typedef.numeric_loss","The numeric value cannot be represented exactly by the new type.",old,next,path);result=replacement(old,next);
             }
+        } else if(isReferenceWidget(old)&&isReferenceWidget(next)) {
+            const auto sourceType=referenceWidgetType(old),targetType=referenceWidgetType(next);
+            if(sourceType!=targetType) {
+                auto schema=referenceWidget(old.instanceId,targetType);
+                if(binding::connect(sourceType,targetType).accepted()) {
+                    if(old.referenceValue)schema.referenceValue->target=old.referenceValue->target;
+                } else {
+                    conflict("typedef.incompatible_type","The local reference is not assignable to the new type. Approval resets it to a typed null.",old,next,path);
+                }
+                result.valueType=std::move(schema.valueType);
+                result.referenceValue=std::move(schema.referenceValue);
+            }
         } else if(binding::widgetType(old).type!=binding::widgetType(next).type) {
             conflict("typedef.incompatible_type","Replacing this value requires approval.",old,next,path);result=replacement(old,next);
+        } else if(result.collection&&previous.collection&&next.collection) {
+            if(result.collection->keyPresentation==previous.collection->keyPresentation)
+                result.collection->keyPresentation=next.collection->keyPresentation;
+            if(result.collection->valuePresentation==previous.collection->valuePresentation)
+                result.collection->valuePresentation=next.collection->valuePresentation;
         }
         if(defaults && oldDefault) {
-            if(const auto saved=data_operations::decode(*oldDefault)) {
+            if(const auto saved=data_operations::decodeStoredDefault(old,*oldDefault)) {
                 auto migrated=run(*saved,previous,next,path+"/<default>",depth+1,false);
                 const auto encoded=data_operations::encode(migrated);
                 if(encoded.empty())conflict("typedef.default_invalid","The migrated saved default cannot be encoded.",*saved,next,path);
@@ -318,6 +439,29 @@ struct Migration {
 };
 }
 
+bool typeDefinitionSameWidgetFamily(const WidgetInstance &local,const WidgetInstance &source) {
+    return schemaFamily(local)==schemaFamily(source);
+}
+bool typeDefinitionHasChoiceCatalog(const WidgetInstance &widget) {
+    return isEnumWidget(widget)||isRingWidget(widget)||isStringDropdownWidget(widget)||isListboxWidget(widget);
+}
+std::vector<SceneObject> typeDefinitionTabChildren(FrogWidgetDataView canvas,std::string_view rootId) {
+    std::unordered_multimap<std::string_view,std::string_view> byParent;
+    for(const auto &object:canvas.objects())
+        if(!object.parentTabId.empty())byParent.emplace(object.parentTabId,object.id);
+    std::vector<std::string_view> parents{rootId};
+    std::unordered_set<std::string_view> found{rootId};
+    while(!parents.empty()) {
+        const auto [first,last]=byParent.equal_range(parents.back());
+        parents.pop_back();
+        for(auto it=first;it!=last;++it)
+            if(found.insert(it->second).second)parents.push_back(it->second);
+    }
+    std::vector<SceneObject> result;
+    for(const auto &object:canvas.objects())
+        if(object.id!=rootId && found.contains(object.id))result.push_back(object);
+    return result;
+}
 bool typeDefinitionSupported(const WidgetInstance &root,std::string *error) {
     if(error)error->clear();const auto type=binding::widgetType(root);
     if(!type.valid() || !type.type.known()) {errorText(error,"Type Definition requires a complete, acyclic type: "+type.error);return false;}
@@ -327,18 +471,53 @@ bool typeDefinitionSupported(const WidgetInstance &root,std::string *error) {
         if(++count>250000 || depth>128){errorText(error,"Type Definition exceeds the document schema budget.");return false;}
         if(const auto *cluster=clusterContainerState(*widget)) {for(const auto &field:cluster->elements)if(field.widget)pending.push_back({field.widget.get(),depth+1});}
         else if(const auto *array=arrayContainerState(*widget)) {if(!array->elementTemplate){errorText(error,"Type Definition Array requires an element type.");return false;}pending.push_back({array->elementTemplate.get(),depth+1});}
-        else if(!(isNumericWidget(*widget)||isBooleanWidget(*widget)||isButtonWidget(*widget)||isStringWidget(*widget)||isEnumWidget(*widget))) {
-            errorText(error,"This widget family is not supported by standard Type Definitions V1.");return false;
+        else if(!widgetSupportsDiagramTerminal(*widget)) {
+            errorText(error,"A Type Definition requires a control or indicator with a data terminal.");return false;
         }
-        if(isEnumWidget(*widget)) {
+        if(typeDefinitionHasChoiceCatalog(*widget)) {
             std::unordered_set<std::string> ids;for(const auto &item:widget->ringItems)
-                if(item.id.empty() || !ids.insert(item.id).second){errorText(error,"Enum item identities must be unique and nonempty.");return false;}
+                if(item.id.empty() || !ids.insert(item.id).second){errorText(error,"Choice item identities must be unique and nonempty.");return false;}
+            if(widget->pictureRing) {
+                if(!isRingWidget(*widget)||widget->ringItems.size()>kPictureRingMaximumItems) {
+                    errorText(error,"Invalid Picture Ring catalog.");return false;
+                }
+                for(std::size_t index=0;index<widget->ringItems.size();++index) {
+                    const auto &item=widget->ringItems[index];
+                    if(item.value!=index) {errorText(error,"Picture Ring indices must follow catalog order.");return false;}
+                    if(!item.imageDataUri||item.imageDataUri->empty()) {
+                        errorText(error,"Picture Ring item '"+item.label+"' has no embedded image.");return false;
+                    }
+                }
+            }
         }
     }
     return true;
 }
 std::string typeDefinitionSchemaFingerprint(const WidgetInstance &widget) {
     if(!typeDefinitionSupported(widget))return {};std::ostringstream text;schemaText(text,widget);return hashing::sha256Hex(text.str());
+}
+std::string typeDefinitionSchemaFingerprint(const TypeDefinitionDocument &definition) {
+    const auto root=typeDefinitionSchemaFingerprint(definition.root);
+    if(root.empty()||definition.tabChildren.empty())return root;
+    std::ostringstream data;
+    data<<root<<std::setprecision(17);
+    for(const auto &child:definition.tabChildren) {
+        framed(data,child.id);framed(data,child.parentTabId);framed(data,child.parentTabPageId);
+        data<<child.bounds.x-definition.root.bounds.x<<','<<child.bounds.y-definition.root.bounds.y
+            <<','<<child.bounds.width<<','<<child.bounds.height<<';'<<child.locked<<child.hidden;
+        if(child.widget) {
+            framed(data,child.widget->role);framed(data,child.widget->label);
+            schemaText(data,*child.widget);
+        } else if(child.staticVisual) {
+            const auto &visual=*child.staticVisual;
+            framed(data,visual.mediaRef);framed(data,visual.svgText);
+            if(!visual.dibBytes.empty()&&!staticVisualUsesEncodedRasterSource(visual))
+                framed(data,hashing::sha256Hex({reinterpret_cast<const char*>(visual.dibBytes.data()),visual.dibBytes.size()}));
+            data<<visual.naturalWidth<<','<<visual.naturalHeight<<','<<visual.preserveAspectRatio
+                <<','<<visual.rotationQuarterTurns<<','<<visual.flipHorizontal<<visual.flipVertical;
+        }
+    }
+    return hashing::sha256Hex(data.str());
 }
 bool typeDefinitionSchemaEquivalent(const WidgetInstance &a,const WidgetInstance &b) {
     const auto left=typeDefinitionSchemaFingerprint(a);return !left.empty() && left==typeDefinitionSchemaFingerprint(b);
@@ -354,7 +533,19 @@ std::string serializeTypeDefinitionLink(const TypeDefinitionLink &link) {
         throw std::invalid_argument("An incomplete Type Definition link cannot be serialized.");
     std::ostringstream out;out<<"{\n";stringField(out,"definition_id",link.definitionId);stringField(out,"source_path",link.sourcePath);
     out<<"  \"resolved_revision\": "<<link.resolvedRevision<<",\n";
-    stringField(out,"schema_fingerprint",link.resolvedSchemaFingerprint);stringField(out,"baseline_widget",link.baselineWidgetJson);
+    stringField(out,"schema_fingerprint",link.resolvedSchemaFingerprint);
+    if(!typeDefinitionUsesStructuredBaseline(link))stringField(out,"baseline_widget",link.baselineWidgetJson);
+    else out<<"  \"baseline_widget\": "<<link.baselineWidgetJson<<",\n";
+    if(!link.tabChildBindings.empty()) {
+        out<<"  \"tab_members\": {";
+        bool first=true;
+        for(const auto &[source,occurrence]:link.tabChildBindings) {
+            if(!first)out<<',';
+            document_internal::appendJsonString(out,source);out<<':';
+            document_internal::appendJsonString(out,occurrence);first=false;
+        }
+        out<<"},\n";
+    }
     stringField(out,"unresolved_reason",link.unresolvedReason);stringField(out,"icon_svg",link.iconSvgText,false);out<<'}';return out.str();
 }
 std::optional<TypeDefinitionLink> deserializeTypeDefinitionLink(std::string_view source,std::string *error) {
@@ -363,11 +554,22 @@ std::optional<TypeDefinitionLink> deserializeTypeDefinitionLink(std::string_view
     TypeDefinitionLink link;link.definitionId=stringValue(*json,"definition_id");link.sourcePath=stringValue(*json,"source_path");
     const auto revision=revisionValue(*json,"resolved_revision");link.resolvedSchemaFingerprint=stringValue(*json,"schema_fingerprint");
     link.baselineWidgetJson=stringValue(*json,"baseline_widget");link.unresolvedReason=stringValue(*json,"unresolved_reason");link.iconSvgText=stringValue(*json,"icon_svg");
+    if(const auto *baseline=json->member("baseline_widget");baseline&&baseline->type==JsonValue::Type::Object)
+        link.baselineWidgetJson=source.substr(baseline->sourceBegin,baseline->sourceEnd-baseline->sourceBegin);
+    if(const auto *members=json->member("tab_members")) {
+        if(members->type!=JsonValue::Type::Object) {errorText(error,"Invalid Type Def Tab member bindings.");return {};}
+        std::unordered_set<std::string> instances;
+        for(const auto &[member,target]:members->object) {
+            if(!textSafe(member)||target.type!=JsonValue::Type::String||!textSafe(target.string)||
+                !instances.insert(target.string).second) {errorText(error,"Invalid or duplicate Type Def Tab member identity.");return {};}
+            link.tabChildBindings.emplace(member,target.string);
+        }
+    }
     if(!textSafe(link.definitionId)||(!link.sourcePath.empty()&&!textSafe(link.sourcePath))||!revision||link.resolvedSchemaFingerprint.size()!=64 ||
-        link.baselineWidgetJson.empty() || link.baselineWidgetJson.size()>8U*1024U*1024U) {
+        link.baselineWidgetJson.empty() || link.baselineWidgetJson.size()>kMaximumFrogDocumentBytes) {
         errorText(error,"Type Definition link is incomplete or invalid.");return {};
     }
-    const auto baseline=deserializeArrayElementWidget(link.baselineWidgetJson);
+    const auto baseline=deserializeTypeDefinitionWidget(link.baselineWidgetJson);
     if(!baseline || baseline->typeDefinition || !typeDefinitionSupported(*baseline)) {
         errorText(error,"Type Definition recovery snapshot is incomplete or invalid.");return {};
     }
@@ -377,20 +579,68 @@ std::string serializeTypeDefinition(const TypeDefinitionDocument &document,std::
     if(error)error->clear();if(!textSafe(document.id)||!textSafe(document.name)||!document.revision||!typeDefinitionSupported(document.root,error)) {
         if(error && error->empty())*error="Type Definition identity, name or revision is invalid.";return {};
     }
-    auto root=document.root;root.typeDefinition.reset();const auto payload=source::parseJson(serializeArrayElementWidget(root));
-    if(!payload){errorText(error,"Type Definition root cannot be serialized.");return {};}
-    std::ostringstream out;out<<"{\n";stringField(out,"format",kTypeDefinitionFormat);out<<"  \"draft_revision\": 1,\n";
+    const auto clearConnectorBinding=[](WidgetInstance &widget) {
+        widget.publicInputId.reset();widget.publicOutputId.reset();
+        widget.interfaceMapSlotId.reset();widget.interfaceConnectionRequirement.reset();
+    };
+    auto root=document.root;root.typeDefinition.reset();clearConnectorBinding(root);
+    const bool hasChildren=!document.tabChildren.empty();
+    if(hasChildren&&!isTabWidget(root)){errorText(error,"Only a Tab definition can own page controls.");return {};}
+    std::string payload;
+    try {
+        if(hasChildren) {
+            FrogWidgetData panel;
+            panel.addObject({root.instanceId,root.bounds,root});
+            for(const auto &child:document.tabChildren) {
+                if(child.id.empty()||panel.objectById(child.id)||child.parentTabId.empty()||
+                    (!child.widget && !child.staticVisual)||(child.widget && child.id!=child.widget->instanceId)) {
+                    errorText(error,"Invalid or duplicate object in the Tab definition.");return {};
+                }
+                auto member=child;
+                if(member.widget)clearConnectorBinding(*member.widget);
+                panel.addObject(std::move(member));
+            }
+            if(!panel.validateTabMembership(error))return {};
+            payload=serializeFrogDraft(panel,document.name);
+        } else payload=serializeArrayElementWidget(root);
+    } catch(const std::exception &e) {errorText(error,e.what());return {};}
+    if(payload.empty()){errorText(error,"Type Definition root cannot be serialized.");return {};}
+    std::ostringstream out;out<<"{\n";stringField(out,"format",kTypeDefinitionFormat);out<<"  \"draft_revision\": "<<(hasChildren?2:1)<<",\n";
     stringField(out,"id",document.id);stringField(out,"name",document.name);out<<"  \"revision\": "<<document.revision<<",\n";
-    stringField(out,"icon_svg",document.iconSvgText);out<<"  \"root\": ";document_internal::appendJsonValue(out,*payload);out<<"\n}\n";return out.str();
+    stringField(out,"icon_svg",document.iconSvgText);
+    if(hasChildren)stringField(out,"tab_root_id",root.instanceId);
+    out<<(hasChildren?"  \"tab_panel\": ":"  \"root\": ")<<payload<<"\n}\n";
+    if(out.tellp()>static_cast<std::streamoff>(kMaximumFrogDocumentBytes)) {
+        errorText(error,"Type Definition exceeds the FROG document byte limit.");return {};
+    }
+    return out.str();
 }
 std::optional<TypeDefinitionDocument> deserializeTypeDefinition(std::string_view source,std::string *error) {
     if(error)error->clear();auto json=source::parseJson(source,error,source::JsonNumberPolicy::PreserveLexeme);
-    if(!json || json->type!=JsonValue::Type::Object || stringValue(*json,"format")!=kTypeDefinitionFormat || revisionValue(*json,"draft_revision")!=1) {
+    const auto format=json?revisionValue(*json,"draft_revision"):std::nullopt;
+    if(!json || json->type!=JsonValue::Type::Object || stringValue(*json,"format")!=kTypeDefinitionFormat || (format!=1 && format!=2)) {
         errorText(error,"Unsupported Type Definition document format or revision.");return {};
     }
     TypeDefinitionDocument document;document.id=stringValue(*json,"id");document.name=stringValue(*json,"name");document.iconSvgText=stringValue(*json,"icon_svg");
-    const auto revision=revisionValue(*json,"revision");const auto *stored=json->member("root");
-    const auto widget=stored?deserializeArrayElementWidget(jsonText(*stored)):std::nullopt;
+    const auto revision=revisionValue(*json,"revision");
+    const auto *stored=json->member(format==2?"tab_panel":"root");
+    if(!stored || stored->type!=JsonValue::Type::Object){errorText(error,"Missing Type Definition widget payload.");return {};}
+    const auto bytes=source.substr(stored->sourceBegin,stored->sourceEnd-stored->sourceBegin);
+    std::optional<WidgetInstance> widget;
+    if(format==2) {
+        const auto rootId=stringValue(*json,"tab_root_id");
+        auto panel=readFrogDraftData(bytes,error);
+        if(!panel)return {};
+        const auto *object=panel->widgets.objectById(rootId);
+        if(!object||!object->widget||!isTabWidget(*object->widget)||!object->parentTabId.empty()||
+            !panel->widgets.validateTabMembership(error)) {
+            errorText(error,"Invalid root or page membership in the Tab definition.");return {};
+        }
+        widget=*object->widget;document.tabChildren=typeDefinitionTabChildren(panel->widgets,rootId);
+        if(document.tabChildren.size()+1!=panel->widgets.objects().size()) {
+            errorText(error,"The Tab definition contains an object outside its root.");return {};
+        }
+    } else widget=deserializeTypeDefinitionWidget(bytes);
     if(!textSafe(document.id)||!textSafe(document.name)||!revision||!widget||widget->typeDefinition||!typeDefinitionSupported(*widget,error)) {
         if(error && error->empty())*error="Type Definition identity, revision or root is invalid.";return {};
     }
@@ -419,7 +669,7 @@ TypeDefinitionMigration linkWidgetToTypeDefinition(const WidgetInstance &local,c
     const bool associated=typeDefinitionCanAssociate(local,definition.root)&&alignAssociation(aligned,definition.root);
     auto result=migrateTypeDefinitionWidget(associated?aligned:local,associated?aligned:local,definition.root,acceptProposed);
     TypeDefinitionLink link;link.definitionId=definition.id;link.sourcePath=std::move(path);link.resolvedRevision=definition.revision;
-    link.resolvedSchemaFingerprint=typeDefinitionSchemaFingerprint(definition.root);link.baselineWidgetJson=serializeArrayElementWidget(definition.root);
+    link.resolvedSchemaFingerprint=typeDefinitionSchemaFingerprint(definition);link.baselineWidgetJson=serializeArrayElementWidget(definition.root);
     link.iconSvgText=definition.iconSvgText;
     if(!result.accepted())link.unresolvedReason=result.diagnostics.front().message;
     result.proposedWidget.typeDefinition=std::move(link);result.changed=true;return result;

@@ -7,6 +7,7 @@ namespace frog::native_engine {
 [[nodiscard]] std::string_view applicationControlReferenceWidgetBase(std::string_view classId) noexcept;
 [[nodiscard]] bool applicationControlValueSignalingAvailable(std::string_view classId) noexcept;
 [[nodiscard]] bool applicationControlBooleanColorsAvailable(std::string_view classId) noexcept;
+[[nodiscard]] bool applicationControlWidgetAppearanceMember(std::string_view classId,std::string_view member) noexcept;
 [[nodiscard]] binding::TypeRef applicationControlBooleanColorsType();
 // An implicit Property target owns resolution even if its identity is missing.
 [[nodiscard]] bool applicationControlHasReferenceInput(const ApplicationControlNode &) noexcept;

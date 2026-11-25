@@ -3,6 +3,12 @@
 
 namespace frog::native_engine {
 struct FrogDraftDataView;
+struct DraftSubFrogExecutionInput;
+struct DraftSubFrogExecutionProjection;
+// Internal handoff from the draft reader. The tree and model must both be
+// the validated result of reading the exact normalized root bytes.
+DraftSubFrogExecutionProjection projectPreparedSubFrogExecution(
+    const DraftSubFrogExecutionInput &, const source::JsonValue *normalizedRoot);
 // Reuses the ordinary adapter's closed raw-field validators before immutable
 // call specialization. The sole call key deferred is an actual frog_call.call.
 // typeDefinitionsValidated is a private owner handoff: accepted()+linked from

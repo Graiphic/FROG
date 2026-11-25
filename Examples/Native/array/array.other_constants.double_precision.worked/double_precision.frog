@@ -1,0 +1,283 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "DBL Array Constant",
+  "metadata": {
+    "name": "DBL Array Constant",
+    "name_source": "document",
+    "description": "Run displays the built-in value value = [1.25, 2.5].\n\nRun displays the built-in value value = [1.25, 2.5].\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nvalue (array<f64>) = [1.25,2.5]\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "array", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" data-frog-shape-standard=\"fixed-constant\">\n<defs>\n    <style>\n      .cls-1 {\n        isolation: isolate;\n      }\n\n      .cls-2 {\n        fill: #f8fafc;\n      }\n\n      .cls-3 {\n        fill: #d97706;\n        stroke: #aab4c0;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.78px;\n      }\n    </style>\n  </defs>\n<rect x=\"6.75\" y=\"12.5\" width=\"34.5\" height=\"23\" rx=\"11.5\" fill=\"#d97706\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/>\n<g transform=\"translate(5.86 11.61)\">\n<g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n\n      <g class=\"cls-1\">\n        <path class=\"cls-2\" d=\"M4.7,17.62V6.62h2.67v1.29h-1.24v8.41h1.24v1.29h-2.67Z\"/>\n        <path class=\"cls-2\" d=\"M8.3,8.54h2.64c.6,0,1.05.05,1.36.14.42.12.78.34,1.08.66s.53.7.68,1.16c.16.46.23,1.02.23,1.69,0,.59-.07,1.1-.22,1.52-.18.52-.43.94-.77,1.26-.25.24-.59.43-1.02.57-.32.1-.75.15-1.28.15h-2.72v-7.16ZM9.75,9.75v4.74h1.08c.4,0,.69-.02.87-.07.23-.06.43-.16.58-.3s.28-.37.38-.69c.1-.32.15-.76.15-1.31s-.05-.98-.15-1.27-.23-.53-.41-.69-.4-.28-.67-.34c-.2-.05-.6-.07-1.19-.07h-.65Z\"/>\n        <path class=\"cls-2\" d=\"M15.54,8.54h2.86c.57,0,.99.02,1.27.07.28.05.53.15.75.3s.4.35.55.6c.15.25.22.53.22.84,0,.33-.09.64-.27.92s-.43.49-.73.63c.44.13.77.34,1.01.65s.35.67.35,1.08c0,.33-.08.64-.23.95-.15.31-.36.55-.62.74-.26.18-.58.3-.97.34-.24.03-.82.04-1.74.05h-2.44v-7.16ZM16.98,9.74v1.66h.95c.56,0,.91,0,1.05-.02.25-.03.44-.12.58-.26.14-.14.21-.33.21-.56s-.06-.4-.18-.54c-.12-.14-.3-.22-.54-.25-.14-.02-.56-.02-1.24-.02h-.83ZM16.98,12.58v1.91h1.34c.52,0,.85-.01.99-.04.21-.04.39-.13.52-.29.14-.15.2-.35.2-.61,0-.21-.05-.4-.16-.55s-.25-.26-.45-.33-.62-.1-1.28-.1h-1.17Z\"/>\n        <path class=\"cls-2\" d=\"M22.79,15.7v-7.1h1.45v5.89h3.59v1.21h-5.04Z\"/>\n        <path class=\"cls-2\" d=\"M31.01,6.62v11h-2.68v-1.29h1.24V7.91h-1.24v-1.28h2.68Z\"/>\n      </g>\n    </g>\n  </g>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "value",
+        "classId": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "valueType": "frog.array<f64,rank=1>",
+        "label": "value",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 182,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "dimensions.rank": 1,
+          "dimensions.shape": [0],
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [0],
+          "viewport.visible_counts": [1],
+          "viewport.orientation": "vertical",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.index_display.container_padding": "4px",
+          "style.index_display.container_border_width": "1px",
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "element.cell_width": 96,
+          "element.cell_height": 32,
+          "element.gap": 0,
+          "element.class_id": "frog.widgets.numeric_indicator",
+          "element.value_type": "f64",
+          "element.role": "indicator",
+          "element.icon": false
+,
+          "element.template":           {
+            "id": "value.element",
+            "classId": "frog.widgets.numeric_indicator",
+            "role": "indicator",
+            "valueType": "f64",
+            "label": "Numeric Indicator",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 96,
+              "height": 32
+            },
+            "props": {
+              "layout.aura_band_px": 4,
+              "label.visible": false,
+              "data_type.representation": "f64",
+              "data_type.named_numeric_size": "Float64",
+              "representation.kind": "float64",
+              "data_entry.use_type_defaults": true
+            },
+            "runtime": {
+              "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+              "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+              "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+              "asset": "asset:numeric_rectangular_svg",
+              "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+            },
+            "state": {
+              "value": 0
+            },
+            "typography": {
+              "inheritanceVersion": 1
+            }
+          }
+
+        },
+        "runtime": {
+          "sourceExample": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+          "wfrog": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/array.default.wfrog",
+          "asset": "asset:array_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.array.other_constants.double_precision",
+        "value_type": "f64",
+        "label": "Array Constant",
+        "label_visible": false,
+        "array_element_template": "{\n  \"id\": \"operation-element\",\n  \"classId\": \"frog.widgets.numeric_control\",\n  \"role\": \"control\",\n  \"valueType\": \"f64\",\n  \"label\": \"Numeric Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 96,\n    \"height\": 32\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"data_type.representation\": \"f64\",\n    \"data_type.named_numeric_size\": \"Float64\",\n    \"representation.kind\": \"float64\",\n    \"data_entry.use_type_defaults\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n    \"asset\": \"asset:numeric_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": 0\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.other_constants.double_precision",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [2],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["1.25", "2.5"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 100,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "value-terminal",
+        "kind": "widget_value",
+        "type": "array:f64",
+        "widget": "value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "DBL Array Constant\nRun displays the built-in value value = [1.25, 2.5].\nEntrées -> opération -> indicateurs. Résultat attendu : value (array<f64>) = [1.25,2.5]\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

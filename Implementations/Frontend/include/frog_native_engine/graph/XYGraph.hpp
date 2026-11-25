@@ -130,6 +130,7 @@ struct Design {
     std::size_t legendRows=4;
     bool legendAutoWidth=true,equalAspect=false;
     std::string aspectXAxis="x",aspectYAxis="y";
+    std::optional<Point> legendPosition;
     [[nodiscard]] bool operator==(const Design &)const=default;
 };
 struct AxisView {std::string axisId; AxisRange range; bool continuous=true; bool explicitPolicy=false; bool operator==(const AxisView &)const=default;};

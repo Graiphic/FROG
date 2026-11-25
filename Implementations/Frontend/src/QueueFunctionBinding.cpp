@@ -38,7 +38,7 @@ std::optional<std::string> queueOptionalInputDefault(std::string_view operationI
         descriptor->requirement==FunctionPortRequirement::Required)return {};
     if(port=="timeout_ms" || port=="max_size")return "-1";
     if(port=="create_if_not_found")return "true";
-    if(port=="force_destroy" || port=="return_elements")return "false";
+    if(port=="force_destroy" || port=="return_elements" || port=="at_front")return "false";
     if(port=="name")return std::string{};
     return {};
 }
@@ -82,7 +82,8 @@ QueueTypeResult resolveQueueFunctionPort(std::string_view operationId,std::strin
         bool accepted=false;
         if(input.portId=="queue")accepted=isQueueReference(*actual)&&queueReferenceElementType(*actual)&&
             *queueReferenceElementType(*actual)==element;
-        else if(input.portId=="element" || input.portId=="element_type")accepted=hasElement && *actual==element;
+        else if(input.portId=="element" || input.portId=="element_type")accepted=hasElement &&
+            (*actual==element || binding::requiresVariantBoxing(*actual,element));
         else {
             const auto expected=binding::parseType(input.typeExpression).type;
             accepted=binding::connect(*actual,expected,input.connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit?
@@ -102,6 +103,8 @@ QueueTypeResult resolveQueueFunctionPort(std::string_view operationId,std::strin
         if(!hasElement)return unresolved("binding.queue_element_unresolved","The Queue collection requires a complete element schema.");
         resolved=TypeRef::array(element,1);
     }
+    if(const auto *actual=supplied(requested);actual && binding::requiresVariantBoxing(*actual,resolved))
+        return {binding::connectValue(*actual,resolved),complete};
     return {{ResolutionStatus::Compatible,std::move(resolved),{},{}},complete};
 }
 QueueTypeResult resolveQueueFunctionPort(const DiagramNode &node,

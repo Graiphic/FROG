@@ -12,6 +12,8 @@ are available as source. They own reading, explicit dependency resolution, types
 semantic validation, FIR, diagnostics, maps and provenance. Studio pins the
 software, API and content it uses.
 
+- [25 November source checkpoint](frontend-checkpoint-2026-11-25.json) records reader revisions 0–13, feature-sensitive writer revisions, and the published Frontend source identity.
+- [22 November source checkpoint](frontend-checkpoint-2026-11-22.json) introduced Draft 11 for embedded Picture Ring catalogues.
 - [19 November source checkpoint](frontend-checkpoint-2026-11-19.json)
   identifies the Frontend content pinned by Studio. Its reader reports draft
   revisions 0 through 10. The structural schema covers revisions 2 through 9.

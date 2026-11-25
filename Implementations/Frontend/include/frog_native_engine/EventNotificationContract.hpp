@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <span>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -31,6 +32,11 @@ std::span<const EventNotificationSpec> eventNotificationCatalog() noexcept;
 const EventNotificationSpec *eventNotificationSpec(std::string_view kind) noexcept;
 std::string_view eventSourceScopeName(EventSourceScope scope) noexcept;
 EventSourceScope eventBindingSourceScope(const DiagramEventBinding &binding) noexcept;
+struct EventSourceIdentityParts { std::string_view source, originNodeId; };
+// The stored source is opaque to old readers. Qualifying it preserves the
+// association on a round trip and makes an unknown association fail closed.
+EventSourceIdentityParts eventSourceIdentityParts(std::string_view stored) noexcept;
+std::string storedEventSourceIdentity(const DiagramEventBinding &binding);
 // Preserve the historical kind/source fallback without materializing a case.
 std::vector<DiagramEventBinding> eventCaseBindings(const DiagramEventCase &eventCase);
 }

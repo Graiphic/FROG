@@ -60,6 +60,7 @@
 #include "frog/math/formula_operation_contract.hpp"
 
 #include <algorithm>
+#include <array>
 #include <charconv>
 #include <exception>
 #include <map>
@@ -127,6 +128,7 @@ BindingResult fromParsed(const TypeParseResult &parsed) {
     return {{ResolutionStatus::Compatible, parsed.type, {}, {}}, true, {}};
 }
 TypeResolution connectShiftRegister(const TypeRef &source, const TypeRef &target,const ClassHierarchy *classes=nullptr) {
+    if(requiresVariantBoxing(source,target))return connectValue(source,target);
     if(classes && (source.kind==TypeKind::Object||target.kind==TypeKind::Object))
         return classes->connectObjects(source,target);
     // Scalar numeric writes may adapt to the initializer's representation.
@@ -169,6 +171,32 @@ std::optional<TypeRef> fixedStringNumericParameterType(std::string_view catalog,
     if (!target.valid() || target.type.kind != TypeKind::Primitive || !target.type.numeric())
         return std::nullopt;
     return target.type;
+}
+// An uninitialized numeric register can take its representation from an
+// independent operand of its writer. A direct feedback operand alone is
+// never evidence. Both inputs must be real, distinct ports in the loop body.
+const DiagramEdge *independentAddOperand(const DiagramNode &loop,
+    const DiagramCaseStructureTunnel &boundary, const DiagramEdge &write,
+    const DiagramNode &producer, std::span<const DiagramEdge *const> inputs) {
+    const auto *definition = functionBindingDefinitionForNode(producer);
+    if (!definition || definition->resolverId != "frog.core.add.type-resolution@1" ||
+        inputs.size() != 2 || write.from.portId != "result" ||
+        producer.diagramOwnerStructureId != loop.id || write.diagramOwnerRegionId != "body" ||
+        producer.diagramOwnerRegionId != write.diagramOwnerRegionId) return nullptr;
+    const DiagramEdge *anchor = nullptr;
+    bool feedback = false;
+    const auto first = functionBindingInputPortOrdinal(*definition, inputs.front()->to.portId);
+    const auto second = functionBindingInputPortOrdinal(*definition, inputs.back()->to.portId);
+    if (!first || !second || first == second) return nullptr;
+    for (const auto *edge : inputs) {
+        if (edge->diagramOwnerStructureId != loop.id || edge->diagramOwnerRegionId != write.diagramOwnerRegionId)
+            return nullptr;
+        const auto *read = edge->from.nodeId == loop.id ? findTunnel(loop, edge->from.portId) : nullptr;
+        if (read && !read->outputFromStructure && read->shiftRegisterPairId == boundary.shiftRegisterPairId &&
+            edge->from.portId == diagram_identity::tunnelOutputId(read->id)) feedback = true;
+        else anchor = edge;
+    }
+    return feedback ? anchor : nullptr;
 }
 const FunctionPortBinding *unaryNumericFeedbackInput(const DiagramNode &node,
     const FunctionBindingDefinition &definition, const FunctionPortBinding &output,
@@ -275,6 +303,83 @@ BindingResult TypeResolver::resolve(const DiagramEdgeEndpoint &endpoint) {
     }
     return resolveRequest(endpoint, false);
 }
+// Follow only unambiguous, identity-preserving transport. An aggregate or a
+// choice between producers retains its compiled schema but has no single origin.
+const DiagramEdge *TypeResolver::upstreamEventProducer(const DiagramNode &consumer, std::string_view port) {
+    const DiagramNode *node=&consumer;
+    std::string inputPort(port);
+    std::unordered_set<const DiagramEdge *> visited;
+    for(;;) {
+        const DiagramEdge *wire=nullptr;
+        for(const auto *edge:incomingEdges(node->id))if(edge->to.portId==inputPort) {
+            if(wire)return nullptr;
+            wire=edge;
+        }
+        if(!wire || !visited.insert(wire).second)return nullptr;
+        const auto found=nodesById_.find(wire->from.nodeId);
+        if(found==nodesById_.end())return nullptr;
+        node=found->second;
+        if(const auto *t=findTunnel(*node,wire->from.portId);t &&
+            wire->from.portId==tunnelOutputId(t->id) && t->shiftRegisterPairId.empty() &&
+            t->mode==DiagramTunnelMode::LastValue && !t->conditional) {
+            inputPort=tunnelInputId(t->id);
+        } else if(wire->from.portId=="user_event_out" &&
+            node->type=="frog.studio.dialog.events.generate_user_event") {
+            inputPort="user_event";
+        } else {
+            return wire;
+        }
+    }
+}
+
+std::vector<EventSourceSpec> TypeResolver::sourcesFromRegistration(const DiagramNode &structure,
+    const TypeRef &registration, bool resolveTypes) {
+    auto sources=eventStructureSources(structure,registration,canvas_,resolveTypes);
+    const auto *driver=upstreamEventProducer(structure,"event_registration");
+    if(!driver)return sources;
+    const auto connectedSource=[&](EventSourceSpec &source) {
+        if(source.scope!=EventSourceScope::Dynamic || source.registeredKind!="user_event")return true;
+        source.path=source.label="<user event>";
+        const auto port="source:"+source.id.substr(std::string_view("dynamic:").size());
+        const auto *edge=driver;
+        std::unordered_set<const DiagramEdge *> visited;
+        while(edge && edge->from.portId=="registration_out" && visited.insert(edge).second) {
+            const auto &reg=*nodesById_.at(edge->from.nodeId);
+            if(reg.type!="frog.studio.dialog.events.register_for_events")break;
+            if(const auto *inputEdge=upstreamEventProducer(reg,port)) {
+                const auto &creator=*nodesById_.at(inputEdge->from.nodeId);
+                if(creator.type=="frog.studio.dialog.events.create_user_event" && inputEdge->from.portId=="user_event") {
+                    source.originNodeId=creator.id;
+                    if(const auto *specimen=upstreamEventProducer(creator,"data_type")) {
+                        const auto &node=*nodesById_.at(specimen->from.nodeId);
+                        const auto *entry=findFunctionCatalogEntryByDiagramNodeType(node.type);
+                        if(const auto *object=canvas_.objectById(node.widgetId);object && object->widget && !object->widget->label.empty())
+                            source.label=object->widget->label;
+                        else if(!node.label.empty() && (!entry || node.label!=entry->displayName))
+                            source.label=node.label;
+                        source.path=source.label;
+                    }
+                }
+                return true;
+            }
+            // A registration can inherit an existing row on re-registration.
+            // The provisional type of a disconnected initial row is useful
+            // for wiring, but it is not an event source to offer a case.
+            edge=upstreamEventProducer(reg,"registration_in");
+            if(!edge)return false;
+        }
+        return true;
+    };
+    for(auto it=sources.begin();it!=sources.end();) {
+        if(connectedSource(*it))++it;
+        else it=sources.erase(it);
+    }
+    return sources;
+}
+std::vector<EventSourceSpec> TypeResolver::eventSourcesForStructure(const DiagramNode &node, bool resolveTypes) {
+    const auto registration=resolve({node.id,"event_registration"});
+    return sourcesFromRegistration(node,registration.resolution.type,resolveTypes);
+}
 const EventDataAuthoringSchema &TypeResolver::eventSchema(
     std::string_view structureId,std::string_view regionId) {
     const auto key=std::string(structureId)+'\x1f'+std::string(regionId);
@@ -288,7 +393,7 @@ const EventDataAuthoringSchema &TypeResolver::eventSchema(
             pendingEventSchema_={};pendingEventSchema_.error="The dynamic registration schema is pending.";
             return pendingEventSchema_;
         }
-        const auto sources=eventStructureSources(*node->second,registration.resolution.type,canvas_);
+        const auto sources=sourcesFromRegistration(*node->second,registration.resolution.type,true);
         schema=eventCaseDataSchema(*node->second,regionId,sources);
     }
     return eventSchemas_.emplace(key,std::move(schema)).first->second;
@@ -584,7 +689,9 @@ void TypeResolver::solveFeedbackTypes() {
             result={{ResolutionStatus::Compatible,candidate->second,{},{}},true,{}};
             const auto data=probe.input(*node,"value");
             if(data.resolution.status==ResolutionStatus::Incompatible)result=data;
-            else if(data.resolution.accepted()&&data.resolution.type.known()&&!fullTypeEqual(data.resolution.type,candidate->second))result=invalid("binding.feedback_type_conflict","The Feedback input must retain the exact previous-state type and metadata.");
+            else if(data.resolution.accepted()&&data.resolution.type.known()&&!fullTypeEqual(data.resolution.type,candidate->second)&&
+                    !requiresVariantBoxing(data.resolution.type,candidate->second))
+                result=invalid("binding.feedback_type_conflict","The Feedback input must retain the exact previous-state type and metadata.");
             else result.complete=data.complete&&data.resolution.accepted();
             if(result.resolution.accepted()&&wired(*node,"initial_value")){
                 const auto initial=probe.input(*node,"initial_value");const auto type=initialType(*node,initial);
@@ -681,6 +788,25 @@ BindingResult TypeResolver::tunnel(const DiagramNode &node, const DiagramCaseStr
         // this frame. Its provisional types, region counts and diagnostics
         // are discarded. Resume the remaining regions with real evidence.
         if (evaluationFrame_ && evaluationFrame_->pending) return source;
+        if (!hasShiftInitializer && !boundary.shiftRegisterPairId.empty() && !source.complete &&
+            source.resolution.status != ResolutionStatus::Incompatible) {
+            const auto writer = nodesById_.find(edge.from.nodeId);
+            if (writer != nodesById_.end()) {
+                const auto *other = independentAddOperand(node, boundary, edge, *writer->second,
+                    incomingEdges(writer->second->id));
+                if (other) {
+                    auto operand = resolveSource(*other);
+                    if (evaluationFrame_ && evaluationFrame_->pending) return operand;
+                    const auto &type = operand.resolution.type;
+                    if (operand.complete && operand.resolution.accepted() && type.kind == TypeKind::Primitive &&
+                        type.numeric() && (!source.resolution.type.known() || source.resolution.type == type)) {
+                        const std::array<TypeRef, 2> inputs{type, type};
+                        const auto fixed = promote(inputs);
+                        if (fixed.accepted() && fixed.type == type) source = operand;
+                    }
+                }
+            }
+        }
         if (!hasShiftInitializer && !boundary.shiftRegisterPairId.empty() &&
             source.resolution.status == ResolutionStatus::Unresolved) {
             const auto producer = nodesById_.find(edge.from.nodeId);
@@ -1560,9 +1686,7 @@ BindingResult TypeResolver::resolveImpl(const DiagramNode &node, std::string_vie
         if (const auto *boundary = findTunnel(node, port)) return tunnelPort(node, *boundary, port);
         return {{ResolutionStatus::Incompatible, {}, "binding.missing_port", "Case has no such port."}, false, {}};
     }
-    if(node.type=="frog.studio.structures.event_structure" &&
-        (port=="event_registration" || port=="event_registration_out" ||
-         port=="event_registration_value" || port=="event_registration_update")) {
+    if(node.type=="frog.studio.structures.event_structure" && isEventStructureRegistrationPort(port)) {
         const auto incoming=input(node,"event_registration");
         if(incoming.resolution.status==ResolutionStatus::Incompatible)return incoming;
         if(!incoming.resolution.type.known())return {{ResolutionStatus::Compatible,
@@ -1603,7 +1727,7 @@ BindingResult TypeResolver::resolveImpl(const DiagramNode &node, std::string_vie
         return fromParsed(parseType(calculusFunctionReferenceSchema(calculusFunctionReferenceDimensions(node.type))));
     if(node.kind=="fitting_model_reference" && nativeNumericalModelReference(node.type) && port=="reference")
         return fromParsed(parseType(nativeNumericalModelSchema(node.type)));
-    if (node.kind == "frog_call") {
+    if (node.kind == "frog_call" || isUntranslatedLabViewNode(node)) {
         for (const auto &callPort : node.callPorts) if (callPort.id == port) return fromParsed(parseType(callPort.valueType));
     }
     if(!frog::native_engine::canonicalNumericIeeeConstantMigrationIdentity(node.type).empty() && port=="value")
@@ -1912,7 +2036,7 @@ std::optional<FunctionPortDirection> TypeResolver::direction(const DiagramEdgeEn
     }
     if (const auto *boundary = findTunnel(node, endpoint.portId))
         return endpoint.portId == tunnelOutputId(boundary->id) ? FunctionPortDirection::Output : FunctionPortDirection::Input;
-    if (node.kind == "frog_call") {
+    if (node.kind == "frog_call" || isUntranslatedLabViewNode(node)) {
         for (const auto &port : node.callPorts) if (port.id == endpoint.portId)
             return port.input ? FunctionPortDirection::Input : FunctionPortDirection::Output;
     }
@@ -1959,6 +2083,8 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
     }
     if (found != nodesById_.end() && found->second->kind == "widget_value" && target.portId == "value") {
         const auto *object = canvas_.objectById(found->second->widgetId);
+        if (object && object->widget && object->widget->valueType == "variant")
+            return connectValue(sourceResult.resolution.type, widgetType(*object->widget).type);
         if (object && object->widget && waveformCanInferType(*object->widget)) {
             if (!sourceResult.complete) return sourceResult.resolution;
             const auto error = graph::validateType(sourceResult.resolution.type);
@@ -1973,7 +2099,7 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
         target.portId.starts_with("event_response.")) {
         const auto response=resolveInRegion(target,ownerStructureId,regionId);
         if(!response.resolution.accepted())return response.resolution;
-        return connect(sourceResult.resolution.type,response.resolution.type,ConnectionPolicy::Exact);
+        return connectValue(sourceResult.resolution.type,response.resolution.type,ConnectionPolicy::Exact);
     }
     if(found!=nodesById_.end() && isInPlaceStructure(*found->second) && target.portId.starts_with("ipe:"))
         return checkInPlaceConnection(*found->second,target.portId,sourceResult.resolution.type,
@@ -2247,7 +2373,7 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
         for(const auto &p:connectivityNodePorts(node,evidence))if(p.id==target.portId && !p.output) {
             if(!p.valueType.known())return {ResolutionStatus::Unresolved,{},"binding.connectivity_unresolved",
                 "Node "+node.id+", terminal "+p.name+": "+p.unresolvedReason};
-            auto result=connect(sourceResult.resolution.type,p.valueType,ConnectionPolicy::Exact);
+            auto result=connectValue(sourceResult.resolution.type,p.valueType,ConnectionPolicy::Exact);
             if(!result.accepted())result.message="Node "+node.id+", terminal "+p.name+": expected "+
                 p.valueType.canonical()+", received "+sourceResult.resolution.type.canonical()+". "+result.message;
             return result;
@@ -2267,6 +2393,12 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
             return {ResolutionStatus::Incompatible,{},"binding.object_reference_class",
                 "Property/Invoke nodes require a supported object or File reference; execution-resource Queue references are a distinct class."};
         return sourceResult.resolution;
+    }
+    if (found!=nodesById_.end() && target.portId=="condition" && isErrorCluster(sourceResult.resolution.type)) {
+        const auto &loop=*found->second;
+        if(loop.type=="frog.studio.structures.while_loop" || loop.type=="frog.studio.structures.timed_loop" ||
+           (loop.type=="frog.studio.structures.for_loop" && loop.forLoopConditionalTerminal))
+            return sourceResult.resolution;
     }
     if (found != nodesById_.end() && found->second->type=="frog.studio.structures.for_loop" && target.portId=="count") {
         // Candidate admission follows the same Studio count receiver as the
@@ -2289,15 +2421,28 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
             return {ResolutionStatus::Incompatible,{},"binding.feedback_history_type","History requires a rank-one Array of T samples."};
         const auto expected=resolve(target);
         if(expected.resolution.status==ResolutionStatus::Incompatible)return expected.resolution;
+        if(requiresVariantBoxing(sourceResult.resolution.type,expected.resolution.type))
+            return connectValue(sourceResult.resolution.type,expected.resolution.type);
         if(expected.resolution.type.known()&&!fullTypeEqual(sourceResult.resolution.type,expected.resolution.type))
             return {ResolutionStatus::Incompatible,{},"binding.feedback_type_conflict","Feedback stores the exact type and metadata without coercion."};
         return sourceResult.resolution;
     }
     if (found != nodesById_.end() && !isCase(*found->second)) {
+        if (isClusterBundleFunction(found->second->type)) {
+            const auto row = clusterFunctionRow(target.portId);
+            if (row) {
+                const auto schema = input(*found->second, "cluster");
+                const auto *field = clusterSelectedField(*found->second, schema.resolution.type, *row);
+                if (field && requiresVariantBoxing(sourceResult.resolution.type, *field))
+                    return connectValue(sourceResult.resolution.type, *field);
+            }
+        }
         const auto *entry = findFunctionCatalogEntryByDiagramNodeType(found->second->type);
         const auto *definition = functionBindingDefinitionForNode(*found->second);
         const auto *port = definition == nullptr ? nullptr : functionPort(*definition, target.portId);
         if (port != nullptr) {
+            if (port->typeExpression == "variant")
+                return connectValue(sourceResult.resolution.type, TypeRef::primitive("variant"));
             if (entry && entry->catalogId.starts_with("array.matrix.") &&
                 port->typeExpression == "array<T:numeric,rank>=2>" &&
                 sourceResult.resolution.type.known() &&
@@ -2393,7 +2538,7 @@ TypeResolution TypeResolver::connectionInRegion(const DiagramEdgeEndpoint &sourc
     if (found != nodesById_.end() &&
         findTunnel(*found->second, target.portId) != nullptr && !targetResult.resolution.type.known())
         return sourceResult.resolution;
-    return connect(sourceResult.resolution.type, targetResult.resolution.type,
+    return connectValue(sourceResult.resolution.type, targetResult.resolution.type,
         found != nodesById_.end() && (isCase(*found->second) || findTunnel(*found->second, target.portId))
             ? ConnectionPolicy::Exact : ConnectionPolicy::NumericImplicit);
 }

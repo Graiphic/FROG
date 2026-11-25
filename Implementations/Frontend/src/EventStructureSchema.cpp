@@ -14,7 +14,8 @@ constexpr std::uint32_t scopeBit(EventSourceScope scope) noexcept {
 }
 bool sameEvent(const DiagramEventBinding &a, const DiagramEventBinding &b) noexcept {
     return a.kind == b.kind && a.source == b.source &&
-        eventBindingSourceScope(a) == eventBindingSourceScope(b);
+        eventBindingSourceScope(a) == eventBindingSourceScope(b) &&
+        (a.originNodeId.empty() || b.originNodeId.empty() || a.originNodeId == b.originNodeId);
 }
 // Versioned Studio source-profile types, not LabVIEW binary layouts or a runtime ABI.
 // Coords use owning-pane logical units; window bounds use window logical
@@ -91,7 +92,7 @@ std::string_view eventFilterSchemaFamily(std::string_view kind) noexcept {
     return kind;
 }
 bool eventHasDataField(const DiagramEventBinding &binding,std::string_view id) noexcept {
-    if(binding.kind=="user_event" && (id=="user_data" || id.starts_with("user_data/")))return true;
+    if(binding.kind=="user_event" && (id=="user_event_ref" || id=="user_data" || id.starts_with("user_data/")))return true;
     if(diagramStructureShelfFieldById(diagramEventStructureDataFields(),id))return true;
     const auto *spec=eventNotificationSpec(binding.kind);
     if(binding.kind=="vi_activation" &&
@@ -145,7 +146,7 @@ std::optional<binding::TypeRef> commonReferenceType(const binding::TypeRef &a,co
 }
 }
 bool isEventAuthoringDataField(std::string_view id) noexcept {
-    if(id=="user_data" || id.starts_with("user_data/"))return true;
+    if(id=="user_event_ref" || id=="user_data" || id.starts_with("user_data/"))return true;
     if(diagramStructureShelfFieldById(diagramEventStructureDataFields(),id))return true;
     for(const auto &event:eventNotificationCatalog())
         if(hasField(event.dataFields,id))return true;
@@ -288,18 +289,26 @@ std::vector<EventSourceSpec> eventStructureSources(const DiagramNode &,
     }
     return sources;
 }
+bool eventBindingMatchesSource(const DiagramEventBinding &binding, const EventSourceSpec &source) noexcept {
+    return binding.source == source.id && eventBindingSourceScope(binding) == source.scope &&
+        (binding.originNodeId.empty() || binding.originNodeId == source.originNodeId);
+}
 std::string validateEventBindingSources(const std::vector<DiagramEventBinding> &bindings,
     std::span<const EventSourceSpec> sources) {
     if (const auto error = validateEventBindings(bindings); !error.empty()) return error;
     for (const auto &binding : bindings) {
         const auto found = std::find_if(sources.begin(), sources.end(), [&](const auto &source) {
-            return source.id == binding.source && source.scope == eventBindingSourceScope(binding);
+            return eventBindingMatchesSource(binding, source) && source.available;
         });
         const auto identity=std::string(eventSourceScopeName(eventBindingSourceScope(binding)))+":"+binding.source;
-        if (found == sources.end() || !found->available)
+        if (found == sources.end() && !binding.originNodeId.empty())
+            return "The selected User Event from node '"+binding.originNodeId+
+                "' is no longer connected to registration source '"+binding.source+
+                "'. Reconnect it or choose a source in Edit Events.";
+        if (found == sources.end())
             return "Event '"+binding.kind+"' source '"+identity+"' is unavailable.";
         if (std::count_if(sources.begin(),sources.end(),[&](const auto &source) {
-                return source.id==binding.source && source.scope==eventBindingSourceScope(binding);}) != 1)
+                return source.available && source.id==binding.source && source.scope==eventBindingSourceScope(binding);}) != 1)
             return "Event '"+binding.kind+"' source '"+identity+"' has an ambiguous identity.";
         const auto *spec = eventNotificationSpec(binding.kind);
         if (!spec || !eventNotificationSupportsSource(*spec, *found))
@@ -325,6 +334,9 @@ std::string validateEventBindings(const std::vector<DiagramEventBinding> &bindin
             return "Notifications and filter events cannot share the same Event case.";
         filter=spec->filter;
         const auto scope = eventBindingSourceScope(binding);
+        if (!binding.originNodeId.empty() && (binding.kind != "user_event" ||
+            scope != EventSourceScope::Dynamic || !binding.source.starts_with("dynamic:")))
+            return "Only a dynamic User Event binding may identify its Create User Event source.";
         if (scope!=EventSourceScope::Dynamic && (spec->sourceScopes & scopeBit(scope)) == 0) return "This event does not belong to the selected source.";
         if (scope == EventSourceScope::Application && !binding.source.empty()) return "Application events do not take a control source.";
         if (scope != EventSourceScope::Application && binding.source.empty()) return "This event requires a source.";
@@ -360,7 +372,7 @@ EventDataAuthoringSchema eventCaseDataSchema(const DiagramNode &node,
     };
     for(const auto &binding:bindings) {
         const auto source=std::find_if(sources.begin(),sources.end(),[&](const auto &candidate) {
-            return candidate.id==binding.source && candidate.scope==eventBindingSourceScope(binding);});
+            return candidate.available && eventBindingMatchesSource(binding,candidate);});
         const auto *spec=eventNotificationSpec(binding.kind);
         auto effectiveSource=*source;
         if(source->scope==EventSourceScope::Dynamic)
@@ -405,7 +417,10 @@ EventDataAuthoringSchema eventCaseDataSchema(const DiagramNode &node,
         }
         if(binding.kind=="user_event") {
             if(!source->valueType.known())return fail("User Event source '"+binding.source+"' has no complete payload schema.");
-            fields.push_back({"user_data","Data",source->valueType});
+            const auto dataLabel = source->originNodeId.empty() || source->label.empty() ||
+                source->label == "<user event>" ? "Data" : source->label;
+            fields.push_back({"user_event_ref","UsrEvtRef",userEventReferenceType(source->valueType)});
+            fields.push_back({"user_data",dataLabel,source->valueType});
             const auto appendChildren=[&](const auto &self,const binding::TypeRef &type,
                     const std::string &path,const std::string &caption)->void {
                 if(type.kind!=binding::TypeKind::Cluster)return;
@@ -455,7 +470,10 @@ EventDataAuthoringSchema eventCaseDataSchema(const DiagramNode &node,
                 auto &field=*current;
                 const auto other=std::find_if(fields.begin(),fields.end(),[&](const auto &item) {return item.id==field.id;});
                 if(other==fields.end()) {current=result.fields.erase(current);continue;}
+                if (field.id=="user_data" && field.label!=other->label) field.label="Data";
                 if(field.type==other->type) {++current;continue;}
+                // Generate User Event requires a single exact payload contract.
+                if(field.id=="user_event_ref") {current=result.fields.erase(current);continue;}
                 if(const auto reference=commonReferenceType(field.type,other->type)) {
                     field.type=*reference;++current;continue;
                 }

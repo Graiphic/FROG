@@ -144,7 +144,7 @@ EventTypeResult resolveEventFunctionPort(const DiagramNode &node,std::string_vie
         if(!descriptor || descriptor->direction!=FunctionPortDirection::Input)
             return fail("binding.event_input_port","A connected Event input does not exist.");
         bool accepted=true;
-        if(item.portId=="data")accepted=item.valueType==data;
+        if(item.portId=="data")accepted=item.valueType==data || binding::requiresVariantBoxing(item.valueType,data);
         else if(item.portId=="data_type")accepted=create;
         else if(item.portId=="event_type_or_object")accepted=criterionAllowed(item.valueType);
         else if(item.portId!="user_event" && item.portId!="registration_in")
@@ -168,6 +168,8 @@ EventTypeResult resolveEventFunctionPort(const DiagramNode &node,std::string_vie
     } else if(requested=="event_type_or_object")result=supplied(requested)?*supplied(requested):Type::primitive("string");
     else if(const auto *p=findFunctionBindingPort(*definition,requested))result=binding::parseType(p->defaultValueType).type;
     if(!result.known())return fail("binding.event_type_unresolved","The Event terminal has no complete type.",true);
+    if(const auto *actual=supplied(requested);actual && binding::requiresVariantBoxing(*actual,result))
+        return {binding::connectValue(*actual,result),complete};
     return {{Status::Compatible,std::move(result),{},{}},complete};
 }
 } // namespace frog::native_engine

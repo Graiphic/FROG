@@ -1,0 +1,292 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Examiner la remise à zéro du chronomètre",
+  "metadata": {
+    "name": "Examiner la remise à zéro du chronomètre",
+    "name_source": "document",
+    "description": "Réinitialiser le chronomètre avec une cible de dix secondes. Le seuil ne doit pas être atteint à l’initialisation.\n\nRéinitialiser le chronomètre avec une cible de dix secondes. Le seuil ne doit pas être atteint à l’initialisation.\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\ntime_has_elapsed (bool) = false\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "structures", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000003786084845466998270000012340165476572849054_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 48 48\"\n\t style=\"enable-background:new 0 0 48 48;\" xml:space=\"preserve\" data-frog-shape-standard=\"square\">\n<style type=\"text/css\">\r\n\t.st0{fill:#4B5563;stroke:#AAB4C0;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}\r\n\t.st1{fill:#E3AA63;}\r\n\t.st2{fill:none;stroke:#E3AA63;stroke-width:1.04;stroke-miterlimit:10;}\r\n</style>\r\n<rect x=\"1\" y=\"1\" width=\"46\" height=\"46\" rx=\"4.5\" class=\"st0\"/>\n<g transform=\"translate(1 1) scale(1.194495) translate(-5.265 -2.851)\" data-frog-body-glyph-profile=\"square-v1\">\n<g>\r\n\t<path class=\"st1\" d=\"M31.53,14.692l0.467-0.467l0.369,0.357l1.094-1.094c0.221-0.209,0.221-0.566,0-0.775l0,0l-0.984-0.984\r\n\t\tc-0.221-0.221-0.566-0.221-0.787,0l-1.094,1.094l0.369,0.357l-0.467,0.467c-1.463-1.23-3.283-1.943-5.176-2.053v-0.43\r\n\t\tc0.922-0.234,1.598-1.057,1.598-2.041c0-1.168-0.947-2.103-2.127-2.103c-1.18,0-2.127,0.947-2.127,2.103\r\n\t\tc0,0.984,0.676,1.807,1.598,2.041v0.43c-1.906,0.111-3.726,0.836-5.176,2.053L18.62,13.18l0.357-0.357l-1.094-1.094\r\n\t\tc-0.221-0.221-0.566-0.221-0.787,0l-0.984,0.984c-0.221,0.209-0.221,0.566,0,0.775l0,0l1.094,1.094l0.357-0.357l0.467,0.467\r\n\t\tc-1.303,1.525-2.09,3.504-2.09,5.668c0,4.845,3.959,8.779,8.853,8.779s8.853-3.935,8.853-8.779c0-2.164-0.787-4.131-2.09-5.668\r\n\t\t M23.882,8.741v1.586c-0.393-0.283-0.627-0.738-0.627-1.217c0-0.836,0.676-1.5,1.512-1.5c0.836,0,1.512,0.676,1.512,1.5\r\n\t\tc0,0.504-0.246,0.934-0.627,1.217V8.741c0-0.541-1.783-0.541-1.783,0 M24.768,27.959c-4.23,0-7.673-3.406-7.673-7.611\r\n\t\ts3.431-7.611,7.673-7.611s7.673,3.406,7.673,7.611S29.01,27.959,24.768,27.959\"/>\r\n\t<path class=\"st1\" d=\"M24.792,13.081c-4.013,0-7.267,3.253-7.267,7.267s3.253,7.267,7.267,7.267c4.013,0,7.267-3.253,7.267-7.267\r\n\t\tS28.805,13.081,24.792,13.081z M29.809,25.303l-4.697-4.008c-0.098,0.037-0.221,0.062-0.332,0.062\r\n\t\tc-0.553,0-0.996-0.443-0.996-0.996c0-0.553,0.443-0.996,0.996-0.996v-6.037c0.246,0,0.713,0.037,0.713,0.037v6.295\r\n\t\tc0.184,0.184,0.295,0.43,0.295,0.689l-0.025,0.025l4.513,4.414C30.128,24.959,29.969,25.144,29.809,25.303z\"/>\r\n\t<line class=\"st2\" x1=\"12.003\" y1=\"26.582\" x2=\"12.003\" y2=\"37.193\"/>\r\n\t<line class=\"st2\" x1=\"37.037\" y1=\"26.582\" x2=\"37.037\" y2=\"37.193\"/>\r\n\t<line class=\"st2\" x1=\"17.335\" y1=\"32.312\" x2=\"32.249\" y2=\"32.312\"/>\r\n\t<polygon class=\"st1\" points=\"17.524,34.476 13.774,32.312 17.524,30.136 \t\"/>\r\n\t<polygon class=\"st1\" points=\"31.172,34.476 34.935,32.312 31.172,30.136 \t\"/>\r\n</g>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "time_has_elapsed",
+        "classId": "frog.widgets.boolean_indicator",
+        "role": "indicator",
+        "valueType": "bool",
+        "label": "Seuil atteint",
+        "bounds": {
+          "x": 32,
+          "y": 40,
+          "width": 46.2,
+          "height": 46.2
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "state_text.visible": false
+        },
+        "runtime": {
+          "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+          "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+          "asset": "asset:boolean_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+        },
+        "state": {
+          "value": false
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "stateTextFontFamily": "",
+          "stateTextStyle": "plain"
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.structures.elapsed_time",
+        "label": "Elapsed Time",
+        "label_visible": true,
+        "palette_catalog_id": "structures.elapsed_time",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "input-time_target",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "f64",
+        "label": "Float Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "10",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 175,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "input-reset",
+        "kind": "primitive",
+        "type": "frog.studio.boolean.true_constant",
+        "value_type": "bool",
+        "label": "True Constant",
+        "label_visible": true,
+        "palette_catalog_id": "boolean.true_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "text": "true",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 250,
+          "width": 120,
+          "height": 32
+        }
+      },
+      {
+        "id": "time_has_elapsed-terminal",
+        "kind": "widget_value",
+        "type": "bool",
+        "widget": "time_has_elapsed",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Examiner la remise à zéro du chronomètre\nRéinitialiser le chronomètre avec une cible de dix secondes. Le seuil ne doit pas être atteint à l’initialisation.\nEntrées -> opération -> indicateurs. Résultat attendu : time_has_elapsed (bool) = false\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "input-time_target",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "time_target"
+        }
+      },
+      {
+        "id": "wire-1",
+        "from": {
+          "node": "input-reset",
+          "port": "value"
+        },
+        "to": {
+          "node": "operation",
+          "port": "reset"
+        }
+      },
+      {
+        "id": "wire-2",
+        "from": {
+          "node": "operation",
+          "port": "time_has_elapsed"
+        },
+        "to": {
+          "node": "time_has_elapsed-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

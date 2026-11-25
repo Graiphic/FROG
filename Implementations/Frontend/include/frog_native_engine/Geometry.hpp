@@ -5,6 +5,7 @@ namespace frog::native_engine {
 struct Point {
     double x = 0.0;
     double y = 0.0;
+    bool operator==(const Point &) const = default;
 };
 
 struct Size {

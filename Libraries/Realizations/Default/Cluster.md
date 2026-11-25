@@ -36,11 +36,19 @@ It does not define the semantics of the child field widget classes.
 
 <hr/>
 
-<h2>2. Published Default Variant</h2>
+<h2>2. Cluster realizations</h2>
 
 <ul>
   <li><code>rectangular_group</code></li>
+  <li><code>horizontal_range_slider</code> and <code>vertical_range_slider</code></li>
 </ul>
+
+<p>A range slider carries two numeric fields in logical order, <code>lower</code>
+and <code>upper</code>. They share the configured numeric representation.
+Moving a thumb updates its field and stops at the other thumb. A range indicator
+positions both thumbs from the incoming cluster. The track can fill between the
+thumbs or from each thumb to the nearest end. Both presentations carry the same
+cluster value.</p>
 
 <hr/>
 

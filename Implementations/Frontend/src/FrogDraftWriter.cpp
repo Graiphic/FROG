@@ -39,6 +39,7 @@
 #include "frog_native_engine/WidgetCatalog.hpp"
 #include "frog_native_engine/WidgetPlacementContract.hpp"
 #include "frog_native_engine/WidgetInstance.hpp"
+#include "frog_native_engine/HorizontalSlider.hpp"
 #include "frog_native_engine/ListboxWidget.hpp"
 #include "frog_native_engine/TabControl.hpp"
 #include "FrogDocumentWaveformGraph.hpp"
@@ -73,6 +74,13 @@
 // Import/loadability policy remains in FrogDocument.cpp.
 namespace frog::native_engine {
 namespace {
+
+void appendDiagramWireRouteIntent(std::ostringstream &output, int indent, DiagramWireRouteIntent intent) {
+    if (intent == DiagramWireRouteIntent::Automatic)
+        document_internal::appendJsonField(output, indent, "route_intent", "automatic");
+    else if (intent == DiagramWireRouteIntent::Manual)
+        document_internal::appendJsonField(output, indent, "route_intent", "manual");
+}
 using document_internal::formatRgbHex;
 using document_internal::appendJsonField;
 using document_internal::appendJsonNumberField;
@@ -185,6 +193,15 @@ std::uint32_t storedPayloadStateRevision(std::string_view text) {
     }
     return required;
 }
+std::uint32_t typeDefinitionStateRevision(const TypeDefinitionLink &link) {
+    // A definition snapshot can retain group/stack state that an occurrence no longer uses.
+    if ((link.baselineWidgetJson.find("stack_order") != std::string::npos ||
+         link.baselineWidgetJson.find("visual_group") != std::string::npos) &&
+        storedPayloadStateRevision(link.baselineWidgetJson) == kFrogClusterPresentationDraftRevision)
+        return kFrogClusterPresentationDraftRevision;
+    return link.tabChildBindings.empty() && !typeDefinitionUsesStructuredBaseline(link)
+        ? kFrogTypeDefinitionDraftRevision : kFrogExtendedTypeDefinitionDraftRevision;
+}
 using document_internal::base64Encode;
 using document_internal::appendIndent;
 using document_internal::appendJsonString;
@@ -237,7 +254,7 @@ bool hasWidgetState(const WidgetInstance &widget) {
 }
 
 bool hasWidgetPropertyOverrides(const WidgetInstance &widget) noexcept {
-    return bool(widget.collection) || widget.valueType == "variant" || isXYGraphWidget(widget) || isWaveformGraphWidget(widget) || isLabelWidget(widget) ||
+    return widget.typeDefinition.has_value() || widget.defaultData.has_value() || bool(widget.collection) || widget.valueType == "variant" || isXYGraphWidget(widget) || isWaveformGraphWidget(widget) || isLabelWidget(widget) ||
         isArrayWidget(widget) ||
         isClusterWidget(widget) ||
         isNumericWidget(widget) ||
@@ -555,7 +572,8 @@ void appendDiagramNode(
     output << "{\n";
     appendJsonField(output, indent + 1, "id", node.id);
     if(node.typeDefinition) {
-        storageMode.requiredStateRevision=(std::max)(storageMode.requiredStateRevision,kFrogTypeDefinitionDraftRevision);
+        const auto &link=*node.typeDefinition;
+        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, typeDefinitionStateRevision(link));
         appendIndent(output,indent+1);output << "\"type_definition\": " << serializeTypeDefinitionLink(*node.typeDefinition) << ",\n";
     }
     if(node.collectionConstant) {
@@ -1120,18 +1138,24 @@ void appendDiagramNode(
     }
     if(node.classOperation && node.kind != "frog_call")
         throw std::invalid_argument("Class operations belong to a frog_call node.");
-    if ((node.kind == "frog_call" || (node.kind == "fitting_model_reference" || node.kind == "calculus_function_reference"))) {
-        appendJsonField(output, indent + 1, "label", node.label);
-        appendJsonBooleanField(output, indent + 1, "label_visible", node.labelVisible);
+    const bool untranslatedLabView = isUntranslatedLabViewNode(node);
+    if (node.kind == "frog_call" || node.kind == "fitting_model_reference" ||
+        node.kind == "calculus_function_reference" || untranslatedLabView) {
+        if (!untranslatedLabView) {
+            appendJsonField(output, indent + 1, "label", node.label);
+            appendJsonBooleanField(output, indent + 1, "label_visible", node.labelVisible);
+        }
         appendIndent(output, indent + 1);
         output << "\"call\": {\n";
         if(node.classOperation) {
             appendIndent(output,indent+2);output << "\"class_operation\": " <<
                 canonical_json::encode(writeClassSourceOperation(*node.classOperation)) << ",\n";
         }
-        appendJsonField(output, indent + 2, "document_path", node.callDocumentPath);
-        appendJsonField(output, indent + 2, "document_title", node.callDocumentTitle);
-        appendJsonField(output, indent + 2, "icon_svg", node.callIconSvgText);
+        if (!untranslatedLabView) {
+            appendJsonField(output, indent + 2, "document_path", node.callDocumentPath);
+            appendJsonField(output, indent + 2, "document_title", node.callDocumentTitle);
+            appendJsonField(output, indent + 2, "icon_svg", node.callIconSvgText);
+        }
         if (node.kind == "frog_call" && node.polymorphicFrogSelection) {
             const auto &selection = *node.polymorphicFrogSelection;
             appendIndent(output, indent + 2);
@@ -1555,6 +1579,7 @@ void appendDiagram(
             appendIndent(output, indent + 2);
             output << "{\n";
             appendJsonField(output, indent + 3, "id", edge.id);
+            appendDiagramWireRouteIntent(output, indent + 3, edge.routeIntent);
             appendIndent(output, indent + 3);
             output << "\"from\": {\n";
             appendJsonField(output, indent + 4, "node", edge.from.nodeId);
@@ -1635,6 +1660,7 @@ void appendDiagram(
             appendIndent(output, indent + 2);
             output << "{\n";
             appendJsonField(output, indent + 3, "id", fragment.id);
+            appendDiagramWireRouteIntent(output, indent + 3, fragment.routeIntent);
             if (!fragment.detachedEdgeId.empty())
                 appendJsonField(output, indent + 3, "detached_edge_id", fragment.detachedEdgeId);
             if (!fragment.label.empty()) {
@@ -1759,7 +1785,8 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
 
     bool wrote = false;
     if(widget.typeDefinition) {
-        storageMode.requiredStateRevision=(std::max)(storageMode.requiredStateRevision,kFrogTypeDefinitionDraftRevision);
+        const auto &link=*widget.typeDefinition;
+        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, typeDefinitionStateRevision(link));
         appendIndent(output,indent+1);output << "\"type_definition\": " << serializeTypeDefinitionLink(*widget.typeDefinition);
         wrote=true;
     }
@@ -2164,6 +2191,12 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
                 output << "{\n";
                 appendJsonField(output, indent + 3, "field_id", field.fieldId);
                 appendJsonField(output, indent + 3, "technical_name", field.technicalName);
+                if (field.stackOrder || field.visualGroup)
+                    storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogClusterPresentationDraftRevision);
+                if (field.stackOrder)
+                    appendJsonIntegerField(output, indent + 3, "stack_order", *field.stackOrder);
+                if (field.visualGroup)
+                    appendJsonIntegerField(output, indent + 3, "visual_group", field.visualGroup);
                 appendJsonNumberField(
                     output,
                     indent + 3,
@@ -2217,6 +2250,22 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
             appendString(
                 "representation.fixed_point.overflow_mode",
                 configuration.overflowMode);
+        }
+    }
+    const auto instrument = numeric_instrument::kind(widget.assetRef);
+    if (instrument != numeric_instrument::Kind::None) {
+        // Lossless Save compares the loaded model with the edited model. A
+        // source may explicitly store the defaults, so keep them in both projections.
+        appendNumber("instrument.tick_count", widget.instrumentTickCount);
+        appendBool("instrument.scale_visible", widget.instrumentScaleVisible);
+        if (numeric_instrument::isSingleSlider(instrument)) {
+            appendBool("instrument.cursor_visible", widget.instrumentCursorVisible);
+        }
+        if (numeric_instrument::isRange(instrument)) {
+            appendBool("instrument.fill_outside", widget.instrumentFillOutside);
+            appendNumber("data_entry.minimum", widget.numericMinimum.value_or(0));
+            appendNumber("data_entry.maximum", widget.numericMaximum.value_or(100));
+            appendNumber("data_entry.increment_step", widget.numericIncrementStep.value_or(1));
         }
     }
     if (isNumericWidget(widget) || isRingWidget(widget)) {

@@ -1,5 +1,6 @@
 #include "frog_native_engine/ContextPathIdentity.hpp"
 #include "frog_native_engine/CanonicalDraftMigration.hpp"
+#include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/DraftInterfaceInspection.hpp"
 #include "FrogDocumentConditionalDisable.hpp"
 #include "frog_native_engine/CanonicalRecordConstant.hpp"
@@ -14,6 +15,7 @@
 #include "frog_native_engine/CanonicalNativeCallScalar.hpp"
 #include "frog_native_engine/ExponentialFunctionIdentity.hpp"
 #include "frog_native_engine/DocumentTextDefaults.hpp"
+#include "frog_native_engine/HorizontalSlider.hpp"
 #include "frog_native_engine/NumericValueLexeme.hpp"
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/HyperbolicFunctionIdentity.hpp"
@@ -615,8 +617,16 @@ struct Migration {
             const auto id=txt(w.member("id"),from+"/id"),type=txt(w.member("valueType"),from+"/valueType");
             const auto klass=txt(w.member("classId"),from+"/classId"),role=txt(w.member("role"),from+"/role");
             const bool numeric=klass=="frog.widgets.numeric_control"||klass=="frog.widgets.numeric_indicator";
+            const auto *runtime=w.member("runtime");
+            const auto *asset=runtime?runtime->member("asset"):nullptr;
+            const auto instrument = asset && asset->type == Json::Type::String
+                ? numeric_instrument::kind(asset->string) : numeric_instrument::Kind::None;
+            const bool slider = numeric && instrument != numeric_instrument::Kind::None && !numeric_instrument::isRange(instrument);
             const bool booleanClass=klass=="frog.widgets.boolean_control"||klass=="frog.widgets.boolean_indicator"||klass=="frog.widgets.button";
             const bool textIndicator=(klass=="frog.widgets.string_indicator"&&type=="string")||(klass=="frog.widgets.path_indicator"&&type=="path");
+            if(klass=="frog.widgets.picture_indicator"&&type=="frog.array<u32,rank=2>"&&role=="indicator")
+                refuse(from,"The Picture Indicator is retained for authoring; the scalar execution profile does not carry its U32 image array.",
+                    "migration.picture_indicator_execution_unavailable",Domain::FrontendCapability);
             if(klass.find("array")!=std::string::npos)refuse(from,"The first compiled Array corridor uses real scalar controls/constants and Numeric indicators; Array widgets are not admitted.","migration.array_widget_unavailable", Domain::FrontendCapability);
             if(klass.find("cluster")!=std::string::npos)refuse(from,"Immutable diagram Record literals do not admit Front Panel Cluster controls/indicators or synthesize replacements.","migration.record_widget_unavailable", Domain::FrontendCapability);
             if((!numeric&&!booleanClass&&!textIndicator)||(numeric&&type!="f64"&&type!="i32"&&type!="u32"&&type!="i64"&&type!="u64")||(booleanClass&&type!="bool"))
@@ -630,6 +640,23 @@ struct Migration {
             const auto current=value(w,type,from,gammaLimit,exactIntegerState);auto initial=current;
             Json props=object();
             if(const auto *p=w.member("props")){
+                if(slider) {
+                    // These dimensions map a pointer position to a numeric value in the
+                    // authored host. The headless diagram receives the resulting scalar.
+                    const auto dimension=[&](std::string_view key,double fallback) {
+                        const auto *field=p->member(key);
+                        if(!field)return fallback;
+                        double value=0;
+                        const auto end=field->string.data()+field->string.size();
+                        const auto parsed=std::from_chars(field->string.data(),end,value);
+                        if(field->type!=Json::Type::Number || parsed.ec!=std::errc{} || parsed.ptr!=end || !std::isfinite(value))
+                            refuse(from+"/props/"+std::string(key),"Slider limits and step must be finite numbers.","migration.slider_range_invalid",Domain::Semantics);
+                        return value;
+                    };
+                    if(dimension("data_entry.minimum",0)>=dimension("data_entry.maximum",100) ||
+                       dimension("data_entry.increment_step",1)<0)
+                        refuse(from+"/props","A slider requires an increasing range and a nonnegative step.","migration.slider_range_invalid",Domain::Semantics);
+                }
                 obj(p,from+"/props");for(const auto &[key,v]:p->object){
                     if(key=="data.default"){
                         if(v.type!=Json::Type::String)refuse(from+"/props/data.default","Stored default must retain its widget record.", "migration.unsupported", Domain::Integrity);
@@ -646,6 +673,17 @@ struct Migration {
                         if(!stored||txt(stored->member("id"),from)!=id||txt(stored->member("classId"),from)!=klass||txt(stored->member("valueType"),from)!=type)
                             refuse(from+"/props/data.default","Stored default has a different widget identity or type.", "migration.unsupported", Domain::Semantics);
                         initial=value(*stored,type,from+"/props/data.default",gammaLimit,storedExact);
+                    }else if(slider && (key=="data_entry.minimum" || key=="data_entry.maximum" || key=="data_entry.increment_step")) {
+                        // The exact values remain in the private source for the native slider.
+                    }else if(slider && (key=="instrument.scale_visible" ||
+                             (numeric_instrument::isSingleSlider(instrument) && key=="instrument.cursor_visible"))) {
+                        flag(&v,from+"/props/"+key);
+                    }else if(slider && key=="instrument.tick_count") {
+                        unsigned int ticks = 0;
+                        const auto end = v.string.data()+v.string.size();
+                        const auto parsed = std::from_chars(v.string.data(),end,ticks);
+                        if(v.type != Json::Type::Number || parsed.ec != std::errc{} || parsed.ptr != end || ticks < 2 || ticks > 32)
+                            refuse(from+"/props/"+key,"The instrument scale requires 2 to 32 main ticks.","migration.slider_range_invalid",Domain::Semantics);
                     }else if(textIndicator&&key=="text.value") {
                         // Its exact writer value has already been migrated to
                         // default_value; this private property is not public.
@@ -1128,7 +1166,8 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         std::string error;auto parsed=source::parseJson(bytes,&error,source::JsonNumberPolicy::PreserveLexeme);if(!parsed)refuse("/",error,"migration.json", Domain::Integrity);
         const auto &raw=obj(&*parsed,"/");if(raw.member("spec_version")||txt(raw.member("format"),"/format")!="frog.document.draft"||
             !raw.member("draft_revision")||raw.member("draft_revision")->type!=Json::Type::Number||
-            (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="3"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"&&raw.member("draft_revision")->string!="11"))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
+            (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="3"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"&&raw.member("draft_revision")->string!="11"&&
+             raw.member("draft_revision")->string!=std::to_string(kFrogClusterPresentationDraftRevision)))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
         // Private drafts may omit metadata; their existing reader keeps the
         // normal document defaults. Only the derived public envelope needs an
         // explicit object. Never treat explicit null/wrong types as absence.
@@ -1310,7 +1349,7 @@ CanonicalDraftWidgetNormalization normalizeCanonicalDraftWidget(const source::Js
                 : binding::TypeRef::primitive("f64");
             for(const auto &[key,_]:authored.object)
                 if(key!="id"&&key!="role"&&key!="class_ref"&&key!="label"&&key!="layout"&&
-                    !(picture&&key=="props"))
+                    !(picture&&(key=="props"||key=="typography")))
                     refuse(from+"/"+key,"This legacy widget has an unaccounted field; no value or configuration was discarded.","migration.legacy_widget_field_unavailable", Domain::Compatibility);
             const auto id=txt(authored.member("id"),from+"/id");
             if(txt(authored.member("role"),from+"/role")!=expectedRole)
@@ -1362,6 +1401,14 @@ CanonicalDraftWidgetNormalization normalizeCanonicalDraftWidget(const source::Js
             for(const auto key:{"x","y","width","height"})
                 if(std::stod(bounds.member(key)->string)!=std::stod(rect.member(key)->string))
                     refuse(from+"/layout/"+key,"The model-codec frame differs from its actual source frame.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
+            if(const auto *typography=authored.member("typography")) {
+                // Lossless Save can retain the legacy field names and add
+                // typography from the current writer. The codec witness
+                // must account for every member of that presentation record.
+                const auto *represented=record.member("typography");
+                if(!represented||!exact(*represented,*typography))
+                    refuse(from+"/typography","The model-codec record did not preserve the authored Picture Indicator typography.","migration.legacy_widget_resolution_invalid", Domain::Integrity);
+            }
             if(labelVisible.has_value()) {
                 const auto *props=record.member("props");
                 const auto *visible=props?props->member("label.visible"):nullptr;

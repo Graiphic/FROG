@@ -216,7 +216,7 @@ class Graph:
         return (node, "value")
 
 
-def emit(constants, locations):
+def emit(constants, locations, source, entry):
     max_count, max_depth, limit_error, finite_error = constants
     g = Graph(locations)
     count = g.widget("nodes-before", "u32", 1999)
@@ -259,7 +259,7 @@ def emit(constants, locations):
     g.widget("checked-number", "f64", source=g.select("return-number", failure, dzero, number, "checked"))
     g.widget("checked-depth", "u32", source=g.select("return-depth", failure, uzero, depth, "checked"))
     document = {"spec_version": "0.1", "metadata": {"name": "QMH expression checked",
-                "summary": "Clang import of checked() and fail() from expression.c"},
+                "summary": f"Source (C): {source}\nClang import of {entry}() and fail()."},
                 "interface": {"inputs": [], "outputs": []},
                 "diagram": {"nodes": g.nodes, "edges": g.edges},
                 "front_panel": {"canvas": {"width": 550, "height": 270}, "widgets": g.widgets}}
@@ -373,7 +373,7 @@ def main():
             "detail": str(error)}
         print(json.dumps(details))
         return 2
-    doc, mapping = emit(constants, locations)
+    doc, mapping = emit(constants, locations, args.source.resolve(), args.entry)
     output = args.output.resolve()
     if output.exists():
         print(json.dumps({"code": "c_import.destination_exists", "path": str(output)}))

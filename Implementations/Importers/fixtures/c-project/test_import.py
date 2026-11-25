@@ -26,6 +26,7 @@ def main():
         return 77
     importer = Path(__file__).resolve().parents[2] / "Import-CProject.py"
     before = args.database.read_bytes()
+    definitions = {(Path(row["directory"]) / row["file"]).resolve() for row in json.loads(before)}
     args.scratch.mkdir(parents=True, exist_ok=True)
     scratch_root = Path(os.environ.get("FROG_C_PROJECT_TEST_SCRATCH", args.scratch))
     scratch_root.mkdir(parents=True, exist_ok=True)
@@ -62,6 +63,11 @@ def main():
                 require(record["origin"].startswith("src/") and record["origin"].split(":")[-1].isdigit(),
                         "Missing C source location")
                 graph = json.loads((output / record["document"]).read_text(encoding="utf-8"))
+                description = graph["metadata"]["description"].splitlines()
+                definition = Path(record["origin"].rsplit(":", 1)[0])
+                expected_file, = (path for path in definitions if path.match(definition.as_posix()))
+                require(description[0] == f"Source (C): {expected_file}" and symbol in description[1],
+                        f"Wrong embedded source for {symbol}")
                 nodes = {node["id"]: node for node in graph["diagram"]["nodes"]}
                 edges = graph["diagram"]["edges"]
                 require(edges and all(e["from"]["node"] in nodes and e["to"]["node"] in nodes for e in edges),

@@ -3,11 +3,12 @@
 
 from dataclasses import dataclass
 import math
+import struct
 
-from pylabview import LVheap, LVparts
-
+from pylabview import LVdatafill, LVdatatype, LVheap, LVmisc, LVparts
+from import_labview_interfaces import ExactRead, InterfaceTypes
 from import_labview_profile import (
-    TYPES, Types, constant_value, field, heap_root, identity, initial_value, items,
+    TYPES, ProfileRefusal, children, constant_value, decode_constant_value, field, heap_root, identity, initial_value, items,
     kind, number, one_section, require, text,
 )
 
@@ -20,6 +21,7 @@ class Widget:
     role: str
     bounds: tuple[int, int, int, int]
     value: object
+    waveform: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -93,11 +95,14 @@ class Graph:
     terms: dict[int, Terminal]
     boundaries: dict[int, Boundary]
     widgets: dict[int, Widget]
+    region_owners: dict
+    resource_nodes: dict
 
 
-STRUCTURES = {"flatSequence", "sequenceFrame", "forLoop"}
-BOUNDARIES = {"flatSeqTun", "lMax", "lCnt", "lSR", "rSR", "lpTun"}
-TERM_BINDINGS = BOUNDARIES | {"fPDCO", "bDConstDCO", "parm", "overridableParm", "aBuildDCO"}
+STRUCTURES = {"flatSequence", "sequenceFrame", "forLoop", "select", "whileLoop"}
+BOUNDARIES = {"seqTun", "flatSeqTun", "lMax", "lCnt", "lSR", "rSR", "lpTun", "lTst", "caseSel", "selTun"}
+TERM_BINDINGS = BOUNDARIES | {"fPDCO", "bDConstDCO", "parm", "overridableParm", "aBuildDCO",
+                              "mxDCO", "dmxDCO", "aIDCO", "aRepDCO", "subsetDCO", "concatDCO", "Class018A"}
 
 
 def members(node, name, location, optional=False):
@@ -124,10 +129,49 @@ def rect(node, name, location, optional=False):
     return found.top, found.left, found.bottom, found.right
 
 
-class HeapTypes(Types):
-    def descriptor(self, dtype, location):
-        family = dtype.fullType().name if dtype is not None else "unknown"
-        if family == "Array":
+class HeapTypes(InterfaceTypes):
+    def set_element(self, dtype, location):
+        stream = ExactRead(dtype.raw_data)
+        try:
+            code, flags, size = LVdatatype.TDObject.parseRSRCDataHeader(stream)
+            require(code == 0x73 and size == len(dtype.raw_data), "set_type",
+                    "Invalid LabVIEW Set descriptor.", location)
+            index = LVmisc.readVariableSizeFieldU2p2(stream)
+            if flags & LVdatatype.TYPEDESC_FLAGS.HasLabel.value:
+                label = stream.read(stream.read(1)[0])
+                require(label == dtype.label, "set_type", "Inconsistent Set label.", location)
+            require(stream.read() in (b"", b"\x00"), "set_type", "Unknown Set descriptor suffix.", location)
+            return self.consolidated.getFlatType(index)
+        except (EOFError, IndexError) as exc:
+            raise ProfileRefusal("set_type", "Invalid Set element type or truncated descriptor.", location) from exc
+
+    def descriptor(self, dtype, location, ancestry=()):
+        require(dtype is not None and id(dtype) not in ancestry and len(ancestry)<16, "type_reference",
+                "Missing, cyclic or excessively nested value type.", location)
+        family = getattr(dtype.fullType(), "name", "unknown")
+        if dtype.fullType() == 0x73:
+            element = self.descriptor(self.set_element(dtype, location), location, (*ancestry, id(dtype)))
+            if element.startswith("array:"):
+                element = f"array<{element[6:]}>"
+            return f"set<{element}>"
+        if family in ("Path", "LVVariant", "Refnum"):
+            native = self.describe(dtype, location).native_type(self.encoding)
+            require(native, "unsupported_type", f"Unsupported {family} descriptor.", location)
+            return native
+        if family == "Cluster":
+            require(0 < len(dtype.clients) <= 32, "cluster_type", "The positional Cluster has no supported arity.", location)
+            named = self.describe(dtype, location).native_type(self.encoding)
+            if named == 'cluster<"status":bool,"code":i32,"source":string>':
+                return named
+            fields = []
+            for index, client in enumerate(dtype.clients, 1):
+                child = self.consolidated.getFlatType(client.index)
+                element = self.descriptor(child, location, (*ancestry,id(dtype)))
+                if element.startswith("array:"):
+                    element = f"array<{element[6:]}>"
+                fields.append(f'"element{index}":{element}')
+            return "cluster<" + ",".join(fields) + ">"
+        if family in ("Array", "SubArray"):
             require(len(dtype.dimensions) == 1 and len(dtype.clients) == 1 and
                     dtype.dimensions[0].flags == 255 and dtype.dimensions[0].fixedSize == 0xFFFFFF,
                     "array_type", "The source array is not a dynamic rank-one array.", location)
@@ -146,6 +190,66 @@ class HeapTypes(Types):
 
 def implicit_value(dtype):
     return [] if dtype.startswith("array:") else initial_value(dtype)
+
+
+def empty_numeric_array_element(types, descriptor, display, location):
+    if display is None or kind(display) != "indArr":
+        return None
+    raw = field(descriptor, "ConstValue", location, optional=True)
+    if raw is None or raw.content not in (bytes(4), bytes(5)):
+        return None
+    try:
+        dtype = types.of(descriptor, location)
+        if dtype in ("array:i32", "array:f64") and types.of(display, location) == dtype:
+            return dtype.removeprefix("array:")
+    except ProfileRefusal:
+        pass
+    return None
+
+
+def waveform_display(body, dtype, role, location, encoding):
+    graph_type = optional_number(body, "graphType", location)
+    require(graph_type == 1 and dtype == "array:f64" and role == "indicator", "panel_widget",
+            f"Unsupported stdGraph variant {graph_type} with {dtype} ({role}).", location)
+    settings = {"profile": "WFG-1-linear"}
+    axes = set()
+    for scale in members(body, "partsList", location):
+        if kind(scale) != "scale":
+            continue
+        axis = {18: "x", 19: "y"}.get(number(scale, "partID", location))
+        require(axis and axis not in axes, "graph_scale", "The Waveform Graph has unsupported extra axes.", location)
+        axes.add(axis)
+        for key, name in (("min", "scaleDMin"), ("max", "scaleDMax")):
+            value = field(scale, name, location, optional=True)
+            require(value is None or isinstance(value.content, bytes) and len(value.content) == 8, "graph_scale",
+                    "The Waveform Graph scale bound is not a saved double.", location)
+            settings[f"{axis}_{key}"] = 0.0 if value is None else struct.unpack(">d", value.content)[0]
+        lo, hi = settings[f"{axis}_min"], settings[f"{axis}_max"]
+        require(math.isfinite(lo) and math.isfinite(hi) and lo < hi, "graph_scale",
+                "The Waveform Graph scale interval is unsupported.", location)
+        for part in members(scale, "partsList", location):
+            if kind(part) == "label" and number(part, "partID", location) == 94:
+                record = field(part, "textRec", location)
+                labels = children(record, "text")
+                if labels:
+                    settings[f"{axis}_label"] = labels[0].content.decode(encoding)
+    require(axes == {"x", "y"}, "graph_scale", "The Waveform Graph requires both saved axes.", location)
+    scale_data = members(body, "GraphScaleData", location)
+    palette = members(body, "GraphScalePalette", location)
+    require(len(scale_data) == len(palette) == 2, "graph_scale",
+            "Cannot identify the autoscale mode of both Waveform Graph axes.", location)
+    for record, entry in zip(scale_data, palette):
+        require(kind(record) == "ScaleData" and kind(entry) == "ScaleLegendData", "graph_scale",
+                "The Waveform Graph has unsupported scale metadata.", location)
+        axis = {18: "x", 19: "y"}.get(number(record, "partID", location))
+        name = field(entry, "name", location)
+        automatic = field(entry, "autoScale", location)
+        require(axis in axes and isinstance(name.content, bytes) and name.content.decode(encoding) == settings.get(f"{axis}_label")
+                and type(automatic.value) is bool, "graph_scale",
+                "Cannot associate the saved autoscale flag with its Waveform Graph axis.", location)
+        settings[f"autoscale_{axis}"] = automatic.value
+        axes.remove(axis)
+    return settings
 
 
 def data_value(data, dtype, types, location):
@@ -173,15 +277,28 @@ def panel_defaults(vi, types, order):
         return {}
     by_index = {record.index: record for record in records}
     require(len(by_index) == len(records), "default_index", "Duplicate DFDS entry.", "DFDS")
-    index = one_section(vi, b"TM80").indexShift
+    type_map = vi.blocks.get(b"TM80")
+    require(type_map is not None, "default_table", "Stored defaults have no LabVIEW 8+ type map.", "DFDS")
+    primary = type_map.getParsedSection(None)
+    require(not primary.parse_failed, "default_table", "The primary type map could not be decoded.", "DFDS")
+    index = primary.indexShift
     candidates = [item for item in records if item.tdType.name == "RepeatedBlock" and
                   len(item.value) == len(LVparts.DSINIT) and
                   all(child.tdType.name == "NumInt32" for child in item.value)]
     require(len(candidates) == 1, "default_table", "The data-space initialization table is not unique.", "DFDS")
-    init = candidates[0].value
+    ds_init = candidates[0]
+    init = ds_init.value
 
     def top_index(value):
-        return index + (value & 0xFFFFFF)
+        ordinal = value & 0xFFFFFF
+        if (value >> 24) & 0xFF == 0x40:
+            require(vi.getFileVersion()["major"] == 20 and ordinal != 0xFFFFFF,
+                    "default_table", "Unsupported relative data-space type reference.", "DFDS")
+            resolved = ds_init.index - 1 + ordinal
+            require(index <= resolved < index + len(primary.content), "default_table",
+                    "The relative data-space type reference is outside the primary type map.", "DFDS")
+            return resolved
+        return index + ordinal
 
     table = by_index.get(top_index(init[LVparts.DSINIT.fpdcoTableTMI].value))
     require(table is not None and table.tdType.name == "RepeatedBlock" and
@@ -201,6 +318,21 @@ def panel_defaults(vi, types, order):
     return result
 
 
+def inline_panel_default(vi, obj, descriptor, location):
+    raw = field(obj, "DefaultData", location, optional=True)
+    if raw is None:
+        return None
+    family = descriptor.fullType().name
+    require(family in TYPES and isinstance(raw.content, bytes), "panel_default",
+            f"No verified inline panel default reader for {family}.", location)
+    stream = ExactRead(raw.content)
+    record = LVdatafill.newDataFillObjectWithTD(vi, (b"FPHb", 0), -1, 0, descriptor, vi.po)
+    record.initWithRSRC(stream)
+    require(stream.tell() == len(raw.content), "panel_default",
+            "The inline panel default contains unread bytes.", location)
+    return record
+
+
 def read_widgets(vi, types):
     root = field(heap_root(vi, b"FPHb"), "root", "FPHb")
     pane = field(root, "paneHierarchy", "FPHb")
@@ -218,14 +350,21 @@ def read_widgets(vi, types):
         family = {"string": "stdString", "bool": "stdBool"}.get(dtype, "stdNum")
         if dtype.startswith("array:"):
             family = "indArr"
-        require(kind(body) == family, "panel_widget", f"Unsupported display class '{kind(body)}'.", location)
+        waveform = None
+        role = "indicator" if flags(item, location) & 1 else "control"
+        if kind(body) == "stdGraph":
+            waveform = waveform_display(body, dtype, role, location, vi.textEncoding)
+        else:
+            require(kind(body) == family, "panel_widget", f"Unsupported display class '{kind(body)}'.", location)
         require(types.of(body, location) == dtype, "panel_type",
                 "The panel object and its display type disagree.", location)
         parts = members(body, "partsList", location)
         labels = [part for part in parts if kind(part) == "label" and number(part, "partID", location) == 16]
         require(len(labels) == 1, "panel_label", "The widget has no unique readable label.", location)
-        name = text(field(field(labels[0], "textRec", location), "text", location).content, location)
-        role = "indicator" if flags(item, location) & 1 else "control"
+        label_bytes = field(field(labels[0], "textRec", location), "text", location).content
+        require(isinstance(label_bytes, bytes) and len(label_bytes) <= 512, "panel_label",
+                "The saved panel label is missing or exceeds 512 bytes.", location)
+        name = label_bytes.decode(vi.textEncoding)
         value = implicit_value(dtype)
         if uid in defaults:
             descriptor, data, default_role = defaults[uid]
@@ -233,7 +372,12 @@ def read_widgets(vi, types):
                     "default_type", "The data-space role or type disagrees with the panel heap.", location)
             if data is not None:
                 value = data_value(data, dtype, types, location)
-        widgets[uid] = Widget(uid, name, dtype, role, rect(body, "bounds", location), value)
+        else:
+            descriptor = types.heap(item, "typeDesc", location)
+            stored = inline_panel_default(vi, item, descriptor, location)
+            if stored is not None:
+                value = data_value(stored, dtype, types, location)
+        widgets[uid] = Widget(uid, name, dtype, role, rect(body, "bounds", location), value, waveform)
     require(len(order) == len(widgets) and set(order) == widgets.keys(), "panel_coverage",
             "Panel references and objects do not match.", "FPHb/ddoList")
     return widgets
@@ -265,7 +409,7 @@ class DiagramReader:
                 f"Unable to resolve source UID {uid}.", location)
         return result
 
-    def read_terminal(self, item, diagram, owner, location):
+    def read_terminal(self, item, diagram, owner, owner_kind, location):
         uid = identity(item, location)
         location += f"/term:{uid}"
         require(uid not in self.terms and kind(item) in {"term", "fPTerm"}, "terminal",
@@ -287,13 +431,37 @@ class DiagramReader:
             require(binding_kind in TERM_BINDINGS, "terminal_descriptor",
                     f"Unsupported terminal descriptor '{binding_kind}'.", location)
             dtype = self.types.of(descriptor, location)
+            if binding_kind == "lpTun" and flags(descriptor, location) & 0x01000000 and owner_kind == "sRN":
+                require(dtype.startswith("array:"), "loop_tunnel_type",
+                        "An indexing tunnel must connect a rank-one Array to its element.", location)
+                dtype = dtype[6:]
             value = None
             position = rect(descriptor, "termBounds", location, optional=True)
             if binding_kind == "bDConstDCO":
-                require(not dtype.startswith("array:"), "constant_type",
-                        "Array-literal payloads are outside this profile.", location)
-                value = constant_value(descriptor, dtype, location)
-                position = rect(field(descriptor, "ddo", location), "bounds", location)
+                display = field(descriptor, "ddo", location)
+                if dtype.startswith("array:"):
+                    require(empty_numeric_array_element(self.types, descriptor, display, location),
+                            "constant_type", "Only a decoded empty rank-one numeric array literal is supported.", location)
+                    value = []
+                elif dtype.startswith("cluster<"):
+                    td = self.types.heap(descriptor, "typeDesc", location)
+                    raw = field(descriptor, "ConstValue", location).content
+                    require(isinstance(raw,bytes), "cluster_literal", "Missing Cluster literal payload.", location)
+                    stream = ExactRead(raw)
+                    value = []
+                    for index, client in enumerate(td.clients,1):
+                        member_type = self.types._child(client)
+                        member_dtype = self.types.descriptor(member_type, location)
+                        require(member_dtype in TYPES.values() and member_dtype not in ("string","bool"), "cluster_literal",
+                                "The positional literal requires fixed-width numeric fields.", location)
+                        label = getattr(member_type,"label",None)
+                        value.append((label.decode(self.types.encoding) if label else f"Element {index}", member_dtype,
+                                      decode_constant_value(stream.read(int(member_dtype[1:])//8),member_dtype,location)))
+                    require(stream.tell()==len(raw), "cluster_literal", "Unread bytes in Cluster literal.", location)
+                else:
+                    require(dtype in TYPES.values(), "constant_type", f"Unsupported literal type '{dtype}'.", location)
+                    value = constant_value(descriptor, dtype, location)
+                position = rect(display, "bounds", location)
             if binding_kind in BOUNDARIES:
                 self.boundary_descriptors[binding_uid] = descriptor
             term = Terminal(uid, kind(item), diagram, owner, terminal_flags, dtype, binding_kind,
@@ -307,10 +475,10 @@ class DiagramReader:
         uid = identity(item, "BDHb")
         location = f"BDHb/uid:{uid}"
         category = kind(item)
-        require(uid not in self.nodes and category in STRUCTURES | {"sRN", "prim", "aBuild"},
+        require(uid not in self.nodes and category in STRUCTURES | {"sRN", "prim", "aBuild", "aIndx", "aReplace", "mux", "demux", "subset", "concat", "Class0189"},
                 "diagram_node", f"Unsupported or repeated diagram node '{category}'.", location)
         self.nodes[uid] = None
-        terms = tuple(self.read_terminal(self.resolve(term, location), diagram, uid, location)
+        terms = tuple(self.read_terminal(self.resolve(term, location), diagram, uid, category, location)
                       for term in members(item, "termList", location, optional=category == "flatSequence"))
         frame_nodes = [self.resolve(frame, location)
                        for frame in members(item, "sequenceList", location, optional=category != "flatSequence")]
@@ -319,17 +487,18 @@ class DiagramReader:
                 "The sequence contains an unsupported or missing frame.", location)
         frames = tuple(self.read_node(frame, diagram, depth) for frame in frame_nodes)
         regions = tuple(self.read_diagram(self.resolve(region, location), depth + 1)
-                        for region in members(item, "diagramList", location, optional=category not in {"sequenceFrame", "forLoop"}))
-        require(len(regions) == int(category in {"sequenceFrame", "forLoop"}),
+                        for region in members(item, "diagramList", location, optional=category not in {"sequenceFrame", "forLoop", "select", "whileLoop"}))
+        require(len(regions) == (2 if category == "select" else int(category in {"sequenceFrame", "forLoop", "whileLoop"})),
                 "diagram_regions", "The diagram regions do not match their structure.", location)
         primitive = None
         if category == "prim":
             primitive = (number(item, "primResID", location), number(item, "primIndex", location))
         operands = ()
         result = None
-        if category == "aBuild":
+        if category in {"aBuild", "aIndx", "aReplace", "mux", "demux", "subset", "concat", "Class0189"}:
             operands = tuple(identity(operand, location) for operand in members(item, "dcoList", location))
             result = identity(field(item, "dcoAgg", location), location)
+        if category == "aBuild":
             incoming = [self.terms[term].binding_uid for term in terms if not self.terms[term].source]
             outgoing = [self.terms[term].binding_uid for term in terms if self.terms[term].source]
             require(len(operands) == len(set(operands)) == len(incoming) and set(operands) == set(incoming)
@@ -344,14 +513,19 @@ class DiagramReader:
         location = f"BDHb/uid:{uid}"
         require(kind(signal) == "signal" and uid not in self.signal_uids,
                 "signal", "The entry is not a unique source signal.", location)
-        require(number(signal, "state", location) in (1, 33), "signal_state",
-                "The saved wire state is outside the verified profile.", location)
+        state = number(signal, "state", location)
         self.signal_uids.add(uid)
         terminals = [self.terms.get(identity(term, location)) for term in members(signal, "termList", location)]
         require(len(terminals) >= 2 and all(term is not None and term.diagram == diagram for term in terminals),
                 "signal_scope", "A signal crosses an unresolved diagram boundary.", location)
         sources = [term for term in terminals if term.source]
         targets = [term for term in terminals if not term.source]
+        # LV marks an integral wire coerced at the input to floating Divide.
+        # Admit the flag only on the decoded operation, direction and representation.
+        coerced_divide = any(term.flags & 0x40000 and term.dtype == "i32" and term.binding_kind == "parm"
+                             and self.nodes[term.owner].primitive == (1053, 106) for term in targets)
+        require(state in (1, 33) or state in (17, 49) and coerced_divide, "signal_state",
+                "The saved wire state is outside the verified profile.", location)
         target_ids = tuple(term.uid for term in targets)
         require(len(sources) == 1 and targets and all(term.dtype == sources[0].dtype for term in targets)
                 and len(set(target_ids)) == len(target_ids) and not used_inputs.intersection(target_ids),
@@ -378,7 +552,7 @@ class DiagramReader:
         visible = set(composed)
         visible.update(node for node in normal if self.nodes[node].kind != "sRN")
         visible.update(term for node in normal if self.nodes[node].kind == "sRN" for term in self.nodes[node].terms
-                       if self.terms[term].binding_kind in {"fPDCO", "bDConstDCO", "lCnt"})
+                       if self.terms[term].binding_kind in {"fPDCO", "bDConstDCO", "lCnt", "lTst"})
         require(len(drawn) == len(set(drawn)) and set(drawn) == visible, "diagram_coverage",
                 "Diagram nodes, terminals and visible source objects disagree.", location)
         used_inputs = set()
@@ -397,6 +571,10 @@ class DiagramReader:
                 owner = owner.parent
             require(owner is not None, "boundary_owner", "A boundary descriptor has no structure owner.", location)
             node = self.nodes.get(identity(owner, location))
+            if node and node.kind in {"select","whileLoop"}:
+                # The shared region reader verifies all per-frame faces (a Case
+                # tunnel has one interior terminal per arm, not one per node).
+                continue
             require(node is not None and len(node.regions) == 1, "boundary_owner",
                     "The boundary's owning structure has no unique diagram.", location)
             ends = [self.terms.get(identity(item, location)) for item in members(descriptor, "termList", location)]
@@ -434,4 +612,22 @@ def decode_graph(vi):
     reader = DiagramReader(vi, types, widgets)
     root = reader.read_diagram(field(heap_root(vi, b"BDHb"), "root", "BDHb"), 0)
     boundaries = reader.read_boundaries()
-    return Graph(root, reader.diagrams, reader.nodes, reader.terms, boundaries, widgets)
+    owners = {}
+    resources = {}
+    from import_labview_editable import BindingTypes, _RESOURCE_PRIMITIVES, resource_primitive
+    if any(n.kind in {"select", "whileLoop"} or n.primitive in _RESOURCE_PRIMITIVES for n in reader.nodes.values()):
+        from import_labview_source_diagram import decode_source_diagram
+        from import_labview_regions import project_region_owner, loop_tunnel_modes
+        decoded = decode_source_diagram(vi)
+        binding_types = BindingTypes(vi)
+        modes = loop_tunnel_modes(decoded, binding_types)
+        for n in decoded.nodes.values():
+            if reader.nodes[n.uid].primitive in _RESOURCE_PRIMITIVES:
+                wired = {tid for sid in decoded.diagrams[n.diagram].signals for tid in decoded.signals[sid].endpoints}
+                translated = resource_primitive(n, decoded, binding_types, wired)
+                require(translated, "resource_signature", "Unverified resource operation or element type.", f"BDHb/uid:{n.uid}")
+                resources[n.uid] = translated
+            if n.kind in {"select","whileLoop"}:
+                target, endpoints, notes = project_region_owner(decoded, n, dict.fromkeys(n.regions), binding_types, loop_modes=modes)
+                owners[n.uid] = (target, endpoints, notes)
+    return Graph(root, reader.diagrams, reader.nodes, reader.terms, boundaries, widgets, owners, resources)

@@ -16,6 +16,8 @@ inline std::string_view diagramLiteralValuePortId(const DiagramNode &node) noexc
     return isDiagramReferenceConstant(node)?"reference_out":"value";
 }
 inline bool isDiagramLiteralConstant(const DiagramNode &node) noexcept {
+    if(node.classOperation)return node.kind=="frog_call" && node.callDocumentPath.empty() &&
+        node.classOperation->kind==ClassOperationKind::Default;
     if(node.applicationControl)return isDiagramReferenceConstant(node);
     return node.kind=="primitive"&&(node.type.find("constant")!=std::string::npos||
         node.type=="numeric"||node.type=="string"||node.type=="bool");

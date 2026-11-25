@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 40" data-frog-template="frog.realizations.default.numeric.gauge" data-frog-variant="gauge">
+  <g data-frog-part="root">
+  <path data-frog-part="scale" d="M11 34a18 18 0 1 1 26 0M12 32l3 -3M7 20h4m2 -13 3 4m8 -8v4m12 0 -3 4m8 9h-4m-1 12 -3 -3" fill="none" stroke="#a6b2bc" stroke-width="2.4" stroke-linecap="round"/>
+  <path data-frog-part="pointer" d="M24 21l9 -8" fill="none" stroke="#0084c8" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="24" cy="21" r="2" fill="#a6b2bc" stroke="#a6b2bc" stroke-width="2"/>
+  </g>
+</svg>

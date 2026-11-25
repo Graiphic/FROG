@@ -29,6 +29,11 @@ binding::TypeRef applicationControlBooleanColorsType() {
     return TypeRef::array(std::move(colors));
 }
 
+bool applicationControlWidgetAppearanceMember(std::string_view classId,std::string_view member) noexcept {
+    if(member=="boolean_text.text")return applicationControlBooleanColorsAvailable(classId);
+    return member=="interaction.visible" && binding::referenceClassAssignable(classId,"frog.control");
+}
+
 bool applicationControlHasReferenceInput(const ApplicationControlNode &node) noexcept {
     return node.kind!=ApplicationControlKind::Reference &&
         (node.kind!=ApplicationControlKind::Property || node.target.kind==ApplicationControlTargetKind::Unbound);

@@ -48,7 +48,7 @@
                     auto replacement=input(clusterFunctionRowId(i));
                     cluster.complete=cluster.complete && replacement.complete;
                     if(replacement.resolution.accepted()) {
-                        const auto checked=connect(replacement.resolution.type,*field,ConnectionPolicy::NumericImplicit);
+                        const auto checked=connectValue(replacement.resolution.type,*field,ConnectionPolicy::NumericImplicit);
                         if(!checked.accepted()) {
                             if(clusterOutput) cluster.complete=false;
                             else {

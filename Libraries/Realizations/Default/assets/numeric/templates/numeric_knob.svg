@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 40" data-frog-template="frog.realizations.default.numeric.knob" data-frog-variant="knob">
+  <g data-frog-part="root">
+  <path data-frog-part="scale" d="M9 35a21 21 0 1 1 30 0" fill="none" stroke="#a6b2bc" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="24" cy="21" r="13" fill="#344250" stroke="#a6b2bc" stroke-width="2"/>
+  <path data-frog-part="pointer" d="M24 21l7 -7" fill="none" stroke="#0084c8" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

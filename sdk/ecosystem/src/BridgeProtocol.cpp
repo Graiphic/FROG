@@ -243,7 +243,10 @@ GraphRequirements requirements(std::string_view provenanceBytes,std::string_view
     const bool draft=family=="frog.document.draft";
     // These are admitted provenance families/versions, not a source reader.
     // The bridge consumes only the complete FIR produced by that Frontend.
-    if((draft&&!oneOf(version,{"0","1","2","3","4","5","6","7","8","9","10"}))||
+    // Revision 13 records field presentation only. The Frontend has already
+    // checked the logical Cluster and emitted a hash-bound Source projection.
+    // Revision 12 is a separate Type Definition profile with its own admission.
+    if((draft&&!oneOf(version,{"0","1","2","3","4","5","6","7","8","9","10","11","13"}))||
         (!draft&&(family!="frog.source"||version!="0.1")))
         reject("bridge.version","The authored source family or version is not supported.","/source/version");
     hash(source,"sha256","/source");str(source,"document_id","/source",8192);

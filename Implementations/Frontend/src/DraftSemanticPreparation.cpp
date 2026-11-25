@@ -272,6 +272,7 @@ DraftConnectionInspection inspectDraftTypedConnections(FrogDraftDataView source,
         // arrays may each satisfy logical_tree but have incompatible ranks.
         // Use the same graph-aware candidate check as the visible wire editor.
         const bool pilotSink = (sinkDefinition && sinkDefinition->resolverId == binding::kStudioPolymorphicResolver) ||
+            (sinkNode->kind=="frog_call" && sinkPort->valueType=="variant") ||
             sinkNode->kind == "widget_value" || isPolynomialFunction(sinkNode->type) || isDiagramStructureNodeType(sinkNode->type) || isQueueFunction(sinkNode->type) || isEventFunction(sinkNode->type) || isNotifierFunction(sinkNode->type) || isSemaphoreFunction(sinkNode->type) || isRendezvousFunction(sinkNode->type) || isOccurrenceFunction(sinkNode->type);
         const auto typedConnection = pilotSink ? typeResolver.connection(edge) : binding::TypeResolution{};
         const bool compatibleTypes = pilotSink ? typedConnection.accepted() : sinkPort->binding != nullptr
@@ -305,7 +306,7 @@ DraftConnectionInspection inspectDraftTypedConnections(FrogDraftDataView source,
     // Reuse this inspection's resolver and one incoming index (no second graph).
     std::unordered_map<std::string,std::vector<const DiagramEdge*>> structureIncoming;
     for(const auto &edge:document.diagramEdges)
-        if(edge.to.portId=="event_registration" || edge.to.portId.starts_with("tunnel:"))
+        if(edge.to.portId.starts_with("tunnel:"))
             structureIncoming[edge.to.nodeId+'\x1f'+edge.to.portId].push_back(&edge);
     const auto structuralError=[&](std::string code,std::string subject,std::string message,
                                     std::string owner,std::string region=std::string{}) {
@@ -320,13 +321,7 @@ DraftConnectionInspection inspectDraftTypedConnections(FrogDraftDataView source,
         if(!family)continue;
         using Family=DiagramStructureFamily;
         if(*family==Family::Event) {
-            binding::TypeRef registration;
-            const auto &incoming=structureIncoming[node.id+'\x1f'+"event_registration"];
-            if(incoming.size()==1) {
-                const auto source=typeResolver.resolveSource(*incoming.front());
-                if(source.resolution.accepted())registration=source.resolution.type;
-            }
-            const auto sources=eventStructureSources(node,registration,document.canvas);
+            const auto sources=typeResolver.eventSourcesForStructure(node);
             for(const auto &region:node.eventStructureCases) {
                 auto message=validateEventCaseConfiguration(node,region.id,region);
                 if(message.empty())message=validateEventBindingSources(eventCaseBindings(region),sources);
@@ -515,17 +510,26 @@ CanonicalDraftResolvedTypes resolveCanonicalDraftTypes(FrogDraftDataView documen
         if(position==routingNodes.end())continue;
         const auto *found=position->second;
         if(!found->constantOwnerNodeId.empty())continue;
-        // The Studio For count is the only structure input admitted here.
-        // Its resolver preserves integer producers and exposes an I64 receiver
-        // for an actual scalar NumericImplicit conversion, independent of the
-        // draft's historical primitive/structure kind spelling.
+        // Preserve the For count contract and the resolver's existing scalar
+        // Shift Register initializer-priority contract. The FIR independently
+        // checks the real pair metadata, complete schemas and edge region.
+        // Ordinary tunnels, aggregate state and Feedback are not admitted.
         const bool forCount=found->type==diagramStructureNodeType(DiagramStructureFamily::ForLoop)&&
             edge.to.portId=="count";
-        bool implicit=false;
+        const bool studioLoop=found->type==diagramStructureNodeType(DiagramStructureFamily::ForLoop)||
+            found->type==diagramStructureNodeType(DiagramStructureFamily::WhileLoop)||
+            found->type==diagramStructureNodeType(DiagramStructureFamily::TimedLoop);
+        const bool shiftFace=studioLoop&&std::any_of(found->caseStructureTunnels.begin(),found->caseStructureTunnels.end(),
+            [&](const auto &tunnel){return !tunnel.shiftRegisterPairId.empty()&&
+                edge.to.portId==binding::tunnelInputId(tunnel.id)&&
+                std::any_of(found->caseStructureTunnels.begin(),found->caseStructureTunnels.end(),
+                    [&](const auto &peer){return peer.id!=tunnel.id&&peer.shiftRegisterPairId==tunnel.shiftRegisterPairId&&
+                        peer.outputFromStructure!=tunnel.outputFromStructure;});});
+        bool implicit=shiftFace;
         if(found->kind=="widget_value"&&edge.to.portId=="value") {
             const auto *widget=document.canvas.objectById(found->widgetId);
             implicit=widget&&widget->widget&&widget->widget->role=="indicator";
-        } else if((found->kind=="primitive"||forCount)&&found->type!="frog.studio.structures.feedback_node") {
+        } else if(!shiftFace&&(found->kind=="primitive"||forCount)&&found->type!="frog.studio.structures.feedback_node") {
             const auto *entry=findFunctionCatalogEntryByDiagramNodeType(found->type);
             if(!entry)entry=findFunctionCatalogEntryByPrimitiveType(found->type);
             const auto *definition=functionBindingDefinitionForNode(*found);
@@ -552,10 +556,14 @@ CanonicalDraftMigrationResult prepareDraftSemanticSource(const FrogDraftData &do
     bool coercion=false;auto types=resolveCanonicalDraftTypes(document,hashing::sha256Hex(bytes),coercion);
     const auto root=source::parseJson(bytes,nullptr,source::JsonNumberPolicy::PreserveLexeme);
     if(!root) {CanonicalDraftMigrationResult out;out.diagnostics.push_back({"frontend.draft_json_invalid","/","The draft JSON could not be read.",true,DocumentDiagnosticDomain::Integrity});return out;}
-    bool legacyNumeric=false;
-    if(const auto *panel=root->member("frontPanel"))if(const auto *widgets=panel->member("widgets");widgets&&widgets->type==source::JsonValue::Type::Array)
-        legacyNumeric=std::any_of(widgets->array.begin(),widgets->array.end(),[](const auto &widget){const auto *klass=widget.member("class_ref");return klass&&klass->type==source::JsonValue::Type::String&&klass->string=="frog.widgets.numeric_control";});
-    if(coercion||canonicalDraftNeedsComposition(*root,&types)||legacyNumeric) {
+    bool legacyWidgetWitnessRequired=false;
+    if(const auto *panel=root->member("frontPanel")) {
+        if(const auto *widgets=panel->member("widgets");widgets&&widgets->type==source::JsonValue::Type::Array) {
+            legacyWidgetWitnessRequired=std::any_of(widgets->array.begin(),widgets->array.end(),
+                canonicalDraftWidgetRequiresLegacyWitness);
+        }
+    }
+    if(coercion||canonicalDraftNeedsComposition(*root,&types)||legacyWidgetWitnessRequired) {
         auto diagnostics=appendCanonicalDraftComposedPorts(document,types);
         if(std::any_of(diagnostics.begin(),diagnostics.end(),[](const auto &d){return d.blocking;})) {CanonicalDraftMigrationResult out;out.diagnostics=std::move(diagnostics);return out;}
     }

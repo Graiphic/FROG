@@ -212,20 +212,30 @@ bool supportLabelAnnotation(const Json &widget,const std::string &at) {
 // A writer revision is only a format declaration. Route the actual supported
 // Reference widget configuration, and reuse the same exact check when the
 // composed adapter receives its hash-bound widget/schema witness.
-bool configuredTypedNullResourceWidget(const Json &widget,const binding::TypeRef &type,
+bool typedWidgetReference(const binding::TypeRef &type) {
+    return type.kind==binding::TypeKind::Reference && type.children.size()==1 &&
+        type.children.front().known() && (binding::referenceClassAssignable(type.name,"frog.control") ||
+        (type.name=="frog.control.array" && type.children.front().kind==binding::TypeKind::Array));
+}
+bool configuredReferenceWidget(const Json &widget,const binding::TypeRef &type,
     std::string_view path) {
     const auto *klass=widget.member("classId"),*declared=widget.member("valueType");
     if(!klass||klass->type!=Json::Type::String||klass->string!="frog.studio.widgets.reference"||
        !declared||declared->type!=Json::Type::String||declared->string!=type.canonical()||
-       !(isOccurrenceReference(type)||isSemaphoreReference(type)||isRendezvousReference(type)||isQueueReference(type)||isNotifierReference(type)))return false;
+       !(isOccurrenceReference(type)||isSemaphoreReference(type)||isRendezvousReference(type)||isQueueReference(type)||isNotifierReference(type)||isUserEventReference(type)||typedWidgetReference(type)))return false;
     const auto *configuration=widget.member("studio_application_control");
     if(!configuration)return false;
     const auto value=application_control_source::readConfiguration(*configuration);
     const auto descriptor=canonicalObjectReferenceDescriptor(*configuration,
         std::string(path)+"/studio_application_control",type);
-    return value&&descriptor&&descriptor->kind==CanonicalObjectReferenceKind::Resolve&&
-        descriptor->effects==std::vector<std::string>{"transport_typed_null"}&&
-        exact(*configuration,application_control_source::writeConfiguration(*value));
+    if((isUserEventReference(type)||typedWidgetReference(type))&&(!value||value->expectedClass!=type.name||type.children.size()!=1||
+       !canonicalObjectReferenceFullTypeEqual(value->valueType,type.children.front())))return false;
+    if(!value||!descriptor||descriptor->kind!=CanonicalObjectReferenceKind::Resolve||
+       !value->target.ownerDocumentId.empty()||!exact(*configuration,application_control_source::writeConfiguration(*value)))return false;
+    if(value->target.kind==ApplicationControlTargetKind::Unbound)
+        return value->target.widgetId.empty()&&descriptor->effects==std::vector<std::string>{"transport_typed_null"};
+    return typedWidgetReference(type)&&value->target.kind==ApplicationControlTargetKind::Widget&&
+        !value->target.widgetId.empty()&&descriptor->effects==std::vector<std::string>{"borrow_reference"};
 }
 void authoredRegionFields(const Json &region,const std::string &rp) {
     fields(region,{"id","title","match","matches","default","draft","draft_text","diagram","event","event_label","subdiagram_label_text",
@@ -428,6 +438,7 @@ bool requiresScope(const Json &scope,unsigned depth) {
         }
         if(const auto *kind=node.member("structure_type");kind&&kind->type==Json::Type::String) {
             if(kind->string=="timed_loop"||kind->string=="event_structure"||kind->string=="in_place_element_structure"||kind->string=="sequence_structure")return true;
+            if(kind->string=="for_loop")if(const auto *terminals=node.member("structure_terminals");terminals&&terminals->member("condition"))return true;
             if(const auto *boundary=node.member("boundary");boundary&&boundary->type==Json::Type::Object)
                 // Even scalar shift registers have real state boundaries.
                 // The classic adapter rejects every nonempty boundary; the
@@ -456,6 +467,8 @@ struct Adapter {
     std::vector<Edge> edges;
     std::map<PortKey,Port> ports;
     std::map<std::string,std::string> scopeOwners;
+    std::map<std::string,std::string> scopeRegionIds;
+    std::map<std::tuple<std::string,std::string,std::string>,Port> eventPorts;
     std::set<std::string> generatedStatefulDefaultNodes,generatedStatefulDefaultEdges;
     std::map<std::string,std::vector<std::string>> children;
     std::map<std::string,Literal> literals;
@@ -515,6 +528,7 @@ struct Adapter {
                 for(std::size_t r=0;r<entries.size();++r) {
                     const auto rp=at+"/regions/"+std::to_string(r);const auto rid=text(entries[r].member("id"),rp+"/id");
                     if(!ids.insert(rid).second)fail(rp,"Region IDs are unique within their explicit owner.", "migration.composed_source_invalid", Domain::Integrity);
+                    scopeRegionIds.emplace(rp+"/diagram",rid);
                     index(objectAt(entries[r].member("diagram"),rp+"/diagram"),rp+"/diagram",id,depth+1);
                 }
             }
@@ -522,7 +536,7 @@ struct Adapter {
         const auto &es=arrayAt(scope.member("edges"),path+"/edges");
         if(es.size()>4096-edges.size())fail(path,"The existing 4096-edge budget was exceeded.","migration.composed_resource_limit", Domain::Control);
         for(std::size_t i=0;i<es.size();++i) {
-            const auto at=path+"/edges/"+std::to_string(i);fields(es[i],{"id","from","to","bends","label"},at);
+            const auto at=path+"/edges/"+std::to_string(i);fields(es[i],{"id","from","to","bends","label","route_intent"},at);
             if(const auto *label=es[i].member("label"))
                 draft_presentation::wireLabel(*label,at+"/label",[](auto path,auto message){
                     fail(std::move(path),std::move(message),"migration.presentation_invalid", Domain::Compatibility);
@@ -554,6 +568,17 @@ struct Adapter {
             const auto type=full?canonicalObjectReferenceReadType(*full,&diagnostic):std::nullopt;
             if(!type||!type->known())fail(node->second.path,"A complete exact type schema is required for every connector.","migration.composed_resolution_invalid", Domain::Integrity);
             const auto resolvedPort=entry.input?inputIdentity(entry.nodeId,entry.portId):entry.portId;
+            if(!entry.eventRegionId.empty()) {
+                const auto *kind=node->second.raw->member("structure_type");
+                const auto *regions=node->second.raw->member("regions");
+                if(entry.input||!entry.sourceNodeId.empty()||!entry.sourcePortId.empty()||!entry.portId.starts_with("event_data.")||
+                    !kind||kind->string!="event_structure"||!regions||
+                    std::none_of(regions->array.begin(),regions->array.end(),[&](const auto &r){return r.member("id")&&r.member("id")->string==entry.eventRegionId;}))
+                    fail(node->second.path,"Event Data evidence must name an output in a case of its own Event Structure.","migration.composed_resolution_invalid", Domain::Integrity);
+                if(!eventPorts.emplace(std::tuple{entry.nodeId,entry.portId,entry.eventRegionId},Port{*type,*full,{}}).second)
+                    fail(node->second.path,"Duplicate Event Data evidence in the same case.","migration.composed_resolution_invalid", Domain::Integrity);
+                continue;
+            }
             auto [found,inserted]=ports.try_emplace({entry.nodeId,resolvedPort,entry.input},Port{*type,*full,{}});
             if(!inserted&&!canonicalObjectReferenceFullTypeEqual(found->second.type,*type))
                 fail(node->second.path,"Repeated scoped connector evidence disagrees about the complete type.","migration.composed_resolution_invalid", Domain::Integrity);
@@ -579,9 +604,8 @@ struct Adapter {
                 const auto node=nodes.find(id);
                 if(node==nodes.end()||(node->second.scope!=edge.scope&&scopeOwners.at(edge.scope)!=id&&!relocatedInitializer(edge,id,port,input))||node->second.raw->member("constant_owner_node_id"))
                     fail(edge.path,"A real wire must stay within its explicit owner/region and cannot wire an owned literal component.", "migration.composed_source_invalid", Domain::Semantics);
-                const auto resolved=ports.find({id,input?inputIdentity(id,port):port,input});
-                if(resolved==ports.end())fail(edge.path,"A wired connector has no complete authored type/direction evidence.","migration.composed_resolution_required", Domain::Semantics);
-                if(input&&!resolved->second.sources.contains({text(from.member("node"),edge.path),text(from.member("port"),edge.path)}))
+                const auto &resolved=this->port(id,input?inputIdentity(id,port):port,input,edge.scope);
+                if(input&&!resolved.sources.contains({text(from.member("node"),edge.path),text(from.member("port"),edge.path)}))
                     fail(edge.path,"Input evidence did not retain its actual source endpoint.","migration.composed_resolution_required", Domain::Semantics);
             }
         }
@@ -595,7 +619,11 @@ struct Adapter {
         for(const auto &widget:resolved.widgets)if(widget.widgetId.empty()||!ids.insert(widget.widgetId).second)
             fail("/frontPanel","Widget evidence needs distinct actual identities.","migration.composed_resolution_invalid", Domain::Integrity);
     }
-    const Port &port(const std::string &id,std::string_view name,bool input) const {
+    const Port &port(const std::string &id,std::string_view name,bool input,const std::string &scope={}) const {
+        if(!input && name.starts_with("event_data.") && scopeOwners.contains(scope) && scopeOwners.at(scope)==id) {
+            const auto regional=eventPorts.find({id,std::string(name),scopeRegionIds.at(scope)});
+            if(regional!=eventPorts.end())return regional->second;
+        }
         auto found=ports.find({id,std::string(name),input});
         if(found==ports.end()&&input&&name=="array_b") {
             const auto *type=nodes.at(id).raw->member("type");
@@ -606,6 +634,13 @@ struct Adapter {
     }
     Json portList(const std::string &id) {
         Json result=array();
+        for(const auto &[key,value]:eventPorts)if(std::get<0>(key)==id) {
+            if(ports.contains({id,std::get<1>(key),false}))
+                fail(nodes.at(id).path,"Event Data evidence cannot be both global and case-specific.","migration.composed_resolution_invalid", Domain::Integrity);
+            Json entry=object();entry.object={{"id",string(std::get<1>(key))},{"direction",string("output")},{"event_region",string(std::get<2>(key))},
+                {"type",string(canonicalObjectReferencePhysicalType(value.type).canonical())},{"studio_type_schema",value.schema}};
+            result.array.push_back(std::move(entry));
+        }
         for(const auto &[key,value]:ports)if(std::get<0>(key)==id) {
             Json entry=object();entry.object={{"id",string(std::get<1>(key))},{"direction",string(std::get<2>(key)?"input":"output")},
                 {"type",string(canonicalObjectReferencePhysicalType(value.type).canonical())},{"studio_type_schema",value.schema}};
@@ -649,7 +684,21 @@ struct Adapter {
                 const auto rank=[](const Json &port){const auto &id=port.member("id")->string;return id=="x"?0:id=="n"?1:id=="result"?2:3;};
                 return rank(a)<rank(b);
             });
-        if(const auto *exponential=authored&&authored->type==Json::Type::String?canonicalExponentialContract(authored->string):nullptr)
+        if(const auto *exponential=authored&&authored->type==Json::Type::String?canonicalExponentialContract(authored->string):nullptr) {
+            // The polymorphic editor port retains its operand type. The real64
+            // implementation consumes F64, so let the existing edge conversion
+            // materialize the promotion when this is the resolved result type.
+            const auto real64=binding::TypeRef::primitive("f64");
+            if(canonicalObjectReferenceFullTypeEqual(port(id,"result",false).type,real64)) {
+                for(auto &entry:result.array) {
+                    if(entry.member("direction")->string!="input")continue;
+                    const auto &operand=port(id,entry.member("id")->string,true).type;
+                    if(exponentialReal64LosslessInput(operand.name)&&canonicalNumericScalarCoercionSupported(operand,real64)) {
+                        entry.object["type"]=string("f64");
+                        entry.object["studio_type_schema"]=canonicalObjectReferenceWriteType(real64);
+                    }
+                }
+            }
             std::stable_sort(result.array.begin(),result.array.end(),[&](const Json &a,const Json &b){
                 // Use the existing provider's semantic ABI: y,x,result for
                 // binary operations and x,result for unary operations.
@@ -657,6 +706,7 @@ struct Adapter {
                     return exponential->binary?(id=="y"?0:id=="x"?1:id=="result"?2:3):(id=="x"?0:id=="result"?1:2);};
                 return rank(a)<rank(b);
             });
+        }
         if(authored&&authored->type==Json::Type::String&&!canonicalComposedMathMigrationIdentity(authored->string).empty()) {
             if(const auto *definition=findFunctionBindingDefinition(bare(authored->string)))
                 std::stable_sort(result.array.begin(),result.array.end(),[&](const Json &a,const Json &b){
@@ -928,6 +978,15 @@ struct Adapter {
         if(depth>32)fail(path,"Widget value nesting exceeds32.", "migration.composed_source_invalid", Domain::Control);
         const auto klass=text(widget.member("classId"),path+"/classId"),declared=text(widget.member("valueType"),path+"/valueType");
         const auto &props=widgetProperties(widget,path);
+        if (klass=="frog.widgets.picture_indicator") {
+            const auto matrix=binding::TypeRef::array(binding::TypeRef::primitive("u32"),2U);
+            if (text(widget.member("role"),path+"/role")!="indicator" ||
+                (declared!="frog.array<u32,rank=2>" && declared!=matrix.canonical()) ||
+                !attested || !binding::fullTypeEqual(matrix,*attested))
+                fail(path,"Picture Display requires its exact two-dimensional U32 indicator schema.",
+                     "migration.picture_indicator_schema_invalid",Domain::Semantics);
+            return matrix;
+        }
         if(klass==graph::classId) {
             const auto decoded=deserializeArrayElementWidget(encode(widget));
             if(!decoded || !isWaveformGraphWidget(*decoded) || !decoded->waveformGraph || decoded->waveformGraph->preservedSource)
@@ -947,8 +1006,8 @@ struct Adapter {
             return *attested;
         }
         if(klass=="frog.studio.widgets.reference") {
-            if(!attested||!configuredTypedNullResourceWidget(widget,*attested,path))
-                fail(path,"The composed resource-reference widget requires its exact nominal schema and typed null Source configuration.","migration.composed_widget_unavailable", Domain::Semantics);
+            if(!attested||!configuredReferenceWidget(widget,*attested,path))
+                fail(path,"The reference widget "+declared+" requires its declared type and a typed NULL or a local widget target.","migration.composed_widget_unavailable", Domain::Semantics);
             return *attested;
         }
         if(klass=="frog.studio.widgets.collection") {
@@ -1196,7 +1255,7 @@ struct Adapter {
                     const auto *t=pending.back();pending.pop_back();
                     compositeArray=compositeArray||t->kind==binding::TypeKind::Array;
                     choiceProjection=choiceProjection||t->kind==binding::TypeKind::Enum||t->choiceKind!=binding::ChoiceKind::None;
-                    resourceReferenceProjection=resourceReferenceProjection||isQueueReference(*t)||isNotifierReference(*t)||isOccurrenceReference(*t)||isSemaphoreReference(*t)||isRendezvousReference(*t);
+                    resourceReferenceProjection=resourceReferenceProjection||isQueueReference(*t)||isNotifierReference(*t)||isOccurrenceReference(*t)||isSemaphoreReference(*t)||isRendezvousReference(*t)||isUserEventReference(*t)||typedWidgetReference(*t);
                     complexProjection=complexProjection||(t->kind==binding::TypeKind::Primitive&&(t->name=="c32"||t->name=="c64"));
                     // The child of Reference<T> is its target/message model,
                     // not a value contained in the widget. A Notifier<Array>
@@ -1210,10 +1269,11 @@ struct Adapter {
             // bounded typed projection of the same hash-bound model instead of
             // implementing a competing private document decoder here.
             const auto widgetClass=text(widget.member("classId"),at);
-            const bool xyWidget=widgetClass==xy::classId || widgetClass==graph::classId;
+            const bool displayWidget=widgetClass==xy::classId || widgetClass==graph::classId ||
+                widgetClass=="frog.widgets.picture_indicator";
             const bool listboxWidget=widgetClass=="frog.widgets.listbox_control"||widgetClass=="frog.widgets.listbox_indicator";
-            auto schema=compositeArray&&attested&&!xyWidget&&!listboxWidget?*attested:widgetType(widget,at,0,attested?&*attested:nullptr);
-            if(compositeArray&&!xyWidget&&!listboxWidget) {
+            auto schema=compositeArray&&attested&&!displayWidget&&!listboxWidget?*attested:widgetType(widget,at,0,attested?&*attested:nullptr);
+            if(compositeArray&&!displayWidget&&!listboxWidget) {
                 const auto klass=text(widget.member("classId"),at);
                 if((schema.kind==binding::TypeKind::Array&&klass!="frog.widgets.array_control"&&klass!="frog.widgets.array_indicator")||
                    (schema.kind==binding::TypeKind::Cluster&&klass!="frog.widgets.cluster_control"&&klass!="frog.widgets.cluster_indicator")||
@@ -1580,7 +1640,7 @@ struct Adapter {
                 const auto evidence=std::find_if(resolved.scalars.begin(),resolved.scalars.end(),[&](const auto &v){return v.nodeId==nodeId;});
                 if(evidence==resolved.scalars.end()||evidence->authoredOperation!=authored||evidence->operands.size()!=1)fail(at,"Increment has no exact current source-operand evidence.","migration.scalar_resolution_incomplete", Domain::Semantics);
                 const auto &actual=evidence->operands.front();const auto &input=port(nodeId,"in",true);const auto &output=port(nodeId,"result",false);
-                if(actual.inputPortId!="in"||!actual.accepted||!actual.complete||actual.valueType.empty()||actual.sourceNodeId.empty()||actual.sourcePortId.empty()||input.type.canonical()!=actual.valueType||input.sources.size()!=1||!input.sources.contains({actual.sourceNodeId,actual.sourcePortId})||!canonicalObjectReferenceFullTypeEqual(input.type,output.type)||!canonicalObjectReferenceFullTypeEqual(input.type,port(actual.sourceNodeId,actual.sourcePortId,false).type))fail(at,"Increment source, input and result must retain the same complete actual operand type.","migration.scalar_resolution_incomplete", Domain::Semantics);
+                if(actual.inputPortId!="in"||!actual.accepted||!actual.complete||actual.valueType.empty()||actual.sourceNodeId.empty()||actual.sourcePortId.empty()||input.type.canonical()!=actual.valueType||input.sources.size()!=1||!input.sources.contains({actual.sourceNodeId,actual.sourcePortId})||!canonicalObjectReferenceFullTypeEqual(input.type,output.type)||!canonicalObjectReferenceFullTypeEqual(input.type,port(actual.sourceNodeId,actual.sourcePortId,false,nodes.at(nodeId).scope).type))fail(at,"Increment source, input and result must retain the same complete actual operand type.","migration.scalar_resolution_incomplete", Domain::Semantics);
                 const auto operation=canonicalScalarMigrationIdentityForType(authored,actual.valueType);
                 if(operation.empty())fail(at,"Increment has no admitted implementation for the exact current operand type.","migration.scalar_type_unavailable", Domain::FrontendCapability);
                 return std::string(operation);
@@ -1686,7 +1746,8 @@ struct Adapter {
             if(!type||type->type!=Json::Type::String||type->string!=kNativeCallDiagramNodeType)
                 fail(path,"NativeCall configuration belongs only to its actual configured node.","migration.native_call_configuration_invalid", Domain::Semantics);
             const auto revision = ordinal(root.member("draft_revision"),"/draft_revision");
-            if(revision != kFrogConnectivityDraftRevision && revision != kFrogPictureRingDraftRevision)
+            if(revision != kFrogConnectivityDraftRevision && revision != kFrogPictureRingDraftRevision &&
+                revision != kFrogClusterPresentationDraftRevision)
                 fail(path,"Configured NativeCall requires its explicitly identified revision-7 writer.","migration.native_call_revision_unavailable", Domain::Compatibility);
         }
         if(const auto *mode=node.member("comparison_aggregates")) {
@@ -2199,6 +2260,13 @@ struct Adapter {
                 const auto *authoredTerminals=node.member("structure_terminals");
                 auto terminals=(type=="in_place_element_structure"||type=="sequence_structure")&&!authoredTerminals?
                     object():objectAt(authoredTerminals,at+"/structure_terminals");
+                if(type=="for_loop") {
+                    const auto *condition=terminals.member("condition");
+                    if(const auto *enabled=node.member("for_loop_conditional_terminal");enabled&&flag(enabled,at)!=(condition!=nullptr))
+                        fail(at+"/structure_terminals/condition","The For conditional terminal must agree with its enabled setting.","migration.for_condition_invalid",Domain::Semantics);
+                    if(condition)if(const auto *mode=node.member("for_loop_stop_if_true");mode&&flag(mode,at)!=(text(condition->member("role"),at)=="stop_if_true"))
+                        fail(at+"/structure_terminals/condition","The For condition role conflicts with its saved stop mode.","migration.for_condition_invalid",Domain::Semantics);
+                }
                 if(type=="in_place_element_structure"&&!terminals.object.empty())
                     fail(at+"/structure_terminals","IPE has no intrinsic structure terminals.","migration.ipe.terminal_invalid", Domain::Semantics);
                 item.object.emplace("structure_terminals",std::move(terminals));
@@ -2250,10 +2318,13 @@ struct Adapter {
                 if(const auto *authored=owner.raw->member("type");authored&&authored->type==Json::Type::String)
                     endpoint.object["port"]=string(std::string(canonicalNumericBooleanConnectorId(authored->string,endpoint.member("port")->string)));
             }
-            // The complete label remains in authored-source provenance. Public
-            // executable wiring retains only its technical identity/geometry.
-            if(edge.object.erase("label"))
-                out.identities.push_back({"presentation",id+":label",at+"/label",std::string(draft_presentation::provenance)+at+"/label",false});
+            // The label and the editor's routing policy remain in authored-source
+            // provenance. Public wiring retains the connections and their geometry.
+            for (const auto key : {"label", "route_intent"}) {
+                if (edge.object.erase(key))
+                    out.identities.push_back({"presentation",id+":"+key,at+"/"+key,
+                        std::string(draft_presentation::provenance)+at+"/"+key,false});
+            }
             edgeList.array.push_back(std::move(edge));
             out.identities.push_back({"edge",id,at,targetPath+"/edges/"+std::to_string(edgeList.array.size()-1),false});
         }
@@ -2262,6 +2333,9 @@ struct Adapter {
 };
 }
 bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolvedTypes *resolved) {
+    const auto *revision = root.member("draft_revision");
+    if (revision && revision->type == Json::Type::Number && revision->string == std::to_string(kFrogClusterPresentationDraftRevision))
+        return true; // Cluster presentation can also be nested in an owned widget payload.
     // Routing only: a real independently declared interface, explicit widget
     // IDs/directions/types and active typed terminals request the existing
     // complete-port pass. The composed adapter still checks every full schema
@@ -2315,7 +2389,10 @@ bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolve
     if(resolved) {
         // The immutable port vector owns these borrowed keys until return.
         std::map<std::pair<std::string_view,std::string_view>,const CanonicalDraftPortResolution*> outputs;
-        for(const auto &port:resolved->ports)if(!port.input)outputs.emplace(std::pair{std::string_view(port.nodeId),std::string_view(port.portId)},&port);
+        for(const auto &port:resolved->ports) {
+            if(!port.eventRegionId.empty())return true;
+            if(!port.input)outputs.emplace(std::pair{std::string_view(port.nodeId),std::string_view(port.portId)},&port);
+        }
         for(const auto &input:resolved->ports)if(input.input&&!input.sourceNodeId.empty()) {
             const auto output=outputs.find({input.sourceNodeId,input.sourcePortId});
             if(output==outputs.end())continue;
@@ -2376,6 +2453,8 @@ bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolve
         for(const auto &widget:widgets->array) {
             if (draft_presentation::isStaticImageWidget(widget)) return true;
             const auto *klass=widget.member("classId");
+            const auto *pictureClass=klass?klass:widget.member("class_ref");
+            if(pictureClass && pictureClass->type==Json::Type::String && pictureClass->string=="frog.widgets.picture_indicator")return true;
             if(!klass||klass->type!=Json::Type::String)continue;
             // Support Labels are non-value authoring annotations. Select their
             // existing strict composed adapter even in an otherwise scalar
@@ -2419,7 +2498,8 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         const auto &root=objectAt(&*parsed,"/");authoredRootFields(root);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","Sub-FROG projection requires identified private Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision&&!(revision==8&&typeDefinitionsValidated)&&
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision&&revision!=kFrogClusterPresentationDraftRevision&&
+            !((revision==kFrogTypeDefinitionDraftRevision||revision==kFrogExtendedTypeDefinitionDraftRevision)&&typeDefinitionsValidated)&&
             !(revision==kFrogClassValueDraftRevision&&((root.member("classes")&&!root.member("classes")->array.empty())||root.member("class_member")||
                 std::any_of(authored.diagramNodes.begin(),authored.diagramNodes.end(),[](const auto &n){return n.classOperation.has_value();}))))
             fail("/draft_revision","This revision needs the existing exact-source Type Definition resolution handoff.","migration.composed_type_definition_resolution_required", Domain::Dependency);
@@ -2476,7 +2556,7 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
             }
             const auto &edges=arrayAt(scope.member("edges"),path+"/edges");
             for(std::size_t e=0;e<edges.size();++e)if(activeEdges.contains(text(edges[e].member("id"),path)))
-                fields(edges[e],{"id","from","to","bends","label"},path+"/edges/"+std::to_string(e));
+                fields(edges[e],{"id","from","to","bends","label","route_intent"},path+"/edges/"+std::to_string(e));
         };
         visit(visit,diagram,"/diagram",0);
         const auto &panel=objectAt(root.member("frontPanel"),"/frontPanel");fields(panel,{"canvas","grid","widgets","groups"},"/frontPanel");
@@ -2484,10 +2564,16 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
         const auto &widgets=arrayAt(panel.member("widgets"),"/frontPanel/widgets");
         if(widgets.size()>1024)fail("/frontPanel/widgets","The existing widget budget was exceeded.","migration.composed_resource_limit", Domain::Control);
         std::set<std::string> ownedLinkPaths;
+        const auto validateLinkFields=[&](const Json &link,const std::string &path) {
+            fields(link,{"definition_id","source_path","resolved_revision","schema_fingerprint","baseline_widget","unresolved_reason","icon_svg","tab_members"},path);
+            const auto *baseline=link.member("baseline_widget");
+            if((link.member("tab_members")||(baseline&&baseline->type==Json::Type::Object))&&revision<kFrogExtendedTypeDefinitionDraftRevision)
+                fail(path,"Extended Type Definition links require draft_revision "+std::to_string(kFrogExtendedTypeDefinitionDraftRevision)+" or later.","migration.composed_source_invalid",Domain::Compatibility);
+        };
         const auto ownedLink=[&](const Json &value,const TypeDefinitionLink *owner,const std::string &at) {
             if(const auto *link=value.member("type_definition")) {
                 const auto path=at+"/type_definition";
-                fields(*link,{"definition_id","source_path","resolved_revision","schema_fingerprint","baseline_widget","unresolved_reason","icon_svg"},path);
+                validateLinkFields(*link,path);
                 if(!typeDefinitionsValidated)
                     fail(path,"An execution-link deferral needs accepted exact-source Type Definition resolution.","migration.composed_type_definition_resolution_required", Domain::Dependency);
                 std::string error;const auto decoded=deserializeTypeDefinitionLink(encode(*link),&error);
@@ -2523,11 +2609,14 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
             if(value.type==Json::Type::Object) {
                 if(const auto *link=value.member("type_definition")) {
                     const auto path=at+"/type_definition";
-                    fields(*link,{"definition_id","source_path","resolved_revision","schema_fingerprint","baseline_widget","unresolved_reason","icon_svg"},path);
+                    validateLinkFields(*link,path);
                     if(!ownedLinkPaths.contains(path))
                         fail(path,"A type_definition outside its actual parsed node/widget owner cannot be deferred.","migration.composed_type_definition_owner_invalid", Domain::Integrity);
                 }
                 for(const auto &[key,child]:value.object) {
+                    // The owner's validated recovery snapshot can itself contain
+                    // linked fields. It is data, not a second live widget tree.
+                    if(key=="type_definition")continue;
                     // Every active child node is checked independently. An
                     // excluded compile-time region is retained, not admitted.
                     if(skipNodeRegions&&key=="regions")continue;
@@ -2638,7 +2727,7 @@ CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string
             fail("/classes","By-value classes require the common class/Sub-FROG preparation before public Source derivation.","class.preparation_required",Domain::Semantics);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","This adapter requires identified Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
+        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision&&revision!=kFrogClusterPresentationDraftRevision)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
         if(root.member("storage") && revision<kFrogArrayStorageDraftRevision)
             fail("/storage","FROG storage options require private draft_revision 3.","migration.storage_invalid",Domain::Integrity);
         const auto *metadata=root.member("metadata");

@@ -665,6 +665,7 @@ def translate(args):
         for graph in translation.reachable.values():
             name = "main.frog" if graph is main else graph.filename
             document = graph.draft(graph is main)
+            document["metadata"]["description"] = f"Source (C): {graph.source_file}\n{graph.key} — {graph.origin}"
             # A plain function does not claim the configured-call revision.
             # Keep the established C Project producer unchanged; the explicit
             # single-file profile emits only the revision its fields require.

@@ -1,0 +1,164 @@
+{
+  "format": "frog.type_definition.draft",
+  "draft_revision": 2,
+  "id": "example:typed-page",
+  "name": "Typed page",
+  "revision": 1,
+  "icon_svg": "",
+  "tab_root_id": "tabs",
+  "tab_panel": {
+    "format": "frog.document.draft",
+    "draft_revision": 8,
+    "storage": {
+      "version": 1,
+      "array_mode": "automatic"
+    },
+    "language": "FROG",
+    "title": "Page definition",
+    "metadata": {
+      "name": "Typed page",
+      "description": ""
+    },
+    "host": {
+      "version": 1,
+      "launch": {
+        "trigger": "manual"
+      },
+      "front_panel_window": {
+        "style": "standard",
+        "initial_position": "centered",
+        "minimum_width": 0,
+        "minimum_height": 0,
+        "allow_close": true,
+        "allow_resize": true,
+        "allow_minimize": true,
+        "menu_bar_visible": true,
+        "toolbar_visible": true,
+        "vertical_scrollbar_visible": true,
+        "horizontal_scrollbar_visible": true,
+        "scroll_to_origin": false
+      }
+    },
+    "execution_policy": {
+      "version": 2,
+      "debugging_allowed": true,
+      "priority": "normal",
+      "reentrancy": "non_reentrant",
+      "execution_system": "caller",
+      "automatic_error_handling": true,
+      "suspend_when_called": false,
+      "clear_indicators_when_called": false
+    },
+    "frontPanel": {
+      "grid": {
+        "pitch": 8
+      },
+      "widgets": [
+        {
+          "id": "tabs",
+          "studio_tab": {
+            "editor_page_id": "tabs.page-1",
+            "next_page_serial": "3",
+            "header_first_visible": 0,
+            "tabs_visible": true,
+            "page_labels_display_visible": false
+          },
+          "classId": "frog.studio.widgets.tab_control",
+          "role": "control",
+          "valueType": "u32",
+          "label": "Tab Control",
+          "bounds": {
+            "x": 30,
+            "y": 30,
+            "width": 340,
+            "height": 210
+          },
+          "props": {
+            "layout.aura_band_px": 4,
+            "data_type.representation": "u32",
+            "data_type.named_numeric_size": "UInt32",
+            "representation.kind": "uint32",
+            "value": "tabs.page-1",
+            "enum.domain_id": "frog.studio.tabs",
+            "items.sequential_values": true,
+            "items": [
+              {
+                "id": "tabs.page-1",
+                "text": "Page 1",
+                "numeric_value": 0,
+                "enabled": true,
+                "visible": true,
+                "caption": "",
+                "caption_matches_label": true
+              },
+              {
+                "id": "tabs.page-2",
+                "text": "Page 2",
+                "numeric_value": 1,
+                "enabled": true,
+                "visible": true,
+                "caption": "",
+                "caption_matches_label": true
+              }
+            ],
+            "data_type.allow_undefined_values": false
+          },
+          "runtime": {
+            "sourceExample": "Examples/20_tab_page_selection/main.frog",
+            "wfrog": "Examples/20_tab_page_selection/ui/tab_panel.wfrog",
+            "realization": "Libraries/Realizations/Default/tab.default.wfrog",
+            "asset": "asset:tab_shell_svg",
+            "defaultSvg": "Libraries/Realizations/Default/assets/tab/templates/tab_shell.svg"
+          },
+          "state": {
+            "value.selected_value": 0
+          },
+          "typography": {
+            "inheritanceVersion": 1
+          }
+        },
+        {
+          "id": "page-value",
+          "studio_tab_parent_id": "tabs",
+          "studio_tab_page_id": "tabs.page-1",
+          "classId": "frog.widgets.numeric_control",
+          "role": "control",
+          "valueType": "i32",
+          "label": "Numeric Control",
+          "bounds": {
+            "x": 56,
+            "y": 80,
+            "width": 100,
+            "height": 30
+          },
+          "props": {
+            "layout.aura_band_px": 4,
+            "data_type.representation": "i32",
+            "data_type.named_numeric_size": "Int32",
+            "representation.kind": "int32",
+            "data_entry.use_type_defaults": true
+          },
+          "runtime": {
+            "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+            "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+            "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+            "asset": "asset:numeric_rectangular_svg",
+            "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+          },
+          "state": {
+            "value": 7
+          },
+          "typography": {
+            "inheritanceVersion": 1
+          }
+        }
+      ]
+    },
+    "diagram": {
+      "zoom_percent": 100,
+      "nodes": [],
+      "edges": [],
+      "wire_fragments": []
+    }
+  }
+}

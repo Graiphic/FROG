@@ -1,0 +1,14 @@
+{
+  "format": "frog.frontend.dependencies",
+  "version": "1",
+  "dependencies": [
+    {
+      "kind": 2,
+      "reference": "typed-page.ftype",
+      "source_uri": "fixture:/typed-page.ftype",
+      "identity": "example:typed-page",
+      "version": "1",
+      "path": "typed-page.ftype"
+    }
+  ]
+}

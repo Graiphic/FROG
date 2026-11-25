@@ -38,6 +38,8 @@ public:
     [[nodiscard]] BindingResult resolveInRegion(const DiagramEdgeEndpoint &endpoint,
         std::string_view ownerStructureId, std::string_view regionId);
     [[nodiscard]] BindingResult resolveSource(const DiagramEdge &edge);
+    [[nodiscard]] std::vector<EventSourceSpec> eventSourcesForStructure(
+        const DiagramNode &node, bool resolveTypes = true);
     [[nodiscard]] const EventDataAuthoringSchema &eventSchema(
         std::string_view structureId, std::string_view regionId);
     // Inspect literal data, including nested Cluster fields. This does not
@@ -86,6 +88,10 @@ private:
     void solveFeedbackTypes();
     [[nodiscard]] BindingResult feedbackPort(const DiagramNode &node, std::string_view port);
     [[nodiscard]] BindingResult input(const DiagramNode &node, std::string_view port);
+    [[nodiscard]] std::vector<EventSourceSpec> sourcesFromRegistration(
+        const DiagramNode &structure, const TypeRef &registration, bool resolveTypes);
+    [[nodiscard]] const DiagramEdge *upstreamEventProducer(
+        const DiagramNode &consumer, std::string_view port);
     [[nodiscard]] BindingResult tunnelPort(const DiagramNode &node,
         const DiagramCaseStructureTunnel &boundary, std::string_view port);
     [[nodiscard]] std::span<const DiagramEdge *const> incomingEdges(const std::string &nodeId);

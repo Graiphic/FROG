@@ -123,7 +123,7 @@ std::string serializeEventStructureProperties(
                 if (binding) output << ", ";
                 const auto &value = eventCase.eventBindings[binding];
                 output << "{ \"kind\": "; appendJsonString(output, value.kind);
-                output << ", \"source\": "; appendJsonString(output, value.source);
+                output << ", \"source\": "; appendJsonString(output, storedEventSourceIdentity(value));
                 if (!value.sourceScope.empty()) {
                     output << ", \"source_scope\": "; appendJsonString(output, value.sourceScope);
                 }

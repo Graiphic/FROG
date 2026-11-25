@@ -164,6 +164,9 @@ struct ClusterElement {
     std::string technicalName;
     std::uint32_t logicalOrder = 0U;
     std::shared_ptr<WidgetInstance> widget;
+    // Presentation within the immediate Cluster. Neither participates in the data type.
+    std::optional<std::uint32_t> stackOrder;
+    std::uint32_t visualGroup = 0;
 };
 
 enum class ClusterAutoSizing { None, SizeToFit, ArrangeHorizontally, ArrangeVertically };
@@ -417,6 +420,13 @@ struct WidgetInstance {
 
     // Picture Ring control presentation. The image face remains interactive.
     bool pictureRingDropdownArrowHidden = false;
+
+    // Scale presentation for Numeric instruments. Range endpoints themselves
+    // are ordinary typed Cluster fields, available to the compiler and Run.
+    int instrumentTickCount = 5;
+    bool instrumentScaleVisible = true;
+    bool instrumentFillOutside = false;
+    bool instrumentCursorVisible = true;
 
 };
 

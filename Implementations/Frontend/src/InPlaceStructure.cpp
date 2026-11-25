@@ -321,7 +321,7 @@ TypeResolution checkInPlaceConnection(const DiagramNode &n, std::string_view id,
             !target->inner && (id.find(":index:") != std::string_view::npos ||
                                id.find(":length:") != std::string_view::npos);
         candidate =
-            connect(value, target->type,
+            connectValue(value, target->type,
                     numericParameter ? ConnectionPolicy::NumericImplicit : ConnectionPolicy::Exact);
         if (!candidate.accepted())
             return candidate;
@@ -331,7 +331,7 @@ TypeResolution checkInPlaceConnection(const DiagramNode &n, std::string_view id,
         if (p.pairId == target->pairId && p.inner && p.direction == FunctionPortDirection::Input) {
             const auto replacement = overrideInput(p.id).resolution.type;
             if (replacement.known() && p.type.known()) {
-                const auto match = connect(replacement, p.type, ConnectionPolicy::Exact);
+                const auto match = connectValue(replacement, p.type, ConnectionPolicy::Exact);
                 if (!match.accepted())
                     return match;
             }

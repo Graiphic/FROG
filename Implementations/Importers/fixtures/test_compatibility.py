@@ -88,6 +88,8 @@ def main():
                        "--frontend", str(args.frontend), "--output", str(output)], capture_output=True, text=True, encoding="utf-8", timeout=40)
             check(result.returncode == 0 and (output / "model.frog").is_file() and source.read_bytes() == before,
                   "frontend_admission_"+file+": "+result.stdout+result.stderr)
+            description = json.loads((output / "model.frog").read_text(encoding="utf-8"))["metadata"]["description"]
+            check(description.splitlines()[0] == f"Source (ONNX): {source.resolve()}", "embedded_origin_"+file)
             report = json.loads((output / "onnx-mapping.json").read_text(encoding="utf-8"))
             check(report["transformations"] == [] and report["onnx_sha256"] == hashlib.sha256(before).hexdigest(), "source_identity_"+file)
         source = root / "equivalent-adder18.onnx"

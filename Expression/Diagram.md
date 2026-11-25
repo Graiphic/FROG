@@ -785,6 +785,15 @@ They are layout metadata and MUST NOT alter the directed connectivity or validat
 When <code>bends</code> is absent or empty, an editor MAY choose any route that preserves the same connectivity.
 </p>
 
+<p>
+In Studio documents, an edge or wire fragment MAY carry <code>route_intent</code>.
+The value <code>automatic</code> allows the editor to recompute the bends when
+either endpoint moves. The value <code>manual</code> preserves a route shaped
+by intermediate clicks or a segment edit. A reader opening an older document
+with stored bends and no <code>route_intent</code> preserves those bends because
+their origin is unknown. This field affects diagram layout only.
+</p>
+
 <h3>12.2 Edge validity</h3>
 
 <p>

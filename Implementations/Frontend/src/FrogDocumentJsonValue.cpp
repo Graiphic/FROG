@@ -1,4 +1,6 @@
 #include "FrogDocumentJsonValue.hpp"
+#include "frog_native_engine/EventNotificationContract.hpp"
+#include "frog_native_engine/SequenceStructure.hpp"
 #include "frog_native_engine/TimedLoopConfiguration.hpp"
 #include "frog_native_engine/StructureTunnelMode.hpp"
 #include "FrogDocumentConditionalDisable.hpp"
@@ -452,6 +454,51 @@ void deserializeStructureTunnels(const JsonValue &nodeValue, DiagramNode &node) 
     node.caseStructureTunnels = std::move(authoringTunnels);
 }
 
+// Older flat sequences can omit studio_width while keeping absolute child
+// positions. Infer a missing separator only when the default cuts into a
+// frame and the two adjacent frames leave an unambiguous gap.
+static void recoverImplicitSequenceWidths(const JsonValue &source, const JsonValue &regions, DiagramNode &node) {
+    const auto *layout=objectField(source,"layout");
+    if (!layout || node.sequenceSemanticProfile!="flat_sequence" || regions.array.size()<2) return;
+    const auto left=jsonNumberField(*layout,"x"), width=jsonNumberField(*layout,"width");
+    if (!left || !width || !std::isfinite(*left+*width) || *width<=0) return;
+    struct Extent {
+        double left=std::numeric_limits<double>::infinity();
+        double right=-std::numeric_limits<double>::infinity();
+    };
+    const auto count=regions.array.size();
+    std::vector<Extent> contents(count);
+    std::vector<double> reserved(count+1);
+    for (std::size_t i=count;i-->0;) {
+        const auto &region=regions.array[i];
+        reserved[i]=reserved[i+1]+jsonNumberField(region,"studio_width").value_or(kSequenceMinimumFrameWidth);
+        const auto *diagram=objectField(region,"diagram");
+        const auto *children=diagram ? objectField(*diagram,"nodes") : nullptr;
+        if (!children || children->type!=JsonValue::Type::Array) continue;
+        for (const auto &child:children->array) {
+            const auto *bounds=objectField(child,"layout");
+            if (!bounds || jsonBooleanField(child,"hidden").value_or(false)) continue;
+            const auto x=jsonNumberField(*bounds,"x"), w=jsonNumberField(*bounds,"width");
+            if (!x || !w || *w<=0 || !std::isfinite(*x+*w)) continue;
+            contents[i].left=(std::min)(contents[i].left,*x);
+            contents[i].right=(std::max)(contents[i].right,*x+*w);
+        }
+    }
+    double origin=*left;
+    for (std::size_t i=0;i+1<count;++i) {
+        auto &frame=node.sequenceFrames[i];
+        if (!objectField(regions.array[i],"studio_width") && std::isfinite(contents[i].right) &&
+            std::isfinite(contents[i+1].left)) {
+            const auto low=(std::max)(origin+kSequenceMinimumFrameWidth,contents[i].right);
+            const auto high=(std::min)(*left+*width-reserved[i+1],contents[i+1].left);
+            const auto nominal=origin+frame.width;
+            if (low<high && (nominal<low || nominal>high))
+                frame.width=(low+(high-low)/2)-origin;
+        }
+        origin+=(std::max)(frame.width,kSequenceMinimumFrameWidth);
+    }
+}
+
 void deserializeStructureProperties(
     const JsonValue &nodeValue,
     DiagramNode &node) {
@@ -524,6 +571,8 @@ void deserializeStructureProperties(
                     jsonStringField(region,"studio_title").value_or(""),
                     jsonNumberField(region,"studio_width").value_or(240.0),
                     jsonStringField(region,"studio_subdiagram_label_text").value_or("")});
+            if (std::any_of(regions->array.begin(),regions->array.end(),[](const auto &r){return !objectField(r,"studio_width");}))
+                recoverImplicitSequenceWidths(nodeValue,*regions,node);
         }
         return; // Do not overwrite the sequence label settings with legacy Case defaults.
     }
@@ -909,10 +958,18 @@ void deserializeStructureProperties(
                         bindings && bindings->type == JsonValue::Type::Array) {
                         for (const auto &binding : bindings->array) {
                             if (binding.type != JsonValue::Type::Object) continue;
-                            eventCase.eventBindings.push_back({
+                            DiagramEventBinding descriptor{
                                 jsonStringField(binding, "kind").value_or(""),
                                 jsonStringField(binding, "source").value_or(""),
-                                jsonStringField(binding, "source_scope").value_or("")});
+                                jsonStringField(binding, "source_scope").value_or("")};
+                            if (descriptor.kind == "user_event" && descriptor.sourceScope == "dynamic") {
+                                const auto parts = eventSourceIdentityParts(descriptor.source);
+                                if (!parts.originNodeId.empty()) {
+                                    descriptor.originNodeId = parts.originNodeId;
+                                    descriptor.source = std::string(parts.source);
+                                }
+                            }
+                            eventCase.eventBindings.push_back(std::move(descriptor));
                         }
                         if (!eventCase.eventBindings.empty()) {
                             eventCase.eventKind = eventCase.eventBindings.front().kind;

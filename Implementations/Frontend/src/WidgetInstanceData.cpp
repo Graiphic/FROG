@@ -12,6 +12,8 @@
 #include "frog_native_engine/PreparedWidgetValueAssignment.hpp"
 #include "frog_native_engine/RingItemIdentity.hpp"
 #include "frog_native_engine/PictureRing.hpp"
+#include "frog_native_engine/HorizontalSlider.hpp"
+#include "frog_native_engine/WidgetNumericData.hpp"
 #include "frog_native_engine/WidgetDataOperations.hpp"
 #include "frog_native_engine/WidgetChoiceProperties.hpp"
 #include <algorithm>
@@ -962,6 +964,12 @@ WidgetInstance makeWidgetData(
     }
     if (entry.family == WidgetFamily::Numeric) {
         widget.initialValue = formatNumericValue(widget.numericValue.value_or(0.0));
+        if (numeric_instrument::kind(entry.assetRef) != numeric_instrument::Kind::None) {
+            widget.numericMinimum = 0;
+            widget.numericMaximum = 100;
+            widget.numericIncrementStep = 1;
+            widget.numericIncrementDecrementVisible = false;
+        }
         if (isColorBoxPaletteEntry(entry)) {
             widget.numericColorBox = true;
             widget.numericRepresentationKind = "uint32";
@@ -988,12 +996,37 @@ WidgetInstance makeWidgetData(
     } else if (entry.classId == "frog.widgets.cluster_control" ||
                entry.classId == "frog.widgets.cluster_indicator") {
         widget.clusterContainer = ClusterContainerState{};
+        if (numeric_instrument::isRange(numeric_instrument::kind(entry.assetRef))) {
+            const auto *numeric = findWidgetCatalogEntryByClassId(entry.role == "indicator"
+                ? "frog.widgets.numeric_indicator" : "frog.widgets.numeric_control");
+            if (numeric) {
+                auto &cluster = *widget.clusterContainer;
+                for (const bool upper : {false, true}) {
+                    const std::string name = upper ? "upper" : "lower";
+                    auto endpoint = std::make_shared<WidgetInstance>(
+                        makeWidgetData(widget.instanceId + "." + name, *numeric, Rect{0, 0, 60, 24}));
+                    endpoint->label = name;
+                    static_cast<void>(setWidgetNumericValue(*endpoint, upper ? 75.0 : 25.0));
+                    cluster.elements.push_back({name, name, upper ? 1U : 0U, std::move(endpoint)});
+                }
+                cluster.nextFieldSerial = 2;
+                widget.valueType = "cluster:f64|f64";
+                widget.numericMinimum = 0;
+                widget.numericMaximum = 100;
+                widget.numericIncrementStep = 1;
+            }
+        }
     } else if (isXYGraphWidget(widget)) {
         widget.xyGraph.emplace();
+        widget.xyGraph->design.legendRows = 1;
+        if (const auto &data = widget.xyGraph->initialSnapshot; data && !data->series.empty()) {
+            widget.xyGraph->design.plots.push_back({data->series.front().id, "Plot 0"});
+        }
         widget.valueType=widget.xyGraph->datatype.canonical();
         widget.labelVisible=true;
     } else if (isWaveformGraphWidget(widget)) {
         widget.waveformGraph = graph::State{};
+        widget.waveformGraph->design.legendRows = 1;
     } else if (isPictureWidget(widget)) {
         widget.pictureDisplay = PictureDisplayState{};
         widget.pictureDisplay->width=picture_data::axisForBounds(bounds.width);
@@ -1007,6 +1040,87 @@ WidgetInstance makeWidgetData(
     if(widget.classId==kCollectionWidgetClass)widget.collection=CollectionAuthoringState{};
     if (isTabWidget(widget)) initializeTabControl(widget);
     return widget;
+}
+
+namespace numeric_instrument {
+namespace {
+template<typename Widget>
+Widget *endpoint(Widget &widget, bool upper) noexcept {
+    if (!isRange(kind(widget.assetRef))) return &widget;
+    if (!widget.clusterContainer) return nullptr;
+    const auto &fields = widget.clusterContainer->elements;
+    const auto index = upper ? 1U : 0U;
+    if (fields.size() != 2 || !fields[index].widget || fields[index].logicalOrder != index) return nullptr;
+    return fields[index].widget.get();
+}
+}
+
+double value(const WidgetInstance &widget, bool upper) noexcept {
+    const auto *field = endpoint(widget, upper);
+    return field ? field->numericValue.value_or(0) : 0;
+}
+
+bool setValue(WidgetInstance &widget, double selected, bool upper) {
+    const auto instrument = kind(widget.assetRef);
+    auto *field = endpoint(widget, upper);
+    const double low = widget.numericMinimum.value_or(0);
+    const double high = widget.numericMaximum.value_or(100);
+    if (!field || instrument == Kind::None || !std::isfinite(selected) ||
+        !std::isfinite(low) || !std::isfinite(high) || high <= low) return false;
+    selected = horizontal_slider::valueAt(horizontal_slider::fraction(selected, low, high),
+        low, high, widget.numericIncrementStep.value_or(1));
+    if (isRange(instrument)) {
+        const double peer = std::clamp(value(widget, !upper), low, high);
+        selected = upper ? (std::max)(selected, peer) : (std::min)(selected, peer);
+    }
+    if (numericCanonicalValueTypeIsIntegral(field->valueType)) selected = std::round(selected);
+    if (isSingleSlider(instrument) && (field->valueType == "i64" || field->valueType == "u64")) {
+        std::string exact;
+        if (field->valueType == "i64") {
+            const auto integer = horizontal_slider::integerAt<std::int64_t>(selected);
+            if (!integer) return false;
+            exact = std::to_string(*integer);
+        } else {
+            const auto integer = horizontal_slider::integerAt<std::uint64_t>(selected);
+            if (!integer) return false;
+            exact = std::to_string(*integer);
+        }
+        if (field->numericValue == selected && field->initialValue == exact) return false;
+        return setWidgetNumericIntegerValueLexeme(*field,exact);
+    }
+    if (field->numericValue == selected) return false;
+    return setWidgetNumericValue(*field, selected);
+}
+
+bool setRepresentation(WidgetInstance &widget, std::string_view representation) {
+    const auto type = widget_numeric_detail::numericRepresentationMapping(representation);
+    const auto instrument = kind(widget.assetRef);
+    if (!type || instrument == Kind::None ||
+        !(widget_numeric_detail::numericValueTypeIsIntegral(type->valueType) ||
+          type->valueType == "f32" || type->valueType == "f64")) return false;
+    if (!isRange(instrument)) return setNumericRepresentationKind(widget, representation);
+    WidgetInstance next = widget;
+    auto *lower = endpoint(next, false);
+    auto *upper = endpoint(next, true);
+    if (!lower || !upper || (lower->valueType == type->valueType && upper->valueType == type->valueType))
+        return false;
+    for (auto *field : {lower, upper}) {
+        if (field->valueType != type->valueType && !setNumericRepresentationKind(*field, representation))
+            return false;
+    }
+    next.valueType = "cluster:" + lower->valueType + "|" + upper->valueType;
+    if (widget.defaultData) {
+        auto saved = data_operations::decodeStoredDefault(widget, *widget.defaultData);
+        if (!saved) return false;
+        saved->defaultData.reset();
+        if (!setRepresentation(*saved, representation)) return false;
+        auto bytes = data_operations::encode(*saved);
+        if (bytes.empty()) return false;
+        next.defaultData = std::move(bytes);
+    }
+    widget = std::move(next);
+    return true;
+}
 }
 
 namespace data_operations {

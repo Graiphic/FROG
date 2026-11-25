@@ -111,7 +111,7 @@ void actualDraft() {
     need(!b::graphRequirements(cj::encode(invalid),direct.fir,requirements,error)&&error.code=="bridge.source_projection","A different Source projection inherited the real FIR");
     invalid=context;invalid.object["source"].object["family"]=cj::string("frog.unknown");
     need(!b::graphRequirements(cj::encode(invalid),direct.fir,requirements,error)&&error.code=="bridge.version","An unknown authored source family was admitted");
-    invalid=context;invalid.object["source"].object["version"]=cj::string("11");
+    invalid=context;invalid.object["source"].object["version"]=cj::string("12");
     need(!b::graphRequirements(cj::encode(invalid),direct.fir,requirements,error)&&error.code=="bridge.version","An unknown draft revision was inferred as current");
     DraftSourceCapture capture;capture.bytes=serializeFrogDraftData(passThroughDraft(true));capture.version="sha256:"+hashing::sha256Hex(capture.bytes);
     parent.diagramEdges.clear();DiagramNode call;call.id="call";call.kind="frog_call";call.type="frog.studio.frog_call";call.callDocumentPath="child.frog";call.layout={120,20,48,48};
@@ -138,6 +138,71 @@ void actualDraft() {
     need(!b::graphRequirements(cj::encode(invalid),withDependency.fir,requirements,error)&&error.code=="bridge.schema","An invalid dependency digest was admitted");
     invalid=original;invalid.object["dependencies"].array[0].object["version"]=cj::string("");
     need(!b::graphRequirements(cj::encode(invalid),withDependency.fir,requirements,error)&&error.code=="bridge.schema","An absent dependency version was inferred");
+}
+
+void actualPictureRing(const std::filesystem::path &file) {
+    const auto bytes=read(file);
+    const auto revision=parse(bytes).object.at("draft_revision").string;
+    need(revision=="11","The public Picture Ring example no longer exercises draft revision 11");
+    const auto result=deriveBytes(bytes,"frog.document.draft",revision);
+    const auto context=parse(result.provenance);
+    const auto &source=context.object.at("source").object;
+    need(source.at("family").string=="frog.document.draft"&&source.at("version").string==revision&&
+        source.at("sha256").string==frog::native_engine::hashing::sha256Hex(bytes)&&
+        context.member("projected_source_sha256"),"The Frontend lost the exact revision 11 source identity");
+    b::GraphRequirements requirements;b::Error error;
+    const bool admitted=b::graphRequirements(result.provenance,result.fir,requirements,error);
+    need(admitted,"Actual Picture Ring FIR/provenance was refused: "+error.code+" "+error.message);
+    auto invalid=context;invalid.object["source"].object["version"]=cj::string("12");
+    need(!b::graphRequirements(cj::encode(invalid),result.fir,requirements,error)&&error.code=="bridge.version",
+        "An unqualified future draft inherited Picture Ring admission");
+    need(read(file)==bytes,"Bridge admission changed the public Picture Ring example");
+}
+
+void actualClusterPresentation() {
+    using namespace frog::native_engine;
+    FrogDraftData document;
+    document.title = "Grouped Cluster pass-through";
+    const auto *numeric = findWidgetCatalogEntryByClassId("frog.widgets.numeric_control");
+    need(numeric != nullptr, "Missing numeric field template");
+    for (const bool input : {true, false}) {
+        const std::string id = input ? "grouped-input" : "grouped-output";
+        const auto *entry = findWidgetCatalogEntryByClassId(input ? "frog.widgets.cluster_control" : "frog.widgets.cluster_indicator");
+        need(entry != nullptr, "Missing authored Cluster widget");
+        auto widget = makeWidgetData(id, *entry, {input ? 20.0 : 260.0, 20, 200, 120});
+        widget.valueType = "cluster:i32|i32";
+        auto *cluster = clusterContainerState(widget);
+        need(cluster != nullptr, "Missing authored Cluster fields");
+        for (std::uint32_t i = 0; i < 2; ++i) {
+            const std::string key = i ? "second" : "first";
+            auto child = makeWidgetData(id + "-" + key, *numeric, {15.0, 20.0 + 44*i, 86, 32});
+            child.valueType = "i32";
+            need(setWidgetNumericIntegerValueLexeme(child, i ? "12" : "34"), "Cannot assign the field data");
+            cluster->elements.push_back({key, key, i, std::make_shared<WidgetInstance>(std::move(child)), 1U-i, 17U});
+        }
+        DiagramNode terminal;
+        terminal.id = id + "-terminal"; terminal.kind = "widget_value"; terminal.widgetId = id;
+        terminal.type = diagramTerminalValueType(widget);
+        document.diagramNodes.push_back(std::move(terminal));
+        document.widgets.addObject({id, widget.bounds, std::move(widget)}, true);
+    }
+    document.diagramEdges.push_back({"forward", {"grouped-input-terminal", "value"}, {"grouped-output-terminal", "value"}});
+    const auto bytes = serializeFrogDraftData(document);
+    need(parse(bytes).object.at("draft_revision").string == "13", "The fixture did not serialize actual Cluster presentation");
+    const auto actual = deriveBytes(bytes, "frog.document.draft", "13");
+    const auto context = parse(actual.provenance);
+    b::GraphRequirements requirements;
+    b::Error error;
+    const bool accepted = b::graphRequirements(actual.provenance, actual.fir, requirements, error);
+    need(accepted, "The bridge rejected derived FIR for a grouped Cluster: " + error.code + " " + error.message);
+    requirements.engineId = "graiphic.llvm.cpu"; requirements.targetId = "windows-x64"; requirements.profileId = "native-fast";
+    need(b::negotiate(requirements, descriptor(requirements), error), "The grouped Cluster failed target negotiation");
+    for (const auto version : {"12", "14"}) {
+        auto unqualified = context;
+        unqualified.object["source"].object["version"] = cj::string(version);
+        need(!b::graphRequirements(cj::encode(unqualified), actual.fir, requirements, error) && error.code == "bridge.version",
+            "The grouped Cluster admitted an unqualified source revision.");
+    }
 }
 
 b::Description descriptor(const b::GraphRequirements &requirements) {
@@ -319,7 +384,7 @@ void actualClasses(const std::filesystem::path &folder) {
         "Actual nominal class dependencies did not retain four kind-5 definitions");
     requirements.engineId="graiphic.llvm.cpu";requirements.targetId="windows-x64";requirements.profileId="native-fast";
     need(b::negotiate(requirements,descriptor(requirements),error),"Classes changed negotiation of their unchanged checked FIR realization");
-    auto invalid=context;invalid.object["source"].object["version"]=cj::string("11");
+    auto invalid=context;invalid.object["source"].object["version"]=cj::string("12");
     need(!b::graphRequirements(cj::encode(invalid),result.fir,requirements,error)&&error.code=="bridge.version","A future source revision inherited class admission");
     invalid=context;invalid.object["dependencies"].array.front().object["kind"]=parse("6");
     need(!b::graphRequirements(cj::encode(invalid),result.fir,requirements,error)&&error.code=="bridge.version","An unknown dependency kind inherited class admission");
@@ -328,7 +393,11 @@ void actualClasses(const std::filesystem::path &folder) {
 }
 }
 int main(int argc,char **argv) {
-    try {need(argc==4,"Usage: bridge-protocol-smoke <ecosystem-fixtures> <real-frontend-fixtures> <class-fixtures>");historic(argv[1]);strictWire();exchanges();lifecyclePayloads();actual(argv[2]);actualDraft();actualClasses(std::filesystem::u8path(argv[3]));
+    try {
+        need(argc==5,"Usage: bridge-protocol-smoke <ecosystem-fixtures> <real-frontend-fixtures> <class-fixtures> <picture-ring-example>");
+        historic(argv[1]);strictWire();exchanges();lifecyclePayloads();actual(argv[2]);actualDraft();
+        actualClasses(std::filesystem::u8path(argv[3]));actualPictureRing(std::filesystem::u8path(argv[4]));
+        actualClusterPresentation();
         std::cout<<"bridge_protocol_smoke PASS checks="<<checks<<" (historical wire + actual API3 FIR/provenance)\n";return 0;
     }catch(const std::exception &e){std::cerr<<"bridge_protocol_smoke FAIL: "<<e.what()<<'\n';return 1;}
 }

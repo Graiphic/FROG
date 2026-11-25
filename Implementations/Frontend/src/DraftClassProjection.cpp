@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 #include "frog_native_engine/DraftClassProjection.hpp"
 #include "frog_native_engine/ClassAuthoring.hpp"
+#include "frog_native_engine/ClusterFunctionBinding.hpp"
 #include "frog_native_engine/DiagramBindingResolver.hpp"
 #include "frog_native_engine/DiagramTunnelIdentity.hpp"
 #include "frog_native_engine/DiagramStructureCatalog.hpp"
@@ -52,6 +53,12 @@ DiagramCallPort port(std::string id,std::string type,bool input) {
     p.connectionRequirement=input?"required":"recommended";p.normalizedX=input?0.0:1.0;return p;
 }
 struct Invalid {ClassIssue issue;};
+}
+bool clusterContainsClassValue(const binding::TypeRef &type) {
+    if(type.kind!=binding::TypeKind::Cluster)return false;
+    return std::any_of(type.children.begin(),type.children.end(),[](const auto &child) {
+        return child.kind==binding::TypeKind::Object || clusterContainsClassValue(child);
+    });
 }
 bool draftHasClasses(const FrogDraftData &document) {
     if(!document.properties.classSource.classes.empty()||document.properties.classSource.member)return true;
@@ -141,14 +148,17 @@ DraftClassProjection projectDraftClassOperations(const FrogDraftData &authored,c
         const auto declaration=authored.declaredInterface?inspectFrogDraftInterface(*authored.declaredInterface):FrogDraftInterfaceInspection{};
         for(const auto &object:authored.widgets.objects())if(object.widget) {
             const auto schema=binding::widgetType(*object.widget);
-            if(schema.type.kind!=TypeKind::Object)continue;
+            if(schema.type.kind!=TypeKind::Object && !clusterContainsClassValue(schema.type))continue;
             // An authored Variant payload cannot manufacture an object. The
             // first profile accepts object interface carriers only at actual
             // call boundaries; entry objects come from checked defaults.
             const auto &widget=*object.widget;
             const auto bound=std::find_if(declaration.ports.begin(),declaration.ports.end(),[&](const auto &p){
                 const auto &id=p.input?widget.publicInputId:widget.publicOutputId;
-                return id&&*id==p.id&&p.parsedType.type==schema.type;
+                // Interface type expressions identify Enum domains and representations.
+                // Their labels and values come from the actual bound widget.
+                return id && *id==p.id && schema.valid() && schema.type.known() &&
+                    schema.type.canonical()==p.parsedType.type.canonical();
             });
             if(root||bound==declaration.ports.end())refuse("class.object_factory_required",
                 "Entry objects require a checked default-object operation; an object interface carrier requires an actual caller.","/frontPanel/"+object.id,schema.type.name);
@@ -193,18 +203,41 @@ DraftClassProjection projectDraftClassOperations(const FrogDraftData &authored,c
             }
         }
         binding::TypeResolver resolver(authored.diagramNodes,authored.diagramEdges,authored.widgets,{},&hierarchy);
-        const auto permissible=[&](const DiagramEdgeEndpoint &endpoint) {
+        const auto permissible=[&](const DiagramEdgeEndpoint &endpoint,const TypeRef &nominal) {
             const auto n=std::find_if(authored.diagramNodes.begin(),authored.diagramNodes.end(),[&](const auto &v){return v.id==endpoint.nodeId;});
             if(n==authored.diagramNodes.end())return false;
             if(n->kind=="frog_call"||n->kind=="widget_value"||n->type=="frog.studio.structures.select")return true;
+            if(clusterContainsClassValue(nominal)) {
+                if(n->type=="frog.studio.cluster.constant" && endpoint.portId=="value")return true;
+                if((n->type=="frog.studio.cluster.bundle_by_name" || n->type=="frog.studio.cluster.unbundle_by_name") &&
+                   (endpoint.portId=="cluster" || endpoint.portId=="result")) {
+                    // Resolve each selection before lowering. A private field inside
+                    // an Object cannot become a selectable field of its carrier.
+                    for(unsigned row=0;row<clusterFunctionCount(*n);++row)
+                        if(!clusterSelectedField(*n,nominal,row))return false;
+                    return true;
+                }
+            }
             return isDiagramStructureNodeType(n->type)&&endpoint.portId.starts_with("tunnel:");
         };
         for(const auto &edge:authored.diagramEdges) {
             const auto from=resolver.resolveSource(edge),to=resolver.resolveInRegion(edge.to,edge.diagramOwnerStructureId,edge.diagramOwnerRegionId);
             const bool object=from.resolution.type.kind==TypeKind::Object||to.resolution.type.kind==TypeKind::Object;
-            if(!object)continue;
-            if(!permissible(edge.from)||!permissible(edge.to))refuse("class.object_operation_required",
+            if(!object && !clusterContainsClassValue(from.resolution.type) && !clusterContainsClassValue(to.resolution.type))continue;
+            if(!object && (!from.complete || !from.resolution.accepted()))
+                refuse("class.object_connection","A Cluster's nominal fields require a complete producer.",wirePath(edge.id));
+            if(!permissible(edge.from,from.resolution.type)||!permissible(edge.to,to.resolution.type))refuse("class.object_operation_required",
                 "An object's private transport cannot be inspected or forged by a Cluster or reference operation.",wirePath(edge.id));
+            // File-call type expressions omit Enum labels and values. The composed
+            // call validator checks the producer against the frozen callee widget.
+            const auto target=std::find_if(authored.diagramNodes.begin(),authored.diagramNodes.end(),
+                [&](const auto &node){return node.id==edge.to.nodeId;});
+            if(!object && target!=authored.diagramNodes.end() && target->kind=="frog_call" &&
+               !target->classOperation && !target->callDocumentPath.empty()) {
+                if(!to.resolution.accepted() || from.resolution.type.canonical()!=to.resolution.type.canonical())
+                    refuse("subfrog.interface.type_mismatch","The file-call connector and its producer have different nominal types.",wirePath(edge.id));
+                continue;
+            }
             const auto connection=resolver.connection(edge);
             if(!connection.accepted())refuse(connection.code.empty()?"class.object_connection":connection.code,connection.message,wirePath(edge.id));
         }
@@ -217,12 +250,20 @@ DraftClassProjection projectDraftClassOperations(const FrogDraftData &authored,c
             if(!ids.insert(id).second)refuse("class.generated_identity","A compiler-generated identity collided with source state.",path(origin));
             result.generatedFrom.emplace(id,origin);return id;
         };
+        const auto lowerValue=[&](auto &self,TypeRef &type) -> void {
+            if(type.kind==TypeKind::Object) {
+                const auto layout=hierarchy.recordLayout(type.name);
+                if(!layout)refuse("class.layout_unavailable","The nominal object has no admitted closed value layout.","/diagram",type.name);
+                type=layout->schema;
+            } else if(type.kind==TypeKind::Cluster) {
+                for(auto &field:type.children)self(self,field);
+            }
+        };
         const auto physical=[&](std::string &expression) {
-            const auto type=binding::parseType(expression);
-            if(type.valid()&&type.type.kind==TypeKind::Object) {
-                const auto layout=hierarchy.recordLayout(type.type.name);
-                if(!layout)refuse("class.layout_unavailable","The nominal object has no admitted closed value layout.","/diagram",type.type.name);
-                expression=layout->schema.canonical();
+            auto type=binding::parseType(expression);
+            if(type.valid()&&(type.type.kind==TypeKind::Object||clusterContainsClassValue(type.type))) {
+                lowerValue(lowerValue,type.type);
+                expression=type.type.canonical();
             }
         };
         // Resolve inferred Select/tunnel types before replacing nominal rails.
@@ -234,23 +275,34 @@ DraftClassProjection projectDraftClassOperations(const FrogDraftData &authored,c
             physical(node.valueType);for(auto &p:node.callPorts)physical(p.valueType);
             for(auto &t:node.caseStructureTunnels)physical(t.valueType);
         }
-        for(auto &o:result.document.widgets.mutableObjects())if(o.widget) {
-            const auto nominal=binding::parseType(o.widget->valueType);
+        const auto lowerWidget=[&](auto &self,WidgetInstance &widget) -> void {
+            const auto nominal=binding::widgetType(widget);
             if(nominal.valid()&&nominal.type.kind==TypeKind::Object) {
-                const auto &old=*o.widget;const auto layout=hierarchy.recordLayout(nominal.type.name);
+                const auto &old=widget;const auto layout=hierarchy.recordLayout(nominal.type.name);
                 ClassIssue issue;auto value=layout?makeClassPortCarrier(layout->schema,old.instanceId,old.role=="control",&issue):std::nullopt;
-                if(!value)refuse("class.carrier_unavailable",issue.message,"/frontPanel/"+o.id,nominal.type.name);
+                if(!value)refuse("class.carrier_unavailable",issue.message,"/frontPanel/"+widget.instanceId,nominal.type.name);
                 value->bounds=old.bounds;value->label=old.label;value->publicInputId=old.publicInputId;value->publicOutputId=old.publicOutputId;
                 value->interfaceMapSlotId=old.interfaceMapSlotId;value->interfaceConnectionRequirement=old.interfaceConnectionRequirement;
-                value->defaultData=serializeArrayElementWidget(*value);o.widget=std::move(*value);
-                for(auto &node:result.document.diagramNodes)if(node.kind=="widget_value"&&node.widgetId==o.id) {
-                    node.type=o.widget->valueType;node.valueType=o.widget->valueType;
-                }
-            } else physical(o.widget->valueType);
+                value->defaultData=serializeArrayElementWidget(*value);widget=std::move(*value);
+            } else if(nominal.valid() && clusterContainsClassValue(nominal.type)) {
+                auto *container=clusterContainerState(widget);
+                if(!container)refuse("class.carrier_unavailable","Missing Cluster field model.","/frontPanel/"+widget.instanceId);
+                for(auto &field:container->elements)if(field.widget)self(self,*field.widget);
+                widget.valueType=binding::widgetType(widget).type.canonical();
+                widget.defaultData=serializeArrayElementWidget(widget);
+            }
+        };
+        for(auto &o:result.document.widgets.mutableObjects())if(o.widget) {
+            const auto nominal=binding::widgetType(*o.widget);
+            if(!nominal.valid() || (nominal.type.kind!=TypeKind::Object && !clusterContainsClassValue(nominal.type)))continue;
+            lowerWidget(lowerWidget,*o.widget);
+            for(auto &node:result.document.diagramNodes)if(node.kind=="widget_value"&&node.widgetId==o.id) {
+                node.type=o.widget->valueType;node.valueType=o.widget->valueType;
+            }
         }
         if(result.document.declaredInterface) {
             const auto declaration=inspectFrogDraftInterface(*result.document.declaredInterface);
-            for(const auto &p:declaration.ports)if(p.parsedType.type.kind==TypeKind::Object) {
+            for(const auto &p:declaration.ports)if(p.parsedType.type.kind==TypeKind::Object || clusterContainsClassValue(p.parsedType.type)) {
                 auto type=p.typeExpression;physical(type);std::string why;
                 if(!result.document.declaredInterface->editPortForAuthoring(p.id,p.input,p.typeExpression,p.input,type,std::nullopt,&why))
                     refuse("class.connector_projection",why,p.sourcePath);

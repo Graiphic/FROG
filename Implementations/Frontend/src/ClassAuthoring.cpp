@@ -14,9 +14,12 @@ using binding::TypeRef;
 using binding::TypeKind;
 WidgetInstance carrier(const TypeRef &type,const std::string &id,bool input,unsigned depth=0) {
     if(depth>32)throw std::runtime_error("Member connector type nesting exceeds32.");
-    const auto classId=type.kind==TypeKind::Object?"frog.widgets.variant_control":type.kind==TypeKind::Cluster?"frog.widgets.cluster_control":
-        type.name=="bool"?"frog.widgets.boolean_control":type.name=="string"?"frog.widgets.string_control":type.name=="path"?"frog.widgets.path_control":
-        "frog.widgets.numeric_control";
+    const auto family=type.kind==TypeKind::Cluster?"cluster":type.name=="bool"?"boolean":
+        type.name=="string"?"string":type.name=="path"?"path":"numeric";
+    // Variant supports both roles with one class. Other catalog families
+    // have distinct control and indicator classes and realization metadata.
+    const std::string classId=type.kind==TypeKind::Object?"frog.widgets.variant_control":
+        std::string("frog.widgets.")+family+(input?"_control":"_indicator");
     const auto *entry=findWidgetCatalogEntryByClassId(classId);
     if(!entry)throw std::runtime_error("The native carrier widget is unavailable: "+std::string(classId));
     auto widget=makeWidgetData(id,*entry,{0,0,entry->defaultPreviewSize.width,entry->defaultPreviewSize.height});

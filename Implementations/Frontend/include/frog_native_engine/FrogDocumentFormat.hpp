@@ -34,7 +34,12 @@ inline constexpr std::uint32_t kFrogClassValueDraftRevision = 10U;
 // Picture Rings persist an ordered embedded image catalogue. A reader that
 // understands only numeric Ring choices must not silently discard the images.
 inline constexpr std::uint32_t kFrogPictureRingDraftRevision = 11U;
-inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogPictureRingDraftRevision;
+// Tab member identities and structured Type Def recovery payloads require
+// an aware reader to preserve links across saves and updates.
+inline constexpr std::uint32_t kFrogExtendedTypeDefinitionDraftRevision = 12U;
+// Group and paint order of Cluster fields are independent of their logical schema.
+inline constexpr std::uint32_t kFrogClusterPresentationDraftRevision = 13U;
+inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogClusterPresentationDraftRevision;
 inline constexpr std::string_view kFrogWidgetValueDraftFormat = "frog.widget.value.draft";
 
 [[nodiscard]] bool validFrogStudioFileVersion(std::string_view version) noexcept;

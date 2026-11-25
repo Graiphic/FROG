@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" data-frog-template="frog.realizations.default.numeric.tank" data-frog-variant="tank" viewBox="0 0 48 40">
+  <g data-frog-part="root">
+  <rect data-frog-part="vessel" x="13" y="3" width="20" height="34" rx="2" fill="#344250" stroke="#a6b2bc" stroke-width="2"/>
+  <rect data-frog-part="level" x="16" y="18" width="14" height="16" fill="#0084c8"/>
+  <path data-frog-part="scale" d="M35 6h5m-5 7h3m-3 7h5m-5 7h3m-3 7h5" fill="none" stroke="#a6b2bc" stroke-width="2"/>
+  </g>
+</svg>

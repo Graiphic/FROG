@@ -16,6 +16,8 @@ The library receives bytes, identities, options and callbacks, with no implicit 
 
 ## Operations and versions
 
+Studio private draft revision 13 supports two optional presentation attributes on a field in `props["cluster.elements"]`. `stack_order` is an unsigned back-to-front rank within that cluster. Older clusters with no ranks draw in field order. Fields added without a rank above an explicitly ordered stack draw in their insertion order. A nonzero `visual_group` identifies fields grouped for visual editing within the same parent. Omitting it or using zero leaves the field ungrouped. A document with no stored group or explicit rank keeps the revision required by its other features. Field identity, logical order, value typing, and diagram bindings continue to use their existing keys.
+
 | Operation | Actual work | Accepted result |
 | --- | --- | --- |
 | `describe` | Implementation identity, API operations, formats, principal profiles and limits | Complete descriptor, no Source or FIR |

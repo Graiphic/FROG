@@ -1,0 +1,282 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Boolean Array Constant",
+  "metadata": {
+    "name": "Boolean Array Constant",
+    "name_source": "document",
+    "description": "Run displays the built-in value value = [true, false, true].\n\nRun displays the built-in value value = [true, false, true].\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nvalue (array<bool>) = [true,false,true]\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "array", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" data-frog-shape-standard=\"fixed-constant\">\n<defs>\n    <style>\n      .cls-1 {\n        fill: #fff;\n        font-family: Arial-BoldMT, Arial;\n        font-weight: 700;\n        isolation: isolate;\n      }\n\n      .cls-2 {\n        font-size: 12px;\n        letter-spacing: .04em;\n      }\n\n      .cls-3 {\n        fill: #0d770d;\n        stroke: #aab4c0;\n        stroke-linecap: round;\n        stroke-linejoin: round;\n        stroke-width: 1.8px;\n      }\n\n      .cls-4 {\n        font-size: 10px;\n        letter-spacing: .04em;\n      }\n    </style>\n  </defs>\n<rect x=\"6.75\" y=\"12.5\" width=\"34.5\" height=\"23\" fill=\"#0d770d\" stroke=\"#AAB4C0\" stroke-width=\"1.8\"/>\n<g transform=\"translate(5.85 11.6)\">\n<g id=\"Calque_1-2\" data-name=\"Calque 1\">\n    <g>\n\n      <text class=\"cls-1\" transform=\"translate(6.65 16.15)\"><tspan class=\"cls-2\" x=\"0\" y=\"0\">[</tspan><tspan class=\"cls-4\" x=\"4.51\" y=\"0\">TF</tspan><tspan class=\"cls-2\" x=\"17.59\" y=\"0\">]</tspan></text>\n    </g>\n  </g>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "value",
+        "classId": "frog.widgets.array_indicator",
+        "role": "indicator",
+        "valueType": "frog.array<bool,rank=1>",
+        "label": "value",
+        "bounds": {
+          "x": 30,
+          "y": 40,
+          "width": 182,
+          "height": 112
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "dimensions.rank": 1,
+          "dimensions.shape": [0],
+          "dimensions.allow_resize": true,
+          "viewport.first_indices": [0],
+          "viewport.visible_counts": [1],
+          "viewport.orientation": "vertical",
+          "viewport.scrollbar_gap": 6,
+          "index_display.visible": true,
+          "index_display.layout.box_width": 54,
+          "index_display.layout.box_height": 30,
+          "index_display.layout.gap": 4,
+          "index_display.layout.step_width": 16,
+          "style.index_display.step_gap": 2,
+          "style.index_display.value_gap": 4,
+          "style.index_display.container_padding": "4px",
+          "style.index_display.container_border_width": "1px",
+          "display.vertical_scrollbar_visible": false,
+          "display.horizontal_scrollbar_visible": false,
+          "element.cell_width": 46.2,
+          "element.cell_height": 46.2,
+          "element.gap": 0,
+          "element.class_id": "frog.widgets.boolean_indicator",
+          "element.value_type": "bool",
+          "element.role": "indicator",
+          "element.icon": false
+,
+          "element.template":           {
+            "id": "value.element",
+            "classId": "frog.widgets.boolean_indicator",
+            "role": "indicator",
+            "valueType": "bool",
+            "label": "Boolean Indicator",
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "width": 46.2,
+              "height": 46.2
+            },
+            "props": {
+              "layout.aura_band_px": 4,
+              "label.visible": false,
+              "state_text.visible": false
+            },
+            "runtime": {
+              "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+              "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+              "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+              "asset": "asset:boolean_rectangular_svg",
+              "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg"
+            },
+            "state": {
+              "value": false
+            },
+            "typography": {
+              "inheritanceVersion": 1,
+              "stateTextFontFamily": "",
+              "stateTextStyle": "plain"
+            }
+          }
+
+        },
+        "runtime": {
+          "sourceExample": "Examples/26_array_numeric_selection_roundtrip/main.frog",
+          "wfrog": "Examples/26_array_numeric_selection_roundtrip/ui/array_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/array.default.wfrog",
+          "asset": "asset:array_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/array/templates/array_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 60,
+      "y": -100
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.array.other_constants.boolean",
+        "value_type": "bool",
+        "label": "Array Constant",
+        "label_visible": false,
+        "array_element_template": "{\n  \"id\": \"operation-element\",\n  \"classId\": \"frog.widgets.boolean_control\",\n  \"role\": \"control\",\n  \"valueType\": \"bool\",\n  \"label\": \"Boolean Control\",\n  \"bounds\": {\n    \"x\": 20,\n    \"y\": 20,\n    \"width\": 46.2,\n    \"height\": 46.2\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"state_text.visible\": false\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n    \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n    \"asset\": \"asset:boolean_rectangular_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n  },\n  \"state\": {\n    \"value\": false\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"stateTextFontFamily\": \"\",\n    \"stateTextStyle\": \"plain\"\n  }\n}\n",
+        "array_element_icon": false,
+        "palette_catalog_id": "array.other_constants.boolean",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "limit_to_single_line": false,
+          "wrap_at_word_breaks": true,
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "size_to_text": false,
+          "text_alignment": "left"
+        },
+        "array_constant": {
+          "rank": 1,
+          "shape": [3],
+          "first_indices": [0],
+          "visible_counts": [3],
+          "one_dimensional_vertical": false,
+          "cell_size": {
+            "width": 48,
+            "element_gap": 0,
+            "height": 20
+          },
+          "values": ["true", "false", "true"],
+          "element_label_visible": false
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": 100,
+          "width": 190,
+          "height": 110
+        }
+      },
+      {
+        "id": "value-terminal",
+        "kind": "widget_value",
+        "type": "array:bool",
+        "widget": "value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Boolean Array Constant\nRun displays the built-in value value = [true, false, true].\nEntrées -> opération -> indicateurs. Résultat attendu : value (array<bool>) = [true,false,true]\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 80,
+          "y": -80,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

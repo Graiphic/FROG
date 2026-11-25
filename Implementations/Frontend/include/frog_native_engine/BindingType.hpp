@@ -122,6 +122,11 @@ struct TypeResolution {
 
 [[nodiscard]] TypeResolution connect(const TypeRef &source, const TypeRef &target,
     ConnectionPolicy policy = ConnectionPolicy::Exact);
+// A wire boxes its complete source value only at a declared Variant receiver.
+// Structural comparisons inside schemas continue to use connect().
+[[nodiscard]] bool requiresVariantBoxing(const TypeRef &source, const TypeRef &target);
+[[nodiscard]] TypeResolution connectValue(const TypeRef &source, const TypeRef &target,
+    ConnectionPolicy policy = ConnectionPolicy::Exact);
 [[nodiscard]] TypeResolution constrain(const TypeRef &source, const TypeExpr &expression);
 [[nodiscard]] TypeResolution unify(std::span<const TypeRef> sources);
 [[nodiscard]] bool acceptsCaseSelector(const TypeRef &type);

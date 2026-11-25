@@ -109,6 +109,7 @@ struct CanonicalIrShiftRegisterStage {
 struct CanonicalIrShiftRegister {
     std::string pairId,writePortId,resultPortId;
     std::vector<CanonicalIrShiftRegisterStage> stages;
+    std::string invocationOwner, invocationCell, invocationFrame;
 };
 struct CanonicalIrTunnelWriter {std::string regionId,inputPortId;};
 struct CanonicalIrTunnel {

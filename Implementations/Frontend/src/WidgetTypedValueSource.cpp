@@ -200,6 +200,28 @@ struct Projection {
       std::string why;const auto projected=listbox_widget::bindingValue(widget,&why);
       if(!projected)throw std::runtime_error(why);jsonBudget(*projected,depth);return *projected;
     }
+    if (isPictureWidget(widget)) {
+      if (!isPictureIndicatorWidget(widget) || !widget.pictureDisplay ||
+          type != Type::array(Type::primitive("u32"), 2U))
+        throw std::runtime_error("Picture Display requires its two-dimensional U32 pixel matrix.");
+      const auto &picture = *widget.pictureDisplay;
+      const auto count = static_cast<std::uint64_t>(picture.width) * picture.height;
+      if ((!picture.pixels.empty() && picture.pixels.size() != count) ||
+          count > maximumBytes / 2 ||
+          !arrayAllocationFitsBudget(count, sizeof(Json), 0, (std::numeric_limits<std::size_t>::max)()))
+        throw std::runtime_error("Picture Display dimensions exceed the available bounded pixel matrix.");
+      auto shape = array(), elements = array();
+      shape.array = {numeric(std::to_string(picture.height)), numeric(std::to_string(picture.width))};
+      elements.array.reserve(static_cast<std::size_t>(count));
+      for (std::size_t i = 0; i < count; ++i) {
+        auto pixel = numeric(std::to_string(picture.pixels.empty() ? 0U : picture.pixels[i]));
+        addBytes(pixel.string.size() + 1);
+        elements.array.push_back(std::move(pixel));
+      }
+      auto result = object();
+      result.object = {{"shape", std::move(shape)}, {"elements", std::move(elements)}};
+      return result;
+    }
     if(isWaveformGraphWidget(widget)) {
       if(!widget.waveformGraph || widget.waveformGraph->preservedSource ||
           !binding::fullTypeEqual(widget.waveformGraph->datatype,type))

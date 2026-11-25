@@ -1,0 +1,742 @@
+{
+  "diagram": {
+    "edges": [
+      {
+        "bends": [
+          {
+            "x": 364,
+            "y": 375
+          },
+          {
+            "x": 364,
+            "y": 204
+          }
+        ],
+        "from": {
+          "node": "node_6",
+          "port": "value"
+        },
+        "id": "edge_6",
+        "to": {
+          "node": "node_10",
+          "port": "data"
+        }
+      },
+      {
+        "bends": [
+          {
+            "x": 538,
+            "y": 204
+          },
+          {
+            "x": 538,
+            "y": 326
+          }
+        ],
+        "from": {
+          "node": "node_10",
+          "port": "variant"
+        },
+        "id": "edge_7",
+        "to": {
+          "node": "node_11",
+          "port": "variant"
+        }
+      },
+      {
+        "bends": [
+          {
+            "x": 364,
+            "y": 375
+          },
+          {
+            "x": 364,
+            "y": 305
+          },
+          {
+            "x": 568,
+            "y": 305
+          }
+        ],
+        "from": {
+          "node": "node_6",
+          "port": "value"
+        },
+        "id": "edge_8",
+        "to": {
+          "node": "node_11",
+          "port": "type"
+        }
+      },
+      {
+        "bends": [
+          {
+            "x": 611,
+            "y": 326
+          },
+          {
+            "x": 611,
+            "y": 326.125
+          }
+        ],
+        "from": {
+          "node": "node_11",
+          "port": "data"
+        },
+        "id": "edge_9",
+        "to": {
+          "node": "node_12",
+          "port": "value"
+        }
+      },
+      {
+        "bends": [
+          {
+            "x": 432,
+            "y": 204
+          },
+          {
+            "x": 432,
+            "y": 204.125
+          }
+        ],
+        "from": {
+          "node": "node_10",
+          "port": "variant"
+        },
+        "id": "edge_10",
+        "to": {
+          "node": "node_13",
+          "port": "value"
+        }
+      }
+    ],
+    "nodes": [
+      {
+        "cluster_constant_autosizing": "fit",
+        "cluster_constant_collapsed": false,
+        "cluster_expanded_height": 110,
+        "cluster_expanded_width": 180,
+        "group": "",
+        "hidden": false,
+        "id": "node_6",
+        "kind": "primitive",
+        "label": "Mesures",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "right",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 83
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": true,
+        "layout": {
+          "height": 40,
+          "width": 184.5,
+          "x": 164,
+          "y": 355
+        },
+        "locked": false,
+        "palette_catalog_id": "cluster.constant",
+        "type": "frog.studio.cluster.constant"
+      },
+      {
+        "constant_field_id": "field-node_7",
+        "constant_field_order": 2,
+        "constant_owner_node_id": "node_6",
+        "constant_text_bounds_automatic": true,
+        "font": {
+          "family": "",
+          "geometry_initialized": true,
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "group": "",
+        "hidden": false,
+        "id": "node_7",
+        "kind": "primitive",
+        "label": "String",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "right",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 60
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": true,
+        "layout": {
+          "height": 31,
+          "width": 85,
+          "x": 260.5,
+          "y": 360.5
+        },
+        "locked": false,
+        "palette_catalog_id": "string.constant",
+        "string_constant": {
+          "display_style": "normal",
+          "display_style_visible": false,
+          "horizontal_scrollbar_visible": false,
+          "limit_to_single_line": false,
+          "size_to_text": false,
+          "text_alignment": "left",
+          "update_while_typing": false,
+          "vertical_scrollbar_visible": false,
+          "wrap_at_word_breaks": true
+        },
+        "text": "bonjour",
+        "type": "frog.studio.string.constant",
+        "value_type": "string"
+      },
+      {
+        "constant_field_id": "field-node_8",
+        "constant_field_order": 1,
+        "constant_owner_node_id": "node_6",
+        "constant_text_bounds_automatic": true,
+        "font": {
+          "family": "",
+          "geometry_initialized": true,
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "group": "",
+        "hidden": false,
+        "id": "node_8",
+        "kind": "primitive",
+        "label": "Numeric",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "right",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 83
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": true,
+        "layout": {
+          "height": 31,
+          "width": 34,
+          "x": 260,
+          "y": 360.5
+        },
+        "locked": false,
+        "palette_catalog_id": "numeric.numeric_constant",
+        "text": "10",
+        "type": "frog.studio.numeric.numeric_constant",
+        "value_type": "f64"
+      },
+      {
+        "constant_field_id": "field-node_9",
+        "constant_field_order": 0,
+        "constant_owner_node_id": "node_6",
+        "font": {
+          "family": "",
+          "geometry_initialized": true,
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "group": "",
+        "hidden": false,
+        "id": "node_9",
+        "kind": "primitive",
+        "label": "Bool",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "right",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 48
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": true,
+        "layout": {
+          "height": 28,
+          "width": 40,
+          "x": 260,
+          "y": 360
+        },
+        "locked": false,
+        "palette_catalog_id": "boolean.true_constant",
+        "text": "true",
+        "type": "frog.studio.boolean.true_constant",
+        "value_type": "bool"
+      },
+      {
+        "group": "",
+        "hidden": false,
+        "id": "node_10",
+        "kind": "primitive",
+        "label": "To Variant",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "center",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 95
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": false,
+        "layout": {
+          "height": 48,
+          "width": 48,
+          "x": 370,
+          "y": 180
+        },
+        "locked": false,
+        "palette_catalog_id": "variant.to_variant",
+        "type": "frog.studio.variant.to_variant"
+      },
+      {
+        "group": "",
+        "hidden": false,
+        "id": "node_11",
+        "kind": "primitive",
+        "label": "Variant To Data",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "center",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 142
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": false,
+        "layout": {
+          "height": 48,
+          "width": 48,
+          "x": 550,
+          "y": 320
+        },
+        "locked": false,
+        "palette_catalog_id": "variant.to_data",
+        "type": "frog.studio.variant.to_data"
+      },
+      {
+        "group": "",
+        "hidden": false,
+        "id": "node_12",
+        "kind": "widget_value",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "left",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 47
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": true,
+        "layout": {
+          "height": 29.75,
+          "width": 66.3,
+          "x": 626,
+          "y": 311.125
+        },
+        "locked": false,
+        "type": "cluster<\"field-node_9\":bool,\"field-node_8\":f64,\"field-node_7\":string>",
+        "widget": "widget-3"
+      },
+      {
+        "group": "",
+        "hidden": false,
+        "id": "node_13",
+        "kind": "widget_value",
+        "label_auto_size": true,
+        "label_font": {
+          "family": "",
+          "point_size": 15,
+          "style": "plain",
+          "use_default_size": true
+        },
+        "label_horizontal_anchor": "left",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "height": 32,
+          "width": 68
+        },
+        "label_vertical_arrangement": "none",
+        "label_visible": true,
+        "layout": {
+          "height": 29.75,
+          "width": 66.3,
+          "x": 446,
+          "y": 189.125
+        },
+        "locked": false,
+        "type": "variant",
+        "widget": "widget-4"
+      }
+    ],
+    "wire_fragments": [],
+    "zoom_percent": 100
+  },
+  "draft_revision": 13,
+  "execution_policy": {
+    "automatic_error_handling": true,
+    "clear_indicators_when_called": false,
+    "debugging_allowed": true,
+    "execution_system": "caller",
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "suspend_when_called": false,
+    "version": 2
+  },
+  "format": "frog.document.draft",
+  "frontPanel": {
+    "canvas": {
+      "coordinate_space": "panel_pixels",
+      "height": 460,
+      "width": 914
+    },
+    "grid": {
+      "pitch": 12
+    },
+    "widgets": [
+      {
+        "bounds": {
+          "height": 270,
+          "width": 172,
+          "x": 720,
+          "y": 60
+        },
+        "classId": "frog.widgets.cluster_indicator",
+        "id": "widget-3",
+        "label": "data",
+        "props": {
+          "cluster.auto_sizing": "vertical",
+          "cluster.elements": [
+            {
+              "field_id": "field-node_9",
+              "logical_order": 0,
+              "technical_name": "field-node_9",
+              "widget": {
+                "bounds": {
+                  "height": 60,
+                  "width": 60,
+                  "x": 8,
+                  "y": 41
+                },
+                "classId": "frog.widgets.boolean_indicator",
+                "id": "widget-3.field0",
+                "label": "Bool",
+                "props": {
+                  "label.visible": true,
+                  "layout.aura_band_px": 4,
+                  "state_text.false_text": "Off",
+                  "state_text.true_text": "On",
+                  "state_text.visible": true
+                },
+                "role": "indicator",
+                "runtime": {
+                  "asset": "asset:boolean_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg",
+                  "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+                  "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+                  "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog"
+                },
+                "state": {
+                  "value": false
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "resolvedPointSize": 15,
+                  "stateTextFontFamily": "",
+                  "stateTextStyle": "plain"
+                },
+                "valueType": "bool"
+              },
+              "stack_order": 0,
+              "visual_group": 2
+            },
+            {
+              "field_id": "field-node_8",
+              "logical_order": 1,
+              "technical_name": "field-node_8",
+              "widget": {
+                "bounds": {
+                  "height": 43,
+                  "width": 125,
+                  "x": 8,
+                  "y": 133
+                },
+                "classId": "frog.widgets.numeric_indicator",
+                "geometry": {
+                  "labelOffset": {
+                    "x": 0,
+                    "y": 0
+                  }
+                },
+                "id": "widget-3.field1",
+                "label": "Numeric",
+                "props": {
+                  "data_entry.use_type_defaults": true,
+                  "data_type.named_numeric_size": "Float64",
+                  "data_type.representation": "f64",
+                  "label.visible": true,
+                  "layout.aura_band_px": 4,
+                  "representation.kind": "float64"
+                },
+                "role": "indicator",
+                "runtime": {
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog"
+                },
+                "state": {
+                  "value": 0
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "resolvedPointSize": 15
+                },
+                "valueType": "f64"
+              },
+              "stack_order": 1,
+              "visual_group": 2
+            },
+            {
+              "field_id": "field-node_7",
+              "logical_order": 2,
+              "technical_name": "field-node_7",
+              "widget": {
+                "bounds": {
+                  "height": 49,
+                  "width": 156,
+                  "x": 8,
+                  "y": 213
+                },
+                "classId": "frog.widgets.string_indicator",
+                "geometry": {
+                  "labelOffset": {
+                    "x": 0,
+                    "y": 0
+                  }
+                },
+                "id": "widget-3.field2",
+                "label": "String",
+                "props": {
+                  "display.horizontal_scrollbar_visible": false,
+                  "display.string.style": "normal",
+                  "display.string.style_selector_visible": false,
+                  "display.vertical_scrollbar_visible": false,
+                  "interaction.text.single_line": false,
+                  "interaction.text.update_while_typing": false,
+                  "interaction.text.wrap_at_word_breaks": true,
+                  "label.visible": true,
+                  "layout.aura_band_px": 4,
+                  "layout.size_to_text": false,
+                  "text.horizontal_alignment": "left",
+                  "text.value": ""
+                },
+                "role": "indicator",
+                "runtime": {
+                  "asset": "asset:string_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg",
+                  "realization": "Libraries/Realizations/Default/string.default.wfrog",
+                  "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+                  "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog"
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "resolvedPointSize": 15
+                },
+                "valueType": "string"
+              },
+              "stack_order": 2,
+              "visual_group": 2
+            }
+          ],
+          "cluster.next_field_serial": "3",
+          "cluster.padding": 8,
+          "data.default": "{\n  \"id\": \"widget-3\",\n  \"classId\": \"frog.widgets.cluster_indicator\",\n  \"role\": \"indicator\",\n  \"valueType\": \"cluster:bool|f64|string\",\n  \"label\": \"data\",\n  \"bounds\": {\n    \"x\": 720,\n    \"y\": 60,\n    \"width\": 172,\n    \"height\": 270\n  },\n  \"props\": {\n    \"layout.aura_band_px\": 4,\n    \"cluster.padding\": 8,\n    \"cluster.next_field_serial\": \"3\",\n    \"cluster.auto_sizing\": \"vertical\",\n    \"style.frame.fill_color\": \"#252A31\",\n    \"style.frame.border_color\": \"#8793A1\",\n    \"cluster.elements\": [\n      {\n        \"field_id\": \"field-node_9\",\n        \"technical_name\": \"field-node_9\",\n        \"logical_order\": 0,\n        \"widget\":         {\n          \"id\": \"widget-3.field0\",\n          \"classId\": \"frog.widgets.boolean_indicator\",\n          \"role\": \"indicator\",\n          \"valueType\": \"bool\",\n          \"label\": \"Bool\",\n          \"bounds\": {\n            \"x\": 8,\n            \"y\": 41,\n            \"width\": 60,\n            \"height\": 60\n          },\n          \"props\": {\n            \"layout.aura_band_px\": 4,\n            \"label.visible\": true,\n            \"state_text.false_text\": \"Off\",\n            \"state_text.true_text\": \"On\",\n            \"state_text.visible\": true\n          },\n          \"runtime\": {\n            \"sourceExample\": \"Examples/42_boolean_placement_ide_view/main.frog\",\n            \"wfrog\": \"Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog\",\n            \"realization\": \"Libraries/Realizations/Default/boolean.default.wfrog\",\n            \"asset\": \"asset:boolean_rectangular_svg\",\n            \"defaultSvg\": \"Libraries/Realizations/Default/assets/boolean/templates/boolean_rectangular.svg\"\n          },\n          \"state\": {\n            \"value\": false\n          },\n          \"typography\": {\n            \"inheritanceVersion\": 1,\n            \"resolvedPointSize\": 15,\n            \"stateTextFontFamily\": \"\",\n            \"stateTextStyle\": \"plain\"\n          }\n        }\n      },\n      {\n        \"field_id\": \"field-node_8\",\n        \"technical_name\": \"field-node_8\",\n        \"logical_order\": 1,\n        \"widget\":         {\n          \"id\": \"widget-3.field1\",\n          \"classId\": \"frog.widgets.numeric_indicator\",\n          \"role\": \"indicator\",\n          \"valueType\": \"f64\",\n          \"label\": \"Numeric\",\n          \"bounds\": {\n            \"x\": 8,\n            \"y\": 133,\n            \"width\": 125,\n            \"height\": 43\n          },\n          \"props\": {\n            \"layout.aura_band_px\": 4,\n            \"label.visible\": true,\n            \"data_type.representation\": \"f64\",\n            \"data_type.named_numeric_size\": \"Float64\",\n            \"representation.kind\": \"float64\",\n            \"data_entry.use_type_defaults\": true\n          },\n          \"runtime\": {\n            \"sourceExample\": \"Examples/41_numeric_placement_ide_view/main.frog\",\n            \"wfrog\": \"Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog\",\n            \"realization\": \"Libraries/Realizations/Default/numeric.default.wfrog\",\n            \"asset\": \"asset:numeric_rectangular_svg\",\n            \"defaultSvg\": \"Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg\"\n          },\n          \"state\": {\n            \"value\": 0\n          },\n          \"geometry\": {\n            \"labelOffset\": {\n              \"x\": 0,\n              \"y\": 0\n            }\n          },\n          \"typography\": {\n            \"inheritanceVersion\": 1,\n            \"resolvedPointSize\": 15\n          }\n        }\n      },\n      {\n        \"field_id\": \"field-node_7\",\n        \"technical_name\": \"field-node_7\",\n        \"logical_order\": 2,\n        \"widget\":         {\n          \"id\": \"widget-3.field2\",\n          \"classId\": \"frog.widgets.string_indicator\",\n          \"role\": \"indicator\",\n          \"valueType\": \"string\",\n          \"label\": \"String\",\n          \"bounds\": {\n            \"x\": 8,\n            \"y\": 213,\n            \"width\": 156,\n            \"height\": 49\n          },\n          \"props\": {\n            \"layout.aura_band_px\": 4,\n            \"label.visible\": true,\n            \"text.value\": \"\",\n            \"display.string.style\": \"normal\",\n            \"text.horizontal_alignment\": \"left\",\n            \"display.string.style_selector_visible\": false,\n            \"interaction.text.single_line\": false,\n            \"interaction.text.wrap_at_word_breaks\": true,\n            \"interaction.text.update_while_typing\": false,\n            \"display.vertical_scrollbar_visible\": false,\n            \"display.horizontal_scrollbar_visible\": false,\n            \"layout.size_to_text\": false\n          },\n          \"runtime\": {\n            \"sourceExample\": \"Examples/07_string_value_roundtrip/main.frog\",\n            \"wfrog\": \"Examples/07_string_value_roundtrip/ui/string_panel.wfrog\",\n            \"realization\": \"Libraries/Realizations/Default/string.default.wfrog\",\n            \"asset\": \"asset:string_rectangular_svg\",\n            \"defaultSvg\": \"Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg\"\n          },\n          \"geometry\": {\n            \"labelOffset\": {\n              \"x\": 0,\n              \"y\": 0\n            }\n          },\n          \"typography\": {\n            \"inheritanceVersion\": 1,\n            \"resolvedPointSize\": 15\n          }\n        }\n      }\n    ],\n    \"label.visible\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"Examples/44_cluster_widget_roundtrip/main.frog\",\n    \"wfrog\": \"Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog\",\n    \"realization\": \"Libraries/Realizations/Default/cluster.default.wfrog\",\n    \"asset\": \"asset:cluster_shell_svg\",\n    \"defaultSvg\": \"Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg\"\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"resolvedPointSize\": 15\n  }\n}\n",
+          "label.visible": true,
+          "layout.aura_band_px": 4,
+          "style.frame.border_color": "#8793A1",
+          "style.frame.fill_color": "#252A31"
+        },
+        "role": "indicator",
+        "runtime": {
+          "asset": "asset:cluster_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg",
+          "realization": "Libraries/Realizations/Default/cluster.default.wfrog",
+          "sourceExample": "Examples/44_cluster_widget_roundtrip/main.frog",
+          "wfrog": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog"
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        },
+        "valueType": "cluster:bool|f64|string"
+      },
+      {
+        "bounds": {
+          "height": 381,
+          "width": 522,
+          "x": 84,
+          "y": 12
+        },
+        "classId": "frog.widgets.variant_control",
+        "id": "widget-4",
+        "label": "variant",
+        "props": {
+          "data.default": "{\n  \"id\": \"widget-4\",\n  \"classId\": \"frog.widgets.variant_control\",\n  \"role\": \"indicator\",\n  \"valueType\": \"variant\",\n  \"label\": \"variant\",\n  \"bounds\": {\n    \"x\": 84,\n    \"y\": 12,\n    \"width\": 522,\n    \"height\": 381\n  },\n  \"props\": {\n    \"variant.payload\": \"\",\n    \"layout.aura_band_px\": 4,\n    \"label.visible\": true\n  },\n  \"runtime\": {\n    \"sourceExample\": \"\",\n    \"wfrog\": \"\",\n    \"realization\": \"\",\n    \"asset\": \"\"\n  },\n  \"typography\": {\n    \"inheritanceVersion\": 1,\n    \"resolvedPointSize\": 15\n  }\n}\n",
+          "label.visible": true,
+          "layout.aura_band_px": 4,
+          "variant.payload": ""
+        },
+        "role": "indicator",
+        "runtime": {
+          "asset": "",
+          "realization": "",
+          "sourceExample": "",
+          "wfrog": ""
+        },
+        "typography": {
+          "inheritanceVersion": 1,
+          "resolvedPointSize": 15
+        },
+        "valueType": "variant"
+      }
+    ]
+  },
+  "host": {
+    "front_panel_window": {
+      "allow_close": true,
+      "allow_minimize": true,
+      "allow_resize": true,
+      "horizontal_scrollbar_visible": true,
+      "initial_position": "centered",
+      "menu_bar_visible": true,
+      "minimum_height": 0,
+      "minimum_width": 0,
+      "scroll_to_origin": false,
+      "style": "standard",
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true
+    },
+    "launch": {
+      "trigger": "manual"
+    },
+    "version": 1
+  },
+  "ide": {
+    "front_panel": {},
+    "windows": {
+      "coordinate_space": "screen_pixels",
+      "diagram": {
+        "bounds": {
+          "height": 614,
+          "width": 914,
+          "x": 180,
+          "y": 140
+        },
+        "maximized": false
+      },
+      "frog_source": {
+        "bounds": {
+          "height": 574,
+          "width": 774,
+          "x": 280,
+          "y": 200
+        },
+        "maximized": false
+      },
+      "front_panel": {
+        "bounds": {
+          "height": 614,
+          "width": 914,
+          "x": 80,
+          "y": 80
+        },
+        "maximized": false
+      }
+    }
+  },
+  "interface": {
+    "inputs": [],
+    "outputs": []
+  },
+  "language": "FROG",
+  "metadata": {
+    "author": "",
+    "automatic_versioning": false,
+    "description": "",
+    "documentation_uri": "",
+    "name": "numeric",
+    "name_source": "document",
+    "program_version": "0.0.0.0",
+    "tags": []
+  },
+  "title": "Cluster presentation and typed values"
+}

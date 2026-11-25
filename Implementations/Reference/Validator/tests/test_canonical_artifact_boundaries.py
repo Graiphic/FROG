@@ -73,6 +73,27 @@ def test_studio_writer_and_recovery_schema():
     linked["draft_revision"] = 8
     assert validator.is_valid(linked)
     assert not validator.is_valid(dict(linked, draft_revision=9))
+    extended = copy.deepcopy(linked)
+    extended_link = extended["diagram"]["nodes"][0]["type_definition"]
+    extended_link["tab_members"] = {"page.member": "caller.control"}
+    assert not validator.is_valid(extended)
+    extended["draft_revision"] = 12
+    assert validator.is_valid(extended)
+    extended_link["baseline_widget"] = {"id": "root"}
+    assert validator.is_valid(extended)
+    panel_link = copy.deepcopy(extended)
+    panel_link["diagram"]["nodes"].clear()
+    panel_link["frontPanel"]["widgets"].append({
+        "id": "picture", "classId": "frog.widgets.picture_indicator",
+        "bounds": {"x": 0, "y": 0, "width": 80, "height": 70},
+        "props": {"type_definition": copy.deepcopy(extended_link)},
+    })
+    assert validator.is_valid(panel_link)
+    assert not validator.is_valid(dict(panel_link, draft_revision=8))
+    del panel_link["frontPanel"]["widgets"][0]["props"]["type_definition"]["resolved_revision"]
+    assert not validator.is_valid(panel_link)
+    extended_link["tab_members"]["page.member"] = ""
+    assert not validator.is_valid(extended)
     del link["resolved_revision"]
     assert not validator.is_valid(linked)
 

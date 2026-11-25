@@ -20,10 +20,13 @@ SHA-256 digests, writer versions and qualified operations.
   qualifies persistence. The CI checks its bytes, envelope and schema; it does
   not expand or execute the Array.
 
-The manifest tracks reader admission and public schema coverage separately.
-The shared reader recognizes private class revision 10. The public structural
-schema still covers revisions 2 through 9. The version gate verifies that an
-incomplete revision 10 document cannot produce FIR without composed resolution.
+The manifest records reader admission separately from schema coverage. The
+shared reader accepts revisions 0–13. The ordinary writer schema covers
+2–9 and 12–13. Draft 11 has a dedicated Picture Ring envelope. Draft 10
+requires private class resolution. The synthetic feature fixtures in
+`format-boundaries/` exercise revision selection, structural validation and FIR derivation. The revision 12
+Tab links a page member through the explicit sibling dependency lock. Revision
+13 exercises visual stack order and grouping on fields of a typed cluster.
 
 To extend the evidence, save and reopen a redistributable fixture via the
 actual GS document path. Verify the feature that distinguishes the revision

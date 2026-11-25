@@ -3,6 +3,7 @@
 #include "FrogDraftJson.hpp"
 #include "FrogDocumentArrayStorage.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/DraftInterfaceInspection.hpp"
 #include "frog_native_engine/DraftSemanticPreparation.hpp"
 #include "frog_native_engine/NativeCallScalarContract.hpp"
@@ -28,7 +29,8 @@ struct NativeCallReadRefusal {
 };
 std::optional<NativeCallReadRefusal> nativeCallReadRefusal(const Json &draft) {
     const auto *revision=draft.member("draft_revision");
-    if(!revision || revision->type!=Json::Type::Number || (revision->string!="7" && revision->string!="11")) return {};
+    if(!revision || revision->type!=Json::Type::Number || (revision->string!="7" && revision->string!="11" &&
+        revision->string!=std::to_string(kFrogClusterPresentationDraftRevision))) return {};
     const auto *diagram=draft.member("diagram");
     std::string diagramPath="/diagram";
     if(!diagram) {
@@ -136,6 +138,7 @@ std::string authoredPath(std::string_view path,const Json &projected,const Json 
 }
 }
 void attributeDraftSourceDiagnostic(DocumentDiagnostic &diagnostic,FrogDraftDataView document,const Json &root) {
+    const bool hasDeclaredOwner = !diagnostic.ownerStructureId.empty();
     // A diagnostic subject is not automatically a JSON Pointer. Preserve the
     // established node:port convention using actual IDs (which may contain ':').
     std::string subject=diagnostic.subjectId;
@@ -206,11 +209,41 @@ void attributeDraftSourceDiagnostic(DocumentDiagnostic &diagnostic,FrogDraftData
                 if(container=="nodes") {owner=id->string;diagnostic.nodeId=owner;}
                 else if(container=="edges"||container=="wire_fragments") {diagnostic.edgeId=id->string;diagnostic.nodeId.clear();}
                 else if(container=="widgets")diagnostic.widgetId=id->string;
-                else if(container=="regions") {diagnostic.ownerStructureId=owner;diagnostic.regionId=id->string;}
+                // The authored path can name the containing structure while
+                // the producer has identified one of that structure's own regions.
+                else if(container=="regions" && !hasDeclaredOwner) {
+                    diagnostic.ownerStructureId=owner;
+                    diagnostic.regionId=id->string;
+                }
             }
         } else return;
         if(!value)return;
         if(slash==path.npos)break;first=slash+1;
+    }
+    // The public diagnostic carries the region identity and JSON Pointer.
+    // A boundary error has no producer node in the failing region. Point to
+    // the exact authored region so another consumer can locate its owner.
+    if (hasDeclaredOwner && diagnostic.nodeId == diagnostic.ownerStructureId &&
+        !diagnostic.regionId.empty() && value->type == Json::Type::Object) {
+        const auto *id = value->member("id");
+        const auto *regions = value->member("regions");
+        if (id && id->type == Json::Type::String && id->string == diagnostic.ownerStructureId &&
+            regions && regions->type == Json::Type::Array) {
+            std::optional<std::size_t> matchingIndex;
+            for (std::size_t i = 0; i < regions->array.size(); ++i) {
+                const auto *regionId = regions->array[i].member("id");
+                if (!regionId || regionId->type != Json::Type::String || regionId->string != diagnostic.regionId)
+                    continue;
+                if (matchingIndex) {
+                    matchingIndex.reset();
+                    break;
+                }
+                matchingIndex = i;
+            }
+            if (matchingIndex)
+                diagnostic.sourcePath = canonical_json::pointer(
+                    canonical_json::pointer(diagnostic.sourcePath, "regions"), std::to_string(*matchingIndex));
+        }
     }
     if(diagnostic.subjectId.empty())diagnostic.subjectId=!diagnostic.edgeId.empty()?diagnostic.edgeId:
         !diagnostic.nodeId.empty()?diagnostic.nodeId:diagnostic.widgetId;
@@ -287,7 +320,24 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
     if(document->publicSourceAuthority||document->privateSourceAwaitingDiagramMigration) {
         error("private_source.diagram_migration_required","The retained format has no authored Diagram; an explicit document migration is required.","/diagram",DocumentDiagnosticDomain::Compatibility);return out;
     }
-    poll();auto definitions=prepareDraftTypeDefinitionSource(*normalized,uri,resolver,false,false);
+    // Retain the original source identities, including nodes in inactive regions.
+    std::optional<IdentityPathIndex> untranslatedPaths;
+    for (const auto &node : document->diagramNodes) if (isUntranslatedLabViewNode(node)) {
+        poll();
+        if (!untranslatedPaths) untranslatedPaths.emplace(*raw);
+        error(kUntranslatedLabViewNodeDiagnostic, untranslatedLabViewNodeMessage(node),
+            std::string(untranslatedPaths->find(node.id)));
+        auto &diagnostic = out.diagnostics.back();
+        diagnostic.subjectId = diagnostic.nodeId = node.id;
+        diagnostic.ownerStructureId = node.diagramOwnerStructureId;
+        diagnostic.regionId = node.diagramOwnerRegionId;
+    }
+    if (!out.diagnostics.empty()) return out;
+    poll();
+    DraftResolvedTypeDefinitionSource definitions;
+    if (draftHasTypeDefinitionLinks(*document)) {
+        definitions=prepareDraftTypeDefinitionSource(*normalized,uri,resolver,false,false);
+    }
     if(!definitions.accepted()) {
         for(const auto &issue:definitions.resolution.diagnostics) {
             error(issue.code,issue.message,issue.fieldPath.empty()?identityPath(*raw,issue.instanceId):issue.fieldPath,DocumentDiagnosticDomain::Dependency,DocumentDiagnosticStage::Resolve);
@@ -386,10 +436,11 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
     // member must be selected from source types before validating these wires.
     const bool hasClasses=draftHasClasses(*document);
     if(!hasPolymorphicCalls&&!hasClasses&&!inspectConnections())return out;
-    std::string projected=definitions.linked||passages.changed||conditional?serializeFrogDraftData(*document):*normalized;
+    const bool rewroteRoot=definitions.linked||passages.changed||conditional;
+    std::string projected=rewroteRoot?serializeFrogDraftData(*document):*normalized;
     poll();
     if(hasClasses||std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),[](const auto &node){return node.kind=="frog_call";})) {
-        auto calls=projectDraftSubFrogExecution({std::make_shared<const FrogDraftData>(*document),projected,std::string(uri),resolver,context,true});
+        auto calls=projectPreparedSubFrogExecution({std::make_shared<const FrogDraftData>(*document),projected,std::string(uri),resolver,context,true},rewroteRoot?nullptr:&*raw);
         for(const auto &issue:calls.diagnostics){error(issue.code,issue.message,issue.sourcePath,issue.domain);out.diagnostics.back().sourceUri=issue.sourceUri;out.diagnostics.back().subjectId=issue.callsiteId;out.diagnostics.back().callsiteId=issue.callsiteId;if(!issue.callsiteId.empty()){out.diagnostics.back().relatedSourceUri=uri;out.diagnostics.back().relatedSourcePath=identityPath(*raw,issue.callsiteId);}}
         if(!out.diagnostics.empty())return out;
         out.subprogramDependencyFingerprint=std::move(calls.dependencyFingerprint);out.dependencies=std::move(calls.frozenSources);

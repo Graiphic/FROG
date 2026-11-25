@@ -1,0 +1,533 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "error in en face avant",
+  "metadata": {
+    "name": "error in en face avant",
+    "name_source": "document",
+    "description": "Modifier la commande et suivre son terminal sur le diagramme.\n\nModifier la commande et suivre son terminal sur le diagramme.\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nvalue (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"code\":0,\"source\":\"\",\"status\":false}\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "error", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<svg id=\"Calque_2\" data-name=\"Calque 2\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 196.94 81.83\">\r\n  <defs>\r\n    <style>\r\n      .cls-1 {\r\n        fill: #dec01b;\r\n        stroke: #aab4c0;\r\n        stroke-linecap: round;\r\n        stroke-linejoin: round;\r\n        stroke-width: 1.78px;\r\n      }\r\n\r\n      .terminal-outline {\r\n        fill: none;\r\n        stroke: #606060;\r\n        stroke-miterlimit: 10;\r\n        stroke-width: 7px;\r\n      }\r\n\r\n      .cls-3 {\r\n        fill: #4B5563;\r\n      }\r\n    </style>\r\n  </defs>\r\n  <g id=\"Calque_1-2\" data-name=\"Calque 1\">\r\n    <g>\r\n      <g data-role=\"frog-string-output-terminal\" shape-rendering=\"geometricPrecision\">\r\n        <path class=\"cls-1\" d=\"M151.49,11.39H11.93v59.05h139.56c16.31,0,29.52-13.22,29.52-29.52s-13.22-29.53-29.52-29.53h0Z\"/>\r\n        <path class=\"terminal-outline\" d=\"M190.34,30.62l-12.85-19.09c-3.38-5.02-9.03-8.03-15.08-8.03H5.66c-1.19,0-2.16,1.25-2.16,2.77v69.29c0,1.52.97,2.77,2.16,2.77h156.53c6.05,0,11.7-3.01,15.08-8.02l13.06-19.37c4.14-6.14,4.14-14.18,0-20.32Z\"/>\r\n      </g>\r\n      <g>\r\n        <g>\r\n          <rect class=\"cls-3\" x=\"93.4\" y=\"19.99\" width=\"8.72\" height=\"31.18\" transform=\"translate(195.51 71.16) rotate(-180)\"/>\r\n          <rect class=\"cls-3\" x=\"93.4\" y=\"57.41\" width=\"8.72\" height=\"6.51\" transform=\"translate(195.51 121.34) rotate(-180)\"/>\r\n        </g>\r\n        <polygon class=\"cls-3\" points=\"85.48 32.65 68.8 19.03 63.31 26.79 85.48 32.65\"/>\r\n        <polygon class=\"cls-3\" points=\"81.92 37.18 66.98 45.99 65.68 38.82 81.92 37.18\"/>\r\n      </g>\r\n    </g>\r\n  </g>\r\n</svg>\r\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "sample",
+        "classId": "frog.widgets.cluster_control",
+        "role": "control",
+        "valueType": "cluster:bool|i32|string",
+        "label": "error in",
+        "bounds": {
+          "x": 32,
+          "y": 40,
+          "width": 174,
+          "height": 173
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "cluster.padding": 12,
+          "cluster.next_field_serial": "3",
+          "cluster.auto_sizing": "none",
+          "style.frame.border_color": "#8793A1",
+          "cluster.elements": [
+            {
+              "field_id": "status",
+              "technical_name": "status",
+              "logical_order": 0,
+              "widget":               {
+                "id": "sample.field.0",
+                "classId": "frog.widgets.boolean_control",
+                "role": "control",
+                "valueType": "bool",
+                "label": "status",
+                "bounds": {
+                  "x": 12,
+                  "y": 43,
+                  "width": 36,
+                  "height": 36
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "label.visible": true,
+                  "state_text.false_text": "",
+                  "state_text.true_text": "!",
+                  "state_text.visible": true,
+                  "state_text.color": "#CC3E3E",
+                  "state_colors.false_fill": "#20B45A",
+                  "state_colors.true_fill": "#FFFFFF",
+                  "state_colors.false_stroke": "#168A43",
+                  "state_colors.true_stroke": "#CC3E3E",
+                  "state_text.lock_in_center": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+                  "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+                  "asset": "asset:boolean_circular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg"
+                },
+                "state": {
+                  "value": false
+                },
+                "geometry": {
+                  "labelOffset": {
+                    "x": 0,
+                    "y": -1
+                  }
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "stateTextFontFamily": "",
+                  "stateTextStyle": "bold"
+                }
+              }
+            },
+            {
+              "field_id": "code",
+              "technical_name": "code",
+              "logical_order": 1,
+              "widget":               {
+                "id": "sample.field.1",
+                "classId": "frog.widgets.numeric_control",
+                "role": "control",
+                "valueType": "i32",
+                "label": "code",
+                "bounds": {
+                  "x": 25,
+                  "y": 38,
+                  "width": 144,
+                  "height": 42
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "label.visible": true,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true,
+                  "display.increment_buttons_visible": true,
+                  "display.increment_buttons_side": "right"
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "geometry": {
+                  "numericValue": {
+                    "offsetX": 46,
+                    "width": 63
+                  },
+                  "labelOffset": {
+                    "x": 50,
+                    "y": 4
+                  }
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            },
+            {
+              "field_id": "source",
+              "technical_name": "source",
+              "logical_order": 2,
+              "widget":               {
+                "id": "sample.field.2",
+                "classId": "frog.widgets.string_control",
+                "role": "control",
+                "valueType": "string",
+                "label": "source",
+                "bounds": {
+                  "x": 15,
+                  "y": 112,
+                  "width": 150,
+                  "height": 48
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "label.visible": true,
+                  "text.value": "",
+                  "display.string.style": "normal",
+                  "text.horizontal_alignment": "left",
+                  "display.string.style_selector_visible": false,
+                  "interaction.text.single_line": false,
+                  "interaction.text.wrap_at_word_breaks": true,
+                  "interaction.text.update_while_typing": true,
+                  "display.vertical_scrollbar_visible": false,
+                  "display.horizontal_scrollbar_visible": false,
+                  "layout.size_to_text": false
+                },
+                "runtime": {
+                  "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+                  "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/string.default.wfrog",
+                  "asset": "asset:string_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+                },
+                "geometry": {
+                  "labelOffset": {
+                    "x": 0,
+                    "y": -1
+                  }
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            }
+          ]
+        },
+        "runtime": {
+          "sourceExample": "Examples/44_cluster_widget_roundtrip/main.frog",
+          "wfrog": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/cluster.default.wfrog",
+          "asset": "asset:cluster_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      },
+      {
+        "id": "value",
+        "classId": "frog.widgets.cluster_indicator",
+        "role": "indicator",
+        "valueType": "cluster:bool|i32|string",
+        "label": "Valeur",
+        "bounds": {
+          "x": 256,
+          "y": 40,
+          "width": 174,
+          "height": 173
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "cluster.padding": 12,
+          "cluster.next_field_serial": "3",
+          "cluster.auto_sizing": "none",
+          "style.frame.border_color": "#8793A1",
+          "cluster.elements": [
+            {
+              "field_id": "status",
+              "technical_name": "status",
+              "logical_order": 0,
+              "widget":               {
+                "id": "value.field.0",
+                "classId": "frog.widgets.boolean_indicator",
+                "role": "indicator",
+                "valueType": "bool",
+                "label": "status",
+                "bounds": {
+                  "x": 12,
+                  "y": 43,
+                  "width": 36,
+                  "height": 36
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "label.visible": true,
+                  "state_text.false_text": "",
+                  "state_text.true_text": "!",
+                  "state_text.visible": true,
+                  "state_text.color": "#CC3E3E",
+                  "state_colors.false_fill": "#20B45A",
+                  "state_colors.true_fill": "#FFFFFF",
+                  "state_colors.false_stroke": "#168A43",
+                  "state_colors.true_stroke": "#CC3E3E",
+                  "state_text.lock_in_center": true
+                },
+                "runtime": {
+                  "sourceExample": "Examples/42_boolean_placement_ide_view/main.frog",
+                  "wfrog": "Examples/42_boolean_placement_ide_view/ui/boolean_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/boolean.default.wfrog",
+                  "asset": "asset:boolean_circular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/boolean/templates/boolean_circular.svg"
+                },
+                "state": {
+                  "value": false
+                },
+                "geometry": {
+                  "labelOffset": {
+                    "x": 0,
+                    "y": -1
+                  }
+                },
+                "typography": {
+                  "inheritanceVersion": 1,
+                  "stateTextFontFamily": "",
+                  "stateTextStyle": "bold"
+                }
+              }
+            },
+            {
+              "field_id": "code",
+              "technical_name": "code",
+              "logical_order": 1,
+              "widget":               {
+                "id": "value.field.1",
+                "classId": "frog.widgets.numeric_indicator",
+                "role": "indicator",
+                "valueType": "i32",
+                "label": "code",
+                "bounds": {
+                  "x": 25,
+                  "y": 38,
+                  "width": 144,
+                  "height": 42
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "label.visible": true,
+                  "data_type.representation": "i32",
+                  "data_type.named_numeric_size": "Int32",
+                  "representation.kind": "int32",
+                  "data_entry.use_type_defaults": true,
+                  "display.increment_buttons_visible": false,
+                  "display.increment_buttons_side": "right"
+                },
+                "runtime": {
+                  "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+                  "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+                  "asset": "asset:numeric_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+                },
+                "state": {
+                  "value": 0
+                },
+                "geometry": {
+                  "numericValue": {
+                    "offsetX": 46,
+                    "width": 63
+                  },
+                  "labelOffset": {
+                    "x": 50,
+                    "y": 4
+                  }
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            },
+            {
+              "field_id": "source",
+              "technical_name": "source",
+              "logical_order": 2,
+              "widget":               {
+                "id": "value.field.2",
+                "classId": "frog.widgets.string_indicator",
+                "role": "indicator",
+                "valueType": "string",
+                "label": "source",
+                "bounds": {
+                  "x": 15,
+                  "y": 112,
+                  "width": 150,
+                  "height": 48
+                },
+                "props": {
+                  "layout.aura_band_px": 4,
+                  "label.visible": true,
+                  "text.value": "",
+                  "display.string.style": "normal",
+                  "text.horizontal_alignment": "left",
+                  "display.string.style_selector_visible": false,
+                  "interaction.text.single_line": false,
+                  "interaction.text.wrap_at_word_breaks": true,
+                  "interaction.text.update_while_typing": true,
+                  "display.vertical_scrollbar_visible": false,
+                  "display.horizontal_scrollbar_visible": false,
+                  "layout.size_to_text": false
+                },
+                "runtime": {
+                  "sourceExample": "Examples/07_string_value_roundtrip/main.frog",
+                  "wfrog": "Examples/07_string_value_roundtrip/ui/string_panel.wfrog",
+                  "realization": "Libraries/Realizations/Default/string.default.wfrog",
+                  "asset": "asset:string_rectangular_svg",
+                  "defaultSvg": "Libraries/Realizations/Default/assets/string/templates/string_rectangular.svg"
+                },
+                "geometry": {
+                  "labelOffset": {
+                    "x": 0,
+                    "y": -1
+                  }
+                },
+                "typography": {
+                  "inheritanceVersion": 1
+                }
+              }
+            }
+          ]
+        },
+        "runtime": {
+          "sourceExample": "Examples/44_cluster_widget_roundtrip/main.frog",
+          "wfrog": "Examples/44_cluster_widget_roundtrip/ui/cluster_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/cluster.default.wfrog",
+          "asset": "asset:cluster_shell_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/cluster/templates/cluster_shell.svg"
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 221,
+      "y": -20
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "widget_value",
+        "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+        "widget": "sample",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "value-terminal",
+        "kind": "widget_value",
+        "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+        "widget": "value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 180,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "error in en face avant\nModifier la commande et suivre son terminal sur le diagramme.\nEntrées -> opération -> indicateurs. Résultat attendu : value (cluster<\"status\":bool,\"code\":i32,\"source\":string>) = {\"code\":0,\"source\":\"\",\"status\":false}\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 241,
+          "y": 0,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

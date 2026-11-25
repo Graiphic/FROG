@@ -1,0 +1,225 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Choisir un calibre",
+  "metadata": {
+    "name": "Choisir un calibre",
+    "name_source": "document",
+    "description": "Suivre la valeur sélectionnée jusqu’à l’indicateur.\n\nSuivre la valeur sélectionnée jusqu’à l’indicateur.\n\nMode: execution. Profile: studio-draft. Capability: studio.native.composed@1.\nExpected:\nvalue (u8) = 1\n",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["typed", "deterministic", "numeric", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 48 48\" role=\"img\" aria-labelledby=\"title\">\n  <title id=\"title\">Constante Ring</title>\n  <g shape-rendering=\"geometricPrecision\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n    <rect x=\"4\" y=\"16\" width=\"40\" height=\"17\" rx=\"4\" fill=\"#F7F7F7\" stroke=\"#3188EA\" stroke-width=\"2\"/><text x=\"21\" y=\"25\" fill=\"#252B31\" font-family=\"Segoe UI, Arial, sans-serif\" font-size=\"8.5\" font-weight=\"700\" font-style=\"normal\" text-anchor=\"middle\" dominant-baseline=\"middle\" letter-spacing=\"0\">Ring</text><path d=\"m31.5 21.5 4.5 6 4.5-6Z\" fill=\"#3188EA\"/>\n  </g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "value",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "u8",
+        "label": "Valeur",
+        "bounds": {
+          "x": 32,
+          "y": 40,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "u8",
+          "data_type.named_numeric_size": "UInt8",
+          "representation.kind": "uint8",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 340,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.numeric.ring_constant",
+        "value_type": "u8",
+        "label": "Ring Constant",
+        "label_visible": true,
+        "palette_catalog_id": "numeric.ring_constant",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "ring_constant": {
+          "selected_value": 1,
+          "allow_undefined_values": false,
+          "text_overflow_visible": true,
+          "digital_display_visible": false,
+          "items": [
+            {
+              "label": "Repos",
+              "value": 0,
+              "disabled": false,
+              "id": "item_1",
+              "visible": true
+            },
+            {
+              "label": "Mesure",
+              "value": 1,
+              "disabled": false,
+              "id": "item_2",
+              "visible": true
+            }
+          ]
+        },
+        "text": "1",
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "value-terminal",
+        "kind": "widget_value",
+        "type": "u8",
+        "widget": "value",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Choisir un calibre\nSuivre la valeur sélectionnée jusqu’à l’indicateur.\nEntrées -> opération -> indicateurs. Résultat attendu : value (u8) = 1\n",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "value"
+        },
+        "to": {
+          "node": "value-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

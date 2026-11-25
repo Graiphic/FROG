@@ -1,4 +1,5 @@
 #include "frog_native_engine/ApplicationControlSchema.hpp"
+#include "frog_native_engine/ApplicationControlMemberLookup.hpp"
 #include "frog_native_engine/graph/XYGraphReferenceContract.hpp"
 #include "frog_native_engine/DiagramBindingResolver.hpp"
 #include "frog_native_engine/WidgetCatalog.hpp"
@@ -123,7 +124,9 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
             property("front_panel","Front Panel","References",TypeRef::reference("frog.front_panel"));
             property("front_panel.open_state","Front Panel.Open State","Front Panel",primitive("bool"),true,false,true);
             property("execution.state","Execution State","Execution",primitive("string"),true,false,false,"Runtime provider unavailable.");
-            method("front_panel.open","Front Panel.Open",false,{{"activate","Activate",primitive("bool"),ApplicationControlParameterDirection::In,false,"true"}});
+            method("front_panel.open","Front Panel.Open",false,{
+                {"activate","Activate",primitive("bool"),ApplicationControlParameterDirection::In,false,"true"},
+                {"state","State",primitive("u32"),ApplicationControlParameterDirection::In,false,"1"}});
             method("front_panel.close","Front Panel.Close",false);
         }
         if(classId=="frog.front_panel") {
@@ -495,6 +498,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
         for(const auto &[id,label]:std::initializer_list<std::pair<const char*,const char*>>{
             {"name","Name"},{"version","Version"},{"kind","Kind"},{"active_frog_name","Active FROG Name"}})
             property(id,label,primitive("string"));
+        for(auto &member:result)if(member.id=="kind")member.runtimeAvailable=true;
         property("executable_path","Executable Path",primitive("path"));
         property("application_directory","Application Directory",primitive("path"));
         property("command_line_arguments","Command Line Arguments",TypeRef::array(primitive("string")));
@@ -911,27 +915,28 @@ std::optional<ApplicationControlMemberDescriptor> applicationControlMember(std::
             return std::move(member);
     return {};
 }
-namespace {
-// A port/diagnostic query has a single effective schema and presentation.
-// Preserve ordered alias lookup and reuse it for repeated row occurrences.
-class PropertyMemberLookup {
-public:
-    PropertyMemberLookup(std::string_view classId,const TypeRef &valueType,const WidgetInstance *presentation)
-        : classId_(classId),valueType_(valueType),presentation_(presentation) {}
-
-    const ApplicationControlMemberDescriptor *find(std::string_view memberId) {
-        if(memberId.empty())return nullptr;
-        const auto [entry,inserted]=members_.try_emplace(memberId);
-        if(inserted)entry->second=applicationControlMember(classId_,valueType_,memberId,presentation_);
+const ApplicationControlMemberDescriptor *ApplicationControlMemberLookup::find(std::string_view memberId) {
+    if(memberId.empty())return nullptr;
+    // Preserve the single-member path and its root precedence for Value,
+    // signaling Value and Colors. Literal keys are independent of the caller.
+    for(const std::string_view root:{"value","value_signaling","colors"}) {
+        if(memberId!=root)continue;
+        const auto [entry,added]=rootMembers_.try_emplace(root);
+        if(added)entry->second=applicationControlMember(classId_,valueType_,root,presentation_);
         return entry->second?&*entry->second:nullptr;
     }
-
-private:
-    std::string_view classId_;
-    const TypeRef &valueType_;
-    const WidgetInstance *presentation_;
-    std::unordered_map<std::string_view,std::optional<ApplicationControlMemberDescriptor>> members_;
-};
+    if(!catalogue_) {
+        catalogue_.emplace(applicationControlMembers(classId_,valueType_,presentation_));
+        byId_.reserve(catalogue_->size());
+        // A migration alias has the same precedence as its descriptor's exact
+        // ID in the existing ordered search. The first descriptor wins.
+        for(const auto &member:*catalogue_) {
+            byId_.try_emplace(member.id,&member);
+            for(const auto &alias:member.migrationAliases)byId_.try_emplace(alias,&member);
+        }
+    }
+    const auto found=byId_.find(memberId);
+    return found==byId_.end()?nullptr:found->second;
 }
 std::string applicationControlClassLabel(std::string_view classId,const TypeRef &value) {
     if(classId==kOccurrenceReferenceClass)return "Occurrence";
@@ -996,7 +1001,7 @@ std::vector<ApplicationControlPort> applicationControlPorts(const ApplicationCon
     const auto error=TypeRef::cluster({"status","code","source"},{primitive("bool"),primitive("i32"),primitive("string")});
     add("error_in","Error",D::Input,error);add("error_out","Error",D::Output,error);
     if(node.kind==ApplicationControlKind::Property) {
-        PropertyMemberLookup members(ref.name,value,presentation);
+        ApplicationControlMemberLookup members(ref.name,value,presentation);
         for(std::size_t i=0;i<node.properties.size();++i) {
             const auto &row=node.properties[i];const auto *member=members.find(row.memberId);
             if(!member || member->kind!=ApplicationControlMemberKind::Property) {
@@ -1050,7 +1055,7 @@ std::vector<ApplicationControlDiagnostic> validateApplicationControlNode(const A
     std::set<std::string> ids;
     if(node.kind==ApplicationControlKind::Property) {
         if(node.properties.empty())error("application_control.unconfigured",{},"Select a property.");
-        PropertyMemberLookup members(ref.name,value,presentation);
+        ApplicationControlMemberLookup members(ref.name,value,presentation);
         for(const auto &row:node.properties) {
             if(!stableId(row.id) || !ids.insert(row.id).second)error("application_control.row_id",row.id,"Property occurrence IDs must be unique and stable.");
             const auto *member=members.find(row.memberId);

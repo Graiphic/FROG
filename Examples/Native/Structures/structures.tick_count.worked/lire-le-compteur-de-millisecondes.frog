@@ -1,0 +1,201 @@
+{
+  "format": "frog.document.draft",
+  "draft_revision": 3,
+  "storage": {"version": 1, "array_mode": "automatic"},
+  "language": "FROG",
+  "title": "Édition uniquement — Lire le compteur de millisecondes",
+  "metadata": {
+    "name": "Édition uniquement — Lire le compteur de millisecondes",
+    "name_source": "document",
+    "description": "Le compteur U32 dépend de la session. Suivre sa valeur jusqu’à l’indicateur. Montage éditable avec des données d’exercice. La sauvegarde et la réouverture sont vérifiées. Le Run de ce scénario reste non qualifié.",
+    "author": "",
+    "automatic_versioning": false,
+    "program_version": "0.0.0.0",
+    "tags": ["editor-only", "synthetic-data", "example"],
+    "documentation_uri": ""
+  },
+  "host": {
+    "version": 1,
+    "launch": {
+      "trigger": "manual"
+    },
+    "front_panel_window": {
+      "style": "standard",
+      "initial_position": "centered",
+      "minimum_width": 0,
+      "minimum_height": 0,
+      "allow_close": true,
+      "allow_resize": true,
+      "allow_minimize": true,
+      "menu_bar_visible": true,
+      "toolbar_visible": true,
+      "vertical_scrollbar_visible": true,
+      "horizontal_scrollbar_visible": true,
+      "scroll_to_origin": false
+    }
+  },
+  "execution_policy": {
+    "version": 2,
+    "debugging_allowed": true,
+    "priority": "normal",
+    "reentrancy": "non_reentrant",
+    "execution_system": "caller",
+    "automatic_error_handling": true,
+    "suspend_when_called": false,
+    "clear_indicators_when_called": false
+  },
+  "icon": {
+    "svg": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\r\n<!-- Generator: Adobe Illustrator 30.8.0, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->\r\n<svg version=\"1.1\" id=\"Calque_2_00000091016982656043250800000008968481531528782518_\"\r\n\t xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\" viewBox=\"0 0 48 48\"\n\t style=\"enable-background:new 0 0 48 48;\" xml:space=\"preserve\" data-frog-shape-standard=\"square\">\n<style type=\"text/css\">\r\n\t.st0{fill:#4B5563;stroke:#AAB4C0;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}\r\n\t.st1{fill:#E3AA63;}\r\n</style>\r\n<rect x=\"1\" y=\"1\" width=\"46\" height=\"46\" rx=\"4.5\" class=\"st0\"/>\n<g transform=\"translate(1 1) scale(1.113424) translate(-2.449 -4.934)\" data-frog-body-glyph-profile=\"square-v1\">\n<g>\r\n\t<path class=\"st1\" d=\"M32.643,20.797l0.661-0.661l0.522,0.505l1.549-1.549c0.313-0.296,0.313-0.801,0-1.096l0,0l-1.392-1.392\r\n\t\tc-0.313-0.313-0.801-0.313-1.114,0l-1.549,1.549l0.522,0.505l-0.661,0.661c-2.071-1.74-4.647-2.75-7.327-2.906v-0.609\r\n\t\tc1.305-0.331,2.262-1.497,2.262-2.889c0-1.653-1.34-2.976-3.011-2.976s-3.011,1.34-3.011,2.976c0,1.392,0.957,2.558,2.262,2.889\r\n\t\tv0.609c-2.697,0.157-5.273,1.183-7.327,2.906l-0.661-0.661l0.505-0.505l-1.549-1.549c-0.313-0.313-0.801-0.313-1.114,0\r\n\t\tl-1.392,1.392c-0.313,0.296-0.313,0.801,0,1.096l0,0l1.549,1.549l0.505-0.505l0.661,0.661c-1.845,2.158-2.959,4.96-2.959,8.023\r\n\t\tc0,6.857,5.604,12.426,12.53,12.426s12.53-5.569,12.53-12.426c0-3.063-1.114-5.847-2.959-8.023 M21.819,12.374v2.245\r\n\t\tc-0.557-0.4-0.888-1.044-0.888-1.723c0-1.183,0.957-2.123,2.141-2.123c1.183,0,2.141,0.957,2.141,2.123\r\n\t\tc0,0.714-0.348,1.323-0.888,1.723v-2.245c0-0.766-2.523-0.766-2.523,0 M23.072,39.575c-5.987,0-10.86-4.821-10.86-10.773\r\n\t\ts4.855-10.773,10.86-10.773s10.86,4.821,10.86,10.773S29.076,39.575,23.072,39.575\"/>\r\n\t<path class=\"st1\" d=\"M23.106,18.517c-5.68,0-10.285,4.605-10.285,10.285c0,5.68,4.605,10.285,10.285,10.285\r\n\t\tc5.68,0,10.285-4.605,10.285-10.285C33.392,23.122,28.787,18.517,23.106,18.517z M30.207,35.816l-6.648-5.673\r\n\t\tc-0.139,0.052-0.313,0.087-0.47,0.087c-0.783,0-1.41-0.627-1.41-1.41s0.627-1.41,1.41-1.41v-8.545c0.348,0,1.009,0.052,1.009,0.052\r\n\t\tv8.91c0.261,0.261,0.418,0.609,0.418,0.975l-0.035,0.035l6.387,6.248C30.659,35.329,30.433,35.59,30.207,35.816z\"/>\r\n</g>\n</g>\n</svg>\n"
+  },
+  "frontPanel": {
+    "grid": {
+      "pitch": 8
+    },
+    "widgets": [
+      {
+        "id": "count",
+        "classId": "frog.widgets.numeric_indicator",
+        "role": "indicator",
+        "valueType": "u32",
+        "label": "Nombre",
+        "bounds": {
+          "x": 32,
+          "y": 40,
+          "width": 96,
+          "height": 32
+        },
+        "props": {
+          "layout.aura_band_px": 4,
+          "data_type.representation": "u32",
+          "data_type.named_numeric_size": "UInt32",
+          "representation.kind": "uint32",
+          "data_entry.use_type_defaults": true
+        },
+        "runtime": {
+          "sourceExample": "Examples/41_numeric_placement_ide_view/main.frog",
+          "wfrog": "Examples/41_numeric_placement_ide_view/ui/numeric_ide_panel.wfrog",
+          "realization": "Libraries/Realizations/Default/numeric.default.wfrog",
+          "asset": "asset:numeric_rectangular_svg",
+          "defaultSvg": "Libraries/Realizations/Default/assets/numeric/templates/numeric_rectangular.svg"
+        },
+        "state": {
+          "value": 0
+        },
+        "typography": {
+          "inheritanceVersion": 1
+        }
+      }
+    ]
+  },
+  "diagram": {
+    "zoom_percent": 100,
+    "viewport_origin": {
+      "x": 340,
+      "y": -40
+    },
+    "nodes": [
+      {
+        "id": "operation",
+        "kind": "primitive",
+        "type": "frog.studio.structures.tick_count",
+        "label": "Tick Count",
+        "label_visible": true,
+        "palette_catalog_id": "structures.tick_count",
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": 180,
+          "width": 48,
+          "height": 48
+        }
+      },
+      {
+        "id": "count-terminal",
+        "kind": "widget_value",
+        "type": "u32",
+        "widget": "count",
+        "label_visible": true,
+        "label_auto_size": true,
+        "label_vertical_arrangement": "none",
+        "label_offset": {
+          "x": 0,
+          "y": 0
+        },
+        "label_size": {
+          "width": 24,
+          "height": 31
+        },
+        "label_font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": true,
+          "point_size": 15
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 700,
+          "y": 160,
+          "width": 66.3,
+          "height": 29.75
+        }
+      },
+      {
+        "id": "example-explanation",
+        "kind": "comment",
+        "comment_auto_size": false,
+        "text": "Édition uniquement — Lire le compteur de millisecondes\nLe compteur U32 dépend de la session. Suivre sa valeur jusqu’à l’indicateur.",
+        "vertical_arrangement": "none",
+        "font": {
+          "family": "",
+          "style": "plain",
+          "use_default_size": false,
+          "geometry_initialized": false,
+          "point_size": 11
+        },
+        "hidden": false,
+        "locked": false,
+        "group": "",
+        "layout": {
+          "x": 360,
+          "y": -20,
+          "width": 780,
+          "height": 140
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "wire-0",
+        "from": {
+          "node": "operation",
+          "port": "count"
+        },
+        "to": {
+          "node": "count-terminal",
+          "port": "value"
+        }
+      }
+    ],
+    "wire_fragments": []
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "format": "frog.public.frontend-checkpoint.v1",
+  "date": "2026-11-25",
+  "frontend": {
+    "software_version": "0.2.0-local",
+    "api_version": 3,
+    "base_revision": "32c8fee2f22a1231a21de7bc1965652d1e6b3f17",
+    "content_sha256": "3013cb790b9c0bfdb6677d53b4dfd773ddcb2a99cfcf196da672e28c42281c36"
+  },
+  "studio_draft_reader_revisions": {
+    "minimum": 0,
+    "maximum": 13
+  },
+  "corpus": "0.1-draft.2",
+  "canonical_source": "0.1",
+  "fir": "0.1",
+  "qualification": {
+    "basis": "Canonical Studio build 0.0.9.781 uses this exact shared Frontend. The content identity covers its implementation and CLI. Format conformance is exercised by tests/test_studio_source_versioning.py in the reference Validator."
+  }
+}

@@ -42,14 +42,23 @@ This document describes how the default realization family can embody that law t
 
 <hr/>
 
-<h2>2. Published Default Variant</h2>
+<h2>2. Numeric realizations</h2>
 
 <ul>
   <li><code>rectangular</code></li>
+  <li><code>horizontal_slider</code> and <code>vertical_slider</code> show one thumb on a linear track.</li>
+  <li><code>knob</code> uses a rotating index on the face of the dial.</li>
+  <li><code>meter</code> shows the value with a needle over a semicircle. <code>gauge</code> uses a 270-degree sweep.</li>
+  <li><code>tank</code> fills a vertical vessel from the bottom.</li>
 </ul>
 
 <p>
-The rectangular variant is the initial default numeric realization variant.
+The rectangular variant is the default. Each instrument has a numeric control and
+indicator role. A control applies its configured increment to a drag or an arrow
+key. Home and End select the minimum and maximum. An indicator positions its
+index, needle, thumb or level from the value received at its terminal.
+The document retains the scale bounds and appearance. The two-thumb variants
+expose the named fields described in the <a href="./Cluster.md">cluster realization</a>.
 </p>
 
 <hr/>

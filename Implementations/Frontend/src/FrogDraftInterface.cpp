@@ -50,6 +50,26 @@ std::string removeToken(std::string_view bytes, std::size_t begin, std::size_t e
     return replace(bytes,begin,right<bytes.size() && bytes[right]==','?right+1:end,{});
 }
 
+std::string appendMember(std::string_view bytes, const JsonValue &object, std::string_view key, std::string_view value) {
+    return replace(bytes, object.sourceEnd - 1, object.sourceEnd - 1,
+        (object.object.empty() ? "" : ",") + quote(key) + ":" + std::string(value));
+}
+
+std::string appendArrayItem(std::string_view bytes, const JsonValue &object, std::string_view key, std::string_view item) {
+    if (const auto *list = object.member(key)) {
+        if (list->type != JsonValue::Type::Array) return {};
+        return replace(bytes, list->sourceEnd - 1, list->sourceEnd - 1,
+            (list->array.empty() ? "" : ",") + std::string(item));
+    }
+    return appendMember(bytes, object, key, "[" + std::string(item) + "]");
+}
+
+bool portListAdmitsId(const JsonValue &object, std::string_view list, std::string_view id) {
+    const auto *ports = object.member(list);
+    return !ports || (ports->type == JsonValue::Type::Array &&
+        std::none_of(ports->array.begin(), ports->array.end(), [&](const auto &port) { return stringIs(port.member("id"), id); }));
+}
+
 enum class DefaultCompatibility { Compatible, Incompatible, Unverified };
 
 template<class Integer>
@@ -151,6 +171,11 @@ bool FrogDraftInterface::containsPort(std::string_view id) const {
 
 bool FrogDraftInterface::declarePort(bool input, std::string_view id,
     std::string_view type, std::string_view connection) {
+    return declareMapWidgetPort(input, id, type, connection, {});
+}
+
+bool FrogDraftInterface::declareMapWidgetPort(bool input, std::string_view id,
+    std::string_view type, std::string_view connection, std::string_view widgetId) {
     if (id.empty() || type.empty()) return false;
     const auto root = tree(*bytes_);
     if (!root || root->type != JsonValue::Type::Object) return false;
@@ -167,17 +192,96 @@ bool FrogDraftInterface::declarePort(bool input, std::string_view id,
         }
     }
     if (found) return true;
+    if (const auto *map = root->member("map"))
+        if (const auto *owners = map->member("widget_port_owners"); owners && owners->member(id)) return false;
     const auto port = "{\"id\":" + quote(id) + ",\"type\":" + quote(type) +
         (input && !connection.empty() ? ",\"connection\":" + quote(connection) : "") + "}";
-    std::string candidate;
-    if (const auto *ports = root->member(destination)) {
-        const auto insertion = (ports->array.empty() ? "" : ",") + port;
-        candidate = replace(*bytes_, ports->sourceEnd - 1U, ports->sourceEnd - 1U, insertion);
-    } else {
-        const auto insertion = (root->object.empty() ? "" : ",") + quote(destination) + ":[" + port + "]";
-        candidate = replace(*bytes_, root->sourceEnd - 1U, root->sourceEnd - 1U, insertion);
+    auto candidate = appendArrayItem(*bytes_, *root, destination, port);
+    if (!widgetId.empty()) {
+        const auto contract = tree(candidate);
+        if (!contract) return false;
+        const auto newOwners = "{" + quote(id) + ":" + quote(widgetId) + "}";
+        if (const auto *map = contract->member("map")) {
+            if (map->type != JsonValue::Type::Object) return false;
+            if (const auto *owners = map->member("widget_port_owners")) {
+                if (owners->type != JsonValue::Type::Object) return false;
+                candidate = appendMember(candidate, *owners, id, quote(widgetId));
+            } else candidate = appendMember(candidate, *map, "widget_port_owners", newOwners);
+        } else candidate = appendMember(candidate, *contract, "map", "{\"widget_port_owners\":" + newOwners + "}");
     }
     if (!tree(candidate)) return false;
+    bytes_ = std::make_shared<const std::string>(std::move(candidate));
+    return true;
+}
+
+bool FrogDraftInterface::mapPortIdReserved(std::string_view id) const {
+    const auto root = tree(*bytes_);
+    if (!root) return false;
+    if (const auto *map = root->member("map"))
+        if (const auto *owners = map->member("widget_port_owners"); owners && owners->member(id)) return true;
+    for (const auto key : {"inputs", "outputs"}) {
+        if (const auto *ports = root->member(key))
+            for (const auto &port : ports->array)
+                if (stringIs(port.member("id"), id)) return true;
+    }
+    return false;
+}
+
+bool FrogDraftInterface::retireMapWidgetPort(bool input, std::string_view id, std::string_view widgetId) {
+    return moveMapWidgetPort(input, id, widgetId, false);
+}
+
+bool FrogDraftInterface::restoreMapWidgetPort(bool input, std::string_view id, std::string_view widgetId) {
+    return moveMapWidgetPort(input, id, widgetId, true);
+}
+
+bool FrogDraftInterface::moveMapWidgetPort(bool input, std::string_view id, std::string_view widgetId, bool restore) {
+    if (id.empty() || widgetId.empty()) return false;
+    const auto root = tree(*bytes_);
+    if (!root || root->type != JsonValue::Type::Object) return false;
+    const auto active = input ? "inputs" : "outputs";
+    const auto retired = input ? "detached_inputs" : "detached_outputs";
+    const auto sourceKey = restore ? retired : active;
+    const auto destinationKey = restore ? active : retired;
+    const auto *map = root->member("map");
+    const auto *owners = map ? map->member("widget_port_owners") : nullptr;
+    if (!owners || !stringIs(owners->member(id), widgetId)) return false;
+    const auto *ports = (restore ? map : &*root)->member(sourceKey);
+    if (!ports || ports->type != JsonValue::Type::Array) return false;
+    const auto entry = std::find_if(ports->array.begin(), ports->array.end(), [&](const auto &port) {
+        return stringIs(port.member("id"), id);
+    });
+    if (entry == ports->array.end()) return false;
+    const auto portBytes = bytes_->substr(entry->sourceBegin, entry->sourceEnd - entry->sourceBegin);
+    auto candidate = restore && ports->array.size() == 1
+        ? removeToken(*bytes_, ports->memberBegin, ports->sourceEnd)
+        : removeToken(*bytes_, entry->sourceBegin, entry->sourceEnd);
+    const auto reduced = tree(candidate);
+    if (!reduced) return false;
+    // Keep identities unique across active and retired ports, including on
+    // documents with accidentally duplicated authoring metadata.
+    const auto *reducedMap = reduced->member("map");
+    if (!reducedMap || !portListAdmitsId(*reduced, "inputs", id) || !portListAdmitsId(*reduced, "outputs", id) ||
+        !portListAdmitsId(*reducedMap, "detached_inputs", id) || !portListAdmitsId(*reducedMap, "detached_outputs", id)) return false;
+    // Map owners are appended when first bound. Keep their original order
+    // among surviving siblings when detached and reattached in another order.
+    std::optional<std::size_t> insertAt;
+    if (restore) {
+        const auto *reducedOwners = reducedMap->member("widget_port_owners");
+        const auto *activePorts = reduced->member(active);
+        const auto *owner = reducedOwners->member(id);
+        if (activePorts) for (const auto &sibling : activePorts->array) {
+            const auto *siblingId = sibling.member("id");
+            const auto *siblingOwner = siblingId ? reducedOwners->member(siblingId->string) : nullptr;
+            if (siblingOwner && siblingOwner->sourceBegin > owner->sourceBegin) {
+                insertAt = sibling.sourceBegin;
+                break;
+            }
+        }
+    }
+    candidate = insertAt ? replace(candidate, *insertAt, *insertAt, portBytes + ",") :
+        appendArrayItem(candidate, restore ? *reduced : *reducedMap, destinationKey, portBytes);
+    if (candidate.empty()) return false;
     bytes_ = std::make_shared<const std::string>(std::move(candidate));
     return true;
 }
