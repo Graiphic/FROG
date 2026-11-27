@@ -30,6 +30,7 @@ NC_ENUM(NativeCallPass, NC_VALUE(NativeCallPass,Value,"value"), NC_VALUE(NativeC
 NC_ENUM(NativeCallAccess, NC_VALUE(NativeCallAccess,ReadOnly,"read_only"), NC_VALUE(NativeCallAccess,ReadWrite,"read_write"), NC_VALUE(NativeCallAccess,WriteOnly,"write_only"))
 NC_ENUM(NativeCallInputRequirement, NC_VALUE(NativeCallInputRequirement,Required,"required"), NC_VALUE(NativeCallInputRequirement,Recommended,"recommended"), NC_VALUE(NativeCallInputRequirement,Optional,"optional"))
 NC_ENUM(NativeCallArrayFormat, NC_VALUE(NativeCallArrayFormat,DataPointer,"data_pointer"), NC_VALUE(NativeCallArrayFormat,LabViewHandle,"labview_handle"))
+NC_ENUM(NativeCallFieldStorage, NC_VALUE(NativeCallFieldStorage,Scalar,"scalar"), NC_VALUE(NativeCallFieldStorage,InlineArray,"inline_array"), NC_VALUE(NativeCallFieldStorage,ArrayPointer,"array_pointer"))
 NC_ENUM(NativeCallStringFormat, NC_VALUE(NativeCallStringFormat,CString,"c_string"), NC_VALUE(NativeCallStringFormat,PascalString,"pascal_string"), NC_VALUE(NativeCallStringFormat,LabViewHandle,"labview_handle"))
 NC_ENUM(NativeCallStringEncoding, NC_VALUE(NativeCallStringEncoding,Utf8,"utf8"), NC_VALUE(NativeCallStringEncoding,Utf16,"utf16"), NC_VALUE(NativeCallStringEncoding,Ansi,"ansi"))
 NC_ENUM(NativeCallOwnership, NC_VALUE(NativeCallOwnership,Borrowed,"borrowed"), NC_VALUE(NativeCallOwnership,CallerOwned,"caller_owned"), NC_VALUE(NativeCallOwnership,LibraryOwned,"library_owned"))
@@ -155,18 +156,39 @@ bool readCapacity(const Json *json, NativeCallCapacity &capacity) {
         readInteger(*json, "constant", capacity.constant) && readString(*json, "parameter_id", capacity.parameterId) &&
         readEnum(*json, "unit", capacity.unit);
 }
+void writeFieldStorage(Json &item,const NativeCallStructField &field) {
+    item.object["storage"]=enumeration(field.storage);
+    item.object["extent"]=capacityJson(field.extent);
+    item.object["valid_length_parameter_id"]=field.validLengthParameterId?string(*field.validLengthParameterId):Json{};
+}
+bool readFieldStorage(const Json &item,NativeCallStructField &field) {
+    return readEnum(item,"storage",field.storage) && readCapacity(item.member("extent"),field.extent) &&
+        readOptionalString(item,"valid_length_parameter_id",field.validLengthParameterId);
+}
 Json nativeTypeJson(const NativeCallType &type) {
     auto value = object(); value.object["kind"] = enumeration(type.kind);
     value.object["numeric_type"] = enumeration(type.numericType); value.object["element_type"] = enumeration(type.elementType);
     value.object["rank"] = integer(type.rank); value.object["array_format"] = enumeration(type.arrayFormat);
     value.object["string_format"] = enumeration(type.stringFormat); value.object["string_encoding"] = enumeration(type.stringEncoding);
     value.object["ansi_code_page"] = integer(type.ansiCodePage); value.object["adapted_type"] = typeRefJson(type.adaptedType);
+    // The optional keys keep the canonical byte representation of v1 declarations.
+    if (type.fromWire) value.object["type_from_wire"] = boolean(true);
+    if (type.wideBoolean) value.object["win32_boolean"] = boolean(true);
+    if(!type.arrayFieldContracts.empty()) {
+        auto choices=array();
+        for(const auto &field:type.arrayFieldContracts) {
+            auto item=object();item.object["field_id"]=string(field.fieldId);
+            writeFieldStorage(item,field);choices.array.push_back(std::move(item));
+        }
+        value.object["array_field_contracts"]=std::move(choices);
+    }
     auto layout = object(); layout.object["c_type_name"] = string(type.structLayout.cTypeName);
     layout.object["byte_size"] = integer(type.structLayout.byteSize); layout.object["alignment"] = integer(type.structLayout.alignment);
     layout.object["packing"] = integer(type.structLayout.packing); auto fields = array();
     for (const auto &field : type.structLayout.fields) {
         auto item = object(); item.object["field_id"] = string(field.fieldId);
         item.object["numeric_type"] = enumeration(field.numericType); item.object["offset"] = integer(field.offset);
+        if(field.storage!=NativeCallFieldStorage::Scalar)writeFieldStorage(item,field);
         fields.array.push_back(std::move(item));
     }
     layout.object["fields"] = std::move(fields); value.object["struct_layout"] = std::move(layout); return value;
@@ -180,6 +202,18 @@ bool readNativeType(const Json *json, NativeCallType &type) {
         !readInteger(*json, "ansi_code_page", page) || page > UINT32_MAX ||
         !readTypeRef(json->member("adapted_type"), type.adaptedType)) return false;
     type.rank = static_cast<std::size_t>(rank); type.ansiCodePage = static_cast<std::uint32_t>(page);
+    if (json->member("type_from_wire") && !readBool(*json, "type_from_wire", type.fromWire)) return false;
+    if (json->member("win32_boolean") && !readBool(*json, "win32_boolean", type.wideBoolean)) return false;
+    if(const auto *choices=json->member("array_field_contracts")) {
+        if(choices->type!=Json::Type::Array)return false;
+        std::set<std::string> ids;
+        for(const auto &item:choices->array) {
+            NativeCallStructField field;
+            if(!readString(item,"field_id",field.fieldId)||field.fieldId.empty()||
+                !ids.insert(field.fieldId).second||!readFieldStorage(item,field)||field.storage==NativeCallFieldStorage::Scalar)return false;
+            type.arrayFieldContracts.push_back(std::move(field));
+        }
+    }
     const auto *layout = json->member("struct_layout");
     if (!layout || layout->type != Json::Type::Object ||
         !readString(*layout, "c_type_name", type.structLayout.cTypeName) ||
@@ -191,6 +225,7 @@ bool readNativeType(const Json *json, NativeCallType &type) {
         NativeCallStructField field;
         if (!readString(item, "field_id", field.fieldId) || !readEnum(item, "numeric_type", field.numericType) ||
             !readInteger(item, "offset", field.offset)) return false;
+        if(item.member("storage")&&!readFieldStorage(item,field))return false;
         type.structLayout.fields.push_back(std::move(field));
     }
     return true;
@@ -327,10 +362,7 @@ std::string cType(const NativeCallType &type) {
     case NativeCallKind::InstanceDataPointer: return "void **";
     case NativeCallKind::Cluster: case NativeCallKind::AdaptToType:
         if (type.adaptedType.kind == binding::TypeKind::Cluster && cIdentifier(type.structLayout.cTypeName)) return "struct " + type.structLayout.cTypeName;
-        if (type.kind == NativeCallKind::AdaptToType && type.adaptedType.kind == binding::TypeKind::Primitive) {
-            for (const auto &[numeric, name] : enumEntries<NativeCallNumericType>())
-                if (type.adaptedType.name == name) return cNumeric(numeric);
-        }
+        if (auto numeric = nativeCallAdaptedNumeric(type,64)) return cNumeric(*numeric);
         return {};
     default: return {};
     }
@@ -363,7 +395,85 @@ const NativeCallParameter *nativeCallParameter(const NativeCallConfiguration &co
         [id](const auto &parameter) { return parameter.id == id; });
     return found == config.arguments.end() ? nullptr : &*found;
 }
+bool nativeCallNumericDefaultValid(const source::JsonValue &value,NativeCallNumericType type,std::size_t pointerBits) {
+    return validDefaultScalar(value,type,pointerBits);
+}
 
+namespace {
+std::optional<NativeCallNumericType> representation(const Type &type, bool wideBoolean) {
+    if(type.kind != binding::TypeKind::Primitive) return std::nullopt;
+    if(type.name == "bool") return wideBoolean ? NativeCallNumericType::Win32Bool : NativeCallNumericType::CBool;
+    for(const auto &[numeric,name] : enumEntries<NativeCallNumericType>())
+        if(type.name == name && numeric != NativeCallNumericType::IntPtr && numeric != NativeCallNumericType::UIntPtr)
+            return numeric;
+    return std::nullopt;
+}
+}
+std::optional<NativeCallNumericType> nativeCallAdaptedNumeric(const NativeCallType &type,std::size_t) {
+    if(type.kind!=NativeCallKind::AdaptToType) return std::nullopt;
+    return representation(type.adaptedType,type.wideBoolean);
+}
+void resolveNativeCallWiredType(NativeCallParameter &parameter,const Type &source,std::size_t pointerBits) {
+    auto &type=parameter.type;
+    if(!type.fromWire || (type.kind!=NativeCallKind::Cluster && type.kind!=NativeCallKind::AdaptToType))return;
+    type.adaptedType=source;
+    NativeCallStructLayout layout;
+    layout.packing=type.structLayout.packing;
+    type.structLayout=layout;
+    if(source.kind!=binding::TypeKind::Cluster || source.children.empty() ||
+        source.children.size()!=source.fieldIds.size() || (pointerBits!=64 && pointerBits!=32) ||
+        (layout.packing && (!powerOfTwo(layout.packing) || layout.packing>16)))return;
+    std::set<std::string> used;
+    layout.cTypeName=cName(parameter.id+"_record","frog_record",used);
+    layout.alignment=1;
+    const auto aligned=[](std::uint64_t offset,std::uint64_t align){return (offset+align-1)&~(align-1);};
+    for(std::size_t i=0;i<source.children.size();++i) {
+        const auto &logical=source.children[i];
+        NativeCallStructField field;
+        field.fieldId=source.fieldIds[i];
+        const Type *element=&logical;
+        if(logical.kind==binding::TypeKind::Array) {
+            const auto choice=std::find_if(type.arrayFieldContracts.begin(),type.arrayFieldContracts.end(),
+                [&](const auto &item){return item.fieldId==field.fieldId;});
+            if(logical.rank!=1 || logical.children.size()!=1 || choice==type.arrayFieldContracts.end())return;
+            field=*choice;element=&logical.children.front();
+        }
+        const auto numeric=representation(*element,type.wideBoolean);
+        if(!numeric)return;
+        field.numericType=*numeric;
+        const auto unit=field.storage==NativeCallFieldStorage::ArrayPointer ? std::uint64_t(pointerBits/8) : scalarBytes(*numeric,pointerBits);
+        const auto count=field.storage==NativeCallFieldStorage::InlineArray ? field.extent.constant : 1;
+        if(!count || count>64U*1024U*1024U/unit)return;
+        const auto alignment=layout.packing ? std::min(unit,layout.packing) : unit;
+        layout.byteSize=aligned(layout.byteSize,alignment);
+        field.offset=layout.byteSize;
+        layout.fields.push_back(std::move(field));
+        layout.byteSize+=unit*count;
+        layout.alignment=std::max(layout.alignment,alignment);
+    }
+    layout.byteSize=aligned(layout.byteSize,layout.alignment);
+    type.structLayout=std::move(layout);
+}
+std::string nativeCallStructDeclaration(const NativeCallType &type) {
+    const auto &layout=type.structLayout;
+    if(layout.fields.empty() || !cIdentifier(layout.cTypeName)) return {};
+    std::string result;
+    if(layout.packing) result="#pragma pack(push, "+std::to_string(layout.packing)+")\n";
+    result+="struct "+layout.cTypeName+" {\n";
+    std::set<std::string> names;
+    for(const auto &field:layout.fields) {
+        const auto found=std::find(type.adaptedType.fieldIds.begin(),type.adaptedType.fieldIds.end(),field.fieldId);
+        const auto i=static_cast<std::size_t>(found-type.adaptedType.fieldIds.begin());
+        const auto &label=i<type.adaptedType.fieldNames.size()&&!type.adaptedType.fieldNames[i].empty() ?
+            type.adaptedType.fieldNames[i]:field.fieldId;
+        result+="    "+cNumeric(field.numericType)+(field.storage==NativeCallFieldStorage::ArrayPointer?" *":" ")+cName(label,"field",names);
+        if(field.storage==NativeCallFieldStorage::InlineArray)result+="["+std::to_string(field.extent.constant)+"]";
+        result+="; /* +"+std::to_string(field.offset)+" */\n";
+    }
+    result+="}; /* sizeof "+std::to_string(layout.byteSize)+", align "+std::to_string(layout.alignment)+" */";
+    if(layout.packing)result+="\n#pragma pack(pop)";
+    return result;
+}
 binding::TypeRef nativeCallTypeRef(const NativeCallType &type, std::size_t pointerBits) {
     switch (type.kind) {
     case NativeCallKind::Numeric: return numericTypeRef(type.numericType, pointerBits);
@@ -500,13 +610,23 @@ NativeCallValidation nativeCallValidate(const NativeCallConfiguration &config, c
             if (type.stringFormat == NativeCallStringFormat::LabViewHandle) unavailable(target && target->labViewHandles, "labview_string_unavailable", "NI string handles require an explicit NI memory manager/profile.", id);
         }
         if (type.kind == NativeCallKind::AdaptToType || type.kind == NativeCallKind::Cluster) {
-            if (!type.adaptedType.known()) add("adapted_type_missing", "Select a concrete FROG type and native layout.", id, Category::Incomplete);
+            if (!type.adaptedType.known()) add("adapted_type_missing", type.fromWire ? "Waiting for a wire on this argument." : "Select a concrete FROG type and native layout.", id, Category::Incomplete);
             if (type.kind == NativeCallKind::Cluster && type.adaptedType.known() && type.adaptedType.kind != binding::TypeKind::Cluster)
                 add("cluster_type", "A struct argument must use an actual Cluster type.", id);
-            unavailable(target && (type.kind == NativeCallKind::Cluster ? target->structs : target->adaptToType),
+            if(type.adaptedType.known())unavailable(target && (type.kind == NativeCallKind::Cluster ? target->structs : target->adaptToType),
                 "adapted_profile_unavailable", "The target does not implement this explicitly adapted native layout.", id);
             if (type.adaptedType.kind == binding::TypeKind::Cluster) {
                 const auto &layout = type.structLayout;
+                if(type.fromWire && layout.fields.empty()) {
+                    for(std::size_t i=0;i<type.adaptedType.children.size();++i) if(!representation(type.adaptedType.children[i],type.wideBoolean)) {
+                        const auto &field=type.adaptedType.children[i];
+                        const auto fieldId=i<type.adaptedType.fieldIds.size()?type.adaptedType.fieldIds[i]:std::to_string(i);
+                        if(field.kind==binding::TypeKind::Array && field.rank==1 && field.children.size()==1 && representation(field.children.front(),type.wideBoolean))
+                            add("wired_struct_array_contract","Field "+fieldId+" ("+field.canonical()+") needs its DLL declaration: choose a fixed inline extent or a bounded array pointer.",id,Category::Incomplete);
+                        else add("wired_struct_field_unsupported","Field "+fieldId+" has unsupported native structure type "+field.canonical()+".",id,Category::Unavailable);
+                        break;
+                    }
+                }
                 if (!layout.byteSize || !powerOfTwo(layout.alignment) || (layout.packing && !powerOfTwo(layout.packing)) || !cIdentifier(layout.cTypeName))
                     add("struct_layout", "A struct needs an explicit C type name, byte size, alignment and valid packing.", id, Category::Incomplete);
                 if (layout.fields.size() != type.adaptedType.fieldIds.size()) add("struct_fields", "Native fields must describe every Cluster field by stable ID.", id);
@@ -516,10 +636,31 @@ NativeCallValidation nativeCallValidate(const NativeCallConfiguration &config, c
                     const auto found = std::find(type.adaptedType.fieldIds.begin(), type.adaptedType.fieldIds.end(), field.fieldId);
                     if (found == type.adaptedType.fieldIds.end() || !fieldIds.insert(field.fieldId).second) { add("struct_field_identity", "Unknown or repeated native struct field ID.", id); continue; }
                     const auto index = static_cast<std::size_t>(found - type.adaptedType.fieldIds.begin());
-                    const auto frog = numericTypeRef(field.numericType, pointerBits);
+                    auto frog = numericTypeRef(field.numericType, pointerBits);
+                    if(field.storage!=NativeCallFieldStorage::Scalar && frog.known())frog=Type::array(frog);
                     if (index >= type.adaptedType.children.size() ||
                         (frog.known() && frog != type.adaptedType.children[index])) add("struct_field_type", "Native field and Cluster field types disagree.", id);
-                    const auto bytes = scalarBytes(field.numericType, pointerBits);
+                    auto bytes = scalarBytes(field.numericType, pointerBits);
+                    if(field.storage!=NativeCallFieldStorage::Scalar) {
+                        const auto *argument=nativeCallParameter(config,id);
+                        const bool writable=argument && argument->access!=NativeCallAccess::ReadOnly;
+                        capacity(field.extent,id,!writable,true);
+                        if(field.extent.unit!=NativeCallCapacityUnit::Elements) add("struct_array_unit","Field "+field.fieldId+" requires a capacity in elements.",id);
+                        if(field.storage==NativeCallFieldStorage::InlineArray) {
+                            if(field.extent.source!=NativeCallCapacitySource::Constant || !field.extent.constant ||
+                                !bytes || field.extent.constant>64U*1024U*1024U/bytes || field.validLengthParameterId)
+                                add("struct_inline_extent","Field "+field.fieldId+" needs a positive fixed C array extent within the native storage budget.",id);
+                            else bytes*=field.extent.constant;
+                        } else if(field.storage==NativeCallFieldStorage::ArrayPointer) {
+                            bytes=pointerBits/8;
+                            if(writable) {
+                                const auto *length=field.validLengthParameterId?nativeCallParameter(config,*field.validLengthParameterId):nullptr;
+                                if(!length || length->type.kind!=NativeCallKind::Numeric || !integerNumeric(length->type.numericType) ||
+                                    length->pass!=NativeCallPass::Pointer || length->access==NativeCallAccess::ReadOnly)
+                                    add("struct_array_valid_length","Field "+field.fieldId+" needs an output length supplied by a writable integer pointer argument.",id,Category::Incomplete);
+                            } else if(field.validLengthParameterId)add("struct_array_valid_length","A read-only array field has no output length.",id);
+                        } else add("struct_field_storage","Unknown array field storage.",id);
+                    }
                     if (bytes) {
                         if (field.offset > layout.byteSize || bytes > layout.byteSize - field.offset) add("struct_field_bounds", "Native field extends outside the declared struct size.", id);
                         else ranges.emplace_back(field.offset, field.offset + bytes);
@@ -595,6 +736,7 @@ NativeCallValidation nativeCallValidate(const NativeCallConfiguration &config, c
             bool valid = parsed.has_value();
             if (parsed) {
                 if (parameter.type.kind == NativeCallKind::Numeric) valid = validDefaultScalar(*parsed, parameter.type.numericType, pointerBits);
+                else if (const auto numeric=nativeCallAdaptedNumeric(parameter.type,pointerBits)) valid=validDefaultScalar(*parsed,*numeric,pointerBits);
                 else if (parameter.type.kind == NativeCallKind::String) {
                     valid = parsed->type == Json::Type::String;
                     if (valid && parameter.type.stringFormat == NativeCallStringFormat::CString) valid = parsed->string.find('\0') == parsed->string.npos;

@@ -124,10 +124,10 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
             property("front_panel","Front Panel","References",TypeRef::reference("frog.front_panel"));
             property("front_panel.open_state","Front Panel.Open State","Front Panel",primitive("bool"),true,false,true);
             property("execution.state","Execution State","Execution",primitive("string"),true,false,false,"Runtime provider unavailable.");
-            method("front_panel.open","Front Panel.Open",false,{
-                {"activate","Activate",primitive("bool"),ApplicationControlParameterDirection::In,false,"true"},
-                {"state","State",primitive("u32"),ApplicationControlParameterDirection::In,false,"1"}});
-            method("front_panel.close","Front Panel.Close",false);
+            for(const bool open:{true,false}) {
+                auto member=applicationControlPanelVisibilityMethod(open);
+                if(only.empty() || only==member.id)result.push_back(std::move(member));
+            }
         }
         if(classId=="frog.front_panel") {
             property("controls","Controls[]","References",TypeRef::array(TypeRef::reference("frog.control")));
@@ -141,6 +141,10 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
     const bool hasValue=applicationControlValueSignalingAvailable(classId);
     if(hasValue) {
         property("value","Value","Value",dataType,true,true);
+        if(!result.empty() && result.back().id=="value") {
+            result.back().runtimeAvailable=true;
+            result.back().help="Reads or writes the current value. A generic Control reference exchanges a Variant. A strict control reference exchanges its declared type. Writing Value does not generate Value Change.";
+        }
         property("default_value","Default Value","Value",dataType,true,true);
         property("value_type","Value Type","Value",primitive("string"));
         property("value_signaling","Value (Signaling)","Value",dataType,false,true,false);
@@ -289,6 +293,10 @@ static std::vector<ApplicationControlMemberDescriptor> baseApplicationControlMem
     }
     if(cap(WidgetCapability::ClusterContainer)) {
         property("controls","Controls[]","References",TypeRef::array(TypeRef::reference("frog.control")));
+        if(!result.empty() && result.back().id=="controls") {
+            result.back().runtimeAvailable=true;
+            result.back().help="Returns references to the controls in this cluster in field order. Each reference identifies the child occurrence in the current instance.";
+        }
         method("find_child","Find Child",true,{{"path","Path",primitive("string")}},TypeRef::reference("frog.control"));
     }
     if(cap(WidgetCapability::ArrayContainer)) {
@@ -499,6 +507,7 @@ std::vector<Descriptor> referenceCatalogue(std::string_view classId,const TypeRe
             {"name","Name"},{"version","Version"},{"kind","Kind"},{"active_frog_name","Active FROG Name"}})
             property(id,label,primitive("string"));
         for(auto &member:result)if(member.id=="kind")member.runtimeAvailable=true;
+        if(only.empty() || only=="application.quit")result.push_back(applicationQuitMethod());
         property("executable_path","Executable Path",primitive("path"));
         property("application_directory","Application Directory",primitive("path"));
         property("command_line_arguments","Command Line Arguments",TypeRef::array(primitive("string")));
@@ -891,7 +900,8 @@ const WidgetInstance *applicationControlReferencePresentation(const DiagramNode 
             members.push_back(row->memberId);
         }
         if(config.kind==ApplicationControlKind::Reference)return finish(config);
-        const auto *source=incoming(*current,"reference_in");
+        // Presentation follows the model; runtime identity follows reference_in.
+        const auto *source=incoming(*current,config.kind==ApplicationControlKind::ToMoreSpecificClass?"target_class":"reference_in");
         if(source) {if(!follow(source))return nullptr;continue;}
         // An implicit local link is a symbolic Reference, without reading Value.
         if(std::any_of(edges.begin(),edges.end(),[&](const auto &e){return e.to.nodeId==current->id && e.to.portId=="reference_in";}))return nullptr;
@@ -995,6 +1005,14 @@ std::vector<ApplicationControlPort> applicationControlPorts(const ApplicationCon
         result.push_back({std::move(id),std::move(label),row,direction,std::move(type),required,std::move(fallback)});
     };
     if(node.kind==ApplicationControlKind::Reference) {add("reference_out","Reference",D::Output,ref);return result;}
+    if(node.kind==ApplicationControlKind::ToMoreSpecificClass) {
+        add("reference_in","reference",D::Input,TypeRef::reference("frog.object"),{},true);
+        add("target_class","target class",D::Input,ref,{},true);
+        add("reference_out","specific class reference",D::Output,ref);
+        const auto error=TypeRef::cluster({"status","code","source"},{primitive("bool"),primitive("i32"),primitive("string")});
+        add("error_in","error in",D::Input,error);add("error_out","error out",D::Output,error);
+        return result;
+    }
     if(applicationControlHasReferenceInput(node))
         add("reference_in","Reference",D::Input,ref,{},node.target.kind==ApplicationControlTargetKind::Unbound);
     if(node.kind!=ApplicationControlKind::Close)add("reference_out","Reference",D::Output,ref);
@@ -1049,6 +1067,7 @@ std::vector<ApplicationControlDiagnostic> validateApplicationControlNode(const A
     // A complete typed-null constant is transportable; Property/Invoke still
     // require an actual runtime target before accessing its value or effects.
     if(node.kind==ApplicationControlKind::Reference && node.target.kind==ApplicationControlTargetKind::Unbound &&
+        !(ref.children.empty() && !node.valueType.known() && applicationControlCastReference(ref)) &&
         (ref.children.size()!=1 || !node.valueType.known() || ref.children.front()!=node.valueType || node.expectedClass!=ref.name))
         error("application_control.unbound",{},"The typed reference is not linked to a target.");
     const auto value=ref.children.empty()?TypeRef{}:ref.children.front();

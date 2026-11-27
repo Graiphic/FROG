@@ -5,11 +5,13 @@
 #include "frog_native_engine/ArrayCapacity.hpp"
 #include "CanonicalComposedDraftMigration.hpp"
 #include "frog_native_engine/CanonicalDraftPortResolution.hpp"
+#include "frog_native_engine/CanonicalExecutionIr.hpp"
 #include "frog_native_engine/graph/XYGraph.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include "frog_native_engine/TimedLoopConfiguration.hpp"
 #include "CanonicalDraftPresentation.hpp"
 #include "frog_native_engine/EventNotificationContract.hpp"
+#include "frog_native_engine/EventStructureSchema.hpp"
 #include "frog_native_engine/CanonicalNumericAggregate.hpp"
 #include "CanonicalBooleanTree.hpp"
 #include "CanonicalComparisonTree.hpp"
@@ -239,7 +241,7 @@ bool configuredReferenceWidget(const Json &widget,const binding::TypeRef &type,
 }
 void authoredRegionFields(const Json &region,const std::string &rp) {
     fields(region,{"id","title","match","matches","default","draft","draft_text","diagram","event","event_label","subdiagram_label_text",
-                        "event_data_fields","event_payload_fields","event_response_fields","studio_event_vkey_encoding","studio_event_data_node_visible","studio_event_data_node_normalized_y",
+                        "event_data_fields","event_payload_fields","event_response_fields","studio_event_response_fields","studio_event_vkey_encoding","studio_event_data_node_visible","studio_event_data_node_normalized_y",
                         "studio_event_response_node_visible","studio_event_response_node_normalized_y","studio_event_selected_fields_version",
                         "studio_title","studio_width","studio_subdiagram_label_text"},rp);
     if(const auto *encoding=region.member("studio_event_vkey_encoding"))
@@ -378,6 +380,18 @@ bool presentation(std::string_view key) {
         key.starts_with("case_structure_")||key.starts_with("event_structure_")||key.starts_with("structure_subdiagram_")||
         key=="structure_auto_grow"||key=="structure_subdiagram_label_border_rgb";
 }
+bool isComposedWriterRevision(unsigned revision) {
+    return revision == kCurrentFrogDraftRevision ||
+           revision == kFrogArrayStorageDraftRevision ||
+           revision == kFrogExactIntegerStateDraftRevision ||
+           revision == kFrogComplexStateDraftRevision ||
+           revision == kFrogApplicationControlDraftRevision ||
+           revision == kFrogConnectivityDraftRevision ||
+           revision == kFrogPictureRingDraftRevision ||
+           revision == kFrogClusterPresentationDraftRevision ||
+           revision == kFrogExtendedAuthoringDraftRevision;
+}
+
 bool requiresScope(const Json &scope,unsigned depth) {
     if(depth>32)return true;
     const auto *nodes=scope.member("nodes");if(!nodes||nodes->type!=Json::Type::Array)return false;
@@ -460,6 +474,35 @@ struct Port {
     std::set<std::pair<std::string,std::string>> sources;
 };
 using PortKey=std::tuple<std::string,std::string,bool>;
+
+constexpr std::size_t maximumConnectorTypeBytes=64*1024;
+
+// A strict cluster reference carries each child's full choice catalogue. Apply
+// the per-type byte limit to each declaration; the aggregate limit below covers
+// the complete wire evidence, including every repeated declaration.
+bool connectorDeclarationsFit(const Json &schema) {
+    constexpr std::size_t maximumTypes=4096;
+    std::vector<const Json *> pending{&schema};
+    std::size_t visited=0;
+    while(!pending.empty()) {
+        const auto &declaration=*pending.back();
+        pending.pop_back();
+        ++visited;
+        const auto *children=declaration.member("children");
+        if(!children||children->type!=Json::Type::Array||
+            children->array.size()>maximumTypes-visited-pending.size())return false;
+        std::size_t bytes=2;
+        for(const auto &[key,value]:declaration.object) {
+            // Count quotes, colon and separator. Each child is charged separately.
+            const auto length=key=="children"?2+children->array.size():encode(value).size();
+            bytes+=canonical_json::quote(key).size()+1+length;
+            if(bytes>maximumConnectorTypeBytes)return false;
+            ++bytes;
+        }
+        for(const auto &child:children->array)pending.push_back(&child);
+    }
+    return true;
+}
 
 struct Adapter {
     CanonicalDraftMigrationResult &out;const Json &root;const CanonicalDraftResolvedTypes &resolved;
@@ -558,12 +601,16 @@ struct Adapter {
         std::size_t descriptorBytes=0;
         for(const auto &entry:resolved.ports) {
             const auto node=nodes.find(entry.nodeId);
-            if(node==nodes.end()||entry.portId.empty()||entry.portId.size()>1024||entry.fullTypeJson.size()>65536)
-                fail("/diagram","Connector evidence names no actual bounded authored node/port.","migration.composed_resolution_invalid", Domain::Integrity);
+            if(node==nodes.end())
+                fail("/diagram","Connector evidence refers to an unknown executable node: "+entry.nodeId.substr(0,1024)+".","migration.composed_resolution_invalid", Domain::Integrity);
+            if(entry.portId.empty()||entry.portId.size()>1024)
+                fail(node->second.path,"Connector evidence has an empty or oversized port identifier.","migration.composed_resolution_invalid", Domain::Integrity);
             if(entry.fullTypeJson.size()>16U*1024U*1024U-descriptorBytes)
                 fail("/diagram","Complete connector schemas exceed the existing aggregate descriptor budget.","migration.composed_resource_limit", Domain::Control);
             descriptorBytes+=entry.fullTypeJson.size();
             const auto full=source::parseJson(entry.fullTypeJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);
+            if(full&&entry.fullTypeJson.size()>maximumConnectorTypeBytes&&!connectorDeclarationsFit(*full))
+                fail(node->second.path,"Type declarations for port '"+entry.portId+"' exceed the 64 KiB per declaration or 4096 type limit.","migration.composed_resource_limit", Domain::Control);
             CanonicalObjectReferenceDiagnostic diagnostic;
             const auto type=full?canonicalObjectReferenceReadType(*full,&diagnostic):std::nullopt;
             if(!type||!type->known())fail(node->second.path,"A complete exact type schema is required for every connector.","migration.composed_resolution_invalid", Domain::Integrity);
@@ -1680,7 +1727,8 @@ struct Adapter {
             if(!application_control_source::preflight(cfg,&why))fail(at,why, "migration.composed_source_invalid", Domain::Semantics);
             const auto decoded=application_control_source::readConfiguration(cfg,&why);
             if(!decoded)fail(at,"The authored application-control operation has no admitted native implementation.","migration.composed_operation_unavailable", Domain::FrontendCapability);
-            return std::string(canonicalObjectReferenceOperation(decoded->kind==ApplicationControlKind::Reference?CanonicalObjectReferenceKind::Resolve:decoded->kind==ApplicationControlKind::Invoke?CanonicalObjectReferenceKind::Invoke:decoded->kind==ApplicationControlKind::Close?CanonicalObjectReferenceKind::Close:CanonicalObjectReferenceKind::Property));
+            return std::string(canonicalObjectReferenceOperation(decoded->kind==ApplicationControlKind::ToMoreSpecificClass?
+                CanonicalObjectReferenceKind::ToMoreSpecificClass:decoded->kind==ApplicationControlKind::Reference?CanonicalObjectReferenceKind::Resolve:decoded->kind==ApplicationControlKind::Invoke?CanonicalObjectReferenceKind::Invoke:decoded->kind==ApplicationControlKind::Close?CanonicalObjectReferenceKind::Close:CanonicalObjectReferenceKind::Property));
         }
         fail(at,"The actual authored operation has no composed-program implementation contract: "+authored,"migration.composed_operation_unavailable", operationDomain(authored));
     }
@@ -1747,8 +1795,8 @@ struct Adapter {
                 fail(path,"NativeCall configuration belongs only to its actual configured node.","migration.native_call_configuration_invalid", Domain::Semantics);
             const auto revision = ordinal(root.member("draft_revision"),"/draft_revision");
             if(revision != kFrogConnectivityDraftRevision && revision != kFrogPictureRingDraftRevision &&
-                revision != kFrogClusterPresentationDraftRevision)
-                fail(path,"Configured NativeCall requires its explicitly identified revision-7 writer.","migration.native_call_revision_unavailable", Domain::Compatibility);
+                revision != kFrogClusterPresentationDraftRevision && revision != kFrogExtendedAuthoringDraftRevision)
+                fail(path,"Configured NativeCall requires an explicitly identified compatible writer.","migration.native_call_revision_unavailable", Domain::Compatibility);
         }
         if(const auto *mode=node.member("comparison_aggregates")) {
             const auto *type=node.member("type");
@@ -2087,6 +2135,15 @@ struct Adapter {
                 for(const auto key:{"cluster_function_terminals","cluster_field_names","cluster_field_id_paths","cluster_show_full_names","string_function_terminals","array_function_terminals","retain_first_error_inputs","studio_event_registration_rows","studio_application_control","build_array_inputs","build_array_concatenate","index_array_outputs","array_edit_groups","reshape_array_dimensions","matrix_append_by_rows"})
                     if(const auto *value=node.member(key))cfg.object.emplace(key,*value);
                 const auto authored=bare(text(node.member("type"),at));
+                if(isQuotientRemainderNodeType(authored))if(const auto *value=node.member("value_type")) {
+                    const auto representation=text(value,at+"/value_type");
+                    if(!isQuotientRemainderRepresentation(representation))
+                        fail(at+"/value_type","Fixed Quotient & Remainder requires I32 or U32.",
+                            "migration.numeric_representation_invalid",Domain::Semantics);
+                    cfg.object.emplace("numeric_representation",*value);
+                    out.identities.push_back({"numeric_representation",id,at+"/value_type",
+                        target+"/studio_configuration/numeric_representation",false});
+                }
                 if(authored=="array.conversion.array_to_cluster"||authored=="cluster.conversion.array_to_cluster") {
                     // The existing authoring resolver stores Cluster Size in
                     // text and seals its exact fields in the result schema.
@@ -2175,8 +2232,10 @@ struct Adapter {
                     const auto decoded=application_control_source::readConfiguration(*configuration);
                     const bool reference=decoded&&decoded->kind==ApplicationControlKind::Reference;
                     const bool referenceInput=decoded&&applicationControlHasReferenceInput(*decoded);
+                    const auto model=decoded&&decoded->kind==ApplicationControlKind::ToMoreSpecificClass
+                        ? port(id,"target_class",true).type : binding::TypeRef{};
                     const auto descriptor=canonicalObjectReferenceDescriptor(*configuration,
-                        target+"/"+std::string(canonicalObjectReferenceAttribute)+"/configuration",port(id,reference||!referenceInput?"reference_out":"reference_in",referenceInput).type,&diagnostic);
+                        target+"/"+std::string(canonicalObjectReferenceAttribute)+"/configuration",port(id,reference||!referenceInput?"reference_out":"reference_in",referenceInput).type,&diagnostic,model);
                     if(!descriptor)fail(at+"/studio_application_control",diagnostic.message,
                         diagnostic.unsupported?"migration.composed_operation_unavailable":"migration.composed_source_invalid", diagnostic.unsupported?Domain::FrontendCapability:Domain::Semantics);
                     item.object["type"]=string(std::string(canonicalObjectReferenceOperation(descriptor->kind)));
@@ -2261,6 +2320,9 @@ struct Adapter {
                 auto terminals=(type=="in_place_element_structure"||type=="sequence_structure")&&!authoredTerminals?
                     object():objectAt(authoredTerminals,at+"/structure_terminals");
                 if(type=="for_loop") {
+                    item.object.emplace("for_loop_count_profile",string(std::string(canonicalStudioForCountProfile)));
+                    out.identities.push_back({"structure_terminal",id+":count",at+"/structure_terminals/count",
+                        target+"/for_loop_count_profile",true});
                     const auto *condition=terminals.member("condition");
                     if(const auto *enabled=node.member("for_loop_conditional_terminal");enabled&&flag(enabled,at)!=(condition!=nullptr))
                         fail(at+"/structure_terminals/condition","The For conditional terminal must agree with its enabled setting.","migration.for_condition_invalid",Domain::Semantics);
@@ -2280,6 +2342,18 @@ struct Adapter {
                     Json converted=object(),eventCase=object();const auto rid=text(region.member("id"),rp+"/id");converted.object.emplace("id",string(rid));eventCase.object.emplace("id",string(rid));
                     for(const auto key:{"match","matches","default","event","event_data_fields","event_payload_fields","event_response_fields"})
                         if(const auto *value=region.member(key)){converted.object.emplace(key,*value);if(std::string_view(key).starts_with("event"))eventCase.object.emplace(key,*value);}
+                    if(const auto *selection=region.member("studio_event_response_fields")) {
+                        const auto path=rp+"/studio_event_response_fields";
+                        const auto &rows=arrayAt(selection,path);
+                        if(type!="event_structure" || rows.size()>16 ||
+                           std::any_of(rows.begin(),rows.end(),[](const Json &row) {
+                               return row.type!=Json::Type::String || !isEventAuthoringResponseField(row.string);
+                           })) fail(path,"Invalid Event response row selection.","migration.event_response_selection_invalid",Domain::Semantics);
+                        if(const auto *declared=region.member("event_response_fields");declared&&!exact(*declared,*selection))
+                            fail(path,"Conflicting Event response row selections.","migration.event_response_selection_invalid",Domain::Semantics);
+                        converted.object.emplace("event_response_fields",*selection);
+                        eventCase.object.emplace("event_response_fields",*selection);
+                    }
                     if(type=="case")if(const auto *legacyMatch=region.member("match")) {
                         // The common Studio writer retains Boolean Case labels
                         // in its historical compact form. Normalize only that
@@ -2333,9 +2407,13 @@ struct Adapter {
 };
 }
 bool canonicalDraftNeedsComposition(const Json &root,const CanonicalDraftResolvedTypes *resolved) {
+    if(resolved&&resolved->requiresExactStudioForCountPorts)return true;
     const auto *revision = root.member("draft_revision");
-    if (revision && revision->type == Json::Type::Number && revision->string == std::to_string(kFrogClusterPresentationDraftRevision))
-        return true; // Cluster presentation can also be nested in an owned widget payload.
+    // Both presentation revisions can occur inside an owned widget payload.
+    if (revision && revision->type == Json::Type::Number &&
+        (revision->string == std::to_string(kFrogClusterPresentationDraftRevision) ||
+         revision->string == std::to_string(kFrogExtendedAuthoringDraftRevision)))
+        return true;
     // Routing only: a real independently declared interface, explicit widget
     // IDs/directions/types and active typed terminals request the existing
     // complete-port pass. The composed adapter still checks every full schema
@@ -2492,13 +2570,13 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
     std::string_view bytes,FrogDraftDataView authored,bool typeDefinitionsValidated) {
     CanonicalDraftMigrationResult report;
     try {
-        if(bytes.size()>8U*1024U*1024U)fail("/","Source bytes exceed the existing preparation contract.","migration.composed_resource_limit", Domain::Control);
+        if(bytes.size()>kMaximumFrogDocumentBytes)fail("/","Source bytes exceed the existing preparation contract.","migration.composed_resource_limit", Domain::Control);
         const auto parsed=source::parseJson(bytes,nullptr,source::JsonNumberPolicy::PreserveLexeme);
         if(!parsed)fail("/","The exact authored source is invalid JSON.", "migration.composed_source_invalid", Domain::Integrity);
         const auto &root=objectAt(&*parsed,"/");authoredRootFields(root);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","Sub-FROG projection requires identified private Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision&&revision!=kFrogClusterPresentationDraftRevision&&
+        if(!isComposedWriterRevision(revision)&&
             !((revision==kFrogTypeDefinitionDraftRevision||revision==kFrogExtendedTypeDefinitionDraftRevision)&&typeDefinitionsValidated)&&
             !(revision==kFrogClassValueDraftRevision&&((root.member("classes")&&!root.member("classes")->array.empty())||root.member("class_member")||
                 std::any_of(authored.diagramNodes.begin(),authored.diagramNodes.end(),[](const auto &n){return n.classOperation.has_value();}))))
@@ -2718,7 +2796,8 @@ std::vector<CanonicalDraftMigrationDiagnostic> validateCanonicalSubFrogProjectio
 CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string_view bytes,std::string_view uri,const CanonicalDraftResolvedTypes *resolved) {
     CanonicalDraftMigrationResult result;result.originalSource=std::make_shared<const std::string>(bytes);result.originalUri=uri;result.originalSha256=hashing::sha256Hex(bytes);
     try {
-        if(bytes.size()>8U*1024U*1024U||uri.empty()||uri.size()>8192||uri.find('#')!=uri.npos)fail("/","Source bytes and identity exceed the existing preparation contract.", "migration.composed_source_invalid", Domain::Integrity);
+        if(bytes.size()>kMaximumFrogDocumentBytes)fail("/","Source bytes exceed the existing preparation contract.","migration.composed_resource_limit", Domain::Control);
+        if(uri.empty()||uri.size()>8192||uri.find('#')!=uri.npos)fail("/","Source identity is invalid.", "migration.composed_source_invalid", Domain::Integrity);
         const auto parsed=source::parseJson(bytes,nullptr,source::JsonNumberPolicy::PreserveLexeme);
         if(!parsed)fail("/","The original source is invalid JSON.", "migration.composed_source_invalid", Domain::Integrity);
         const auto &root=objectAt(&*parsed,"/");
@@ -2727,7 +2806,7 @@ CanonicalDraftMigrationResult prepareCanonicalComposedDraftMigration(std::string
             fail("/classes","By-value classes require the common class/Sub-FROG preparation before public Source derivation.","class.preparation_required",Domain::Semantics);
         if(text(root.member("format"),"/format")!="frog.document.draft")fail("/format","This adapter requires identified Studio source.", "migration.composed_source_invalid", Domain::Compatibility);
         const auto revision=ordinal(root.member("draft_revision"),"/draft_revision");
-        if(revision!=2&&revision!=3&&revision!=4&&revision!=5&&revision!=6&&revision!=7&&revision!=kFrogPictureRingDraftRevision&&revision!=kFrogClusterPresentationDraftRevision)fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
+        if(!isComposedWriterRevision(revision))fail("/draft_revision","The private writer revision is not identified.", "migration.composed_source_invalid", Domain::Compatibility);
         if(root.member("storage") && revision<kFrogArrayStorageDraftRevision)
             fail("/storage","FROG storage options require private draft_revision 3.","migration.storage_invalid",Domain::Integrity);
         const auto *metadata=root.member("metadata");

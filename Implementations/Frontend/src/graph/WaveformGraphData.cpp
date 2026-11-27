@@ -102,6 +102,8 @@ bool positionCursor(const State &state,Cursor &c,Point p) {
     if(!best)return false;c.sourceIndex=*best;c.x=std::fma(static_cast<double>(*best),it->step,it->origin);c.y=it->y[*best];return true;
 }
 std::string validate(const Design &design) {
+    if (design.legendWidth && !validPlotLegendWidth(*design.legendWidth))
+        return "Invalid Waveform Graph legend width.";
     if(design.cursors.size()>256)return "WFG_CURSOR_LIMIT: at most 256 cursors.";
     std::unordered_set<std::string> cursorIds;
     for(const auto &c:design.cursors)if(c.id.empty()||c.id.size()>256||!cursorIds.insert(c.id).second||c.name.size()>1024||
@@ -131,6 +133,11 @@ std::string validate(const Design &design) {
             return "WFG_PLOT_ID: unique, nonempty plot IDs are required.";
         if (!std::isfinite(plot.width) || plot.width < 0.5 || plot.width > 8.0 || plot.rgb > 0xFFFFFF)
             return "WFG_PLOT_STYLE: width must be between 0.5 and 8; color must be RGB.";
+        if ((plot.presentation && (*plot.presentation < Presentation::Line || *plot.presentation > Presentation::None)) ||
+            plot.lineStyle < LineStyle::Solid || plot.lineStyle > LineStyle::DashDotDot ||
+            plot.interpolation < Interpolation::None || plot.interpolation > Interpolation::VerticalCentered ||
+            plot.symbol < Symbol::None || plot.symbol > Symbol::SmallHollowSquare)
+            return "WFG_PLOT_STYLE: unsupported plot presentation, line, interpolation or symbol.";
     }
     return {};
 }

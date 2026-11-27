@@ -54,10 +54,10 @@ void checkKeys(const JsonValue &v, std::initializer_list<std::string_view> known
         if (std::find(known.begin(), known.end(), key) == known.end())
             throw std::runtime_error("Unsupported field: " + key);
 }
-int readAxisInteger(const JsonValue &value, std::string_view key, int maximum, int fallback) {
+int readGraphInteger(const JsonValue &value, std::string_view key, int maximum, int fallback) {
     const double setting = number(value, key, fallback);
     if (!std::isfinite(setting) || setting < 0 || setting > maximum || std::floor(setting) != setting)
-        throw std::runtime_error("Invalid Waveform Graph axis setting: " + std::string(key));
+        throw std::runtime_error("Invalid Waveform Graph setting: " + std::string(key));
     return static_cast<int>(setting);
 }
 void readAxisOptions(const JsonValue &value, std::string_view key, graph::AxisOptions &axis) {
@@ -67,11 +67,11 @@ void readAxisOptions(const JsonValue &value, std::string_view key, graph::AxisOp
         "visible", "title_visible", "tick_labels_visible", "major_ticks", "minor_ticks", "major_grid", "minor_grid",
         "time_origin", "time_unit", "time_zone", "time_content"});
     axis.scale = static_cast<graph::AxisScale>(
-        readAxisInteger(*v, "scale", static_cast<int>(graph::AxisScale::Logarithmic), static_cast<int>(axis.scale)));
+        readGraphInteger(*v, "scale", static_cast<int>(graph::AxisScale::Logarithmic), static_cast<int>(axis.scale)));
     if (v->member("format"))
         axis.format = static_cast<graph::AxisFormat>(
-            readAxisInteger(*v, "format", static_cast<int>(graph::AxisFormat::SI), 0));
-    axis.precision = readAxisInteger(*v, "precision", 17, axis.precision);
+            readGraphInteger(*v, "format", static_cast<int>(graph::AxisFormat::SI), 0));
+    axis.precision = readGraphInteger(*v, "precision", 17, axis.precision);
     axis.significantDigits = flag(*v, "significant_digits", axis.significantDigits);
     axis.trailingZeros = flag(*v, "trailing_zeros", axis.trailingZeros);
     axis.visible = flag(*v, "visible", true);
@@ -85,7 +85,7 @@ void readAxisOptions(const JsonValue &value, std::string_view key, graph::AxisOp
     axis.timeUnit = text(*v, "time_unit", axis.timeUnit);
     axis.timeZone = text(*v, "time_zone", axis.timeZone);
     axis.timeContent = static_cast<graph::TimeContent>(
-        readAxisInteger(*v, "time_content", static_cast<int>(graph::TimeContent::Time), static_cast<int>(axis.timeContent)));
+        readGraphInteger(*v, "time_content", static_cast<int>(graph::TimeContent::Time), static_cast<int>(axis.timeContent)));
 }
 void writeAxisOptions(std::ostringstream &out, const char *key, const graph::AxisOptions &axis) {
     if (axis == graph::AxisOptions{}) return;
@@ -106,8 +106,8 @@ void writeAxisOptions(std::ostringstream &out, const char *key, const graph::Axi
 }
 void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
     try {
-        checkKeys(value, {"profile", "x_label", "y_label", "autoscale_x", "autoscale_y", "grid_visible", "legend_visible", "legend_rows",
-            "legend_position", "x_min", "x_max", "y_min", "y_max", "x_axis", "y_axis", "plots", "initial_data", "x_title", "y_title", "annotations",
+        checkKeys(value, {"profile", "x_label", "y_label", "autoscale_x", "autoscale_y", "grid_visible", "legend_visible", "legend_rows", "kind_badge_visible",
+            "legend_position", "legend_width", "x_min", "x_max", "y_min", "y_max", "x_axis", "y_axis", "plots", "initial_data", "x_title", "y_title", "annotations",
             "datatype", "datatype_explicit", "typed_initial_data", "cursors"});
         if (text(value, "profile", "") != "WFG-1-linear") throw std::runtime_error("Unsupported Waveform Graph profile.");
         graph::State candidate;
@@ -159,10 +159,13 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         d.annotations.clear();
         d.autoscaleX = flag(value, "autoscale_x", true); d.autoscaleY = flag(value, "autoscale_y", true);
         d.gridVisible = flag(value, "grid_visible", true); d.legendVisible = flag(value, "legend_visible", true);
+        d.showKindBadge = flag(value, "kind_badge_visible", true);
         const double legendRows = number(value, "legend_rows", d.legendRows);
         if (!(legendRows >= 1 && legendRows <= graph::maximumSeries && std::floor(legendRows) == legendRows))
             throw std::runtime_error("Invalid Waveform Graph legend row count.");
         d.legendRows = static_cast<std::uint8_t>(legendRows);
+        if (const auto *width = field(value, "legend_width", JsonValue::Type::Number))
+            d.legendWidth = width->number;
         if (const auto *position = field(value, "legend_position", JsonValue::Type::Object)) {
             checkKeys(*position, {"x", "y"});
             const auto *x = field(*position, "x", JsonValue::Type::Number);
@@ -178,13 +181,23 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         if (auto *plots = field(value, "plots", JsonValue::Type::Array)) {
             if (plots->array.size() > graph::maximumSeries) throw std::runtime_error("Plot quota exceeded.");
             for (const auto &p : plots->array) {
-                checkKeys(p, {"id", "name", "rgb", "visible", "lines", "points", "width"});
+                checkKeys(p, {"id", "name", "rgb", "visible", "lines", "points", "width",
+                    "presentation", "line_style", "interpolation", "symbol"});
                 graph::Plot plot;
                 plot.id = text(p, "id", ""); plot.name = text(p, "name", "");
                 const auto rgb = number(p, "rgb", plot.rgb);
                 if (!std::isfinite(rgb) || rgb < 0 || rgb > 0xFFFFFF || std::floor(rgb) != rgb) throw std::runtime_error("Invalid plot color.");
                 plot.rgb = static_cast<std::uint32_t>(rgb); plot.width = number(p, "width", plot.width);
                 plot.visible = flag(p, "visible", true); plot.lines = flag(p, "lines", true); plot.points = flag(p, "points", false);
+                if (p.member("presentation"))
+                    graph::setPlotPresentation(plot, static_cast<graph::Presentation>(
+                        readGraphInteger(p, "presentation", static_cast<int>(graph::Presentation::None), 0)));
+                plot.lineStyle = static_cast<graph::LineStyle>(readGraphInteger(p, "line_style",
+                    static_cast<int>(graph::LineStyle::DashDotDot), static_cast<int>(plot.lineStyle)));
+                plot.interpolation = static_cast<graph::Interpolation>(readGraphInteger(p, "interpolation",
+                    static_cast<int>(graph::Interpolation::VerticalCentered), static_cast<int>(plot.interpolation)));
+                plot.symbol = static_cast<graph::Symbol>(readGraphInteger(p, "symbol",
+                    static_cast<int>(graph::Symbol::SmallHollowSquare), static_cast<int>(plot.symbol)));
                 d.plots.push_back(std::move(plot));
             }
         }
@@ -243,6 +256,26 @@ void deserializeWaveformGraph(const JsonValue &value, graph::State &state) {
         state.diagnostic = "WFG_UNSUPPORTED_SOURCE: " + std::string(error.what());
     }
 }
+bool usesExtendedGraphPresentation(const graph::State &state) {
+    if (!state.preservedSource) {
+        return state.design.legendWidth.has_value() || !state.design.showKindBadge ||
+            std::any_of(state.design.plots.begin(), state.design.plots.end(), [](const graph::Plot &plot) {
+                return plot.presentation.has_value() || plot.lineStyle != graph::LineStyle::Solid ||
+                    plot.interpolation != graph::Interpolation::Linear || plot.symbol != graph::Symbol::Disc;
+            });
+    }
+    const auto stored = source::parseJson(*state.preservedSource);
+    return stored && usesExtendedWaveformGraphSourcePresentation(*stored);
+}
+bool usesExtendedWaveformGraphSourcePresentation(const JsonValue &stored) {
+    if (stored.member("legend_width") || stored.member("kind_badge_visible")) return true;
+    const auto *plots = stored.member("plots");
+    return plots && std::any_of(plots->array.begin(), plots->array.end(), [](const JsonValue &plot) {
+        return plot.member("presentation") || plot.member("line_style") ||
+            plot.member("interpolation") || plot.member("symbol");
+    });
+}
+
 std::string serializeWaveformGraph(const graph::State &state) {
     if (state.preservedSource) return *state.preservedSource;
     std::ostringstream o; o.imbue(std::locale::classic()); o << std::boolalpha << std::setprecision(17);
@@ -267,6 +300,10 @@ std::string serializeWaveformGraph(const graph::State &state) {
     writeTitle("x_title", d.xTitle); writeTitle("y_title", d.yTitle);
     if (d.legendPosition)
         o << ",\"legend_position\":{\"x\":" << d.legendPosition->x << ",\"y\":" << d.legendPosition->y << '}';
+    if (d.legendWidth)
+        o << ",\"legend_width\":" << *d.legendWidth;
+    if (!d.showKindBadge)
+        o << ",\"kind_badge_visible\":false";
     writeAxisOptions(o, "x_axis", d.xAxis);
     writeAxisOptions(o, "y_axis", d.yAxis);
     if (!d.annotations.empty()) {
@@ -297,7 +334,13 @@ std::string serializeWaveformGraph(const graph::State &state) {
         if (i) o << ','; const auto &p = d.plots[i];
         o << "{\"id\":"; appendJsonString(o, p.id); o << ",\"name\":"; appendJsonString(o, p.name);
         o << ",\"rgb\":" << p.rgb << ",\"visible\":" << p.visible << ",\"lines\":" << p.lines
-          << ",\"points\":" << p.points << ",\"width\":" << p.width << '}';
+          << ",\"points\":" << p.points << ",\"width\":" << p.width;
+        if (p.presentation) o << ",\"presentation\":" << static_cast<int>(*p.presentation);
+        if (p.lineStyle != graph::LineStyle::Solid) o << ",\"line_style\":" << static_cast<int>(p.lineStyle);
+        if (p.interpolation != graph::Interpolation::Linear)
+            o << ",\"interpolation\":" << static_cast<int>(p.interpolation);
+        if (p.symbol != graph::Symbol::Disc) o << ",\"symbol\":" << static_cast<int>(p.symbol);
+        o << '}';
     }
     o << "],\"initial_data\":[";
     for (std::size_t i = 0; i < state.initialData.series.size(); ++i) {

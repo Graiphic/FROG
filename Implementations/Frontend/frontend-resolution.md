@@ -174,12 +174,14 @@ of the newer local Studio pin and general `@2` qualification remain open.
 
 ## Limits and cancellation
 
-Zero selects documented limits; nonzero values can only reduce them. Existing
-producer limits take precedence:
+Zero selects the documented default. For the root document, callers can
+request a larger input budget through `max_source_bytes`. Each input and
+output remains subject to its own producer limit.
 
 | Input or work | Maximum effective limit |
 | --- | ---: |
-| Source and context JSON, each | 8 MiB |
+| Root source | 8 MiB by default, up to 64 MiB with an explicit budget |
+| Semantic-context JSON | The smaller of 8 MiB and the effective root source budget |
 | One dependency | 8 MiB |
 | Total unique dependency captures | 64 MiB |
 | Combined JSON results, including FIR | 32 MiB |

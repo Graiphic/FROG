@@ -13,6 +13,7 @@ bool readApplicationControl(const JsonValue &node,DiagramNode &output,std::strin
     const auto *entry=findFunctionCatalogEntryByDiagramNodeType(output.type);
     const std::string_view catalogId=c.kind==ApplicationControlKind::Reference?"application_control.reference":
         c.kind==ApplicationControlKind::Property?"application_control.property_node":
+        c.kind==ApplicationControlKind::ToMoreSpecificClass?"application_control.to_more_specific_class":
         c.kind==ApplicationControlKind::Invoke?"application_control.invoke_node":"application_control.close_reference";
     if(output.kind!="primitive" || !entry || entry->catalogId!=catalogId)
         return fail("Private operation configuration does not match the node type.");

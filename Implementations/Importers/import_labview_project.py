@@ -196,7 +196,7 @@ def import_project(args, data, report, reader):
                              "identity": definitions[control]["id"], "version": "1", "path": str(model)}
             lock = scratch / "dependencies.json"
             reader.write_json(lock, {"format": "frog.frontend.dependencies", "version": "1", "dependencies": list(deps.values())})
-            reader.validate_frontend(args.frontend, doc, scratch, lock)
+            reader.validate_frontend(args.frontend, doc, scratch, entries[path][1] + ".frog", lock)
             outputs[out] = doc
             mapping["programs"][out.as_posix()] = evidence
     ET.indent(manifest)

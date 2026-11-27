@@ -115,20 +115,34 @@ def _case_regions(graph, node, regions, target, binding_type, notes):
         elif rule.region in regions:
             notes.append(_note(node, "case_rule_unqualified", "A stored Case rule has no verified native match.",
                                region_uid=rule.region))
+    default_region = selection.default_region
+    # NI can omit SelectDefaultCase while saving the selected Enum item and
+    # its Default designation in the Case selector. Cross-check the label
+    # against the typed range table before assigning a fallback region.
+    if (default_region is None and "SelectDefaultCase" not in node.fields
+            and enum_items and selection.displayed_label):
+        candidates = {rule.region for rule in selection.range_rules
+                      if rule.start_kind == rule.end_kind == 0 and rule.start == rule.end
+                      and 0 <= rule.start < len(enum_items)
+                      and selection.displayed_label == f'"{enum_labels[rule.start]}", Default'}
+        if len(candidates) == 1:
+            candidate, = candidates
+            if selection.displayed_region in (None, candidate):
+                default_region = candidate
     for uid, region in regions.items():
-        if uid == selection.default_region:
+        if uid == default_region:
             region["default"] = True
             region.setdefault("matches", [])
         if selection.displayed_region == uid and selection.displayed_label:
             region.setdefault("title", selection.displayed_label)
-        if uid not in matched and uid != selection.default_region:
+        if uid not in matched and uid != default_region:
             text = region.get("title") or f"LabVIEW region {uid}"
             region["draft_text"] = f"{text} (selector requires review)"
             notes.append(_note(node, "case_match_unqualified", "The saved selector rule is retained as source evidence.", region_uid=uid))
     exhaustive = len(selection.range_rules) == len(matched) == len(regions) == 2 and status_values == {0, 1}
     if enum_items:
         exhaustive = (len(enum_values) == len(enum_items) == len(selection.range_rules) and len(matched) == len(regions))
-    if selection.default_region is None and not exhaustive:
+    if default_region is None and not exhaustive:
         notes.append(_note(node, "case_default_unqualified", "There is no verified explicit default region in the source data."))
 
 
@@ -255,6 +269,44 @@ def panel_close_responses(graph, node, binding_type, wired):
         if len(candidates) == 1:
             matches[uid] = candidates[0]
     return matches
+
+
+def unwired_panel_close_data(graph, region, types, wired):
+    """Read the saved display rows without turning an unwired shelf into a function."""
+    candidates = []
+    field_names = {b"Source": "source", b"Type": "type", b"Time": "time", b"VIRef": "program_ref"}
+    for uid in graph.diagrams[region].nodes:
+        node = graph.nodes[uid]
+        if node.kind != "eventDataNode" or not node.terminals or wired.intersection(node.terminals):
+            continue
+        terminals = [graph.terminals[t] for t in node.terminals]
+        if any(t.direction != "source" for t in terminals):
+            continue
+        aggregate = node.fields.get("dcoAgg")
+        rows = node.fields.get("dcoList")
+        binding = graph.bindings.get(aggregate.uid) if aggregate else None
+        if not binding or not rows or binding.type_label != "Event Data" or not rows.children:
+            continue
+        schema = types.schema(binding)
+        if not schema or schema.family != "Cluster" or len(rows.children) > 16:
+            continue
+        if {t.binding for t in terminals} != {binding.uid, *(row.uid for row in rows.children)}:
+            continue
+        fields = []
+        for row in rows.children:
+            selected = graph.bindings.get(row.uid)
+            if not selected or selected.kind != "nmxDCO":
+                break
+            index = selected.fields["i"].value if "i" in selected.fields else 0
+            if not isinstance(index, int) or not 0 <= index < len(schema.children):
+                break
+            field = field_names.get(schema.children[index].field_label())
+            if not field:
+                break
+            fields.append(field)
+        if len(fields) == len(rows.children):
+            candidates.append((uid, fields))
+    return candidates[0] if len(candidates) == 1 else None
 
 
 def _single_dynamic_events(graph, node, types):

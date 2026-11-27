@@ -11,11 +11,12 @@ import struct
 
 from pylabview import LVmisc
 from import_labview_interfaces import ExactRead, InterfaceTypes, read_connector
-from import_labview_panel import project_panel, resource_payload
+from import_labview_panel import project_panel, resource_payload, unbound_reference
 from import_labview_profile import (ATTR_UID, TYPES, ProfileRefusal, bounds, convert_constant, decode_constant_value,
-                                    field, heap_root, identity, items, kind, projection_requirement_diagnostics, require)
+                                    field, heap_root, identity, items, kind, projection_requirement_diagnostics, require,
+                                    vi_document_path)
 from import_labview_regions import (NATIVE_TERMINALS, STRUCTURE_KINDS, _terminal_record, event_control_displays,
-                                   loop_tunnel_modes, panel_close_responses, project_region_owner)
+                                   loop_tunnel_modes, panel_close_responses, project_region_owner, unwired_panel_close_data)
 from import_labview_structured import OPERATIONS, append_ports, boundary_port, empty_array_constant, matches_operation_types, result_binding, structure
 from import_labview_source_diagram import decode_source_diagram, is_quit_application, merge_error_ports
 from import_labview_bundle import Bundle, member_presentation, panel_terminal_type, project_calls, resolve_bundle
@@ -200,7 +201,12 @@ def cluster_literal(uid, binding, types, classes):
     value = binding.fields.get("ConstValue")
     if not schema or schema.family != "Cluster" or not schema.native_type(types.encoding) or not value or value.payload is None:
         return None
-    stream = ExactRead(value.payload)
+    data = value.payload
+    if binding.padded_clear_error and data == bytes(10) and types(binding) == _ERROR:
+        # The LV20 clear-error constant can include one extra zero octet. The
+        # diagram and display descriptors independently agree on all three fields.
+        data = data[:9]
+    stream = ExactRead(data)
     children = []
 
     def decode(source, key, depth):
@@ -260,14 +266,11 @@ def cluster_literal(uid, binding, types, classes):
         if field.family == "Refnum":
             cls = field.reference_class()
             values = field.value_children()
-            if not cls or stream.read(4) != bytes(4) or len(values) != 1:
+            if not cls or stream.read(4) != bytes(4) or len(values) > 1:
                 return None
             return {"id": ident, "kind": "primitive", "type": "frog.studio.application_control.reference",
                     "palette_catalog_id": "application_control.reference", "label_visible": False,
-                    "studio_application_control": {"profile": "frog.studio.application_control@1", "kind": "reference",
-                    "expected_class": cls, "target": {"kind": "unbound", "owner_document": "", "widget_id": ""},
-                    "method_id": "", "properties": [], "parameters": [],
-                    "value_schema": resource_payload(values[0], types.encoding)}}
+                    "studio_application_control": unbound_reference(field, types.encoding)}
         if dtype == "path":
             if stream.read(12) != b"PTH0" + bytes((0, 0, 0, 4)) + bytes(4):
                 return None
@@ -769,6 +772,41 @@ def value_primitive(node, graph, types, wired, signature):
              "palette_catalog_id": operation, "label_visible": False}, ports)
 
 
+def select_strings(node, graph, types, wired):
+    # Select consumes both strings and the predicate before delivering either
+    # input. Preserve that dependency with two input tunnels on one typed Case.
+    signature = ("structures.select", {0: ("result", "source", "string"), 1: ("false", "sink", "string"),
+                                        2: ("select", "sink", "bool"), 3: ("true", "sink", "string")})
+    binding = value_primitive(node, graph, types, wired, signature)
+    if binding is None:
+        return None
+    operation, terminals = binding
+    owner = operation["id"]
+    case = structure(owner, "case_structure")
+    case.update(structure_type="case", case_profile="frog.case-editing@1", binding_profile="frog.typed-binding@1",
+                structure_terminals={"selector": _terminal_record("bool", "selector", "selector", "selected_case", True)})
+    # Allocate enough space to distinguish both inputs in the authoring view.
+    box = layout(node.bounds)
+    case["layout"] = bounds(box["x"], box["y"], max(box["width"], 112), max(box["height"], 80))
+    for name, output, position in (("true", False, 0.25), ("false", False, 0.75), ("result", True, 0.5)):
+        case["boundary"]["outputs" if output else "inputs"].append({"id": name, "type": "string"})
+        case["structure_tunnels"].append({"id": name, "side": "right" if output else "left",
+                                         "normalized_position": position, "value_type": "string",
+                                         "output_from_structure": output})
+    for value in (False, True):
+        arm = str(value).lower()
+        body = draft_diagram()
+        body["edges"].append({"id": f"{owner}-{arm}-result",
+                              "from": {"node": owner, "port": boundary_port(arm, "output")},
+                              "to": {"node": owner, "port": boundary_port("result", "input")}})
+        case["regions"].append({"id": f"{owner}-region-{arm}", "title": str(value), "diagram": body,
+                                "matches": [{"kind": "boolean_exact", "value": value}]})
+    ports = {uid: (owner, "selector" if name == "select" else
+                   boundary_port(name, "output" if name == "result" else "input"))
+             for uid, (_, name) in terminals.items()}
+    return case, ports
+
+
 def append_array(node, graph, types):
     if node.kind != "aBuild":
         return None
@@ -794,7 +832,23 @@ def append_array(node, graph, types):
 def resource_primitive(node, graph, types, wired):
     if node.kind != "prim":
         return None
+    if len(node.terminals) == 1:
+        terminal = graph.terminals[node.terminals[0]]
+        binding = graph.bindings.get(terminal.binding)
+        if is_quit_application(node, binding) and terminal.direction == "sink" and types(binding) == "bool":
+            origin = f"lv-node-{node.uid}"
+            cfg = {"profile": "frog.studio.application_control@1", "kind": "invoke",
+                   "expected_class": "frog.application", "method_id": "application.quit",
+                   "target": {"kind": "this_application", "owner_document": "", "widget_id": ""},
+                   "properties": [], "parameters": [],
+                   "value_schema": {"canonical": "unknown", "children": [], "choice_kind": "none",
+                                    "choices": [], "field_names": []}}
+            return ({"id": origin, "kind": "primitive", "type": "frog.studio.application_control.invoke_node",
+                     "palette_catalog_id": "application_control.invoke_node", "label_visible": False,
+                     "studio_application_control": cfg}, {terminal.uid: (origin, "parameter:quit:in")})
     key = primitive_identity(node)
+    if key == (1516, 136):
+        return select_strings(node, graph, types, wired)
     if key in _VALUE_PRIMITIVES:
         return value_primitive(node, graph, types, wired, _VALUE_PRIMITIVES[key])
     if key in OPERATIONS:
@@ -1055,13 +1109,16 @@ def boolean_control_access(node, graph, types, wired, target, panel):
              "parameters": [], "target": address, "value_schema": resource_payload(value, types.encoding)}}, ports)
 
 
-def project_document(source, vi, panel, panel_notes, calls, graph, output, member_class=None, class_refs=None):
+def project_document(source, vi, panel, panel_notes, calls, graph, output, member_class=None, class_refs=None, types=None):
     diagrams = {uid: draft_diagram() for uid in graph.diagrams}
-    types = BindingTypes(vi)
+    if types is None:
+        types = BindingTypes(vi)
     control_targets = static_control_targets(vi, graph, types)
     loop_modes = loop_tunnel_modes(graph, types) if vi.getFileVersion()["major"] == 20 else {}
     notes = list(panel_notes)
     endpoints, signals, source_nodes, expansions = {}, {}, {}, {}
+    translated_xnodes = {uid for uid, (obj, _, _, _) in calls.items() if obj is not None and graph.nodes[uid].kind == "xNode"}
+    source_only_regions = {region for uid in translated_xnodes for region in graph.nodes[uid].regions}
     field_readers = {}
     wired = {term for signal in graph.signals.values() for term in signal.endpoints}
     event_displays = {node.uid: event_control_displays(node) for node in graph.nodes.values() if node.kind == "eventStruct"}
@@ -1077,6 +1134,9 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
                      for node in graph.nodes.values() if node.kind == "eventStruct"}
     response_owners = {response: (owner, region, terminal)
                        for owner, regions in close_filters.items() for region, (response, terminal) in regions.items()}
+    close_data = {region: shelf for regions in close_filters.values() for region in regions
+                  if (shelf := unwired_panel_close_data(graph, region, types, wired))}
+    data_shelf_nodes = {shelf[0] for shelf in close_data.values()}
     diagnostics = {entry["uid"]: entry for group in projection_requirement_diagnostics(vi)
                    for entry in group["occurrences"] if entry["source"].startswith("BDHb/")}
 
@@ -1085,8 +1145,20 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
         diagrams[diagram_uid]["nodes"].append(obj)
         endpoints.update(ports)
 
+    def retain_expansion(region):
+        name = output.parent / (output.stem + ".regions") / f"diagram-{region}.frog"
+        expansions[region] = name
+        return name
+
     for node in graph.nodes.values():
         if node.kind == "sRN":
+            continue
+        if node.uid in data_shelf_nodes:
+            owner = graph.diagrams[node.diagram].owner
+            source_nodes[node.uid] = {"node": f"lv-node-{owner}", "class": node.kind, "diagram": node.diagram,
+                                      "bounds": node.bounds, "terminals": list(node.terminals),
+                                      "fields": {name: source_field(info) for name, info in node.fields.items()},
+                                      "event_data_fields": close_data[node.diagram][1]}
             continue
         if node.uid in response_owners:
             owner, region, terminal = response_owners[node.uid]
@@ -1099,7 +1171,8 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
                                       "response_port": "event_response.discard"}
             continue
         call, ports, call_notes, defaults = calls.get(node.uid, (None, {}, [], []))
-        notes.extend(call_notes)
+        if node.diagram not in source_only_regions:
+            notes.extend(call_notes)
         merge = merge_error_ports(graph, node) if node.kind == "mergeErrors" else None
         translated = (resource_primitive(node, graph, types, wired) or append_array(node, graph, types) or initialize_array_1d(node, graph, types)
                       or named_cluster_operation(node, graph, types) or close_own_front_panel(node, graph, types, wired)
@@ -1109,22 +1182,31 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
             obj, ports, region_notes = project_region_owner(graph, node, diagrams, types, close_responses=close_filters.get(node.uid),
                                                            event_controls=event_controls.get(node.uid),
                                                            loop_modes=loop_modes)
+            if node.kind == "eventStruct":
+                for region, row in zip(node.regions, obj["regions"], strict=True):
+                    if region in close_data:
+                        row["event_data_fields"] = close_data[region][1]
+                        row["studio_event_data_node_visible"] = True
             notes.extend(region_notes)
         elif call is not None:
             obj = call
-            input_y = {p["id"]: p["normalized_y"] for p in obj["call"]["ports"] if p["direction"] == "input"}
-            bottom = None
-            for slot, _, dtype, value in sorted(defaults, key=lambda entry: input_y[entry[0]]):
-                literal = convert_constant(f"call-{node.uid}-{slot}", dtype, value, 0, 0)
-                box = literal["layout"]
-                box["x"] = node.bounds[0] - box["width"] - 20
-                y = node.bounds[1] + (node.bounds[3] - node.bounds[1]) * input_y[slot] - box["height"] / 2
-                box["y"] = y if bottom is None else max(bottom + 6, y)
-                bottom = box["y"] + box["height"]
-                diagrams[node.diagram]["nodes"].append(literal)
-                diagrams[node.diagram]["edges"].append({
-                    "id": literal["id"] + "-wire", "from": {"node": literal["id"], "port": "value"},
-                    "to": {"node": obj["id"], "port": slot}})
+            if node.uid in translated_xnodes:
+                for region in node.regions:
+                    retain_expansion(region)
+            if defaults:
+                input_y = {p["id"]: p["normalized_y"] for p in obj["call"]["ports"] if p["direction"] == "input"}
+                bottom = None
+                for slot, _, dtype, value in sorted(defaults, key=lambda entry: input_y[entry[0]]):
+                    literal = convert_constant(f"call-{node.uid}-{slot}", dtype, value, 0, 0)
+                    box = literal["layout"]
+                    box["x"] = node.bounds[0] - box["width"] - 20
+                    y = node.bounds[1] + (node.bounds[3] - node.bounds[1]) * input_y[slot] - box["height"] / 2
+                    box["y"] = y if bottom is None else max(bottom + 6, y)
+                    bottom = box["y"] + box["height"]
+                    diagrams[node.diagram]["nodes"].append(literal)
+                    diagrams[node.diagram]["edges"].append({
+                        "id": literal["id"] + "-wire", "from": {"node": literal["id"], "port": "value"},
+                        "to": {"node": obj["id"], "port": slot}})
         elif opened := (front_panel_open(node, graph, types, wired) or register_user_event(node, graph, types, wired)):
             obj, ports, helpers, links = opened
             diagrams[node.diagram]["nodes"].extend(helpers)
@@ -1173,10 +1255,12 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
                     node, graph.bindings.get(graph.terminals[node.terminals[0]].binding)):
                 title = "Quit LabVIEW"
             reason = f"LabVIEW {title} ({node.kind}), source UID {node.uid}. Execution requires a native implementation."
+            if call_notes and call_notes[0].get("library_target"):
+                reason = (f"LabVIEW {title} ({node.kind}), source UID {node.uid}. "
+                          f"Saved LabVIEW library dependency: {call_notes[0]['library_target']}. "
+                          f"{call_notes[0]['reason']}")
             for region in node.regions:
-                name = output.parent / (output.stem + ".regions") / f"diagram-{region}.frog"
-                expansions[region] = name
-                reason += f" Saved internal diagram {region}: {name.as_posix()}."
+                reason += f" Saved internal diagram {region}: {retain_expansion(region).as_posix()}."
             if call_notes and call_notes[0].get("member"):
                 reason += " Source member: " + call_notes[0]["member"]
             connector = next((note["ports"] for note in call_notes if note.get("ports")), ())
@@ -1187,11 +1271,14 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
                         "A wired terminal is absent from its saved connector.", f"BDHb/uid:{node.uid}")
                 terms = [row["terminal_uid"] for row in connector]
             obj, ports = marker(f"lv-node-{node.uid}", str(title), terms, graph, types, reason, node.bounds, connector)
-            notes.append({"node_uid": node.uid, "code": "untranslated_operation", "object": str(title),
-                          "message": reason})
+            if node.diagram not in source_only_regions:
+                notes.append({"node_uid": node.uid, "code": "untranslated_operation", "object": str(title),
+                              "message": reason})
         obj.setdefault("layout", layout(node.bounds))
         source_nodes[node.uid] = {"node": obj["id"], "class": node.kind, "diagram": node.diagram, "bounds": node.bounds,
                                   "fields": {name: source_field(info) for name, info in node.fields.items()}}
+        if node.uid in translated_xnodes:
+            source_nodes[node.uid]["translated_internal_diagrams"] = list(node.regions)
         if node.uid in control_targets:
             source_nodes[node.uid]["static_control_target"] = control_targets[node.uid]
         if defaults:
@@ -1228,7 +1315,8 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
             title = binding.type_label or binding.kind if binding else "Terminal"
             reason = f"LabVIEW {title}, terminal UID {terminal.uid} in diagram {terminal.diagram}. Review the original binding."
             obj, ports = marker(f"lv-terminal-{terminal.uid}", title, [terminal.uid], graph, types, reason, rect)
-            notes.append({"resource": location, "code": "terminal_reference", "object": title, "message": reason})
+            if terminal.diagram not in source_only_regions:
+                notes.append({"resource": location, "code": "terminal_reference", "object": title, "message": reason})
         insert(terminal.diagram, obj, ports)
 
     for signal in graph.signals.values():
@@ -1287,10 +1375,11 @@ def project_document(source, vi, panel, panel_notes, calls, graph, output, membe
 
 
 def project_editable(source, vi, load=None, class_readers=None):
-    source = Path(source).resolve()
-    bundle = resolve_bundle(source, vi, load, class_readers) if load else Bundle(source.parent)
+    selected = Path(source)
+    source = selected.resolve()
+    bundle = resolve_bundle(selected, vi, load, class_readers) if load else Bundle(source.parent)
     if not load:
-        bundle[source] = vi, Path("model.frog")
+        bundle[source] = vi, vi_document_path(selected)
     # Class identities are now resolved for this snapshot. Share the immutable
     # connector between its panel and every caller; a new import gets a new cache.
     read_interface = cache(read_connector)
@@ -1319,7 +1408,8 @@ def project_editable(source, vi, load=None, class_readers=None):
             available.unavailable[path] = skipped[bundle[path][1].as_posix()]["reason"]
     documents, maps = {}, {}
     for path, (member, output) in available.items():
-        calls = project_calls(member, graphs[path], path, available, panel_lists, presentations, read_interface)
+        types = BindingTypes(member)
+        calls = project_calls(member, graphs[path], path, available, panel_lists, presentations, read_interface, types)
         member_class = None
         if path in bundle.members:
             class_id = bundle.members[path]["class_id"]
@@ -1330,7 +1420,7 @@ def project_editable(source, vi, load=None, class_readers=None):
                       "path": Path(os.path.relpath(relative, output.parent)).as_posix()}
                       for relative, cls in bundle.classes.items()}
         document, mapping, regions = project_document(path, member, panels[path], notes[path], calls, graphs[path],
-                                                       output, member_class, class_refs)
+                                                       output, member_class, class_refs, types)
         require(not (regions.keys() & documents.keys()) and not (regions.keys() & {p for _, p in available.values()}),
                 "dependency_output_collision", "An internal diagram path collides with another member.", "BDHb")
         documents.update(regions)
@@ -1351,7 +1441,7 @@ def project_editable(source, vi, load=None, class_readers=None):
         # If every operation happens to have a rendering, untranslated semantics
         # can still exist in the VI's panel, entry point, or region conditions.
         qualified = (queue_service_profile(document, mapping) or user_event_service_profile(document, mapping)
-                     or clocked_value_member(document, mapping))
+                     or clocked_value_member(document, mapping) or call_dispatch_profile(document, mapping))
         if qualified:
             mapping["execution_profile"] = qualified
         elif not any(obj.get("type") == "frog.studio.import.labview.untranslated"
@@ -1362,13 +1452,32 @@ def project_editable(source, vi, load=None, class_readers=None):
             document["diagram"]["nodes"].append(obj)
         maps[output.as_posix()] = mapping
         documents[output] = document
-    root_map = maps.pop("model.frog")
+    root_map = maps.pop(bundle[source][1].as_posix())
     root_map.update(profile="labview-editable-source-v1", dependencies=maps, skipped_members=skipped)
     root_map["unreadable_members"] = {p.relative_to(source.parent).as_posix(): str(err) for p, err in available.unavailable.items()}
     root_map["class_diagnostics"] = bundle.class_issues
     root_map["verified_class_typedefs"] = bundle.typedefs
     documents.update(bundle.classes)
     return documents, root_map
+
+
+def call_dispatch_profile(document, mapping):
+    """Qualify the caller's translation. Each static callee is validated separately at Run."""
+    if (mapping["reader_issues"] or mapping["detached_regions"]
+            or mapping["presentation"]["connector"].get("status") != "verified"
+            or any(note.get("kind") != "cosm" for note in mapping["notes"])):
+        return None
+    supported = {"structures.case_structure", "structures.conditional_disable_structure",
+                 "application_control.invoke_node", "application_control.property_node",
+                 "error.retain_first", "numeric.enum_constant", "numeric.conversion.to_u32",
+                 "boolean.false_constant", "boolean.true_constant"}
+    has_call = False
+    for node in walk_nodes(document["diagram"]):
+        if node["kind"] == "frog_call" and node.get("call", {}).get("document_path"):
+            has_call = True
+        elif node["kind"] != "widget_value" and node["type"].removeprefix("frog.studio.") not in supported:
+            return None
+    return "labview-static-call-dispatch-v1" if has_call else None
 
 
 def queue_service_profile(document, mapping):

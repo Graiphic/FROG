@@ -4,6 +4,7 @@
 #include "frog_native_engine/FrogDraftData.hpp"
 #include "frog_native_engine/StatisticsNodeBinding.hpp"
 #include "frog_native_engine/DiagramLiteralSchema.hpp"
+#include "frog_native_engine/DiagramBindingResolver.hpp"
 #include "frog_native_engine/ConnectivityConfiguration.hpp"
 #include "frog_native_engine/FrogIconPresentation.hpp"
 #include "frog_native_engine/DiagramCommentTextRuns.hpp"
@@ -4105,6 +4106,13 @@ std::optional<FrogDraftData> readFrogDraftData(
     if (authoredDiagram || !publicSource) {
         static_cast<void>(graph::synchronizeTypes(document.diagramNodes,
             document.diagramEdges, document.widgets));
+        // A v1 draft could store an adaptive connector before the editor knew
+        // how to bind its incoming wire. Fully declared ABI contracts stay explicit.
+        for(auto &node:document.diagramNodes)if(node.nativeCall)
+            for(auto &p:node.nativeCall->arguments)if((p.type.kind==NativeCallKind::AdaptToType || p.type.kind==NativeCallKind::Cluster) &&
+                !p.type.adaptedType.known() && p.type.structLayout==NativeCallStructLayout{})
+                p.type.fromWire=true;
+        binding::synchronizeNativeCallWiredTypes(document.diagramNodes,document.diagramEdges,document.widgets);
         return document;
     }
 

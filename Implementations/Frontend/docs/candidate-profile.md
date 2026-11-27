@@ -2,7 +2,7 @@
 
 # Common Frontend candidate profile
 
-Local candidate `0.2.0-local` / API 3, statically linked into Studio and used by the CLI. Source/FIR remain `0.1`; drafts declare exact revisions `0` through `9`. Qualifications apply to specific hashes, separately from the recipes below. Initial standalone snapshot `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62` was rebuilt, installed and called by an external C consumer (six CTest cases, 6,614 checks). Later captures require their own inventory-bound receipt; this initial success qualifies neither new bytes nor a later Studio executable.
+Local candidate `0.2.0-local` / API 3, statically linked into Studio and used by the CLI. Source and FIR retain `0.1`. The current reader recognizes exact Studio Draft revisions `0` through `14`. Qualifications apply to specific hashes, separately from the recipes below. Initial standalone snapshot `c640d266a4de9d9581e6394d80d7152ce3d91d64278b960ab6777a524a056a62` was rebuilt, installed and called by an external C consumer (six CTest cases, 6,614 checks). Later captures require their own inventory-bound receipt; this initial success qualifies neither new bytes nor a later Studio executable.
 
 <a id="propriétaire-et-frontière"></a>
 
@@ -17,6 +17,12 @@ The library receives bytes, identities, options and callbacks, with no implicit 
 ## Operations and versions
 
 Studio private draft revision 13 supports two optional presentation attributes on a field in `props["cluster.elements"]`. `stack_order` is an unsigned back-to-front rank within that cluster. Older clusters with no ranks draw in field order. Fields added without a rank above an explicitly ordered stack draw in their insertion order. A nonzero `visual_group` identifies fields grouped for visual editing within the same parent. Omitting it or using zero leaves the field ungrouped. A document with no stored group or explicit rank keeps the revision required by its other features. Field identity, logical order, value typing, and diagram bindings continue to use their existing keys.
+
+Revision 14 is required when the writer emits an extended graph presentation,
+Native Call ABI settings or a **To More Specific Class** node. Earlier files
+with the same settings are read and promoted on save. See the
+[authoring profile](../../../Expression/Studio%20authoring%20document%20profile%20v1.md#revision-14-authoring-options)
+for the exact keys and compatibility rules.
 
 | Operation | Actual work | Accepted result |
 | --- | --- | --- |
@@ -38,7 +44,7 @@ Each validate/derive request supplies immutable authored bytes, explicit URI, `s
 | Capabilities / maps | `frog.frontend.capabilities/0.2` / `frog.frontend.source_maps/0.1` |
 | Profiles and bridge | Their own semantic revisions; separate downstream protocol |
 
-The descriptor announces principal profiles `frog.canonical.widget-f64-add.v1`, `frog.canonical.typed-structures.v1`, `frog.studio.composed-program@1`, `frog.canonical.event-scalar.v1`, `frog.canonical.event-captured.v1`, `frog.frontend.resolution@1` and `frog.frontend.resolution@2`. `profiles_exhaustive: false` prevents presenting this as an exhaustive operator/realization matrix. On success, provenance.profiles and provenance.operations come from actual produced FIR. The descriptor retains `native_execution_claim: false` and local distribution.
+The descriptor announces principal profiles `frog.canonical.widget-f64-add.v1`, `frog.canonical.public-f64-add.v1`, `frog.canonical.typed-structures.v1`, `frog.studio.composed-program@1`, `frog.canonical.event-scalar.v1`, `frog.canonical.event-captured.v1`, `frog.frontend.resolution@1` and `frog.frontend.resolution@2`. The public f64 Add profile uses the existing Source `interface_input` and `interface_output` nodes with the graph terminal `value`. Each required f64 port has a dedicated boundary node, and FIR attributes and source maps retain the logical port and its declaration. `profiles_exhaustive: false` prevents presenting the descriptor as an exhaustive operator or realization matrix. On success, `provenance.profiles` and `provenance.operations` come from actual produced FIR. The descriptor retains `native_execution_claim: false` and local distribution.
 
 <a id="périmètre-fini-de-langage"></a>
 
@@ -97,11 +103,12 @@ The CLI publishes diagnostics/maps/provenance separately, then FIR only on succe
 
 ## Limits, cancellation and concurrency
 
-Zero selects the default; a nonzero request can only reduce the effective maximum. These budgets do not guarantee admission of every language combination of that size.
+Zero selects the default. A nonzero value sets the caller's budget up to the profile ceiling shown below. These budgets do not guarantee admission of every language combination of that size.
 
 | Effective maximum budget | Value |
 | --- | ---: |
-| Source and context JSON, each | 8 MiB |
+| Root source | 8 MiB by default. An explicit source budget can reach 64 MiB. |
+| Semantic-context JSON | 8 MiB, reduced when the configured source budget is smaller. |
 | One dependency / total unique captures | 8 MiB / 64 MiB |
 | Combined JSON results, including projection | 32 MiB |
 | Producer FIR | 16 MiB |

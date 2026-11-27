@@ -1601,6 +1601,10 @@
         "for_loop_iteration_normalized_x": {
           "$ref": "#/$defs/normalizedPosition"
         },
+        "for_loop_count_profile": {
+          "const": "frog.studio.for.count-zero-floor@1",
+          "description": "Explicit Studio-derived count policy. Absent in the strict base For profile."
+        },
         "for_loop_iteration_normalized_y": {
           "$ref": "#/$defs/normalizedPosition"
         },
@@ -1869,6 +1873,11 @@
                 "minItems": 1,
                 "maxItems": 1
               }
+            }
+          },
+          "else": {
+            "not": {
+              "required": ["for_loop_count_profile"]
             }
           }
         },

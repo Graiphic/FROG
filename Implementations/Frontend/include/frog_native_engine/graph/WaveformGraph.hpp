@@ -19,6 +19,12 @@ inline constexpr Size minimumSize{240.0, 160.0};
 inline constexpr Size defaultSize{640.0, 400.0};
 inline constexpr std::size_t maximumSeries = 64;
 inline constexpr std::size_t maximumSamples = 1'000'000;
+inline constexpr double minimumPlotLegendWidth = 110.0;
+inline constexpr double maximumPlotLegendWidth = 320.0;
+
+[[nodiscard]] constexpr bool validPlotLegendWidth(double width) noexcept {
+    return width >= minimumPlotLegendWidth && width <= maximumPlotLegendWidth;
+}
 
 struct Series {
     std::string id;
@@ -39,6 +45,15 @@ struct Range {
     double maximum = 100.0;
     bool operator==(const Range &) const = default;
 };
+enum class Symbol {
+    None, Circle, Disc, HollowDisc, CircleDot, Square, FilledSquare,
+    HollowFilledSquare, SquareDot, SmallSquare, SmallDot, Plus, SmallPlus,
+    Cross, SmallCross, Diamond, SmallHollowSquare
+};
+enum class LineStyle { Solid, LongDash, ShortDash, DashDot, DashDotDot };
+enum class Interpolation { None, Staircase, Linear, Horizontal, HorizontalCentered, VerticalCentered };
+enum class Presentation { Line, Points, LinePoints, Area, Comb, Bars, None };
+
 struct Plot {
     std::string id;
     std::string name;
@@ -47,8 +62,27 @@ struct Plot {
     bool lines = true;
     bool points = false;
     double width = 1.5;
+    std::optional<Presentation> presentation;
+    LineStyle lineStyle = LineStyle::Solid;
+    Interpolation interpolation = Interpolation::Linear;
+    Symbol symbol = Symbol::Disc;
     bool operator==(const Plot &) const = default;
 };
+
+[[nodiscard]] inline Presentation plotPresentation(const Plot &plot) noexcept {
+    if (plot.presentation) return *plot.presentation;
+    if (plot.lines) return plot.points ? Presentation::LinePoints : Presentation::Line;
+    return plot.points ? Presentation::Points : Presentation::None;
+}
+
+inline void setPlotPresentation(Plot &plot, Presentation presentation) noexcept {
+    plot.lines = presentation != Presentation::None && presentation != Presentation::Points;
+    plot.points = presentation == Presentation::Points || presentation == Presentation::LinePoints;
+    if (presentation >= Presentation::Area && presentation <= Presentation::Bars)
+        plot.presentation = presentation;
+    else
+        plot.presentation.reset();
+}
 // Authored title layout, independent of live samples and of the widget label.
 // Positions are fractions of the graph body; sizes are unzoomed canvas units.
 struct TitleStyle {
@@ -109,6 +143,7 @@ struct Design {
     bool autoscaleY = true;
     bool gridVisible = true;
     bool legendVisible = true;
+    bool showKindBadge = true;
     std::uint8_t legendRows = 4;
     Range xRange;
     Range yRange{-10.0, 10.0};
@@ -118,6 +153,7 @@ struct Design {
     AxisOptions xAxis, yAxis;
     // Logical top-left of the legend relative to its widget. Empty uses the default placement.
     std::optional<Point> legendPosition;
+    std::optional<double> legendWidth;
     bool operator==(const Design &) const = default;
 };
 [[nodiscard]] inline const AxisOptions &axisOptions(const Design &design, bool xAxis) noexcept {

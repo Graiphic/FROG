@@ -272,6 +272,7 @@ DraftConnectionInspection inspectDraftTypedConnections(FrogDraftDataView source,
         // arrays may each satisfy logical_tree but have incompatible ranks.
         // Use the same graph-aware candidate check as the visible wire editor.
         const bool pilotSink = (sinkDefinition && sinkDefinition->resolverId == binding::kStudioPolymorphicResolver) ||
+            sinkNode->applicationControl.has_value() ||
             (sinkNode->kind=="frog_call" && sinkPort->valueType=="variant") ||
             sinkNode->kind == "widget_value" || isPolynomialFunction(sinkNode->type) || isDiagramStructureNodeType(sinkNode->type) || isQueueFunction(sinkNode->type) || isEventFunction(sinkNode->type) || isNotifierFunction(sinkNode->type) || isSemaphoreFunction(sinkNode->type) || isRendezvousFunction(sinkNode->type) || isOccurrenceFunction(sinkNode->type);
         const auto typedConnection = pilotSink ? typeResolver.connection(edge) : binding::TypeResolution{};
@@ -537,15 +538,23 @@ CanonicalDraftResolvedTypes resolveCanonicalDraftTypes(FrogDraftDataView documen
                 entry?canonicalFunctionBindingPortId(entry->catalogId,edge.to.portId):std::string_view(edge.to.portId)):nullptr;
             implicit=port&&port->direction==FunctionPortDirection::Input&&
                 (port->connectionPolicy==FunctionPortConnectionPolicy::NumericImplicit||
-                 port->connectionPolicy==FunctionPortConnectionPolicy::NumericScalarOrArrayImplicit);
+                 port->connectionPolicy==FunctionPortConnectionPolicy::NumericScalarOrArrayImplicit||
+                 (isQuotientRemainderNodeType(found->type)&&isQuotientRemainderRepresentation(found->valueType)));
         }
         if(!implicit)continue; // No other structure/tunnel/Feedback or explicit-conversion admission.
         const auto source=resolver.resolveSource(edge);
         const auto target=resolver.resolveInRegion(edge.to,edge.diagramOwnerStructureId,edge.diagramOwnerRegionId);
-        if(!source.complete||!target.complete||!source.resolution.accepted()||!target.resolution.accepted()||
-            !canonicalNumericScalarCoercionSupported(source.resolution.type,target.resolution.type))continue;
+        if(!source.complete||!target.complete||!source.resolution.accepted()||!target.resolution.accepted())continue;
         const auto from=resolver.direction(edge.from),to=resolver.direction(edge.to);
         if(!from||!to||*from!=FunctionPortDirection::Output||*to!=FunctionPortDirection::Input)continue;
+        if(forCount && binding::fullTypeEqual(source.resolution.type,target.resolution.type) &&
+           (target.resolution.type==binding::TypeRef::primitive("i32")||
+            target.resolution.type==binding::TypeRef::primitive("u32")||
+            target.resolution.type==binding::TypeRef::primitive("u64"))) {
+            result.requiresExactStudioForCountPorts=true;
+            break;
+        }
+        if(!canonicalNumericScalarCoercionSupported(source.resolution.type,target.resolution.type))continue;
         if(!resolver.connection(edge).accepted()||binding::connect(source.resolution.type,target.resolution.type,
                 binding::ConnectionPolicy::NumericImplicit).status!=binding::ResolutionStatus::Coercion)continue;
         hasScalarNumericCoercion=true;break;

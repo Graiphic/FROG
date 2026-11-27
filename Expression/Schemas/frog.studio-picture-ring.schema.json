@@ -6,7 +6,11 @@
   "type": "object",
   "required": ["format", "draft_revision", "language", "title", "metadata", "storage", "frontPanel", "diagram"],
   "not": {"required": ["spec_version"]},
-  "allOf": [{"$ref": "frog.studio-document.schema.json#/$defs/legacyTypeDefinitionLinks"}, {"$ref": "frog.studio-document.schema.json#/$defs/noClusterPresentation"}],
+  "allOf": [
+    {"$ref": "frog.studio-document.schema.json#/$defs/legacyTypeDefinitionLinks"},
+    {"$ref": "frog.studio-document.schema.json#/$defs/noClusterPresentation"},
+    {"$ref": "frog.studio-document.schema.json#/$defs/noExtendedAuthoring"}
+  ],
   "properties": {
     "format": {"const": "frog.document.draft"},
     "draft_revision": {"const": 11},

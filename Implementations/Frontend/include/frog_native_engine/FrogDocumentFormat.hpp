@@ -39,7 +39,9 @@ inline constexpr std::uint32_t kFrogPictureRingDraftRevision = 11U;
 inline constexpr std::uint32_t kFrogExtendedTypeDefinitionDraftRevision = 12U;
 // Group and paint order of Cluster fields are independent of their logical schema.
 inline constexpr std::uint32_t kFrogClusterPresentationDraftRevision = 13U;
-inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogClusterPresentationDraftRevision;
+// Extended graph presentation, native ABI declarations and reference casts.
+inline constexpr std::uint32_t kFrogExtendedAuthoringDraftRevision = 14U;
+inline constexpr std::uint32_t kMaximumSupportedFrogDraftRevision = kFrogExtendedAuthoringDraftRevision;
 inline constexpr std::string_view kFrogWidgetValueDraftFormat = "frog.widget.value.draft";
 
 [[nodiscard]] bool validFrogStudioFileVersion(std::string_view version) noexcept;

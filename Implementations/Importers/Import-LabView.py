@@ -16,6 +16,7 @@ import sys
 import tempfile
 import time
 from types import SimpleNamespace
+from urllib.parse import quote
 import warnings
 import zlib
 
@@ -58,6 +59,7 @@ class ReaderMessages(io.TextIOBase):
 
 
 def read_snapshot(source):
+    source = publication_path(source)
     if not source.is_file():
         raise Refusal("source_unreadable", "Choose a regular LabVIEW file.")
     with source.open("rb") as stream:
@@ -484,12 +486,12 @@ def projection_size(diagram):
     return {"nodes": nodes, "wires": wires}
 
 
-def validate_frontend(frontend, document, stage, dependencies=None):
-    model = stage / "model.frog"
+def validate_frontend(frontend, document, stage, filename, dependencies=None):
+    model = stage / filename
     diagnostics = stage / "frontend-diagnostics.json"
     write_json(model, document)
     result = subprocess.run([str(frontend.resolve(strict=True)), "validate", "--source", str(model),
-                             "--source-uri", "import:/labview/model.frog", "--document-id", "labview:studio:draft",
+                             "--source-uri", "import:/labview/" + quote(filename), "--document-id", "labview:studio:draft",
                              "--fir-document-id", "labview:studio:fir", "--source-format", "frog.document.draft",
                              "--source-version", str(document["draft_revision"]), "--fir-version", "0.1",
                              "--diagnostics-output", str(diagnostics),
@@ -517,7 +519,7 @@ def retry_windows_sharing(operation):
 
 
 def publication_path(path):
-    """Allow the staging directory and bundled members to exceed Win32 MAX_PATH."""
+    """Keep source and staging I/O usable beyond Win32 MAX_PATH."""
     absolute = os.path.abspath(path)
     if os.name == "nt" and not absolute.startswith(("\\\\?\\", "\\\\.\\")):
         absolute = ("\\\\?\\UNC\\" + absolute[2:] if absolute.startswith("\\\\")
@@ -526,13 +528,19 @@ def publication_path(path):
 
 
 def publish(document, mapping, report, args, documents=None, fingerprints=None):
+    from import_labview_profile import vi_document_path
+
     output = publication_path(args.output)
     if output.exists() or output.is_symlink():
         raise Refusal("destination_exists", "Choose a new import destination.")
     stage = Path(tempfile.mkdtemp(prefix=".labview-import-", dir=output.parent))
     try:
+        if document is not None:
+            filename = vi_document_path(args.source)
+            document["title"] = document["metadata"]["name"] = filename.stem
+            report["root_document"] = filename.name
         if documents is None:
-            validate_frontend(args.frontend, document, stage)
+            validate_frontend(args.frontend, document, stage, filename.name)
             report["frontend_validated"] = True
         else:
             for relative, member in documents.items():
@@ -597,7 +605,7 @@ def main():
             import_project(args, data, report, sys.modules[__name__])
             return finish_report(args, report) if args.analyze else 0
         vi = inspect(data, args.source, report)
-        from import_labview_profile import ProfileRefusal, project, projection_requirement_diagnostics
+        from import_labview_profile import ProfileRefusal, project, projection_requirement_diagnostics, vi_document_path
 
         report["execution_checks"] = "incomplete"
         try:
@@ -646,7 +654,7 @@ def main():
                 except ProfileRefusal as projection_error:
                     report["diagnostics"].append(Refusal(projection_error.code, str(projection_error), projection_error.resource).diagnostic)
                 else:
-                    document = documents[Path("model.frog")]
+                    document = documents[vi_document_path(args.source)]
                     report.update(editable=True, profile=mapping["profile"], projection=projection_size(document["diagram"]),
                                   presentation=mapping["presentation"],
                                   source_regions=len(mapping["diagrams"]), source_signals=len(mapping["signals"]),
@@ -663,7 +671,7 @@ def main():
             if args.analyze and args.frontend:
                 scratch_parent = args.report.parent if args.report else None
                 with tempfile.TemporaryDirectory(prefix=".labview-analysis-", dir=scratch_parent) as scratch:
-                    validate_frontend(args.frontend, document, Path(scratch))
+                    validate_frontend(args.frontend, document, Path(scratch), vi_document_path(args.source).name)
                 report["frontend_validated"] = True
             report.update(compatible=True, editable=True, execution_checks="complete", projection=projection_size(document["diagram"]), profile=mapping["profile"],
                           adaptations=mapping.get("adaptations", []), presentation=mapping["presentation"])

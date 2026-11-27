@@ -7,9 +7,13 @@
 #include <vector>
 
 namespace frog::native_engine {
-enum class ApplicationControlKind { Reference, Property, Invoke, Close };
+enum class ApplicationControlKind { Reference, Property, Invoke, Close, ToMoreSpecificClass };
 enum class ApplicationControlTargetKind { Unbound, ThisFrog, ThisApplication, FrontPanel, Widget };
 enum class ApplicationControlPropertyMode { Read, Write };
+inline bool applicationControlCastReference(const binding::TypeRef &type) {
+    return type.kind==binding::TypeKind::Reference && type.known() &&
+        (type.name=="frog.object" || binding::referenceClassAssignable(type.name,"frog.control"));
+}
 struct ApplicationControlTarget {
     ApplicationControlTargetKind kind = ApplicationControlTargetKind::Unbound;
     // Empty owner means the containing document. Explicit external owners are

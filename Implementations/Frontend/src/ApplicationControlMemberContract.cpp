@@ -21,6 +21,11 @@ bool applicationControlBooleanColorsAvailable(std::string_view classId) noexcept
     return definition && (definition->family==WidgetFamily::Boolean || definition->family==WidgetFamily::Button);
 }
 
+bool applicationControlClusterControlsAvailable(std::string_view classId) noexcept {
+    const auto *definition=findWidgetDefinitionByClassId(applicationControlReferenceWidgetBase(classId));
+    return definition && widgetDefinitionHasCapability(*definition,WidgetCapability::ClusterContainer);
+}
+
 binding::TypeRef applicationControlBooleanColorsType() {
     using binding::TypeRef;
     auto colors=TypeRef::cluster({"foreground_color","background_color"},
@@ -32,6 +37,31 @@ binding::TypeRef applicationControlBooleanColorsType() {
 bool applicationControlWidgetAppearanceMember(std::string_view classId,std::string_view member) noexcept {
     if(member=="boolean_text.text")return applicationControlBooleanColorsAvailable(classId);
     return member=="interaction.visible" && binding::referenceClassAssignable(classId,"frog.control");
+}
+ApplicationControlMemberDescriptor applicationQuitMethod() {
+    ApplicationControlMemberDescriptor member;
+    member.id="application.quit";
+    member.label="Quit Application";
+    member.kind=ApplicationControlMemberKind::Method;
+    member.authoringAvailable=true;
+    member.runtimeAvailable=true;
+    member.parameters={{"quit","Quit?",binding::TypeRef::primitive("bool"),ApplicationControlParameterDirection::In,false,"true"}};
+    member.help="Finish this running application when Quit? is true. An unwired input defaults to true.";
+    return member;
+}
+
+ApplicationControlMemberDescriptor applicationControlPanelVisibilityMethod(bool open) {
+    ApplicationControlMemberDescriptor member;
+    member.kind=ApplicationControlMemberKind::Method;
+    member.id=open?"front_panel.open":"front_panel.close";
+    member.label=open?"Front Panel.Open":"Front Panel.Close";
+    member.group="Methods";
+    member.authoringAvailable=true;
+    member.help="Shows or hides the front panel of the referenced program.";
+    if(open)member.parameters={
+        {"activate","Activate",binding::TypeRef::primitive("bool"),ApplicationControlParameterDirection::In,false,"true"},
+        {"state","State",binding::TypeRef::primitive("u32"),ApplicationControlParameterDirection::In,false,"1"}};
+    return member;
 }
 
 bool applicationControlHasReferenceInput(const ApplicationControlNode &node) noexcept {

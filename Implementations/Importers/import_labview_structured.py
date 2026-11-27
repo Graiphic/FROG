@@ -267,28 +267,21 @@ class Projection:
             "index": {"type": "i64", "outer_visible": False, "exposed_in_body": True, "read_only": True,
                       "role": "index", "body_port": "iteration"},
         }
-        count_cast = f"lv-count64-{count.uid}"
-        self.node(source.diagram, count.uid, operation(count_cast, "frog.studio.numeric.conversion.to_i64",
-                                                      "numeric.conversion.to_i64"), adaptation="signed LabVIEW I32 count to native I64 count")
-        if literal_count is not None and literal_count >= 0:
-            self.port(count.outer, count_cast, "value", "i32", False)
-        else:
-            clamp = f"lv-nonnegative-count-{count.uid}"
-            zero = f"lv-count-zero-{count.uid}"
-            self.node(source.diagram, count.uid, operation(clamp, "frog.studio.numeric.max_min", "numeric.max_min"),
-                      adaptation="LabVIEW For treats a negative N as zero iterations")
-            self.node(source.diagram, count.uid, dict(convert_constant(count.uid, "i32", 0, 0, 0), id=zero),
-                      adaptation="zero lower bound on loop count")
-            self.port(count.outer, clamp, "x", "i32", False)
-            self.add_adaptation_edge(source.diagram, zero + "-edge", Connector(zero, "value", "i32", True),
-                                     Connector(clamp, "y", "i32", False))
-            self.add_adaptation_edge(source.diagram, clamp + "-edge", Connector(clamp, "max", "i32", True),
-                                     Connector(count_cast, "value", "i32", False))
-        self.add_adaptation_edge(source.diagram, f"lv-count-edge-{count.uid}", Connector(count_cast, "result", "i64", True),
-                                 Connector(target["id"], "count", "i64", False))
-        # GS exposes both index and count value as I64. LV retains I32 in the body.
+        # The decoder records the LabVIEW wire as I32. Studio consumes it at
+        # the native count terminal and handles nonpositive counts itself.
+        self.port(count.outer, target["id"], "count", count.dtype, False)
+        # Studio exposes the index and count value as I64. Where every receiver
+        # preserves its LabVIEW I32 representation, use the receiving coercion.
+        # Leave explicit adaptation for remaining consumers, including tunnels.
         for boundary, name in ((index, "iteration"), (count, "count_value")):
-            if not self.is_wired(boundary.inner):
+            receivers = [self.graph.terms[uid]
+                         for signal in self.graph.diagrams[body].signals if signal.source == boundary.inner
+                         for uid in signal.targets]
+            if not receivers:
+                continue
+            if all(term.dtype == "i32" and (node := self.graph.nodes.get(term.owner))
+                   and node.primitive == (1056, 108) for term in receivers):
+                self.port(boundary.inner, target["id"], name, boundary.dtype, True)
                 continue
             cast = f"lv-body32-{boundary.uid}"
             self.node(body, boundary.uid, operation(cast, "frog.studio.numeric.conversion.to_i32",
@@ -506,7 +499,7 @@ class Projection:
                     "Unexpected Quotient & Remainder parameters or representation.", location)
             id_ = f"lv-operation-{member.uid}"
             self.node(member.diagram, member.uid, operation(id_, "frog.studio.numeric.quotient_remainder",
-                      "numeric.quotient_remainder"), member.bounds)
+                      "numeric.quotient_remainder", value_type=terms[0].dtype), member.bounds)
             for term, key in zip(terms, keys):
                 self.port(term.uid, id_, ports[key], term.dtype, term.source)
             return

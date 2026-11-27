@@ -11,6 +11,7 @@ namespace frog::native_engine {
 class CanonicalEventExecutionIr;
 struct CanonicalFrontendMetrics;
 inline constexpr std::string_view canonicalEventRegionBodyProfile="frog.private.event-region-body.v1";
+inline constexpr std::string_view canonicalStudioForCountProfile="frog.studio.for.count-zero-floor@1";
 struct CanonicalIrDiagnostic {
     std::string code;
     std::string message;
@@ -81,6 +82,8 @@ struct CanonicalIrNode {
     std::string configurationJson,fullTypeJson,widgetLabel,authoredKind;
     std::string collectionConfigurationJson;
     std::optional<CanonicalIrFeedback> feedback;
+    // Logical public port identity; separate from this node's graph terminal ID.
+    std::string interfacePortId;
 };
 struct CanonicalIrEndpoint {std::string objectId;std::string portId;};
 struct CanonicalIrConnection {
@@ -140,6 +143,7 @@ struct CanonicalIrStructure {
     std::string inPlaceConfigurationJson;
     std::string timedLoopConfigurationJson;
     bool stopIfTrue=false;
+    bool clampNegativeCount=false;
     std::vector<std::string> caseSelectorFieldPath;
     std::string sequenceProfile;
     std::vector<CanonicalIrSequenceTransfer> sequenceTransfers;
@@ -150,7 +154,7 @@ struct CanonicalIrEventScope {
 
 // Bounded intake of the open canonical artifact. The sealed normalized view
 // stays subordinate to retained immutable IR and exact authoritative source.
-// The historical flat f64/Add corridor remains intact. The explicit typed
+// Flat f64/Add supports Numeric widgets and standalone public ports. The explicit typed
 // corridor additionally admits scalar While/For bodies, Boolean Case regions,
 // their exact intrinsic terminal projections, Boolean Not and Less.
 // The explicit frog.studio.composed-program@1 local profile additionally

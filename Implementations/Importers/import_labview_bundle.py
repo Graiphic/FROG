@@ -10,7 +10,7 @@ from pathlib import Path
 from import_labview_interfaces import (
     match_call, read_call_links, read_connector, read_dependencies, read_project_dependencies, resolve_local_path,
 )
-from import_labview_profile import ProfileRefusal, TYPES, bounds, require
+from import_labview_profile import ProfileRefusal, TYPES, bounds, decode_constant_value, require, vi_document_path
 
 
 _PATTERNS_BY_ROW = {1: "pattern_04", 2: "pattern_06", 3: "pattern_12", 4: "pattern_16",
@@ -18,6 +18,29 @@ _PATTERNS_BY_ROW = {1: "pattern_04", 2: "pattern_06", 3: "pattern_12", 4: "patte
 # GS pattern 35 enumerates all cells row-major, including its eight interior cells.
 _SIX_ROW_SIDES = ((1, 7, 9, 11, 17, 19), (6, 8, 10, 16, 18, 20))
 _CALL_CLASSES = {"iUse", "polyIUse"}
+_SIMPLE_ERROR_HANDLER_PATH = (b"<vilib>", b"Utility", b"error.llb", b"Simple Error Handler.vi")
+_ERROR_CLUSTER = 'cluster<"status":bool,"code":i32,"source":string>'
+_SIMPLE_ERROR_HANDLER_CONNECTOR = (
+    (0, True, 2304, "bool"),
+    (1, True, 2304, "i32"),
+    (3, False, 0, "i32"),
+    (4, False, 131072, "string"),
+    (5, True, 2304, "string"),
+    (6, True, 3337, _ERROR_CLUSTER),
+    (7, True, 2304, "string"),
+    (8, False, 2048, "u16"),
+    (9, False, 2560, _ERROR_CLUSTER),
+)
+_ERROR_FROM_CODE_PATH = (b"<vilib>", b"Utility", b"error.llb", b"Error Cluster From Error Code.vi")
+_ERROR_FROM_CODE_CONNECTOR = (
+    (0, True, 3334, _ERROR_CLUSTER),
+    (4, False, 512, "bool"),
+    (5, False, 2560, "bool"),
+    (6, False, 2560, _ERROR_CLUSTER),
+    (8, False, 0, "string"),
+    (9, False, 4096, "i32"),
+)
+_INVALID_MESSAGE_FORMAT = 'The invalid message string "%s" was received in the Message Handling Loop.'
 
 
 class Bundle(dict):
@@ -35,6 +58,7 @@ class Bundle(dict):
 
 def resolve_bundle(source, vi, load, class_readers=None):
     """Return the original parsed VIs and their paths within the output project."""
+    root_output = vi_document_path(source)
     source = Path(source).resolve()
     root = source.parent
     loaded = {source: vi}
@@ -96,7 +120,7 @@ def resolve_bundle(source, vi, load, class_readers=None):
             bundle.typedefs = verify_class_typedefs(project, loaded, root, declarations, read_bytes, load_control)
     destinations = set()
     for member in project:
-        relative = Path("model.frog") if member == source else member.relative_to(root).with_suffix(".frog")
+        relative = root_output if member == source else member.relative_to(root).with_suffix(".frog")
         identity = relative.as_posix().casefold()
         require(identity not in destinations, "dependency_output_collision",
                 f"Several saved dependencies map to the same output '{relative.as_posix()}'.", "LIvi")
@@ -451,14 +475,138 @@ def _call_projection(node, call, target, source, bundle, panels, connected, read
     return member, endpoints, defaults
 
 
-def project_calls(vi, graph, source, bundle, panels, presentations, read_interface):
+def _simple_error_handler_projection(node, call, encoding, wired, connected_inputs, connected_outputs):
+    location = f"BDHb/uid:{node.uid}"
+    layout = node.bounds
+    require(layout is not None, "call_layout", "The saved call has no readable bounds.", location)
+    connector = tuple((terminal.slot, terminal.output, terminal.flags, terminal.datatype.native_type(encoding))
+                      for terminal in call.terminals)
+    require(node.kind == "iUse" and call.specialization is None and (call.pattern, call.slots) == (161, 10)
+            and connector == _SIMPLE_ERROR_HANDLER_CONNECTOR, "simple_error_handler_connector",
+            "The saved Simple Error Handler connector differs from the qualified connector.", location)
+    by_slot = {terminal.slot: terminal for terminal in call.terminals}
+    dialog = by_slot[8].datatype
+    require(dialog.family == "TypeDef" and dialog.definition == (b"DialogType.ctl",)
+            and dialog.detail == (3101996562,), "simple_error_handler_connector",
+            "The Simple Error Handler dialog type does not have the verified NI default.", location)
+    input_uid = by_slot[9].terminal_uid
+    message_uid = by_slot[7].terminal_uid
+    require(set(node.terminals) & wired == {input_uid, message_uid} and
+            input_uid in connected_inputs and message_uid in connected_outputs, "simple_error_handler_wiring",
+            "Simple Error Handler requires a connected error in and message, with all other ports unwired.", location)
+    node_id = f"lv-node-{node.uid}"
+    left, top, right, bottom = layout
+    member = {
+        "id": node_id, "kind": "primitive", "type": "frog.studio.error.simple_handler",
+        "palette_catalog_id": "error.simple_handler", "label": "Simple Error Handler.vi", "label_visible": True,
+        "documentation": {"summary": f"Saved LabVIEW library dependency: <vilib>/Utility/error.llb/Simple Error Handler.vi. Source UID {node.uid}."},
+        "layout": bounds(left, top, max(1, right - left), max(1, bottom - top)),
+    }
+    return member, {input_uid: (node_id, "error_in"), message_uid: (node_id, "message")}, []
+
+
+def invalid_message_xnode_ports(node, graph, calls, types):
+    """Return the host ports only for the saved LV20 invalid-message expansion."""
+    if node.kind != "xNode" or len(node.regions) != 1 or len(node.terminals) != 2 or node.frames:
+        return None
+    region = graph.diagrams.get(node.regions[0])
+    if region is None or region.owner != node.uid or len(region.nodes) != 3 or len(region.signals) != 7:
+        return None
+    children = {graph.nodes[uid].kind: graph.nodes[uid] for uid in region.nodes}
+    if children.keys() != {"sRN", "printf", "iUse"} or any(
+            child.regions or child.frames or child.boundary_bindings for child in children.values()):
+        return None
+    boundary, formatter, constructor = (children[kind] for kind in ("sRN", "printf", "iUse"))
+
+    def binding(uid):
+        return graph.bindings.get(graph.terminals[uid].binding)
+
+    host, inner = {}, {}
+    boundary_bindings = set()
+    for uid in node.terminals:
+        terminal = graph.terminals[uid]
+        connector = binding(uid)
+        if connector is None or connector.kind != "xTunnel":
+            return None
+        name = connector.fields.get("id")
+        signature = (terminal.direction, (name.payload if name else None), types(connector))
+        if signature == ("sink", b"parameter 0", "string"):
+            port, child_direction = "message", "source"
+        elif signature == ("source", b"error out", _ERROR_CLUSTER):
+            port, child_direction = "error_out", "sink"
+        else:
+            return None
+        mates = set(connector.terminals) - {uid}
+        if uid not in connector.terminals or len(mates) != 1:
+            return None
+        (mate,) = mates
+        child_term = graph.terminals.get(mate)
+        if (child_term is None or child_term.owner != boundary.uid or child_term.direction != child_direction
+                or child_term.binding != connector.uid):
+            return None
+        boundary_bindings.add(connector.uid)
+        host[port], inner[port] = uid, mate
+    if host.keys() != {"message", "error_out"} or set(node.boundary_bindings) != boundary_bindings:
+        return None
+
+    call = calls.get(constructor.uid)
+    if call is None or call.specialization is not None or (call.pattern, call.slots) != (208, 10):
+        return None
+    dependency = call.dependency
+    if (dependency.kind, dependency.path_encoding, dependency.path_type, dependency.path_components,
+            dependency.qualified_name) != (b"IUVI", b"PTH0", 0, _ERROR_FROM_CODE_PATH, _ERROR_FROM_CODE_PATH[-1:]):
+        return None
+    if tuple((port.slot, port.output, port.flags, port.datatype.native_type(types.encoding))
+             for port in call.terminals) != _ERROR_FROM_CODE_CONNECTOR:
+        return None
+    slots = {port.slot: port.terminal_uid for port in call.terminals}
+    if not set(slots.values()) <= set(constructor.terminals):
+        return None
+
+    format_ports = [binding(uid) for uid in formatter.terminals]
+    if any(port is None or port.kind != "printfArg" for port in format_ports):
+        return None
+    if tuple((graph.terminals[uid].direction, types(port), port.flags, port.type_label)
+             for uid, port in zip(formatter.terminals, format_ports, strict=True)) != (
+                 ("sink", "string", 65536, None), ("source", "string", 65536, None),
+                 ("source", "string", 65537, None), ("source", _ERROR_CLUSTER, 65536, "error IO"),
+                 ("source", _ERROR_CLUSTER, 65537, "error IO"), ("sink", "string", None, "parameter 0")):
+        return None
+    format_in, _, message_out, _, _, parameter_in = formatter.terminals
+
+    sources = {}
+    for uid in region.signals:
+        signal = graph.signals[uid]
+        if signal.source is None or len(signal.targets) != 1:
+            return None
+        sources[signal.targets[0]] = signal.source
+    literals = {format_in: ("string", _INVALID_MESSAGE_FORMAT), slots[4]: ("bool", False),
+                slots[5]: ("bool", True), slots[9]: ("i32", 1)}
+    wires = {parameter_in: inner["message"], slots[8]: message_out, inner["error_out"]: slots[0]}
+    if sources.keys() != wires.keys() | literals.keys() or any(sources[target] != uid for target, uid in wires.items()):
+        return None
+    if set(boundary.terminals) != set(inner.values()) | {sources[target] for target in literals}:
+        return None
+    for target, (datatype, expected) in literals.items():
+        constant = binding(sources[target])
+        if constant is None or constant.kind != "bDConstDCO" or types(constant) != datatype:
+            return None
+        value = constant.fields.get("ConstValue")
+        try:
+            if not value or decode_constant_value(value.payload, datatype, f"BDHb/uid:{constant.uid}") != expected:
+                return None
+        except ProfileRefusal:
+            return None
+    return host
+
+
+def project_calls(vi, graph, source, bundle, panels, presentations, read_interface, types=None):
     """Project only verified native calls and return local notes for preserved source markers."""
     nodes = {node.uid: node for node in graph.nodes.values() if node.kind in _CALL_CLASSES}
     if not nodes:
         return {}
     source = Path(source).resolve()
-    root = bundle.root if isinstance(bundle, Bundle) else next(
-        path.parent for path, (_, output) in bundle.items() if output == Path("model.frog"))
+    root = bundle.root
     try:
         dependencies = read_dependencies(vi, b"LIbd")
     except ProfileRefusal as error:
@@ -477,6 +625,8 @@ def project_calls(vi, graph, source, bundle, panels, presentations, read_interfa
         except ProfileRefusal as error:
             poly_error = error
     connected = {uid for signal in graph.signals.values() if signal.source is not None for uid in signal.targets}
+    wired = {uid for signal in graph.signals.values() for uid in signal.endpoints}
+    producers = {signal.source for signal in graph.signals.values() if signal.source is not None and signal.targets}
     linked_nodes = {}
     for dependency in dependencies:
         if dependency.kind in {b"IUVI", b"PUPV"}:
@@ -496,6 +646,10 @@ def project_calls(vi, graph, source, bundle, panels, presentations, read_interfa
                                  for part in dependency.qualified_name)
                 if name:
                     provenance["target"] = name
+                if (dependency.path_encoding == b"PTH0" and dependency.path_type == 0
+                        and dependency.path_components[:1] == (b"<vilib>",)):
+                    provenance["library_target"] = "/".join(
+                        part.decode(vi.textEncoding, errors="backslashreplace") for part in dependency.path_components)
                 target = resolve_local_path(dependency, source, root, vi.textEncoding)
                 if target in bundle:
                     provenance["member"] = bundle[target][1].as_posix()
@@ -504,11 +658,27 @@ def project_calls(vi, graph, source, bundle, panels, presentations, read_interfa
                 raise error
             require(call is not None, "call_specialization",
                     "This saved call is not an ordinary VI connector binding.", location)
-            member, endpoints, defaults = _call_projection(node, call, target, source, bundle, panels, connected,
-                                                           read_interface, presentations)
+            if (dependency.kind == b"IUVI" and dependency.path_encoding == b"PTH0" and dependency.path_type == 0
+                    and dependency.path_components == _SIMPLE_ERROR_HANDLER_PATH
+                    and dependency.qualified_name == _SIMPLE_ERROR_HANDLER_PATH[-1:]):
+                member, endpoints, defaults = _simple_error_handler_projection(
+                    node, call, vi.textEncoding, wired, connected, producers)
+            else:
+                member, endpoints, defaults = _call_projection(node, call, target, source, bundle, panels, connected,
+                                                               read_interface, presentations)
             result[uid] = (member, endpoints, [], defaults)
         except ProfileRefusal as error:
             if call is not None:
                 provenance["ports"] = source_marker_ports(call, vi.textEncoding)
             result[uid] = (None, {}, [_note(error.resource, str(error), error.code, **provenance)], [])
+    if types is not None and call_error is None and vi.getFileVersion()["major"] == 20:
+        for node in graph.nodes.values():
+            ports = invalid_message_xnode_ports(node, graph, calls, types)
+            if ports is None:
+                continue
+            node_id = f"lv-node-{node.uid}"
+            obj = {"id": node_id, "kind": "primitive", "type": "frog.studio.error.invalid_message",
+                   "palette_catalog_id": "error.invalid_message", "label": "Invalid Message", "label_visible": True,
+                   "documentation": {"summary": f"LabVIEW invalid-message xNode, source UID {node.uid}, saved diagram {node.regions[0]}."}}
+            result[node.uid] = (obj, {uid: (node_id, port) for port, uid in ports.items()}, [], [])
     return result

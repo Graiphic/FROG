@@ -1,15 +1,23 @@
 // SPDX-License-Identifier: Apache-2.0
 #include <frog/frontend.h>
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/CanonicalExecutionIr.hpp"
+#include "frog_native_engine/CanonicalNumericAggregate.hpp"
+#include "frog_native_engine/DiagramBindingResolver.hpp"
 #include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/DraftTypedConnections.hpp"
 #include "frog_native_engine/FunctionCatalog.hpp"
 #include "frog_native_engine/FunctionPortIdentities.hpp"
+#include "frog_native_engine/ApplicationControlSourceCodec.hpp"
+#include "frog_native_engine/ApplicationControlSchema.hpp"
+#include "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 #include "frog_native_engine/OccurrenceReference.hpp"
 #include "frog_native_engine/SemaphoreReference.hpp"
 #include "frog_native_engine/RendezvousReference.hpp"
 #include "frog_native_engine/Sha256.hpp"
+#include "frog_native_engine/graph/WaveformGraph.hpp"
+#include "frog_native_engine/graph/XYGraph.hpp"
 #include "../src/CanonicalJsonSupport.hpp"
 #include <algorithm>
 #include <chrono>
@@ -32,7 +40,7 @@ std::string revision(std::string_view bytes) {const auto root=json(bytes);const 
 struct Result {frog_frontend_outcome outcome;std::string fir,diagnostics,provenance;};
 struct Context {
     frog_frontend_context *value=nullptr;
-    Context() {frog_frontend_config config{};config.struct_size=sizeof(config);need(frog_frontend_context_create(FROG_FRONTEND_API_VERSION,&config,&value)==FROG_FRONTEND_OK,"C API context creation failed");}
+    explicit Context(std::uint64_t maximumSourceBytes=0) {frog_frontend_config config{};config.struct_size=sizeof(config);config.limits.max_source_bytes=maximumSourceBytes;need(frog_frontend_context_create(FROG_FRONTEND_API_VERSION,&config,&value)==FROG_FRONTEND_OK,"C API context creation failed");}
     ~Context(){frog_frontend_context_destroy(value);}
 };
 Result call(Context &context,std::string_view bytes,std::string_view sourceRevision,std::string_view semantic,bool derive,
@@ -84,6 +92,177 @@ FrogDraftData scalar(std::string type) {
     wire(document,"left-wire","left","value","add","a");wire(document,"right-wire","right","value","add","b");
     indicator(document,type,"add","result");return document;
 }
+void studioForAndFixedQuotient(Context &context) {
+    FrogDraftData draft;draft.title="Studio For with fixed I32 Quotient & Remainder";
+    auto loop=operation("loop","structures.for_loop");
+    loop.kind="structure";
+    draft.diagramNodes={literal("n","i64","-5"),loop};
+    wire(draft,"count","n","value","loop","count");
+    indicator(draft,"i64","loop","iteration");
+    const auto insideLoop=[](auto &item) {
+        item.diagramOwnerStructureId="loop";
+        item.diagramOwnerRegionId="body";
+    };
+    insideLoop(draft.diagramNodes.back());
+    insideLoop(draft.diagramEdges.back());
+    const auto verifyPolicy=[&](const FrogDraftData &sourceDraft) {
+        const auto result=qualify(context,sourceDraft);
+        need(result.fir.find(canonicalStudioForCountProfile)!=std::string::npos,
+            "Studio For count policy is absent from the real FIR");
+        const auto prepared=prepareDraftFrontend(serializeFrogDraftData(sourceDraft),"memory:/studio-for.frog",{},{});
+        need(prepared.accepted(),"The authored For did not prepare Source");
+        const CanonicalIrReadOptions options{"memory:/for-source.frog",{}};
+        const auto fir=CanonicalExecutionIr::derive(*prepared.source,"fir:studio-count-policy",options);
+        need(fir&&fir->structures().size()==1&&fir->structures().front().clampNegativeCount,
+            "The Studio For policy was lost in its executable projection");
+        auto strictSource=prepared.source->root();
+        auto &nodes=strictSource.object.at("diagram").object.at("nodes").array;
+        const auto owner=std::find_if(nodes.begin(),nodes.end(),[](const auto &node){
+            const auto *id=node.member("id");return id&&id->string=="loop";
+        });
+        need(owner!=nodes.end(),"Studio Source lost the For owner");
+        auto &fields=owner->object;
+        need(fields.erase("for_loop_count_profile")==1,"Studio Source lacks its explicit For policy");
+        auto publicSource=FrogSourceDocument::read(canonical_json::encode(strictSource));
+        need(bool(publicSource),"The Source envelope could not be reopened");
+        const auto strict=CanonicalExecutionIr::derive(*publicSource,"fir:strict",options);
+        need(strict&&strict->structures().size()==1&&!strict->structures().front().clampNegativeCount,
+            "A For without the explicit policy must keep the strict public rule");
+        fields["for_loop_count_profile"]=canonical_json::string("frog.studio.for.count-zero-floor@999");
+        publicSource=FrogSourceDocument::read(canonical_json::encode(strictSource));
+        need(bool(publicSource),"The Source envelope could not be reopened with an unknown policy");
+        std::vector<CanonicalIrDiagnostic> diagnostics;
+        need(!CanonicalExecutionIr::derive(*publicSource,"fir:unknown-count-policy",options,&diagnostics)&&
+            std::any_of(diagnostics.begin(),diagnostics.end(),[](const auto &d){return d.code=="IR_FOR_COUNT_PROFILE";}),
+            "An unknown count policy must never enable execution");
+        return *fir;
+    };
+    verifyPolicy(draft);
+
+    auto liveCount=draft;
+    const auto *control=findWidgetCatalogEntryByClassId("frog.widgets.numeric_control");
+    need(control,"Numeric control data class is absent");
+    auto input=makeWidgetData("count-control",*control,{40,30,100,28});
+    input.valueType="i32";
+    DiagramNode terminal;terminal.id="n";terminal.kind="widget_value";terminal.widgetId=input.instanceId;
+    terminal.type=diagramTerminalValueType(input);
+    liveCount.widgets.addObject({input.instanceId,input.bounds,std::move(input)},true);
+    liveCount.diagramNodes.front()=std::move(terminal);
+    const auto liveFir=verifyPolicy(liveCount);
+    for(const auto *id:{"n","loop"}) {
+        const auto portId=std::string_view(id)=="n"?"value":"count";
+        const auto node=std::find_if(liveFir.nodes().begin(),liveFir.nodes().end(),[&](const auto &n){
+            return n.sourceNodeId==id;
+        });
+        need(node!=liveFir.nodes().end()&&std::any_of(node->ports.begin(),node->ports.end(),[&](const auto &port){
+            return port.id==portId&&port.typeRef=="i32";
+        }),"An exact live I32 counter must keep its type on both source and receiver");
+    }
+    need(std::none_of(liveFir.nodes().begin(),liveFir.nodes().end(),[](const auto &node){
+        return node.kind==canonicalNumericCoercionId;
+    }),"An exact live I32 For count unexpectedly acquired a coercion");
+
+    auto divisor=literal("divisor","i32","16");
+    auto remainder=operation("division","numeric.quotient_remainder");
+    insideLoop(divisor);insideLoop(remainder);
+    remainder.valueType="i32";
+    draft.diagramNodes.push_back(std::move(divisor));
+    draft.diagramNodes.push_back(std::move(remainder));
+    const auto resultWire=draft.diagramEdges.back();
+    draft.diagramEdges.pop_back();
+    wire(draft,"iteration","loop","iteration","division","x");
+    insideLoop(draft.diagramEdges.back());
+    wire(draft,"divisor-value","divisor","value","division","y");
+    insideLoop(draft.diagramEdges.back());
+    // Original I64 output remains as a representation witness downstream.
+    draft.diagramEdges.push_back(resultWire);
+
+    const auto bytes=serializeFrogDraftData(draft);
+    const auto reopened=readFrogDraftData(bytes);
+    need(bool(reopened),"The authored Quotient & Remainder could not be reopened");
+    need(std::any_of(reopened->diagramNodes.begin(),reopened->diagramNodes.end(),[](const auto &node){
+        return node.id=="division"&&node.valueType=="i32";
+    }),"Save/Open lost the imported operation's representation");
+    binding::TypeResolver resolver(reopened->diagramNodes,reopened->diagramEdges,reopened->widgets);
+    const auto type=[](std::string_view name){return binding::TypeRef::primitive(name);};
+    const auto sourceType=resolver.resolve({"loop","iteration"}).resolution;
+    const auto inputType=resolver.resolve({"division","x"}).resolution;
+    const auto sameType=resolver.resolve({"division","y"}).resolution;
+    const auto outputType=resolver.resolve({"division","quotient"}).resolution;
+    need(sourceType.type==type("i64")&&inputType.type==type("i32")&&
+        inputType.status==binding::ResolutionStatus::Coercion&&sameType.type==type("i32")&&
+        sameType.status==binding::ResolutionStatus::Compatible&&outputType.type==type("i32"),
+        "Fixed Quotient & Remainder must keep I32 while the original For index stays I64");
+    verifyPolicy(*reopened);
+    const auto prepared=prepareDraftFrontend(bytes,"memory:/quotient.frog",{},{});
+    const auto fir=CanonicalExecutionIr::derive(*prepared.source,"fir:quotient",{"memory:/quotient.frog",{}});
+    need(fir&&std::count_if(fir->nodes().begin(),fir->nodes().end(),[](const auto &node){
+        return node.kind==canonicalNumericCoercionId&&node.sourceNodeId=="division"&&
+            node.ports.size()==2&&node.ports.front().typeRef=="i64"&&node.ports.back().typeRef=="i32";
+    })==1,"The authored mismatch must materialize one I64 to I32 conversion, after the For terminal");
+
+    draft.diagramNodes.back().valueType.clear();
+    binding::TypeResolver promoted(draft.diagramNodes,draft.diagramEdges,draft.widgets);
+    need(promoted.resolve({"division","quotient"}).resolution.type==type("i64"),
+        "An ordinary Quotient & Remainder lost its normal promotion");
+    draft.diagramNodes.back().valueType="i32";
+    auto boolean=operation("nonnumeric","boolean.false_constant");
+    insideLoop(boolean);
+    draft.diagramNodes.push_back(std::move(boolean));
+    draft.diagramEdges.at(1).from={"nonnumeric","value"};
+    const auto refused=prepareDraftFrontend(serializeFrogDraftData(draft),"memory:/invalid-quotient.frog",{},{});
+    need(!refused.accepted()&&std::any_of(refused.diagnostics.begin(),refused.diagnostics.end(),[](const auto &d){
+        return d.code=="incompatible_wire_types"&&d.edgeId=="iteration";
+    }),"A fixed operation must explicitly reject a Boolean wire");
+}
+void rootSourceBudget(Context &standard) {
+    constexpr std::size_t eightMiB=8U*1024U*1024U;
+    const auto small=serializeFrogDraftData(scalar("i32")),version=revision(small);
+    std::string padded=small;
+    padded.resize(eightMiB+1,' ');
+    Context expanded(padded.size());
+    need(call(standard,padded,version,"{}",true).outcome==FROG_FRONTEND_LIMIT_EXCEEDED,
+        "The public root input exceeded its default eight MiB budget");
+    const auto result=call(expanded,padded,version,"{}",true);
+    if(result.outcome!=FROG_FRONTEND_SUCCESS)std::cerr<<result.diagnostics<<'\n';
+    need(result.outcome==FROG_FRONTEND_SUCCESS && !result.fir.empty(),
+        "A valid draft exactly at the explicit root budget did not produce executable IR");
+    padded.push_back(' ');
+    need(call(expanded,padded,version,"{}",true).outcome==FROG_FRONTEND_LIMIT_EXCEEDED,
+        "The caller's explicit root budget must remain effective");
+    std::string context="{}";context.resize(eightMiB+1,' ');
+    const auto largeContext=call(expanded,small,version,context,true);
+    need(largeContext.outcome==FROG_FRONTEND_LIMIT_EXCEEDED && largeContext.diagnostics.find("Semantic-context")!=std::string::npos,
+        "A larger root budget also widened the semantic-context budget");
+    padded.pop_back();padded.front()='!';
+    const auto malformed=call(expanded,padded,version,"{}",false);
+    need(malformed.outcome==FROG_FRONTEND_REJECTED && !malformed.diagnostics.empty(),
+        "Malformed source within the explicit budget must remain a source error");
+    Context oversized(kMaximumFrogDocumentBytes+1);
+    padded.resize(kMaximumFrogDocumentBytes+1,' ');
+    need(call(oversized,padded,version,"{}",false).outcome==FROG_FRONTEND_LIMIT_EXCEEDED,
+        "The explicit root budget exceeded the format's hard ceiling");
+}
+void runtimePropertyCatalogue() {
+    using Type=binding::TypeRef;
+    const auto u16=Type::primitive("u16"),variant=Type::primitive("variant");
+    const auto checkValue=[](std::string_view classId,const Type &schema,const Type &expected) {
+        const auto menu=applicationControlMembers(classId,schema);
+        const auto inMenu=std::find_if(menu.begin(),menu.end(),[](const auto &member){return member.id=="value";});
+        const auto direct=applicationControlMember(classId,schema,"value");
+        need(inMenu!=menu.end() && inMenu->runtimeAvailable && inMenu->readable && inMenu->writable &&
+            inMenu->type==expected && direct && direct->runtimeAvailable && direct->type==expected,
+            "Browse Properties and direct member lookup must advertise typed runtime Value");
+    };
+    checkValue("frog.control",{},variant);
+    checkValue("frog.widgets.ring_control",u16,u16);
+    const auto controls=applicationControlMember("frog.widgets.cluster_control",{},"controls");
+    need(controls && controls->runtimeAvailable && controls->readable && !controls->writable &&
+        controls->type==Type::array(Type::reference("frog.control")) && controls->help.find("unavailable")==std::string::npos,
+        "Cluster Controls[] must describe its runtime child-reference array");
+    const auto element=applicationControlMember("frog.widgets.array_control",Type::array(u16),"array_element.value");
+    need(element && !element->runtimeAvailable,"Array Element is a presentation template and cannot exchange Value");
+}
 void pictureRingRevision() {
     const auto *entry = findWidgetCatalogEntryByClassId("frog.widgets.ring_control");
     need(entry, "Picture Ring requires the ordinary Ring widget class");
@@ -120,6 +299,261 @@ void pictureRingRevision() {
          "Reading a legacy Picture Ring must retain the catalogue and save the new revision");
     old.object["draft_revision"] = json(std::to_string(kMaximumSupportedFrogDraftRevision+1U));
     need(!readFrogDraftData(canonical_json::encode(old)), "Unknown future draft revision was admitted");
+}
+void graphPresentationRevision() {
+    const auto *xyEntry = findWidgetCatalogEntryByClassId("frog.widgets.xy_graph");
+    const auto *waveformEntry = findWidgetCatalogEntryByClassId("frog.widgets.waveform_graph");
+    need(xyEntry && waveformEntry, "Missing graph widget catalogue entries");
+    auto xyWidget = makeWidgetData("xy", *xyEntry, {20, 30, 320, 200});
+    auto waveformWidget = makeWidgetData("waveform", *waveformEntry, {360, 30, 320, 200});
+    need(xyWidget.xyGraph && waveformWidget.waveformGraph, "Missing graph design state");
+    const auto write = [](const WidgetInstance &widget) {
+        FrogDraftData draft;
+        draft.title = "Graph presentation compatibility";
+        draft.widgets.addObject({widget.instanceId, widget.bounds, widget}, true);
+        return serializeFrogDraftData(draft);
+    };
+    need(revision(write(xyWidget)) == "3" && revision(write(waveformWidget)) == "3",
+        "Default graphs must retain the ordinary draft revision");
+
+    xyWidget.xyGraph->design.legendWidth = 208;
+    need(revision(write(xyWidget)) == "14", "An explicit XY legend width requires draft 14");
+    xyWidget.xyGraph->design.legendWidth.reset();
+    xyWidget.xyGraph->design.showKindBadge = false;
+    need(revision(write(xyWidget)) == "14", "Hiding the XY kind badge requires draft 14");
+
+    auto &waveform = waveformWidget.waveformGraph->design;
+    const auto defaultPlots = waveform.plots;
+    graph::Plot plot;
+    plot.id = "plot-0";
+    plot.name = "Plot 0";
+    waveform.plots = {plot};
+    need(revision(write(waveformWidget)) == "3", "A default Waveform trace must retain draft 3");
+    graph::setPlotPresentation(waveform.plots.front(), graph::Presentation::Bars);
+    need(revision(write(waveformWidget)) == "14", "Waveform bars require draft 14");
+    waveform.plots = {plot};
+    waveform.plots.front().lineStyle = graph::LineStyle::DashDot;
+    need(revision(write(waveformWidget)) == "14", "A Waveform line style requires draft 14");
+    waveform.plots = {plot};
+    waveform.plots.front().interpolation = graph::Interpolation::Staircase;
+    need(revision(write(waveformWidget)) == "14", "Waveform interpolation requires draft 14");
+    waveform.plots = {plot};
+    waveform.plots.front().symbol = graph::Symbol::Square;
+    need(revision(write(waveformWidget)) == "14", "A Waveform point symbol requires draft 14");
+    waveform.plots = defaultPlots;
+    waveform.legendWidth = 209;
+    need(revision(write(waveformWidget)) == "14", "An explicit Waveform legend width requires draft 14");
+    waveform.legendWidth.reset();
+    waveform.showKindBadge = false;
+    need(revision(write(waveformWidget)) == "14", "Hiding the Waveform kind badge requires draft 14");
+
+    xyWidget.xyGraph->design.legendWidth = 208;
+    waveform.legendWidth = 209;
+    graph::setPlotPresentation(plot, graph::Presentation::Bars);
+    plot.lineStyle = graph::LineStyle::DashDot;
+    plot.interpolation = graph::Interpolation::Staircase;
+    plot.symbol = graph::Symbol::Square;
+    waveform.plots = {plot};
+    FrogDraftData draft;
+    draft.widgets.addObject({xyWidget.instanceId, xyWidget.bounds, xyWidget}, true);
+    draft.widgets.addObject({waveformWidget.instanceId, waveformWidget.bounds, waveformWidget}, true);
+    auto stored = json(serializeFrogDraftData(draft));
+    for (const auto *declaredRevision : {"3", "14"}) {
+        stored.object["draft_revision"] = json(declaredRevision);
+        const auto reopened = readFrogDraftData(canonical_json::encode(stored));
+        need(bool(reopened), "Opening an existing graph file failed");
+        const auto &objects = reopened->widgets.objects();
+        need(objects.size() == 2 && objects[0].widget && objects[0].widget->xyGraph &&
+                objects[0].widget->xyGraph->design == xyWidget.xyGraph->design &&
+                objects[1].widget && objects[1].widget->waveformGraph &&
+                objects[1].widget->waveformGraph->design == waveform,
+            "Graph presentation changed during migration or save/open");
+        need(revision(serializeFrogDraftData(*reopened)) == "14", "A styled graph must save as draft 14");
+    }
+    const auto nested = serializeArrayElementWidget(waveformWidget);
+    need(revision(nested) == "14", "A styled graph in a standalone widget payload requires revision 14");
+    const auto reopenedNested = deserializeArrayElementWidget(nested);
+    need(reopenedNested && reopenedNested->waveformGraph && reopenedNested->waveformGraph->design == waveform,
+        "Reopening a revision 14 widget payload changed its graph settings");
+    auto ordinaryWaveform = makeWidgetData("default-waveform", *waveformEntry, {0, 0, 320, 200});
+    const auto nestedObject = json(nested);
+    ordinaryWaveform.defaultData = canonical_json::encode(nestedObject.object.at("widget"));
+    need(revision(write(ordinaryWaveform)) == "14", "A retained legacy graph default requires revision 14");
+    stored.object["draft_revision"] = json("15");
+    need(!readFrogDraftData(canonical_json::encode(stored)), "Draft 15 must remain unsupported");
+}
+void nativeCallAuthoringRevision() {
+    auto node = operation("native-call", "connectivity.libraries.call_library_function");
+    NativeCallConfiguration ordinary;
+    ordinary.symbol = "sum";
+    ordinary.library.value = "example.dll";
+    NativeCallParameter input;
+    input.id = "input";
+    ordinary.arguments = {input};
+    ordinary.presentation.visualParameterOrder = {input.id};
+    const auto write = [&](const NativeCallConfiguration &configuration) {
+        FrogDraftData draft;
+        node.nativeCall = configuration;
+        draft.diagramNodes = {node};
+        return serializeFrogDraftData(draft);
+    };
+    need(revision(write(ordinary)) == "7", "Ordinary native calls still use draft 7");
+
+    auto extended = ordinary;
+    extended.arguments.front().type.fromWire = true;
+    need(revision(write(extended)) == "14", "An explicit Native Call wire type requires draft 14");
+    extended = ordinary;
+    extended.returnDefinition.type.kind = NativeCallKind::Numeric;
+    extended.returnDefinition.type.wideBoolean = true;
+    need(revision(write(extended)) == "14", "A native Win32 Boolean return requires draft 14");
+
+    NativeCallStructField arrayField;
+    arrayField.fieldId = "values";
+    arrayField.storage = NativeCallFieldStorage::InlineArray;
+    arrayField.extent.source = NativeCallCapacitySource::Constant;
+    arrayField.extent.constant = 4;
+    extended = ordinary;
+    auto &argument = extended.arguments.front().type;
+    argument.arrayFieldContracts = {arrayField};
+    need(revision(write(extended)) == "14", "Remembered ABI array field contracts require draft 14");
+    argument.arrayFieldContracts.clear();
+    argument.kind = NativeCallKind::Cluster;
+    argument.adaptedType = binding::parseType("cluster<\"values\":array<i32>>").type;
+    argument.structLayout = {"Samples", 16, 4, 0, {arrayField}};
+    const auto bytes = write(extended);
+    need(revision(bytes) == "14", "A native inline array layout requires draft 14");
+    auto stored = json(bytes);
+    stored.object["draft_revision"] = json("7");
+    std::string error;
+    const auto reopened = readFrogDraftData(canonical_json::encode(stored), &error);
+    if (!reopened) throw std::runtime_error("Legacy Native Call failed to open: " + error);
+    need(reopened->diagramNodes.size() == 1 && reopened->diagramNodes.front().nativeCall == extended,
+        "Previously saved native struct settings changed during migration");
+    need(revision(serializeFrogDraftData(*reopened)) == "14", "A migrated native struct must save as draft 14");
+}
+void composedControlTypeMetadata() {
+    namespace codec=application_control_source;
+    using Type=binding::TypeRef;
+    const auto ring=[](unsigned count) {
+        auto type=Type::primitive("u16");type.choiceKind=binding::ChoiceKind::Ring;
+        for(unsigned i=0;i<count;++i)type.choices.push_back({"choice-"+std::to_string(i),
+            "Serialized colour for component "+std::to_string(i),i,false,true});
+        return type;
+    };
+    const auto cluster=[](std::vector<Type> fields) {
+        std::vector<std::string> ids,names;
+        for(std::size_t i=0;i<fields.size();++i){ids.push_back("field-"+std::to_string(i));names.push_back("Field "+std::to_string(i));}
+        auto type=Type::cluster(std::move(ids),std::move(fields));type.fieldNames=std::move(names);return type;
+    };
+    const auto pins=cluster(std::vector<Type>(4,ring(3)));
+    const auto row=cluster({ring(10),ring(10),ring(10),ring(10),pins});
+    const auto board=cluster(std::vector<Type>(12,row));
+    const auto schema=codec::writeType(board);
+    need(canonical_json::encode(schema).size()>64U*1024U && board.canonical().size()<64U*1024U,
+        "The composite fixture must exceed 64 KiB in full, with bounded individual spellings");
+    const auto decoded=codec::readType(schema);
+    need(decoded && canonical_json::exact(schema,codec::writeType(*decoded)),
+        "Strict read/write lost a field or a choice in the 12-row control type");
+    auto broken=schema;
+    auto &lastRing=broken.object.at("children").array.back().object.at("children").array.back().object.at("children").array.back();
+    lastRing.object.at("choices").array.back().object.at("value")=canonical_json::string("invalid");
+    need(!codec::readType(broken),"An invalid choice in the last nested Ring escaped type validation");
+    broken=schema;broken.object.at("children").array.back().object.at("canonical")=canonical_json::string("u16");
+    need(!codec::readType(broken),"A mismatched final child escaped canonical type validation");
+    auto deep=Type::primitive("u16");for(unsigned i=0;i<33;++i)deep=Type::array(std::move(deep));
+    need(!codec::readType(codec::writeType(deep)),"The type spelling's depth ceiling must remain effective");
+    auto limit=codec::writeType(ring(4095));
+    need(bool(codec::readType(limit)),"One type with 4095 choices is within the structural budget");
+    limit.object.at("choices").array.push_back(schema.object.at("children").array.front().object.at("children").array.front().object.at("choices").array.front());
+    need(!codec::readType(limit),"One type with 4096 choices exceeds the structural budget");
+
+    ApplicationControlNode symbol;symbol.kind=ApplicationControlKind::Reference;
+    symbol.target={ApplicationControlTargetKind::Unbound,{},{}};symbol.expectedClass="frog.widgets.cluster_control";symbol.valueType=board;
+    auto config=codec::writeConfiguration(symbol);
+    auto unrelated=canonical_json::array();unrelated.array.resize(4096);
+    config.object["extension"]=std::move(unrelated);
+    need(!codec::preflight(config),"Unrelated metadata incorrectly received the serialized type allowance");
+    auto model=operation("board-model","application_control.reference");model.applicationControl=symbol;
+    auto members=operation("board-controls","application_control.property_node");
+    symbol.kind=ApplicationControlKind::Property;symbol.properties={{"children","controls",ApplicationControlPropertyMode::Read}};
+    members.applicationControl=symbol;
+    FrogDraftData draft;draft.title="Twelve rows of controls";draft.diagramNodes={std::move(model),std::move(members)};
+    // A fixed text literal selects the same composed adapter as the complete game.
+    draft.diagramNodes.push_back(operation("separator","string.other_constants.space"));
+    wire(draft,"board-reference","board-model","reference_out","board-controls","reference_in");
+    const auto bytes=serializeFrogDraftData(draft);
+    const auto prepared=prepareDraftFrontend(bytes,"memory:/twelve-rows.frog",{},{});
+    if(!prepared.accepted())for(const auto &d:prepared.diagnostics)std::cerr<<d.code<<' '<<d.message<<'\n';
+    need(prepared.accepted(),"The .frog with the full composite control-reference type did not prepare");
+    const auto &diagram=prepared.source->root().object.at("diagram");
+    need(diagram.object.at("profile").string=="frog.studio.composed-program@1",
+        "The full control type must travel through the composed Source adapter");
+}
+void typedControlCast(Context &context) {
+    using Type=binding::TypeRef;
+    ApplicationControlNode node;
+    node.kind=ApplicationControlKind::ToMoreSpecificClass;
+    node.expectedClass="frog.control";
+    node.target={ApplicationControlTargetKind::Unbound,{},{}};
+    const auto config=application_control_source::writeConfiguration(node);
+    need(application_control_source::readConfiguration(config)==node,"Control cast changed during source round trip");
+    const auto source=Type::reference("frog.control");
+    const auto ring=Type::reference("frog.widgets.ring_control",Type::primitive("u16"));
+    const auto cluster=Type::reference("frog.widgets.cluster_control");
+    constexpr auto pointer="/diagram/nodes/2/application_control";
+    for(const auto &target:{ring,cluster}) {
+        const auto descriptor=canonicalObjectReferenceDescriptor(config,pointer,source,nullptr,target);
+        need(descriptor && descriptor->kind==CanonicalObjectReferenceKind::ToMoreSpecificClass,
+            "A typed Ring or class-only Cluster model was rejected");
+        const auto &ports=descriptor->ports;
+        need(ports.size()==5 && ports[0].id=="reference_in" && ports[0].type==source.canonical() && ports[0].required &&
+            ports[1].id=="target_class" && ports[1].type==target.canonical() && ports[1].required &&
+            ports[2].id=="reference_out" && ports[2].fullTypeJson==ports[1].fullTypeJson &&
+            !ports[2].input && ports[3].id=="error_in" && ports[4].id=="error_out",
+            "Control cast did not preserve separate source, template, strict return and error ports");
+        auto attrs=canonicalObjectReferenceAttributes(*descriptor);
+        need(canonicalObjectReferenceDescriptorFromAttributes(attrs,pointer)==descriptor,
+            "Sealed control cast did not round trip");
+        auto &outputs=attrs.object.at("ports").array;
+        outputs.at(2).object.at("schema")=outputs.at(0).object.at("schema");
+        need(!canonicalObjectReferenceDescriptorFromAttributes(attrs,pointer),
+            "A cast with a forged source schema on its result was accepted");
+    }
+    need(!canonicalObjectReferenceDescriptor(config,pointer,source,nullptr,Type::primitive("u16")) &&
+        !canonicalObjectReferenceDescriptor(config,pointer,Type::primitive("u16"),nullptr,ring),
+        "The value behind a control was allowed to substitute for a reference");
+    node.kind=ApplicationControlKind::Reference;
+    node.expectedClass=cluster.name;
+    const auto unbound=canonicalObjectReferenceDescriptor(application_control_source::writeConfiguration(node),pointer);
+    need(unbound && unbound->effects==std::vector<std::string>{"transport_typed_null"} &&
+        unbound->ports.front().type==cluster.canonical(),"An unbound Cluster class constant required a live target");
+    FrogDraftData draft;
+    draft.title="Separate source and strict cast template";
+    auto sourceNode=operation("source","application_control.reference");
+    node.expectedClass=source.name;
+    sourceNode.applicationControl=node;
+    auto templateNode=operation("ring-model","application_control.reference");
+    node.expectedClass=ring.name;
+    node.valueType=ring.children.front();
+    templateNode.applicationControl=node;
+    auto cast=operation("cast","application_control.to_more_specific_class");
+    node.kind=ApplicationControlKind::ToMoreSpecificClass;
+    cast.applicationControl=node;
+    draft.diagramNodes={std::move(sourceNode),std::move(templateNode),std::move(cast)};
+    wire(draft,"source-channel","source","reference_out","cast","reference_in");
+    wire(draft,"model-channel","ring-model","reference_out","cast","target_class");
+    const auto bytes = serializeFrogDraftData(draft);
+    need(revision(bytes) == "14", "A reference cast requires draft 14");
+    auto legacy = json(bytes);
+    legacy.object["draft_revision"] = json("6");
+    const auto migrated = readFrogDraftData(canonical_json::encode(legacy));
+    need(migrated && migrated->diagramNodes.size() == 3 && migrated->diagramNodes.back().applicationControl == node &&
+            revision(serializeFrogDraftData(*migrated)) == "14",
+        "Previously saved control casts must retain their configuration on migration");
+    const auto result=qualify(context,draft);
+    need(result.fir.find("frog.studio.object_reference.to_more_specific_class.v1")!=std::string::npos &&
+        result.fir.find("target_class")!=std::string::npos,
+        "Public draft derivation did not emit the native control cast and its independent model input");
 }
 void legacyStructureType(Context &context) {
     auto original=json(R"frog({
@@ -461,7 +895,14 @@ void independentStructureDiagnostics(Context &context) {
 int main() {
     try {
         Context context;
+        rootSourceBudget(context);
+        studioForAndFixedQuotient(context);
+        runtimePropertyCatalogue();
         pictureRingRevision();
+        graphPresentationRevision();
+        nativeCallAuthoringRevision();
+        composedControlTypeMetadata();
+        typedControlCast(context);
         incompleteWireDiagnostics(context);
         independentStructureDiagnostics(context);
         wireRouteIntentPresentation(context);

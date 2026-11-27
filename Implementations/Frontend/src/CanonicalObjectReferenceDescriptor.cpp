@@ -70,17 +70,24 @@ std::string_view canonicalObjectReferenceOperation(CanonicalObjectReferenceKind 
     case CanonicalObjectReferenceKind::Update:return "frog.studio.record.update.v1";
     case CanonicalObjectReferenceKind::Select:return "frog.studio.record.select.v1";
     case CanonicalObjectReferenceKind::Close:return "frog.studio.object_reference.close_borrowed.v1";
+    case CanonicalObjectReferenceKind::ToMoreSpecificClass:return "frog.studio.object_reference.to_more_specific_class.v1";
     }
     return {};
 }
 std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescriptor(const Json &value,
-    std::string_view pointer,const binding::TypeRef &wired,CanonicalObjectReferenceDiagnostic *diagnostic) {
+    std::string_view pointer,const binding::TypeRef &wired,CanonicalObjectReferenceDiagnostic *diagnostic,
+    const binding::TypeRef &targetClass) {
     const auto fail=[&](std::string code,std::string why,bool unsupported=false)->std::optional<CanonicalObjectReferenceDescriptor>{
         if(diagnostic)*diagnostic={std::move(code),std::move(why),std::string(pointer),unsupported};return {};};
     try {
         std::string why;const auto cfg=decode(value,why);
         if(!cfg)return fail("canonical.object_reference.configuration_invalid",why);
         const auto type=wired.known()?wired:binding::TypeRef::reference(cfg->expectedClass,cfg->valueType.known()?std::optional{cfg->valueType}:std::nullopt);
+        const bool cast=cfg->kind==ApplicationControlKind::ToMoreSpecificClass;
+        if(cast && (!applicationControlCastReference(wired) || !applicationControlCastReference(targetClass) ||
+            cfg->target.kind!=ApplicationControlTargetKind::Unbound || !cfg->target.ownerDocumentId.empty() ||
+            !cfg->target.widgetId.empty() || !cfg->methodId.empty() || !cfg->properties.empty() || !cfg->parameters.empty()))
+            return fail("canonical.object_reference.cast_invalid","The cast requires separate source and model control references and no linked object or member.");
         if(cfg->kind==ApplicationControlKind::Close&&
             (type.kind!=binding::TypeKind::Reference||
              (type.name!="frog.object"&&!binding::referenceClassAssignable(type.name,"frog.control"))))
@@ -92,23 +99,38 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
               isNullNotifierReferenceValue(*cfg)&&isNotifierReference(type))&&type.children.size()==1&&
              canonicalObjectReferenceFullTypeEqual(type.children.front(),cfg->valueType));
         const bool genericControlView=type.kind==binding::TypeKind::Reference&&type.children.empty()&&
-            (type.name=="frog.control"||type.name=="frog.object")&&!cfg->valueType.known();
-        const bool applicationKind=type.kind==binding::TypeKind::Reference && type.name=="frog.application" &&
-            cfg->expectedClass==type.name && type.children.empty() && !cfg->valueType.known() &&
-            cfg->kind==ApplicationControlKind::Property && !cfg->properties.empty() &&
+            applicationControlCastReference(type)&&!cfg->valueType.known();
+        const bool applicationTarget=type.kind==binding::TypeKind::Reference && type.name=="frog.application" &&
+            cfg->expectedClass==type.name && type.children.empty() && !cfg->valueType.known();
+        const bool applicationQuit=applicationTarget && cfg->kind==ApplicationControlKind::Invoke &&
+            cfg->methodId=="application.quit";
+        const bool applicationKind=applicationTarget && cfg->kind==ApplicationControlKind::Property && !cfg->properties.empty() &&
             std::all_of(cfg->properties.begin(),cfg->properties.end(),[](const auto &row){
                 return row.memberId=="kind" && row.mode==ApplicationControlPropertyMode::Read;
             });
-        if(!synchronizationNull&&!genericControlView&&!applicationKind&&(type.kind!=binding::TypeKind::Reference||!type.known()||type.children.size()!=1||!valueType(type.children.front(),false)))
+        const bool panelMethod=cfg->kind==ApplicationControlKind::Invoke && cfg->expectedClass=="frog.program" &&
+            (cfg->methodId=="front_panel.open" || cfg->methodId=="front_panel.close");
+        if(panelMethod) {
+            if(!cfg->properties.empty())
+                return fail("canonical.object_reference.configuration_invalid","A panel method cannot declare property rows.");
+            if(type.kind!=binding::TypeKind::Reference || type.name!=cfg->expectedClass || !type.children.empty() || cfg->valueType.known())
+                return fail("canonical.object_reference.schema_invalid","A panel method requires a nominal program reference without a control-value schema.");
+            if((cfg->target.kind!=ApplicationControlTargetKind::ThisFrog && cfg->target.kind!=ApplicationControlTargetKind::Unbound) ||
+                !cfg->target.ownerDocumentId.empty() || !cfg->target.widgetId.empty())
+                return fail("canonical.object_reference.target_invalid","A panel method requires the owning program or an explicitly wired program reference.");
+        }
+        const bool requiresValueSchema=!cast&&!synchronizationNull&&!genericControlView&&!applicationKind&&!applicationQuit&&!panelMethod;
+        if(requiresValueSchema&&(type.kind!=binding::TypeKind::Reference||!type.known()||type.children.size()!=1||!valueType(type.children.front(),false)))
             return fail("canonical.object_reference.type_unavailable","The local profile requires a complete exact scalar/String/Record value schema and a typed borrowed reference.",true);
-        if(!binding::referenceClassAssignable(type.name,cfg->expectedClass))return fail("canonical.object_reference.class_invalid","The actual reference view is not assignable to the configured expected class.");
-        if(!synchronizationNull&&!genericControlView&&!applicationKind&&!canonicalObjectReferenceFullTypeEqual(type.children.front(),cfg->valueType))return fail("canonical.object_reference.schema_invalid","The effective target and saved complete value schema differ.");
+        if(!cast&&!binding::referenceClassAssignable(type.name,cfg->expectedClass))return fail("canonical.object_reference.class_invalid","The actual reference view is not assignable to the configured expected class.");
+        if(requiresValueSchema&&!canonicalObjectReferenceFullTypeEqual(type.children.front(),cfg->valueType))return fail("canonical.object_reference.schema_invalid","The effective target and saved complete value schema differ.");
         // An explicitly generic Control/Object reference keeps its nominal
         // view. Value crosses that view as a typed Variant; the actual target
         // schema and capabilities are checked by the instance registry.
         const auto valueSchema=type.children.empty()?binding::TypeRef::primitive("variant"):type.children.front();
         if(cfg->target.kind!=ApplicationControlTargetKind::Widget&&cfg->target.kind!=ApplicationControlTargetKind::Unbound&&
-           !(applicationKind && cfg->target.kind==ApplicationControlTargetKind::ThisApplication))
+           !((applicationKind||applicationQuit) && cfg->target.kind==ApplicationControlTargetKind::ThisApplication) &&
+           !(panelMethod && cfg->target.kind==ApplicationControlTargetKind::ThisFrog))
             return fail("canonical.object_reference.target_unavailable","Value and Reinitialize require an actual declared widget target or a typed input reference.",true);
         if(cfg->target.kind==ApplicationControlTargetKind::Widget&&cfg->target.widgetId.empty())
             return fail("canonical.object_reference.target_invalid","The typed reference has no actual target identity.");
@@ -118,11 +140,17 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
         result.configurationSha256=hashing::sha256Hex(result.configurationJson);
         if(cfg->kind==ApplicationControlKind::Reference){result.kind=CanonicalObjectReferenceKind::Resolve;
             result.effects=cfg->target.kind==ApplicationControlTargetKind::Unbound?std::vector<std::string>{"transport_typed_null"}:std::vector<std::string>{"borrow_reference"};}
+        else if(cast) {
+            result.kind=CanonicalObjectReferenceKind::ToMoreSpecificClass;
+            result.effects={"check_borrowed_reference_class"};
+        }
         else if(cfg->kind==ApplicationControlKind::Property) {
             result.kind=CanonicalObjectReferenceKind::Property;
             if(cfg->properties.empty()||cfg->properties.size()>32)return fail("canonical.object_reference.configuration_invalid","Property needs a bounded nonempty list of stable rows.");
             for(const auto &row:cfg->properties) {
                 const bool label=row.memberId=="label.text"&&row.mode==ApplicationControlPropertyMode::Read;
+                const bool controls=row.memberId=="controls"&&row.mode==ApplicationControlPropertyMode::Read&&
+                    applicationControlClusterControlsAvailable(type.name);
                 const bool signaling=row.memberId=="value_signaling";
                 const bool colors=row.memberId=="colors"&&applicationControlBooleanColorsAvailable(type.name)&&
                     valueSchema==binding::TypeRef::primitive("bool");
@@ -136,8 +164,8 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;
                 const bool graphProperty=xy_reference::supported(row.memberId) && graph && graph->kind==ApplicationControlMemberKind::Property && graph->runtimeAvailable &&
                     (row.mode==ApplicationControlPropertyMode::Read?graph->readable:graph->writable);
-                if(row.memberId!="value"&&!signaling&&!label&&!graphProperty&&!colors&&!applicationKind&&!appearance)return fail("canonical.object_reference.member_unavailable","The declared class has no native executor for this property.",true);
-                const std::string effect=applicationKind?"read_application_kind":colors?"boolean_colors_presentation":appearance?"widget_appearance":label?"read_declared_label":signaling?"write_value_signaling":graphProperty?"xy_presentation":row.mode==ApplicationControlPropertyMode::Read?"read_value":"write_value_silent";
+                if(row.memberId!="value"&&!signaling&&!label&&!graphProperty&&!colors&&!applicationKind&&!appearance&&!controls)return fail("canonical.object_reference.member_unavailable","The declared class has no native executor for this property.",true);
+                const std::string effect=controls?"read_cluster_controls":applicationKind?"read_application_kind":colors?"boolean_colors_presentation":appearance?"widget_appearance":label?"read_declared_label":signaling?"write_value_signaling":graphProperty?"xy_presentation":row.mode==ApplicationControlPropertyMode::Read?"read_value":"write_value_silent";
                 if(std::find(result.effects.begin(),result.effects.end(),effect)==result.effects.end())result.effects.push_back(effect);
                 if(signaling&&std::find(result.effects.begin(),result.effects.end(),"publish_value_change")==result.effects.end())
                     result.effects.push_back("publish_value_change");
@@ -149,10 +177,12 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
         }else {
             const auto graph=xyTarget?xy_reference::member(cfg->methodId):std::nullopt;
             const bool graphMethod=graph && graph->kind==ApplicationControlMemberKind::Method && graph->runtimeAvailable;
-            if(cfg->methodId!="reinitialize"&&!graphMethod)return fail("canonical.object_reference.method_unavailable","The declared class has no native executor for this method.",true);
-            if(!graphMethod&&!cfg->parameters.empty())return fail("canonical.object_reference.configuration_invalid","The actual Reinitialize method has no parameter bindings.");
+            if(cfg->methodId!="reinitialize"&&!graphMethod&&!applicationQuit&&!panelMethod)return fail("canonical.object_reference.method_unavailable","The declared class has no native executor for this method.",true);
+            if(!graphMethod&&!applicationQuit&&!panelMethod&&!cfg->parameters.empty())return fail("canonical.object_reference.configuration_invalid","The actual Reinitialize method has no parameter bindings.");
+            if(applicationQuit && std::any_of(cfg->parameters.begin(),cfg->parameters.end(),[](const auto &p){return p.id!="quit";}))
+                return fail("canonical.object_reference.configuration_invalid","Quit Application has only one Boolean parameter.");
             if(graphMethod)for(const auto &binding:cfg->parameters)if(std::none_of(graph->parameters.begin(),graph->parameters.end(),[&](const auto &parameter){return parameter.id==binding.id;}))return fail("canonical.object_reference.configuration_invalid","A Graph XY method parameter is not declared by its exact signature.");
-            result.kind=CanonicalObjectReferenceKind::Invoke;result.effects={graphMethod?"xy_presentation":"reinitialize"};
+            result.kind=CanonicalObjectReferenceKind::Invoke;result.effects={panelMethod?cfg->methodId:applicationQuit?"quit_application":graphMethod?"xy_presentation":"reinitialize"};
         }
         const auto port=[&](std::string id,const binding::TypeRef &t,bool input,bool required=false){
             result.ports.push_back({std::move(id),canonicalObjectReferencePhysicalType(t).canonical(),encode(canonicalObjectReferenceWriteType(t)),input,required,{}});};
@@ -160,19 +190,28 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
         else {
             if(applicationControlHasReferenceInput(*cfg))
                 port("reference_in",type,true,cfg->target.kind==ApplicationControlTargetKind::Unbound);
-            if(cfg->kind!=ApplicationControlKind::Close)port("reference_out",type,false);
+            if(cast)port("target_class",targetClass,true,true);
+            if(cfg->kind!=ApplicationControlKind::Close)port("reference_out",cast?targetClass:type,false);
             const auto error=binding::TypeRef::cluster({"status","code","source"},{binding::TypeRef::primitive("bool"),binding::TypeRef::primitive("i32"),binding::TypeRef::primitive("string")});
             port("error_in",error,true);port("error_out",error,false);
             for(const auto &row:cfg->properties) {
                 const auto graph=xyTarget?xy_reference::member(row.memberId):std::nullopt;
                 const auto schema=row.memberId=="colors"?applicationControlBooleanColorsType():
+                    row.memberId=="controls"?binding::TypeRef::array(binding::TypeRef::reference("frog.control")):
                     row.memberId=="interaction.visible"?binding::TypeRef::primitive("bool"):
                     row.memberId=="boolean_text.text"?binding::TypeRef::primitive("string"):
                     graph?graph->type:(applicationKind||row.memberId=="label.text")?binding::TypeRef::primitive("string"):valueSchema;
                 port("property:"+row.id,schema,row.mode==ApplicationControlPropertyMode::Write,row.mode==ApplicationControlPropertyMode::Write);
             }
-            if(cfg->kind==ApplicationControlKind::Invoke && xyTarget && cfg->methodId!="reinitialize") {
-                const auto method=xy_reference::member(cfg->methodId);
+            if(applicationQuit || panelMethod || (cfg->kind==ApplicationControlKind::Invoke && xyTarget && cfg->methodId!="reinitialize")) {
+                const auto method=panelMethod?std::optional{applicationControlPanelVisibilityMethod(cfg->methodId=="front_panel.open")}:
+                    applicationQuit?std::optional{applicationQuitMethod()}:xy_reference::member(cfg->methodId);
+                if(!method)return fail("canonical.object_reference.method_unavailable","The native method signature is unavailable.",true);
+                if(panelMethod) {
+                    for(const auto &binding:cfg->parameters)if(
+                        std::none_of(method->parameters.begin(),method->parameters.end(),[&](const auto &parameter){return parameter.id==binding.id;}))
+                        return fail("canonical.object_reference.configuration_invalid","The panel method has an unknown parameter.");
+                }
                 for(const auto &parameter:applicationControlMethodPorts(*method,cfg->parameters)) {
                     port(parameter.id,parameter.type,parameter.direction==ApplicationControlPortDirection::Input,parameter.required);
                     result.ports.back().defaultValueJson=parameter.defaultValue;
@@ -416,12 +455,19 @@ std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescri
             const auto operation=kind->string=="literal"?CanonicalObjectReferenceKind::Resolve:kind->string=="construct"?CanonicalObjectReferenceKind::Construct:kind->string=="update"?CanonicalObjectReferenceKind::Update:CanonicalObjectReferenceKind::Select;
             descriptor=canonicalObjectReferenceRecordDescriptor(operation,*type,std::move(ports),std::move(paths),config->member("value"),pointer,diagnostic);
         }else {
-            binding::TypeRef wired;
+            binding::TypeRef wired,targetClass;
             // Port signatures carry the exact actual nominal view separately
             // from the immutable configured expected class. Revalidate it;
             // never obtain its semantics from a SHA or Source side channel.
-            for(const auto &p:rawPorts->array){const auto *id=p.member("id"),*schema=p.member("schema");if(id&&id->type==Json::Type::String&&(id->string=="reference_in"||id->string=="reference_out")&&schema){const auto parsed=canonicalObjectReferenceReadType(*schema,diagnostic);if(!parsed)return {};wired=*parsed;break;}}
-            descriptor=canonicalObjectReferenceDescriptor(*config,pointer,wired,diagnostic);
+            for(const auto &p:rawPorts->array) {
+                const auto *id=p.member("id"),*schema=p.member("schema");
+                if(!id||id->type!=Json::Type::String||!schema)continue;
+                const bool templatePort=id->string=="target_class";
+                if(!templatePort && id->string!="reference_in" && !(id->string=="reference_out"&&!wired.known()))continue;
+                const auto parsed=canonicalObjectReferenceReadType(*schema,diagnostic);if(!parsed)return {};
+                (templatePort?targetClass:wired)=*parsed;
+            }
+            descriptor=canonicalObjectReferenceDescriptor(*config,pointer,wired,diagnostic,targetClass);
         }
         if(!descriptor)return {};
         if(!exact(attrs,canonicalObjectReferenceAttributes(*descriptor)))return fail("Full local configuration, SHA, signature, effects or field paths were tampered.");return descriptor;

@@ -343,6 +343,8 @@ FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.build_cluster", "Build Error C
 FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.clear_cluster", "Clear Error Cluster", "functions/error/02-clear-cluster.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.demultiplex", "Demultiplex Errors", "functions/error/03-demultiplex.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.display", "Display Error", "functions/error/04-display.svg", "")
+FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.simple_handler", "Simple Error Handler", "functions/error/04-display.svg", "")
+FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.invalid_message", "Invalid Message", "functions/error/01-build-cluster.svg", "", "", FunctionCatalogEntryKind::Operation, FunctionCatalogEntryRole::Node, false)
 FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.downgrade_to_warning", "Downgrade To Warning", "functions/error/05-downgrade-to-warning.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.filter_code", "Filter Error Code", "functions/error/06-filter-code.svg", "")
 FROG_FUNCTION_ENTRY(FunctionFamily::Error, "error.generate_report", "Generate Error Report", "functions/error/07-generate-report.svg", "")
@@ -407,6 +409,7 @@ FROG_FUNCTION_ENTRY(FunctionFamily::Path, "path.application_directory", "Applica
 FROG_FUNCTION_ENTRY(FunctionFamily::ApplicationControl, "application_control.close_reference", "Close Reference", "functions/application-control/Close Reference.svg", "", "", FunctionCatalogEntryKind::Operation)
 FROG_FUNCTION_ENTRY(FunctionFamily::ApplicationControl, "application_control.property_node", "Property Node", "functions/application-control/Property Node.svg", "", "", FunctionCatalogEntryKind::Operation)
 FROG_FUNCTION_ENTRY(FunctionFamily::ApplicationControl, "application_control.invoke_node", "Invoke Node", "functions/application-control/Invoke Node.svg", "", "", FunctionCatalogEntryKind::Operation)
+FROG_FUNCTION_ENTRY(FunctionFamily::ApplicationControl, "application_control.to_more_specific_class", "To More Specific Class", "functions/application-control/To More Specific Class.svg", "", "", FunctionCatalogEntryKind::Operation)
 FROG_FUNCTION_ENTRY(FunctionFamily::ApplicationControl, "application_control.reference", "FROG Server Reference", "functions/application-control/VI server reference_Rounded.svg", "", "", FunctionCatalogEntryKind::Operation)
 
 // One Programming > Synchronization folder; the historical Structures entry stays a navigation alias.

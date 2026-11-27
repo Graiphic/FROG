@@ -938,6 +938,15 @@ or infer transfers from port names or geometry.
 </p>
 
 <p>
+The Studio-derived For can carry <code>for_loop_count_profile</code> with the
+value <code>frog.studio.for.count-zero-floor@1</code> in the structure's
+attributes or in its composed structure semantics. This profile evaluates a
+negative count as zero iterations and preserves the other loop limits. The
+strict base For profile omits this field. Both forms use FIR version
+<code>0.1</code>.
+</p>
+
+<p>
 The regression owner
 <a href="../sdk/ecosystem/tests/test_reference_c_fir_contract.py">test_reference_c_fir_contract.py</a>
 validates eight immutable real Frontend artifacts: scalar Add, exact typed scalars,

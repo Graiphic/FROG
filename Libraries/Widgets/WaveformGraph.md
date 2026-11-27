@@ -25,6 +25,16 @@ values as the JSON strings `NaN`, `Inf` and `-Inf`.
 
 Only explicit initial data/configuration is persisted. Accepted runtime snapshots, revisions, caches, device handles and diagnostics are not defaults. Unknown profile/fields or invalid payloads are preserved and block support claims; they are never silently converted to an empty linear graph.
 
+Plot overrides may also carry `presentation` (0 line, 1 points, 2 line and
+points, 3 area, 4 comb, 5 bars, 6 none), `line_style` (0 solid, 1 long dash,
+2 short dash, 3 dash dot, 4 dash dot dot), `interpolation` (0 none, 1 step
+vertical first, 2 linear, 3 step horizontal first, 4 horizontal centered,
+5 vertical centered), and `symbol` (0–16, the Graph XY point-symbol
+order). If `presentation` is absent, `lines` and `points` select the
+presentation as before. Omitted style fields keep the solid line, linear
+interpolation and filled circle defaults. These fields affect the display;
+the graph value, sample origin and step are preserved.
+
 Effective authoring limits: 64 series, 1 000 000 total samples, RGB styles and line width 0.5–8. An execution target may not infer support from the existence of a local renderer: it must explicitly advertise the profile. No target runtime support, time adapters, zoom/pan, cursors, event API, export or advanced-axis conformance is claimed here.
 
 The sample quota above is the in-memory dataset limit. Persisted initial data also shares the host document's 250 000 JSON-value and 64 MiB source budgets with all other objects and metadata. The host must refuse an unreadable over-budget save without overwriting the previously saved document; it does not truncate samples to fit.
@@ -94,6 +104,19 @@ Increasing it leaves the dataset unchanged. The optional `legend_position`
 object stores the legend's top-left corner as numeric `x` and `y` in logical
 units relative to the widget's top-left corner. Omitting it places the legend
 beside the right edge. Moving the widget carries its legend with it.
+The optional numeric `legend_width` stores a manual width from 110 to 320
+logical units. The measured width applies when the field is absent.
 Existing documents without `legend_rows` use four rows. Each plot retains
 its own `plots[].visible` and stable ID when the legend is folded or hidden.
 The widget label has its own visibility setting outside this graph object.
+The optional boolean `kind_badge_visible` controls the graph type pictogram
+and defaults to `true`. Graph XY stores the same flag in its graph design.
+
+Waveform plot settings also accept the optional integer fields `presentation`,
+`line_style`, `interpolation` and `symbol`. Presentation uses the Graph XY
+ordinals for Line, Points, Line and Points, Area, Comb and Bars (0–5), with
+None (6) representing a hidden line and point rendering. When omitted, the
+existing `lines` and `points` flags decide the presentation. Line style,
+interpolation and symbol use the Graph XY ordinals and default to Solid,
+Linear and Disc, respectively. These fields affect the drawing and retain the
+original samples, plot IDs and values.

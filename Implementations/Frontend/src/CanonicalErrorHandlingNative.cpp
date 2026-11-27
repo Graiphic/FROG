@@ -3,12 +3,13 @@
 #include <utility>
 namespace frog::native_engine {
 namespace {
-constexpr std::array<std::pair<std::string_view,std::string_view>,19> operations{{
+constexpr std::array<std::pair<std::string_view,std::string_view>,20> operations{{
     {"error.build_cluster","frog.studio.error.build_cluster.v1"},
     {"error.demultiplex","frog.studio.error.demultiplex.v1"},
     {"error.downgrade_to_warning","frog.studio.error.downgrade_to_warning.v1"},
     {"error.filter_code","frog.studio.error.filter_code.v1"},
     {"error.generate_report","frog.studio.error.generate_report.v1"},
+    {"error.invalid_message","frog.studio.error.invalid_message.v1"},
     {"error.is_error_or_warning","frog.studio.error.is_error_or_warning.v1"},
     {"error.is_error","frog.studio.error.is_error.v1"},
     {"error.is_warning","frog.studio.error.is_warning.v1"},
@@ -31,6 +32,7 @@ std::string_view canonicalErrorHandlingMigrationIdentity(std::string_view id) no
     if(id.starts_with("frog.studio."))id.remove_prefix(12);
     if(id=="error.clear"||id=="error.clear_cluster")return "frog.studio.error.clear.v1";
     if(id=="error.display")return "frog.studio.error.display.v1";
+    if(id=="error.simple_handler")return "frog.studio.error.simple_handler.v1";
     if(id=="error.retain_first")return "frog.studio.error.retain_first.v1";
     for(const auto &[catalog,operation]:operations)if(catalog==id)return operation;return {};
 }

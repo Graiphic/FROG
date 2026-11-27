@@ -1,5 +1,6 @@
 #include "frog_native_engine/CanonicalFrontendMetrics.hpp"
 #include "frog_native_engine/CanonicalExecutionIr.hpp"
+#include "frog_native_engine/FrogJson.hpp"
 #include "CanonicalExecutionIrStorage.hpp"
 #include "frog_native_engine/Sha256.hpp"
 #include "CanonicalStructuredExecutionIr.hpp"
@@ -79,6 +80,10 @@ void validateMetadata(const Json *value,std::string_view at) {
 }
 bool sameNumber(double a,double b) {return std::bit_cast<std::uint64_t>(a)==std::bit_cast<std::uint64_t>(b);}
 struct SourceItem {const Json *value;std::string pointer;};
+struct PublicPortDeclaration {SourceItem source;bool input;};
+bool isPublicPortFamily(std::string_view family) {
+    return family=="interface_input" || family=="interface_output";
+}
 const Json &resolvePointer(const Json &root,std::string_view pointer) {
     if(pointer.empty())return root;
     if(pointer.front()!='/')fail("IR_SOURCE_REF","A source reference must use a JSON pointer.",std::string(pointer));
@@ -113,6 +118,7 @@ struct Intake {
     std::vector<CanonicalIrSourceMap> maps;
     std::vector<CanonicalIrCorrespondence> relations;
     std::map<std::string,SourceItem> sourceNodes,sourceEdges,widgets;
+    std::map<std::string,PublicPortDeclaration> publicPorts;
     std::map<std::string,std::size_t> nodeIndex;
     std::set<std::string> allIds;
     std::map<std::string,std::vector<std::string>> objectCorrespondence;
@@ -159,14 +165,42 @@ struct Intake {
             if(!inventory.emplace(valueId,SourceItem{&entry,at}).second)fail("IR_SOURCE_DUPLICATE_ID","Authoritative source identity is duplicated.",at);
         }
     }
+    void collectPublicPorts(const Json &boundary) {
+        for(const auto side:{std::string_view("inputs"),std::string_view("outputs")}) {
+            const auto pointer="/interface/"+std::string(side);
+            const auto &ports=array(boundary.member(side),pointer,limits().maximumNodes,true);
+            const bool input=side=="inputs";
+            for(std::size_t i=0;i<ports.size();++i) {
+                const auto at=pointer+"/"+std::to_string(i);
+                const auto &entry=object(&ports[i],at);
+                fields(entry,{"id","type","connection"},at);
+                const auto portId=id(entry.member("id"),at+"/id",limits().maximumSourceIdBytes,false);
+                if(text(entry.member("type"),at+"/type")!="f64")
+                    fail("IR_PUBLIC_PORT_TYPE_UNSUPPORTED","This public boundary supports f64 ports.",at+"/type",true);
+                if(const auto *policy=entry.member("connection");policy && (!input || text(policy,at+"/connection")!="required"))
+                    fail("IR_PUBLIC_PORT_POLICY_UNSUPPORTED","This public boundary supports required inputs.",at+"/connection",true);
+                if(!publicPorts.emplace(portId,PublicPortDeclaration{{&entry,at},input}).second)
+                    fail("IR_SOURCE_DUPLICATE_ID","Public port identity is duplicated.",at+"/id");
+            }
+        }
+    }
+    std::string publicPortBinding(const SourceItem &node,std::string_view family) const {
+        const auto at=node.pointer+"/interface_port";
+        const auto portId=id(node.value->member("interface_port"),at,limits().maximumSourceIdBytes,false);
+        const auto found=publicPorts.find(portId);
+        if(found==publicPorts.end())
+            fail("IR_PUBLIC_PORT_MISSING","Public port '"+portId+"' is not declared.",at);
+        if(found->second.input!=(family=="interface_input"))
+            fail("IR_PUBLIC_PORT_DIRECTION","Public port '"+portId+"' is declared in the opposite direction.",at);
+        return portId;
+    }
     void validateSource() {
         if(source.envelopeStatus()!=FrogSourceEnvelopeStatus::Recognized)
             fail("IR_SOURCE_UNSUPPORTED","Authoritative source is outside the current source envelope.","/",true);
         const auto &root=object(&source.root(),"/");
         fields(root,{"spec_version","metadata","interface","diagram","front_panel","connector","icon","ide","cache","host","execution_policy"},"/");
         const auto &boundary=object(root.member("interface"),"/interface");fields(boundary,{"inputs","outputs"},"/interface");
-        for(const auto side:{"inputs","outputs"})if(!array(boundary.member(side),"/interface",limits().maximumNodes,true).empty())
-            fail("IR_PUBLIC_INTERFACE_UNSUPPORTED","Public ports require a real public boundary adapter.","/interface",true);
+        collectPublicPorts(boundary);
         for(const auto section:{"host","execution_policy"}) {
             if(const auto *policy=root.member(section);policy && !object(policy,section).object.empty())
                 fail("IR_SOURCE_POLICY_UNSUPPORTED","Source policy is not carried by this initial adapter.",section,true);
@@ -176,11 +210,24 @@ struct Intake {
             fail("IR_INCOMPLETE_SOURCE","Incomplete source wires cannot enter native IR intake.","/diagram/wire_fragments");
         collect(sourceNodes,diagram.member("nodes"),"/diagram/nodes",limits().maximumNodes);
         collect(sourceEdges,diagram.member("edges"),"/diagram/edges",limits().maximumEdges);
+        std::set<std::string> boundPublicPorts;
         for(const auto &[_,item]:sourceNodes) {
             const auto family=text(item.value->member("kind"),item.pointer);
-            if(family!="primitive" && family!="widget_value")
+            if(isPublicPortFamily(family)) {
+                fields(*item.value,{"id","kind","interface_port","layout","doc","tags"},item.pointer);
+                const auto portId=publicPortBinding(item,family);
+                if(!boundPublicPorts.insert(portId).second)
+                    fail("IR_PUBLIC_PORT_DUPLICATE_BINDING","Public port '"+portId+"' has multiple boundary nodes in this profile.",item.pointer+"/interface_port");
+            } else if(family=="widget_value" && !publicPorts.empty()) {
+                fail("IR_PUBLIC_WIDGET_MIX_UNSUPPORTED","This public boundary profile is standalone.",item.pointer,true);
+            } else if(family!="primitive" && family!="widget_value") {
                 fail("IR_SOURCE_FAMILY_UNSUPPORTED","Source execution family has no implementation in this corridor.",item.pointer,true);
+            }
         }
+        for(const auto &[portId,port]:publicPorts)
+            if(!boundPublicPorts.contains(portId))
+                fail("IR_PUBLIC_PORT_UNBOUND","Public port '"+portId+"' has no boundary node.",port.source.pointer);
+        if(!root.member("front_panel") && !publicPorts.empty())return;
         const auto &panel=object(root.member("front_panel"),"/front_panel");fields(panel,{"canvas","widgets"},"/front_panel");
         collect(widgets,panel.member("widgets"),"/front_panel/widgets",limits().maximumWidgets);
         for(const auto &[wid,item]:widgets) {
@@ -244,24 +291,37 @@ struct Intake {
             CanonicalIrNode node;node.id=unique(record.member("id"),"/unit/objects/id");
             node.valueType="f64";
             node.family=text(record.member("family"),node.id);node.kind=text(record.member("kind"),node.id);
-            if(node.family!="primitive" && node.family!="widget_value")fail("IR_FAMILY_UNSUPPORTED","The canonical execution family is not implemented by this native intake.",node.id,true);
+            const bool publicPort=isPublicPortFamily(node.family);
+            if(node.family!="primitive" && node.family!="widget_value" && !publicPort)
+                fail("IR_FAMILY_UNSUPPORTED","The canonical execution family is not implemented by this native intake.",node.id,true);
             const auto &attrs=object(record.member("attributes"),node.id);
-            fields(attrs,node.family=="primitive"?std::initializer_list<std::string_view>{"source_node_id"}:std::initializer_list<std::string_view>{"source_node_id","widget_id","widget_class","value_type","default_value"},node.id);
+            if(publicPort)fields(attrs,{"source_node_id","interface_port_id"},node.id);
+            else if(node.family=="primitive")fields(attrs,{"source_node_id"},node.id);
+            else fields(attrs,{"source_node_id","widget_id","widget_class","value_type","default_value"},node.id);
             node.sourceNodeId=id(attrs.member("source_node_id"),node.id,limits().maximumSourceIdBytes,false);
             const auto sourceNode=sourceNodes.find(node.sourceNodeId);
             if(sourceNode==sourceNodes.end() || text(sourceNode->second.value->member("kind"),node.id)!=node.family)
                 fail("IR_SOURCE_NODE_MISMATCH","IR object does not match an actual source node family.",node.id);
             const auto &sourceNodeValue=*sourceNode->second.value;
-            fields(sourceNodeValue,node.family=="primitive"?std::initializer_list<std::string_view>{"id","kind","type","layout","doc","tags"}:std::initializer_list<std::string_view>{"id","kind","widget","layout","doc","tags"},sourceNode->second.pointer);
             std::set<std::string> expected{ref(sourceNode->second.pointer)};
             const auto &classification=object(record.member("classification"),node.id);fields(classification,{"primary_or_support","library_id"},node.id);
             if(text(classification.member("primary_or_support"),node.id)!="primary")fail("IR_CLASSIFICATION","Admitted objects must remain primary execution objects.",node.id);
             if(node.family=="primitive") {
+                fields(sourceNodeValue,{"id","kind","type","layout","doc","tags"},sourceNode->second.pointer);
                 if(record.member("role"))fail("IR_ROLE_UNSUPPORTED","A role on the admitted primitive has no defined execution meaning.",node.id,true);
                 if(node.kind!="frog.core.add" || text(sourceNodeValue.member("type"),node.id)!=node.kind)
                     fail("IR_PRIMITIVE_UNSUPPORTED","Only the real two-input frog.core.add primitive is admitted.",node.id,true);
                 if(text(classification.member("library_id"),node.id)!="frog.core")fail("IR_CLASSIFICATION","Add must retain its public core-library identity.",node.id);
+            } else if(publicPort) {
+                node.interfacePortId=publicPortBinding(sourceNode->second,node.family);
+                const auto &declaration=publicPorts.at(node.interfacePortId);
+                node.role=declaration.input?"input":"output";
+                if(node.kind!=node.family || classification.member("library_id") ||
+                   text(record.member("role"),node.id)!=node.role || text(attrs.member("interface_port_id"),node.id)!=node.interfacePortId)
+                    fail("IR_PUBLIC_PORT_MISMATCH","IR boundary identity or direction differs from its public declaration.",sourceNode->second.pointer+"/interface_port");
+                expected.insert(ref(declaration.source.pointer));
             } else {
+                fields(sourceNodeValue,{"id","kind","widget","layout","doc","tags"},sourceNode->second.pointer);
                 if(classification.member("library_id"))fail("IR_CLASSIFICATION_UNSUPPORTED","Widget participation has no admitted execution-library classification.",node.id,true);
                 if(node.kind!="widget_value")fail("IR_WIDGET_KIND","Natural widget participation must remain widget_value.",node.id);
                 node.widgetId=id(attrs.member("widget_id"),node.id,limits().maximumSourceIdBytes,false);
@@ -280,7 +340,7 @@ struct Intake {
                 expected.insert(ref(widget->second.pointer));
             }
             const std::map<std::string,bool> expectedPorts=node.family=="primitive"?std::map<std::string,bool>{{"a",true},{"b",true},{"result",false}}:
-                std::map<std::string,bool>{{"value",node.role=="indicator"}};
+                std::map<std::string,bool>{{"value",node.role=="indicator" || node.role=="output"}};
             std::set<std::string> seen;
             for(const auto &portRaw:array(record.member("ports"),node.id,3)) {
                 const auto &port=object(&portRaw,node.id);fields(port,{"id","direction","role","type_ref","boundary_kind","metadata"},node.id);
@@ -288,7 +348,8 @@ struct Intake {
                 const auto found=expectedPorts.find(p.id);
                 if(found==expectedPorts.end() || !seen.insert(p.id).second)fail("IR_PORT_SIGNATURE","A port is absent from the real admitted signature, or duplicated.",node.id);
                 p.input=found->second;p.typeRef=text(port.member("type_ref"),node.id);
-                if(text(port.member("direction"),node.id)!=(p.input?"in":"out") || p.typeRef!="f64" || text(port.member("role"),node.id)!="data" || text(port.member("boundary_kind"),node.id)!="none")
+                if(text(port.member("direction"),node.id)!=(p.input?"in":"out") || p.typeRef!="f64" || text(port.member("role"),node.id)!="data" ||
+                   text(port.member("boundary_kind"),node.id)!=(publicPort?"public_interface":"none"))
                     fail("IR_PORT_SIGNATURE","A port lost its actual direction, resolved type or participation role.",node.id);
                 const auto &metadata=object(port.member("metadata"),node.id);fields(metadata,{"source_node_id","source_port_id"},node.id);
                 if(text(metadata.member("source_node_id"),node.id)!=node.sourceNodeId || text(metadata.member("source_port_id"),node.id)!=p.id)
@@ -344,13 +405,22 @@ struct Intake {
             connections.push_back(std::move(edge));
         }
         if(connections.size()!=sourceEdges.size())fail("IR_SOURCE_EDGE_COVERAGE","Every actual source connection must remain present.","/unit/connections");
-        for(const auto &node:nodes)for(const auto &p:node.ports)if(p.input && !drivers.contains({node.id,p.id}))fail("IR_MISSING_DRIVER","An admitted input lost its real driver.",node.id);
+        for(const auto &node:nodes) {
+            const auto &sourceNode=sourceNodes.at(node.sourceNodeId);
+            if(node.family=="interface_input" && adjacency[node.id].empty())
+                fail("IR_PUBLIC_PORT_UNCONSUMED","Public input '"+node.interfacePortId+"' is not connected to a diagram input.",sourceNode.pointer+"/interface_port");
+            for(const auto &p:node.ports)if(p.input && !drivers.contains({node.id,p.id})) {
+                if(node.family=="interface_output")
+                    fail("IR_PUBLIC_PORT_UNDRIVEN","Public output '"+node.interfacePortId+"' has no diagram driver.",sourceNode.pointer+"/interface_port");
+                fail("IR_MISSING_DRIVER","An admitted input lost its real driver.",node.id);
+            }
+        }
         std::deque<std::string> queue;for(const auto &[node,degree]:indegree)if(degree==0)queue.push_back(node);
         std::size_t visited=0;while(!queue.empty()) {auto node=std::move(queue.front());queue.pop_front();++visited;for(const auto &dest:adjacency[node])if(--indegree[dest]==0)queue.push_back(dest);}
         if(visited!=nodes.size())fail("IR_COMBINATIONAL_CYCLE","Native intake cannot invent memory to repair a cycle.","/unit/connections");
     }
     void readMappings(const Json &unit) {
-        std::set<std::string> mappedNodes,mappedEdges,mappedWidgets,mappedDefaults;
+        std::set<std::string> mappedNodes,mappedEdges,mappedPublicPorts,mappedWidgets,mappedDefaults;
         std::map<std::string,const CanonicalIrConnection *> edgeIndex;for(const auto &edge:connections)edgeIndex.emplace(edge.id,&edge);
         for(const auto &raw:array(unit.member("source_map"),"/unit/source_map",limits().maximumMappingRecords)) {
             const auto &record=object(&raw,"/unit/source_map");fields(record,{"id","source_kind","source_ref","target_kind","target_refs","relation","notes"},"/unit/source_map");
@@ -366,6 +436,13 @@ struct Intake {
                 if(map.targetKind!="connection" || map.relation!="direct_primary" || map.targetRefs.size()!=1 || !edgeIndex.contains(map.targetRefs.front()) ||
                     &origin!=sourceEdges.at(edgeIndex.at(map.targetRefs.front())->sourceEdgeId).value || !mappedEdges.insert(map.targetRefs.front()).second)
                     fail("IR_SOURCE_MAP","An edge mapping lost actual edge identity or attribution.",map.id);
+            } else if(map.sourceKind=="interface_port") {
+                if(map.targetKind!="object" || map.relation!="direct_primary" || map.targetRefs.size()!=1 || !nodeIndex.contains(map.targetRefs.front()))
+                    fail("IR_PUBLIC_PORT_MAP","A public declaration must map to its actual interface boundary object.",map.id);
+                const auto &node=nodes[nodeIndex.at(map.targetRefs.front())];
+                const auto declaration=publicPorts.find(node.interfacePortId);
+                if(declaration==publicPorts.end() || &origin!=declaration->second.source.value || !mappedPublicPorts.insert(node.interfacePortId).second)
+                    fail("IR_PUBLIC_PORT_MAP","A public declaration mapping lost its actual boundary identity.",map.id);
             } else if(map.sourceKind=="widget_instance") {
                 const auto widget=std::find_if(widgets.begin(),widgets.end(),[&](const auto &entry){return entry.second.value==&origin;});
                 if(widget==widgets.end() || !mappedWidgets.insert(widget->first).second || map.relation!="non_primary")fail("IR_WIDGET_MAP","Widget declarations must remain distinct and non-primary.",map.id);
@@ -382,8 +459,8 @@ struct Intake {
             } else fail("IR_MAPPING_UNSUPPORTED","Source mapping family is outside this admitted corridor.",map.id,true);
             maps.push_back(std::move(map));
         }
-        if(mappedNodes.size()!=nodes.size() || mappedEdges.size()!=connections.size() || mappedWidgets.size()!=widgets.size())
-            fail("IR_SOURCE_MAP_COVERAGE","Nodes, edges and widget declarations require complete source maps.","/unit/source_map");
+        if(mappedNodes.size()!=nodes.size() || mappedEdges.size()!=connections.size() || mappedPublicPorts.size()!=publicPorts.size() || mappedWidgets.size()!=widgets.size())
+            fail("IR_SOURCE_MAP_COVERAGE","Nodes, edges, public ports and widget declarations require complete source maps.","/unit/source_map");
         for(const auto &[wid,item]:widgets) {
             const auto *props=item.value->member("props");
             if(props && props->member("default_value") && !mappedDefaults.contains(wid))
@@ -442,7 +519,7 @@ struct Intake {
         for(const auto &relation:relations)byId.emplace(relation.id,&relation);
         for(const auto &node:nodes) {
             const auto &references=objectCorrespondence.at(node.id);
-            if(node.family=="primitive" && !references.empty())fail("IR_CORRESPONDENCE","A primitive cannot replace widget declaration participation.",node.id);
+            if(node.family!="widget_value" && !references.empty())fail("IR_CORRESPONDENCE","This object cannot replace widget declaration participation.",node.id);
             if(node.family=="widget_value") {
                 if(references.size()!=1 || !byId.contains(references.front()))fail("IR_CORRESPONDENCE","A widget participant lost its declared object correspondence.",node.id);
                 const auto &relation=*byId.at(references.front());
@@ -523,9 +600,9 @@ struct CanonicalDraft {
         if(!metadataJson.empty())record+=",\"metadata\":"+std::string(metadataJson);
         append(relations,record+"}");
     }
-    std::string port(std::string_view node,std::string_view name,bool input) {
+    std::string port(std::string_view node,std::string_view name,bool input,bool publicPort=false) {
         return "{\"id\":"+quoteCanonicalJson(name)+",\"direction\":"+quoteCanonicalJson(input?"in":"out")+
-            ",\"role\":\"data\",\"type_ref\":\"f64\",\"boundary_kind\":\"none\",\"metadata\":{\"source_node_id\":"+
+            ",\"role\":\"data\",\"type_ref\":\"f64\",\"boundary_kind\":"+quoteCanonicalJson(publicPort?"public_interface":"none")+",\"metadata\":{\"source_node_id\":"+
             quoteCanonicalJson(node)+",\"source_port_id\":"+quoteCanonicalJson(name)+"}}";
     }
     std::string construct(std::string_view documentId) {
@@ -535,9 +612,18 @@ struct CanonicalDraft {
             const auto sourceId=text(raw.member("id"),"/diagram/nodes");const auto &item=admission.sourceNodes.at(sourceId);
             const auto family=text(raw.member("kind"),item.pointer);const auto objectId=encodedId("node",sourceId);
             std::string role,attrs="{\"source_node_id\":"+quoteCanonicalJson(sourceId),ports,correspondenceRefs="[]";
-            std::string kind=family=="primitive"?text(raw.member("type"),item.pointer):"widget_value";
+            const auto kind=family=="primitive"?text(raw.member("type"),item.pointer):family;
             std::string attribution="["+quoteCanonicalJson(admission.ref(item.pointer));
-            if(family=="widget_value") {
+            const bool publicPort=isPublicPortFamily(family);
+            if(publicPort) {
+                const auto portId=admission.publicPortBinding(item,family);
+                const auto &declaration=admission.publicPorts.at(portId);
+                role=declaration.input?"input":"output";
+                attrs+=",\"interface_port_id\":"+quoteCanonicalJson(portId);
+                ports="["+port(sourceId,"value",!declaration.input,true)+"]";
+                attribution+=","+quoteCanonicalJson(admission.ref(declaration.source.pointer));
+                mapping(encodedId("map-interface",portId),"interface_port",declaration.source.pointer,objectId,"object");
+            } else if(family=="widget_value") {
                 const auto widgetId=text(raw.member("widget"),item.pointer);const auto found=admission.widgets.find(widgetId);
                 if(found==admission.widgets.end())fail("IR_WIDGET_MISMATCH","Source participant has no actual declared widget.",item.pointer);
                 const auto &decl=*found->second.value;role=text(decl.member("role"),found->second.pointer);
@@ -554,7 +640,7 @@ struct CanonicalDraft {
             std::string record="{\"id\":"+quoteCanonicalJson(objectId)+",\"family\":"+quoteCanonicalJson(family)+",\"kind\":"+quoteCanonicalJson(kind)+
                 ",\"classification\":{\"primary_or_support\":\"primary\""+(family=="primitive"?",\"library_id\":\"frog.core\"":"")+
                 "},\"ports\":"+ports+",\"attributes\":"+attrs+"},\"attribution\":{\"source_refs\":"+attribution+
-                "],\"mode\":"+quoteCanonicalJson(family=="widget_value"?"multi_contributor":"direct")+"},\"correspondence_refs\":"+correspondenceRefs;
+                "],\"mode\":"+quoteCanonicalJson(family=="primitive"?"direct":"multi_contributor")+"},\"correspondence_refs\":"+correspondenceRefs;
             if(!role.empty())record+=",\"role\":"+quoteCanonicalJson(role);append(objects,record+"}");
             mapping(encodedId("map-node",sourceId),"diagram_node",item.pointer,objectId,"object");
             for(const auto field:{"layout","doc","tags"})if(raw.member(field))correspondence(encodedId("node-"+std::string(field),sourceId),item.pointer+"/"+field);
@@ -573,8 +659,8 @@ struct CanonicalDraft {
             mapping(encodedId("map-edge",sourceId),"diagram_edge",item.pointer,edgeId,"connection");
             if(raw.member("bends"))correspondence(encodedId("edge-bends",sourceId),item.pointer+"/bends");
         }
-        const auto &panel=object(source.member("front_panel"),"/front_panel");
-        for(const auto &decl:array(panel.member("widgets"),"/front_panel/widgets",admission.limits().maximumWidgets)) {
+        const auto *panel=source.member("front_panel");
+        for(const auto &decl:array(panel?panel->member("widgets"):nullptr,"/front_panel/widgets",admission.limits().maximumWidgets,true)) {
             const auto wid=text(decl.member("id"),"/front_panel/widgets");const auto &item=admission.widgets.at(wid);
             const auto found=participants.find(wid);const auto targetId=found==participants.end()?std::string{}:found->second;
             mapping(encodedId("map-widget",wid),"widget_instance",item.pointer,targetId,targetId.empty()?"none":"object","non_primary");
@@ -595,11 +681,11 @@ struct CanonicalDraft {
             for(const auto field:{"layout","parts","doc","tags"})if(decl.member(field))correspondence(encodedId("widget-"+std::string(field),wid),item.pointer+"/"+field);
         }
         for(const auto section:{"connector","icon","ide","cache"})if(source.member(section))correspondence("section:"+std::string(section),"/"+std::string(section));
-        if(panel.member("canvas"))correspondence("panel:canvas","/front_panel/canvas");
+        if(panel && panel->member("canvas"))correspondence("panel:canvas","/front_panel/canvas");
         if(diagram.member("annotations"))correspondence("diagram:annotations","/diagram/annotations");
         const auto result="{\"schema_family\":\"frog.execution_ir\",\"schema_version\":\"0.1\",\"document_id\":"+quoteCanonicalJson(documentId)+
             ",\"metadata\":{\"producer\":\"frog.native.canonical-execution-ir\",\"producer_version\":\"1\",\"notes\":["+
-            quoteCanonicalJson("Accepted subset: frog.canonical.widget-f64-add.v1")+","+
+            quoteCanonicalJson(admission.publicPorts.empty()?"Accepted subset: frog.canonical.widget-f64-add.v1":"Accepted subset: frog.canonical.public-f64-add.v1")+","+
             quoteCanonicalJson("Exact source bytes: sha256:"+hashing::sha256Hex(admission.source.originalUtf8()))+","+quoteCanonicalJson("Source URI: "+admission.options.sourceUri)+
             "]},\"unit\":{\"id\":\"unit:main\",\"objects\":"+list(objects)+",\"connections\":"+list(connections)+
             ",\"regions\":[],\"source_map\":"+list(maps)+",\"correspondence\":"+list(relations)+"}}";
@@ -616,7 +702,7 @@ std::optional<CanonicalExecutionIr> CanonicalExecutionIr::read(std::string_view 
     try {
         const auto &limit=options.limits;const CanonicalIrLimits ceilings;
         const std::array requested{limit.maximumIrBytes,limit.maximumSourceBytes,limit.maximumNodes,limit.maximumEdges,limit.maximumWidgets,limit.maximumSourceIdBytes,limit.maximumIrIdBytes,limit.maximumMappingRecords};
-        const std::array maximum{ceilings.maximumIrBytes,ceilings.maximumSourceBytes,ceilings.maximumNodes,ceilings.maximumEdges,ceilings.maximumWidgets,ceilings.maximumSourceIdBytes,ceilings.maximumIrIdBytes,ceilings.maximumMappingRecords};
+        const std::array maximum{ceilings.maximumIrBytes,kMaximumFrogDocumentBytes,ceilings.maximumNodes,ceilings.maximumEdges,ceilings.maximumWidgets,ceilings.maximumSourceIdBytes,ceilings.maximumIrIdBytes,ceilings.maximumMappingRecords};
         for(std::size_t i=0;i<requested.size();++i)if(!requested[i] || requested[i]>maximum[i])fail("IR_RESOURCE_POLICY","Admission budgets may only lower the declared native intake ceilings.","/",true);
         if(bytes.size()>limit.maximumIrBytes || sourceDoc.originalUtf8().size()>limit.maximumSourceBytes)fail("IR_RESOURCE_LIMIT","Input bytes exceed native intake budgets.","/",true);
         if(options.sourceUri.empty() || options.sourceUri.find('#')!=options.sourceUri.npos || options.sourceUri.size()>8192)fail("IR_SOURCE_URI","An explicit, bounded source-origin URI without a fragment is required.","/");
@@ -646,7 +732,7 @@ std::optional<CanonicalExecutionIr> CanonicalExecutionIr::derive(const FrogSourc
     try {
         const auto &limit=options.limits;const CanonicalIrLimits ceilings;
         const std::array requested{limit.maximumIrBytes,limit.maximumSourceBytes,limit.maximumNodes,limit.maximumEdges,limit.maximumWidgets,limit.maximumSourceIdBytes,limit.maximumIrIdBytes,limit.maximumMappingRecords};
-        const std::array maximum{ceilings.maximumIrBytes,ceilings.maximumSourceBytes,ceilings.maximumNodes,ceilings.maximumEdges,ceilings.maximumWidgets,ceilings.maximumSourceIdBytes,ceilings.maximumIrIdBytes,ceilings.maximumMappingRecords};
+        const std::array maximum{ceilings.maximumIrBytes,kMaximumFrogDocumentBytes,ceilings.maximumNodes,ceilings.maximumEdges,ceilings.maximumWidgets,ceilings.maximumSourceIdBytes,ceilings.maximumIrIdBytes,ceilings.maximumMappingRecords};
         for(std::size_t i=0;i<requested.size();++i)if(!requested[i] || requested[i]>maximum[i])fail("IR_RESOURCE_POLICY","Admission budgets may only lower the declared native intake ceilings.","/",true);
         if(sourceDoc.originalUtf8().size()>limit.maximumSourceBytes)fail("IR_RESOURCE_LIMIT","Source exceeds embedded admission byte budget.","/",true);
         if(options.sourceUri.empty() || options.sourceUri.find('#')!=options.sourceUri.npos || options.sourceUri.size()>8192)fail("IR_SOURCE_URI","An explicit bounded source-origin URI is required.","/");

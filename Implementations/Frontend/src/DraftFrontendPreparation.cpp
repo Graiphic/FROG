@@ -30,7 +30,8 @@ struct NativeCallReadRefusal {
 std::optional<NativeCallReadRefusal> nativeCallReadRefusal(const Json &draft) {
     const auto *revision=draft.member("draft_revision");
     if(!revision || revision->type!=Json::Type::Number || (revision->string!="7" && revision->string!="11" &&
-        revision->string!=std::to_string(kFrogClusterPresentationDraftRevision))) return {};
+        revision->string!=std::to_string(kFrogClusterPresentationDraftRevision) &&
+        revision->string!=std::to_string(kFrogExtendedAuthoringDraftRevision))) return {};
     const auto *diagram=draft.member("diagram");
     std::string diagramPath="/diagram";
     if(!diagram) {
@@ -439,7 +440,9 @@ DraftFrontendPreparation prepareDraftFrontend(std::string_view bytes,std::string
     const bool rewroteRoot=definitions.linked||passages.changed||conditional;
     std::string projected=rewroteRoot?serializeFrogDraftData(*document):*normalized;
     poll();
-    if(hasClasses||std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),[](const auto &node){return node.kind=="frog_call";})) {
+    if(hasClasses||std::any_of(document->diagramNodes.begin(),document->diagramNodes.end(),[](const auto &node){
+        return node.kind=="frog_call"||node.type==kLabViewInvalidMessageNodeType;
+    })) {
         auto calls=projectPreparedSubFrogExecution({std::make_shared<const FrogDraftData>(*document),projected,std::string(uri),resolver,context,true},rewroteRoot?nullptr:&*raw);
         for(const auto &issue:calls.diagnostics){error(issue.code,issue.message,issue.sourcePath,issue.domain);out.diagnostics.back().sourceUri=issue.sourceUri;out.diagnostics.back().subjectId=issue.callsiteId;out.diagnostics.back().callsiteId=issue.callsiteId;if(!issue.callsiteId.empty()){out.diagnostics.back().relatedSourceUri=uri;out.diagnostics.back().relatedSourcePath=identityPath(*raw,issue.callsiteId);}}
         if(!out.diagnostics.empty())return out;

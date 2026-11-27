@@ -1,7 +1,9 @@
 #include "frog_native_engine/DraftSourcePreparation.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
+#include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/WidgetBindingType.hpp"
+#include "frog_native_engine/graph/WaveformGraph.hpp"
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
@@ -275,6 +277,32 @@ int main(int argc, char **argv) {
         need(serializeFrogDraftData(linked)==authored,"Resolution changed authored data");
         need(!prepareDraftTypeDefinitionSource(authored,"memory:linked",{}).accepted(),"Missing Type Definition got a fallback");
 
+        auto extendedChild = child();
+        auto childLink = linkWidgetToTypeDefinition(*extendedChild.widgets.widgetById("source"), definition, "exact.ftype");
+        need(childLink.accepted(), "The revision 14 child must have an actual linked widget");
+        *extendedChild.widgets.widgetById("source") = std::move(childLink.proposedWidget);
+        const auto *graphEntry = findWidgetCatalogEntryByClassId(graph::classId);
+        need(graphEntry != nullptr, "Missing Waveform Graph catalogue entry");
+        auto graphWidget = makeWidgetData("scope", *graphEntry, {250, 20, 260, 160});
+        need(bool(graphWidget.waveformGraph), "Missing Waveform Graph design");
+        graphWidget.waveformGraph->design.showKindBadge = false;
+        extendedChild.widgets.addObject({"scope", graphWidget.bounds, std::move(graphWidget)}, true);
+        const auto extendedBytes = serializeFrogDraftData(extendedChild);
+        const auto resolveDefinition = [&](const auto &query) {
+            return query.kind == DraftDependencyKind::TypeDefinition &&
+                query.authoredReference == "exact.ftype" && query.expectedIdentity == definition.id
+                ? definitionSource : DraftDependencyResult{};
+        };
+        const auto prepared = prepareDraftFrontend(extendedBytes, "memory:/extended.frog", {}, resolveDefinition);
+        if (!prepared.accepted()) for (const auto &d : prepared.diagnostics) std::cerr << d.code << ": " << d.message << '\n';
+        need(prepared.accepted() && prepared.sourceRevision == kFrogExtendedAuthoringDraftRevision &&
+            !prepared.typeDefinitionSchemaFingerprint.empty(),
+            "Revision 14 must derive with its required exact Type Definition resolution");
+        const auto missingDefinition = prepareDraftFrontend(extendedBytes, "memory:/extended.frog", {}, {});
+        need(!missingDefinition.accepted() && std::any_of(missingDefinition.diagnostics.begin(), missingDefinition.diagnostics.end(),
+            [](const auto &d) { return d.domain == DocumentDiagnosticDomain::Dependency; }),
+            "Revision 14 must still refuse a missing linked Type Definition");
+
         const auto callee=content("memory:child",serializeFrogDraftData(child()));
         auto root=std::make_shared<const FrogDraftData>(parent());const auto rootBytes=serializeFrogDraftData(*root);
         DraftSubFrogExecutionInput input;input.rootDocument=root;input.sourceUtf8=rootBytes;input.sourceUri="memory:parent";
@@ -288,6 +316,22 @@ int main(int argc, char **argv) {
         need(serializeFrogDraftData(*root)==rootBytes,"SubFROG projection changed the input document");
         need(std::none_of(projected.document.diagramNodes.begin(),projected.document.diagramNodes.end(),[](const auto &n){return n.kind=="frog_call";}),"Call body was not expanded");
         need(std::any_of(projected.identities.begin(),projected.identities.end(),[](const auto &i){return i.sourceUri=="memory:child"&&!i.sourcePointer.empty();}),"Callee provenance was lost");
+        const auto extendedCallee = content("memory:child", extendedBytes);
+        input.resolver = [&](const auto &query) {
+            return query.kind == DraftDependencyKind::Source && query.authoredReference == "child.frog"
+                ? extendedCallee : resolveDefinition(query);
+        };
+        const auto extendedProjection = projectDraftSubFrogExecution(input);
+        if (!extendedProjection.accepted()) for (const auto &d : extendedProjection.diagnostics) std::cerr << d.code << ": " << d.message << '\n';
+        const auto froze = [&](std::string_view uri, std::string_view sha256) {
+            return std::any_of(extendedProjection.frozenSources.begin(), extendedProjection.frozenSources.end(),
+                [&](const auto &entry) { return entry.source.canonicalUri == uri && entry.source.sha256 == sha256; });
+        };
+        need(extendedProjection.accepted() && extendedProjection.changed && extendedProjection.frozenSources.size() == 3 &&
+            froze(input.sourceUri, hashing::sha256Hex(rootBytes)) &&
+            froze(extendedCallee.canonicalUri, extendedCallee.sha256) &&
+            froze(definitionSource.canonicalUri, definitionSource.sha256),
+            "The revision 14 Sub-FROG must freeze the caller, the callee and its exact linked Type Definition");
         input.resolver=[](const auto&){return DraftDependencyResult{};};
         const auto missing=projectDraftSubFrogExecution(input);
         need(!missing.accepted()&&missing.diagnostics.front().sourcePath=="/diagram/nodes/2/call/document_path","Missing source has no callsite attribution");

@@ -14,7 +14,12 @@ inline constexpr std::string_view kNativeCallScalarOperationId="frog.studio.nati
 inline constexpr std::string_view kNativeCallScalarErrorType="cluster<\"status\":bool,\"code\":i32,\"source\":string>";
 // The active alternative IS the native representation. No carrier promotion,
 // narrowing, bool-as-integer, or integer-to-f64 conversion occurs in this API.
-using NativeCallScalarValue = std::variant<std::int32_t,std::uint32_t,std::int64_t,std::uint64_t,double>;
+using NativeCallElement = std::variant<bool,std::int64_t,std::uint64_t,double>;
+using NativeCallField = std::variant<NativeCallElement,std::vector<NativeCallElement>>;
+using NativeCallRecord = std::vector<std::pair<std::string,NativeCallField>>;
+using NativeCallArray = std::pair<std::vector<std::uint32_t>,std::vector<NativeCallElement>>;
+using NativeCallScalarValue = std::variant<std::int32_t,std::uint32_t,std::int64_t,std::uint64_t,double,
+    NativeCallRecord,NativeCallArray>;
 using NativeCallScalarInputs = std::vector<std::pair<std::string,NativeCallScalarValue>>;
 struct NativeCallError {
     bool status = false;
@@ -30,6 +35,7 @@ struct NativeCallScalarResult {
     bool bypassed = false;
     // Same fatal/native-memory-fault distinction as the existing Legacy owner.
     std::string fatalError;
+    std::optional<std::string> libraryPath;
 };
 
 

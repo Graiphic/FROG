@@ -106,6 +106,7 @@ class Binding:
     zero_ring_item_table: bytes | None = None
     padded_scalar_zero: bool = False
     empty_array_element: str | None = None
+    padded_clear_error: bool = False
 
 
 @dataclass(frozen=True)
@@ -416,6 +417,7 @@ class _Reader:
         box = _bounds(item, "termBounds", location)
         zero_items = None
         padded_scalar_zero = False
+        padded_clear_error = False
         array_element = None
         if kind(item) == "bDConstDCO":
             display = field(item, "ddo", location, optional=True)
@@ -426,6 +428,14 @@ class _Reader:
                     array_element = empty_numeric_array_element(self.types, item, display, location)
                 if value in (bytes(3), bytes(5)):
                     zero_items = _zero_ring_item_table(display, location)
+                if (self.major_version == 20 and kind(display) == "stdClust" and value == bytes(10)
+                        and record_fields == (("status", "Boolean"), ("code", "NumInt32"), ("source", "String"))):
+                    display_id = _number(display, "typeDesc", location)
+                    if display_id and 1 <= display_id <= self.types.slice.tdCount:
+                        display_td = self.types.consolidated.getTopType(self.types.slice.indexShift + display_id - 1)
+                        padded_clear_error = (display_td is not None and display_td.fullType() == descriptor.fullType()
+                                              and [child.index for child in display_td.clients]
+                                              == [child.index for child in descriptor.clients])
                 if self.major_version == 20 and (type_name, kind(display), value) in (
                         ("NumUInt32", "stdNum", bytes(5)), ("Boolean", "stdBool", bytes(2))):
                     display_id = _number(display, "typeDesc", location)
@@ -435,7 +445,8 @@ class _Reader:
         result = Binding(uid, kind(item), resource, None, _number(item, "objFlags", location), type_id, type_name,
                          type_code, type_label, enum_labels, record_fields, box,
                          self._uids(item, "termList", location),
-                         _fields(item, BINDING_FIELDS, location), zero_items, padded_scalar_zero, array_element)
+                         _fields(item, BINDING_FIELDS, location), zero_items, padded_scalar_zero, array_element,
+                         padded_clear_error)
         self.bindings[uid] = result
         return result
 

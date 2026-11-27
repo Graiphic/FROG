@@ -270,6 +270,12 @@ struct Builder {
         // Other structure boundaries and Feedback retain their own exact
         // contracts; only the declared scalar state faces above may adapt.
         if(target.family!="primitive"||target.feedback)return false;
+        if(isQuotientRemainderNodeType(target.authoredKind)&&(pid=="x"||pid=="y")&&!target.configurationJson.empty()) {
+            const auto configuration=parse(target.configurationJson);
+            if(const auto *type=configuration.member("numeric_representation"))
+                return binding::fullTypeEqual(targetType,binding::TypeRef::primitive(type->string))&&
+                    canonicalNumericScalarCoercionSupported(sourceType,targetType);
+        }
         if(const auto *exponential=canonicalExponentialContract(target.kind))
             return (pid=="x"||(exponential->binary&&pid=="y"))&&exponentialReal64LosslessInput(sourceType.name)&&
                 canonicalObjectReferenceFullTypeEqual(targetType,binding::TypeRef::primitive("f64"))&&
@@ -376,8 +382,12 @@ struct Builder {
     void nodes() {
         for(const auto &[sid,raw]:rawNodes) {
             const auto &v=*raw.raw;const auto &p=raw.path;CanonicalIrNode n;
-            fields(v,{"id","kind","type","value","constant_profile","studio_type_schema","studio_ports","studio_authored_type","studio_configuration","studio_event","studio_in_place","studio_timed_loop","studio_sequence","studio_collection","studio_feedback","widget","value_type","layout","structure_type","boundary","structure_terminals","structure_tunnels","regions","case_profile","doc","tags","native_call_profile","native_call_configuration","selected_fields_version","selected_fields",canonicalObjectReferenceAttribute},p);
+            fields(v,{"id","kind","type","value","constant_profile","studio_type_schema","studio_ports","studio_authored_type","studio_configuration","studio_event","studio_in_place","studio_timed_loop","studio_sequence","studio_collection","studio_feedback","widget","value_type","layout","structure_type","boundary","structure_terminals","structure_tunnels","regions","case_profile","for_loop_count_profile","doc","tags","native_call_profile","native_call_configuration","selected_fields_version","selected_fields",canonicalObjectReferenceAttribute},p);
             n.sourceNodeId=sid;n.id=encodedId("node",sid);n.regionId=raw.region;n.family=text(v.member("kind"),p);
+            if(const auto *profile=v.member("for_loop_count_profile");profile&&
+                (n.family!="structure"||text(v.member("structure_type"),p)!="for_loop"||
+                 text(profile,p)!=canonicalStudioForCountProfile))
+                fail("IR_FOR_COUNT_PROFILE","Unknown or misplaced Studio For count profile.",p+"/for_loop_count_profile",true);
             if(v.member("studio_sequence")&&(n.family!="structure"||!v.member("structure_type")||v.member("structure_type")->string!="sequence_structure"))fail("IR_SEQUENCE_OWNER","Sequence semantics belong only to an actual Sequence structure.",p);
             if(v.member("studio_collection")&&n.family!="primitive")fail("IR_COLLECTION_OWNER","Collection operation configuration belongs only to primitive Collection operations.",p);
             if(v.member("studio_feedback")&&n.family!="primitive")fail("IR_FEEDBACK_OWNER","Feedback state configuration belongs only to a primitive Feedback Node.",p);
@@ -517,6 +527,18 @@ struct Builder {
                     std::string why,at;
                     if(!canonicalNumericScalarPaletteSignatureValid(n.kind,signature,&why,&at))
                         fail("IR_NUMERIC_PALETTE_SIGNATURE",why,p+(at.empty()?"":"/"+at));
+                    if(const auto *cfg=v.member("studio_configuration");cfg&&cfg->member("numeric_representation")) {
+                        const auto field=p+"/studio_configuration/numeric_representation";
+                        const auto representation=text(cfg->member("numeric_representation"),field);
+                        if(!isQuotientRemainderNodeType(n.authoredKind)||
+                           canonicalNumericScalarPaletteMigrationIdentity(n.authoredKind)!=n.kind||
+                           !isQuotientRemainderRepresentation(representation))
+                            fail("IR_NUMERIC_REPRESENTATION","This authored operation has no such fixed numeric representation.",field);
+                        const auto exact=binding::TypeRef::primitive(representation);
+                        if(std::any_of(signature.begin(),signature.end(),[&](const auto &port){
+                            return !binding::fullTypeEqual(port.type,exact);
+                        }))fail("IR_NUMERIC_REPRESENTATION","Port schemas do not match the fixed numeric representation.",field);
+                    }
                 }
                 if(n.kind==canonicalNumericExactAbsId||!canonicalNumericConversionTarget(n.kind).empty()) {
                     std::vector<CanonicalNumericAggregatePort> signature;
@@ -1310,6 +1332,7 @@ void Builder::structures() {
         } else if(s.kind=="for_loop") {
             if(s.regionIds.size()!=1)fail("IR_LOOP_REGION","A For has exactly one explicit body.",p);
             s.iterationPortId=terminal("index",true);s.countPortId=terminal("count",false);s.countValuePortId=terminal("count",true);
+            s.clampNegativeCount=v.member("for_loop_count_profile")!=nullptr;
             if(const auto *condition=terminals.member("condition")) {
                 s.conditionPortId=terminal("condition",true);
                 const auto role=text(condition->member("role"),p);
@@ -1573,6 +1596,7 @@ void Builder::write() {
             // Retain the exact source semantic descriptors, plus the explicit
             // normalized transfer identities used by downstream consumers.
             auto semantics=object();semantics.object={{"terminals",*raw.raw->member("structure_terminals")},{"boundary",*raw.raw->member("boundary")},{"stop_if_true",boolean(s->stopIfTrue)}};
+            if(s->clampNegativeCount)semantics.object["for_loop_count_profile"]=string(std::string(canonicalStudioForCountProfile));
             auto tunnels=array();
             for(const auto &t:s->tunnels) {
                 auto value=object(),writers=array();

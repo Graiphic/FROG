@@ -329,6 +329,107 @@
         "reduction_policy": "unspecified",
         "array_lifting_policy": "none"
       }
+    },
+    {
+      "catalog_id": "application_control.to_more_specific_class",
+      "definition_ref": "frog.studio.application_control.to_more_specific_class",
+      "contract_status": "defined",
+      "profile_id": "frog.studio.application_control.to_more_specific_class.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "reference_in",
+            "display_name": "reference",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "target_class",
+            "display_name": "target class",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "reference_out",
+            "display_name": "specific class reference",
+            "type": "ref<\"frog.object\">",
+            "default_value_type": "ref<\"frog.object\">",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "default_value_type": "cluster<\"status\":bool,\"code\":i32,\"source\":string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "custom_resolver",
+        "accepted_operands": [
+          "ref<\"frog.object\">",
+          "cluster<\"status\":bool,\"code\":i32,\"source\":string>"
+        ],
+        "result": "resolve:frog.studio.application_control.type-resolution@1",
+        "implicit_coercion": false
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 3
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Operates on a single borrowed object reference."
+      },
+      "behavior_summary": "Returns a view of the source object using the class and optional strict value schema of the target-class wire. A null model is valid. A class or strict-schema mismatch returns an invalid reference and an error.",
+      "runtime_availability": {
+        "available": true,
+        "implementation_kind": "built_in_provider",
+        "implementation_id": "frog.studio.object_reference.to_more_specific_class.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "provider_requirement": "frog.studio.object-reference.local@1",
+        "notes": "Requires the current document's object-reference authority."
+      },
+      "blockers": [],
+      "authority_refs": [],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "editor_managed",
+        "documentation_url": "docs/functions/application_control/to_more_specific_class.md",
+        "resolver_id": "frog.studio.application_control.type-resolution@1",
+        "evaluation_order": "canonical_port_order",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
     }
   ]
 }

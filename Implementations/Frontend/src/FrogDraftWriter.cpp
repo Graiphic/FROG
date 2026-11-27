@@ -19,6 +19,7 @@
 #include "frog_native_engine/CollectionModel.hpp"
 #include "frog_native_engine/CollectionBinding.hpp"
 #include "frog_native_engine/ClusterFunctionBinding.hpp"
+#include "frog_native_engine/CanonicalNumericAggregate.hpp"
 #include "FrogDocumentCaseStructureSerialization.hpp"
 #include "FrogDocumentDisabledStructureSerialization.hpp"
 #include "FrogDocumentConditionalDisableSerialization.hpp"
@@ -109,7 +110,11 @@ std::uint32_t storedPayloadStateRevision(std::string_view text) {
             value.find("numeric-elements-json-le32-v1")!=value.npos ||
             value.find("numeric-cell-text-le32-v1")!=value.npos ||
             value.find(document_internal::numericWordArrayProfile)!=value.npos ||
-            value.find(document_internal::exactNarrowNumericWordArrayProfile)!=value.npos;
+            value.find(document_internal::exactNarrowNumericWordArrayProfile)!=value.npos ||
+            (value.find("_graph") != value.npos &&
+                (value.find("legend_width") != value.npos || value.find("kind_badge_visible") != value.npos ||
+                 value.find("line_style") != value.npos || value.find("interpolation") != value.npos ||
+                 value.find("presentation") != value.npos || value.find("symbol") != value.npos));
     };
     if(!candidate(text))return 0;
     std::uint32_t required=0;
@@ -176,6 +181,11 @@ std::uint32_t storedPayloadStateRevision(std::string_view text) {
             }
         };
         if(classId)if(const auto *props=value->member("props")) {
+            const auto *xyGraph = classId->string == "frog.widgets.xy_graph" ? props->member("xy_graph") : nullptr;
+            const auto *waveformGraph = classId->string == "frog.widgets.waveform_graph" ? props->member("waveform_graph") : nullptr;
+            if ((xyGraph && document_internal::usesExtendedXYGraphSourcePresentation(*xyGraph)) ||
+                (waveformGraph && document_internal::usesExtendedWaveformGraphSourcePresentation(*waveformGraph)))
+                required = (std::max)(required, kFrogExtendedAuthoringDraftRevision);
             queue(props->member("element.template"));
             if(const auto *fields=props->member("cluster.elements");fields && fields->type==JsonValue::Type::Array)
                 for(const auto &field:fields->array)queue(field.member("widget"));
@@ -194,11 +204,13 @@ std::uint32_t storedPayloadStateRevision(std::string_view text) {
     return required;
 }
 std::uint32_t typeDefinitionStateRevision(const TypeDefinitionLink &link) {
-    // A definition snapshot can retain group/stack state that an occurrence no longer uses.
-    if ((link.baselineWidgetJson.find("stack_order") != std::string::npos ||
-         link.baselineWidgetJson.find("visual_group") != std::string::npos) &&
-        storedPayloadStateRevision(link.baselineWidgetJson) == kFrogClusterPresentationDraftRevision)
-        return kFrogClusterPresentationDraftRevision;
+    // A retained definition may still carry presentation no longer used by the occurrence.
+    const std::string_view baseline = link.baselineWidgetJson;
+    if (baseline.find("stack_order") != baseline.npos || baseline.find("visual_group") != baseline.npos ||
+        baseline.find("_graph") != baseline.npos) {
+        const auto retainedRevision = storedPayloadStateRevision(baseline);
+        if (retainedRevision >= kFrogClusterPresentationDraftRevision) return retainedRevision;
+    }
     return link.tabChildBindings.empty() && !typeDefinitionUsesStructuredBaseline(link)
         ? kFrogTypeDefinitionDraftRevision : kFrogExtendedTypeDefinitionDraftRevision;
 }
@@ -588,8 +600,13 @@ void appendDiagramNode(
         appendIndent(output,indent+1);output << "\"studio_collection_build\": ";document_internal::appendJsonValue(output,writeCollectionBuildState(*node.collectionBuild));output << ",\n";
     }
     if (node.applicationControl) {
-        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogApplicationControlDraftRevision);
+        const auto required = node.applicationControl->kind == ApplicationControlKind::ToMoreSpecificClass
+            ? kFrogExtendedAuthoringDraftRevision : kFrogApplicationControlDraftRevision;
+        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, required);
         document_internal::appendApplicationControl(output, *node.applicationControl, indent + 1);
+    } else if (node.type == "frog.studio.application_control.to_more_specific_class" ||
+               node.type == "application_control.to_more_specific_class") {
+        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogExtendedAuthoringDraftRevision);
     }
     if (node.type.starts_with("frog.studio.connectivity.")) {
         storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogConnectivityDraftRevision);
@@ -604,10 +621,20 @@ void appendDiagramNode(
         output << ",\n";
     }
     if (node.nativeCall) {
-        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogConnectivityDraftRevision);
+        const auto &configuration = *node.nativeCall;
+        const auto needsExtendedAbi = [](const NativeCallType &type) {
+            return type.fromWire || type.wideBoolean || !type.arrayFieldContracts.empty() ||
+                std::any_of(type.structLayout.fields.begin(), type.structLayout.fields.end(),
+                    [](const NativeCallStructField &field) { return field.storage != NativeCallFieldStorage::Scalar; });
+        };
+        const bool extendRevision = needsExtendedAbi(configuration.returnDefinition.type) ||
+            std::any_of(configuration.arguments.begin(), configuration.arguments.end(),
+                [&](const NativeCallParameter &parameter) { return needsExtendedAbi(parameter.type); });
+        const auto required = extendRevision ? kFrogExtendedAuthoringDraftRevision : kFrogConnectivityDraftRevision;
+        storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, required);
         appendIndent(output, indent + 1);
         output << "\"studio_native_call\": ";
-        document_internal::appendJsonValue(output, nativeCallToJson(*node.nativeCall));
+        document_internal::appendJsonValue(output, nativeCallToJson(configuration));
         output << ",\n";
     }
     const auto structureType =
@@ -673,7 +700,8 @@ void appendDiagramNode(
             node.type == "frog.studio.variant.constant" || node.type == "variant.constant" ||
             node.type.starts_with("frog.studio.array.other_constants.");
         appendJsonField(output, indent + 1, "type", node.type);
-        if ((primitiveValueConstant || isBooleanArrayToNumber(node.type)) && !node.valueType.empty()) {
+        if ((primitiveValueConstant || isBooleanArrayToNumber(node.type) ||
+             isQuotientRemainderNodeType(node.type)) && !node.valueType.empty()) {
             appendJsonField(output, indent + 1, "value_type", node.valueType);
         }
         // Labels are editor metadata for functions and structures too, not
@@ -1791,12 +1819,16 @@ void appendWidgetPropertyOverrides(std::ostringstream &output, const WidgetInsta
         wrote=true;
     }
     if(isXYGraphWidget(widget) && widget.xyGraph) {
+        if (document_internal::usesExtendedGraphPresentation(*widget.xyGraph))
+            storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogExtendedAuthoringDraftRevision);
         if(wrote)output << ",\n";
         appendIndent(output,indent+1);
         output << "\"xy_graph\": " << document_internal::serializeXYGraph(*widget.xyGraph);
         wrote=true;
     }
     if (isWaveformGraphWidget(widget) && widget.waveformGraph) {
+        if (document_internal::usesExtendedGraphPresentation(*widget.waveformGraph))
+            storageMode.requiredStateRevision = (std::max)(storageMode.requiredStateRevision, kFrogExtendedAuthoringDraftRevision);
         if(wrote)output << ",\n";
         appendIndent(output, indent + 1);
         output << "\"waveform_graph\": " << document_internal::serializeWaveformGraph(*widget.waveformGraph);

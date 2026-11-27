@@ -48,10 +48,10 @@ enum class Side {Bottom,Top,Left,Right};
 enum class NumberFormat {Automatic,Decimal,Scientific,Engineering,Binary,Octal,Hexadecimal,Duration,DateTime,SI,
     RelativeTime=Duration,AbsoluteTime=DateTime};
 enum class TimeContent : std::uint8_t {DateTime,Date,Time};
-enum class Symbol {None,Circle,Disc,HollowDisc,CircleDot,Square,FilledSquare,HollowFilledSquare,SquareDot,SmallSquare,SmallDot,Plus,SmallPlus,Cross,SmallCross,Diamond,SmallHollowSquare};
-enum class LineStyle {Solid,LongDash,ShortDash,DashDot,DashDotDot};
-enum class Interpolation {None,Staircase,Linear,Horizontal,HorizontalCentered,VerticalCentered};
-enum class Presentation {Line,Points,LinePoints,Area,Comb,Bars};
+using graph::Symbol;
+using graph::LineStyle;
+using graph::Interpolation;
+using graph::Presentation;
 enum class Fill {None,Zero,NegativeEdge,PositiveEdge,Plot};
 enum class Orientation {Vertical,Horizontal};
 enum class AnchorMode {Free,Plot,AnyPlot};
@@ -127,10 +127,12 @@ struct Design {
     std::vector<Decoration> decorations;
     Plane plane;
     bool legendVisible=true,scaleLegendVisible=false,paletteVisible=true,cursorLegendVisible=false,xScrollbarVisible=false;
+    bool showKindBadge=true;
     std::size_t legendRows=4;
     bool legendAutoWidth=true,equalAspect=false;
     std::string aspectXAxis="x",aspectYAxis="y";
     std::optional<Point> legendPosition;
+    std::optional<double> legendWidth;
     [[nodiscard]] bool operator==(const Design &)const=default;
 };
 struct AxisView {std::string axisId; AxisRange range; bool continuous=true; bool explicitPolicy=false; bool operator==(const AxisView &)const=default;};

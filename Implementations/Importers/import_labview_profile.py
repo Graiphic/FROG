@@ -1,11 +1,26 @@
 # SPDX-License-Identifier: Apache-2.0
 """Translate the decoded, standalone scalar LabVIEW diagram profile."""
 
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import math
 import struct
 
 from pylabview import LVheap
+
+
+def valid_windows_component(name):
+    path = PureWindowsPath(name)
+    return (bool(name) and name[-1] not in " ." and not path.drive and not path.root
+            and len(path.parts) == 1 and not path.is_reserved()
+            and all(c not in '/\\:<>|?*"' and ord(c) >= 32 for c in name))
+
+
+def vi_document_path(source):
+    # Win32 limits a single filename to 255 UTF-16 code units.
+    name = Path(source).stem + ".frog"
+    if valid_windows_component(name) and len(name.encode("utf-16-le", "surrogatepass")) <= 510:
+        return Path(name)
+    return Path("model.frog")
 
 
 class ProfileRefusal(ValueError):
@@ -289,7 +304,7 @@ def _project_dataflow(vi, source, source_sha256):
         require(mapping.get("execution_profile"), "queue_service",
                 "The Queue wrapper has unverified operations, bindings or defaults.", "BDHb")
         mapping.update(profile=mapping["execution_profile"], source_sha256=source_sha256)
-        return documents[Path("model.frog")], mapping
+        return documents[vi_document_path(source)], mapping
     for item in physical:
         requirement = unprojected_node(item)
         if requirement is not None:
@@ -333,7 +348,7 @@ def _project_unwired_panel(vi, source, source_sha256, plane, terms):
             and terminal_ids == graph.terminals.keys() == {identity(obj, "BDHb") for obj in plane}
             and widget_ids == widgets.keys() == graph.bindings.keys(),
             "panel_coverage", "The unwired terminals and saved panel controls do not match exactly.", "BDHb")
-    document, mapping, regions = project_document(source, vi, widgets, issues, {}, graph, Path("model.frog"))
+    document, mapping, regions = project_document(source, vi, widgets, issues, {}, graph, vi_document_path(source))
     presentation, evidence, problems = member_presentation(vi, list(widgets.values()), source.stem)
     require(not regions and not mapping["notes"] and not problems
             and len(document["diagram"]["nodes"]) == len(terms)

@@ -16,6 +16,7 @@ namespace cj = canonical_json;
 constexpr std::size_t maxMembers = 64;
 constexpr std::size_t maxPorts = 32;
 constexpr std::size_t maxBytes = 4U * 1024 * 1024;
+constexpr double maxFieldLayoutCoordinate = 10'000'000.0;
 
 struct InvalidClass : std::runtime_error { using std::runtime_error::runtime_error; };
 void require(bool condition, std::string_view path, std::string_view message) {
@@ -58,6 +59,47 @@ Json number(std::uint32_t value) {
     result.type = J::Number;
     result.string = std::to_string(value);
     return result;
+}
+
+double readLayoutCoordinate(const Json &object, std::string_view key, const std::string &path) {
+    const auto &lexeme = get(object, key, J::Number, path).string;
+    double value = 0.0;
+    const auto parsed = std::from_chars(lexeme.data(), lexeme.data() + lexeme.size(), value);
+    require(parsed.ec == std::errc{} && parsed.ptr == lexeme.data() + lexeme.size() &&
+        std::isfinite(value) && std::abs(value) <= maxFieldLayoutCoordinate,
+        cj::pointer(path, key), "Expected a finite layout coordinate within the supported range.");
+    return value;
+}
+
+Rect readFieldLayout(const Json &object, const std::string &path) {
+    keys(object, {"x", "y", "width", "height"}, path);
+    const Rect layout{readLayoutCoordinate(object, "x", path), readLayoutCoordinate(object, "y", path),
+        readLayoutCoordinate(object, "width", path), readLayoutCoordinate(object, "height", path)};
+    require(layout.width > 0.0 && layout.height > 0.0, path, "Field layout extents must be positive.");
+    return layout;
+}
+
+Json layoutNumber(double value) {
+    // std::to_chars gives the shortest representation that survives rereading.
+    std::array<char, 64> buffer{};
+    const auto encoded = std::to_chars(buffer.data(), buffer.data() + buffer.size(), value);
+    require(encoded.ec == std::errc{}, "/fields/layout", "Could not serialize the field layout.");
+    Json result;
+    result.type = J::Number;
+    result.string.assign(buffer.data(), encoded.ptr);
+    return result;
+}
+
+Json writeFieldLayout(const Rect &layout) {
+    require(std::isfinite(layout.x) && std::abs(layout.x) <= maxFieldLayoutCoordinate &&
+        std::isfinite(layout.y) && std::abs(layout.y) <= maxFieldLayoutCoordinate &&
+        layout.width > 0.0 && layout.width <= maxFieldLayoutCoordinate &&
+        layout.height > 0.0 && layout.height <= maxFieldLayoutCoordinate,
+        "/fields/layout", "Field layout requires finite coordinates and positive supported extents.");
+    auto object = cj::object();
+    object.object = {{"x", layoutNumber(layout.x)}, {"y", layoutNumber(layout.y)},
+        {"width", layoutNumber(layout.width)}, {"height", layoutNumber(layout.height)}};
+    return object;
 }
 
 bool identity(std::string_view id) {
@@ -193,9 +235,14 @@ std::optional<ClassDefinition> readClassDefinition(std::string_view bytes, std::
         require(fields.array.size() <= maxMembers, "/fields", "Too many fields.");
         for (const auto &entry : fields.array) {
             const auto path = atIndex("/fields", result.fields.size());
-            keys(entry, {"id", "label", "type", "default"}, path);
+            const auto *layout = entry.member("layout");
+            if (layout)
+                keys(entry, {"id", "label", "type", "default", "layout"}, path);
+            else
+                keys(entry, {"id", "label", "type", "default"}, path);
             result.fields.push_back({str(entry, "id", path), str(entry, "label", path),
-                dataType(str(entry, "type", path), path + "/type"), any(entry, "default", path)});
+                dataType(str(entry, "type", path), path + "/type"), any(entry, "default", path),
+                layout ? std::optional<Rect>{readFieldLayout(*layout, path + "/layout")} : std::nullopt});
         }
         const auto &methods = get(*root, "methods", J::Array, "");
         require(methods.array.size() <= maxMembers, "/methods", "Too many methods.");
@@ -257,6 +304,7 @@ std::string writeClassDefinition(const ClassDefinition &definition) {
         auto entry = cj::object();
         entry.object = {{"id", cj::string(field.id)}, {"label", cj::string(field.label)},
             {"type", cj::string(field.type.canonical())}, {"default", field.defaultValue}};
+        if (field.layout) entry.object.emplace("layout", writeFieldLayout(*field.layout));
         fields.array.push_back(std::move(entry));
     }
     auto methods = cj::array();
@@ -299,7 +347,7 @@ std::optional<ClassField> prepareClassField(std::string id, std::string label,
         std::string parseError;
         const auto initial = source::parseJson(defaultJson, &parseError, source::JsonNumberPolicy::PreserveLexeme);
         require(initial.has_value(), "/default", parseError);
-        ClassField field{std::move(id), std::move(label), dataType(canonicalType, "/type"), *initial};
+        ClassField field{std::move(id), std::move(label), dataType(canonicalType, "/type"), *initial, std::nullopt};
         require(validDefault(field), "/default", "The default does not match the exact admitted field type.");
         return field;
     } catch (const InvalidClass &e) {

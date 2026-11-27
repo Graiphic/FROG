@@ -22,6 +22,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -115,6 +116,77 @@ void typedCorpus(const fs::path &directory){phase="production Source corpus thro
             for(std::size_t i=0;i<regions.array.size();++i)need(hasString(field(field(ir,"unit"),"source_map"),in.uri+"#/diagram/nodes/1/regions/"+std::to_string(i)),"A hidden Event region lost its exact authored source mapping");
             if(std::string_view(name)=="pane-unbundle.frog")need(stringContains(ir,"ref<\"frog.front_panel\">"),"Event/reference schemas were reduced to plain strings or numbers");}
     }
+}
+void publicScalarBoundary() {
+    phase="public f64 boundary through API3 and strict FIR intake";
+    Context context;
+    Input in{R"({
+      "spec_version":"0.1","metadata":{"name":"Public addition"},
+      "interface":{"inputs":[{"id":"a","type":"f64"},{"id":"b","type":"f64"}],"outputs":[{"id":"result","type":"f64"}]},
+      "diagram":{"nodes":[
+        {"id":"left","kind":"interface_input","interface_port":"a"},
+        {"id":"right","kind":"interface_input","interface_port":"b"},
+        {"id":"sum","kind":"primitive","type":"frog.core.add"},
+        {"id":"out","kind":"interface_output","interface_port":"result"}
+      ],"edges":[
+        {"id":"a-to-sum","from":{"node":"left","port":"value"},"to":{"node":"sum","port":"a"}},
+        {"id":"b-to-sum","from":{"node":"right","port":"value"},"to":{"node":"sum","port":"b"}},
+        {"id":"sum-to-out","from":{"node":"sum","port":"result"},"to":{"node":"out","port":"value"}}
+      ]}
+    })","fixture:/public-add.frog","source:public-add","fir:public-add"};
+    const auto derived=pair(context,in,FROG_FRONTEND_SUCCESS);
+    const auto provenance=parse(derived.provenance);
+    need(hasString(field(provenance,"profiles"),"frog.canonical.public-f64-add.v1") &&
+         hasString(field(provenance,"operations"),"interface_input") && hasString(field(provenance,"operations"),"interface_output"),
+         "Frontend provenance lost the public profile or its executed boundary families");
+    auto ir=parse(derived.fir);
+    const auto &unit=field(ir,"unit");
+    need(field(unit,"objects").array.size()==4 && field(unit,"connections").array.size()==3,
+         "Public addition changed topology");
+    std::string error;
+    auto source=frog::native_engine::FrogSourceDocument::read(in.bytes,&error);
+    need(bool(source),"Cannot read public addition source");
+    frog::native_engine::CanonicalIrReadOptions options;
+    options.sourceUri=in.uri;
+    std::vector<frog::native_engine::CanonicalIrDiagnostic> diagnostics;
+    const auto sealed=frog::native_engine::CanonicalExecutionIr::read(derived.fir,*source,options,&diagnostics);
+    need(bool(sealed),"Strict FIR intake refused a production public boundary");
+    for(const auto &[sourceId,portId,sourcePointer,graphInput]:{
+            std::tuple{"left","a","/interface/inputs/0",false},
+            std::tuple{"right","b","/interface/inputs/1",false},
+            std::tuple{"out","result","/interface/outputs/0",true}}) {
+        const auto found=std::find_if(sealed->nodes().begin(),sealed->nodes().end(),[&](const auto &node) {
+            return node.sourceNodeId==sourceId;
+        });
+        need(found!=sealed->nodes().end() && found->interfacePortId==portId &&
+             found->family==(graphInput?"interface_output":"interface_input") && found->valueType=="f64" &&
+             found->ports.size()==1 && found->ports.front().id=="value" &&
+             found->ports.front().input==graphInput && found->ports.front().typeRef=="f64" && found->widgetId.empty(),
+             "Public graph terminal lost its logical port, type, direction, or distinct identity");
+        const auto &object=firNode(ir,sourceId);
+        need(str(field(object,"ports").array.front(),"boundary_kind")=="public_interface" &&
+             hasString(field(object,"attribution"),in.uri+"#"+sourcePointer) &&
+             std::any_of(sealed->sourceMap().begin(),sealed->sourceMap().end(),[&](const auto &map) {
+                 return map.sourceKind=="interface_port" && map.sourceRef==in.uri+"#"+sourcePointer &&
+                     map.targetRefs==std::vector<std::string>{found->id};
+             }),"Public declaration and its execution boundary lost their source attribution");
+    }
+    auto &object=field(field(ir,"unit"),"objects").array.front();
+    field(object,"attributes").object["interface_port_id"]=cj::string("b");
+    need(!frog::native_engine::CanonicalExecutionIr::read(cj::encode(ir),*source,options,&diagnostics) &&
+         !diagnostics.empty() && diagnostics.front().code=="IR_PUBLIC_PORT_MISMATCH",
+         "Strict FIR intake accepted a public port identity changed from Source");
+
+    phase="public boundary missing declaration identifies the authored node";
+    auto bad=parse(in.bytes);
+    field(field(bad,"diagram"),"nodes").array.front().object["interface_port"]=cj::string("missing");
+    in.bytes=cj::encode(bad);
+    const auto refused=pair(context,in,FROG_FRONTEND_REJECTED);
+    const auto checked=parse(refused.diagnostics);
+    need(std::any_of(checked.array.begin(),checked.array.end(),[](const auto &entry) {
+        return str(entry,"code")=="IR_PUBLIC_PORT_MISSING" &&
+            str(field(entry,"source"),"pointer")=="/diagram/nodes/0/interface_port" && stringContains(entry,"missing");
+    }),"The public binding refusal lost the exact authored location or missing port name");
 }
 void refusals(const fs::path &directory){Context context;auto in=input(directory,"pure-add.frog");phase="malformed/unsupported public boundary";
     in.bytes="{";pair(context,in,FROG_FRONTEND_REJECTED);in=input(directory,"pure-add.frog");in.sourceVersion="unsupported-version";pair(context,in,FROG_FRONTEND_UNSUPPORTED);
@@ -276,6 +348,6 @@ int main(int argc,char **argv){try{
 #endif
     unsigned bench=0;int i=1;if(i<argc&&std::string_view(argv[i])!="--bench")directory=fs::u8path(argv[i++]);
     if(i<argc){need(i+2==argc&&std::string_view(argv[i])=="--bench","Usage: frontend-integration [FIXTURE_DIRECTORY] [--bench 1..100]");bench=static_cast<unsigned>(std::stoul(argv[i+1]));need(bench>0&&bench<=100,"Benchmark iteration count is outside its bounded range");}
-    need(frog_frontend_api_version()==3&&FROG_FRONTEND_API_VERSION==3,"Integration must use the real API3 library");fixtureInventory(directory);typedCorpus(directory);refusals(directory);limitsAndOwnership(directory);dependencyFragments(directory);preparedEventProjection(directory);if(bench)benchmark(directory,bench);
-    std::cout<<"FRONTEND_INTEGRATION_PASS checks="<<checks.load()<<" api=3 production_public_fixtures=6 exact_i64_u64=1 nested_nominal=1 hidden_event_regions=1 real_dependency_fragment=1 resolved_source_lifetime=1 resolved_source_budget=1 distinct_source_fir_ids=1 lease_lifetime=1 independent_contexts=1 concurrent_contexts=2 compiler_api_calls=0 runtime_api_calls=0\n";return 0;
+    need(frog_frontend_api_version()==3&&FROG_FRONTEND_API_VERSION==3,"Integration must use the real API3 library");fixtureInventory(directory);typedCorpus(directory);publicScalarBoundary();refusals(directory);limitsAndOwnership(directory);dependencyFragments(directory);preparedEventProjection(directory);if(bench)benchmark(directory,bench);
+    std::cout<<"FRONTEND_INTEGRATION_PASS checks="<<checks.load()<<" api=3 production_public_fixtures=6 public_scalar_boundary=1 exact_i64_u64=1 nested_nominal=1 hidden_event_regions=1 real_dependency_fragment=1 resolved_source_lifetime=1 resolved_source_budget=1 distinct_source_fir_ids=1 lease_lifetime=1 independent_contexts=1 concurrent_contexts=2 compiler_api_calls=0 runtime_api_calls=0\n";return 0;
 }catch(const std::exception &error){std::cerr<<"FRONTEND_INTEGRATION_FAIL "<<error.what()<<" checks="<<checks.load()<<'\n';return 1;}}

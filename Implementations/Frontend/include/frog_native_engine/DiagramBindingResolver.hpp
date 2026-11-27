@@ -19,6 +19,11 @@ namespace frog::native_engine::binding {
 // display paths after schema edits. Removed IDs remain selected but invalid.
 [[nodiscard]] bool synchronizeClusterFieldSelections(std::vector<DiagramNode> &nodes,
     std::span<const DiagramEdge> edges, FrogWidgetDataView canvas);
+using NativeCallInputTypes = std::unordered_map<std::string,TypeRef>;
+[[nodiscard]] NativeCallInputTypes nativeCallInputTypes(const DiagramNode &,class TypeResolver &,
+    std::span<const DiagramEdge> edges);
+void synchronizeNativeCallWiredTypes(std::vector<DiagramNode> &nodes,
+    std::span<const DiagramEdge> edges,FrogWidgetDataView canvas);
 [[nodiscard]] bool isCase(const DiagramNode &node);
 [[nodiscard]] std::string tunnelInputId(std::string_view id);
 [[nodiscard]] std::string tunnelOutputId(std::string_view id);

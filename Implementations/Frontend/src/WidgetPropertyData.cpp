@@ -1,6 +1,7 @@
 #include "frog_native_engine/WidgetInstance.hpp"
 #include "WidgetTypographyDetail.hpp"
 
+#include "frog_native_engine/HorizontalSlider.hpp"
 #include "frog_native_engine/ReferenceWidget.hpp"
 
 #include <algorithm>
@@ -316,7 +317,7 @@ bool setWidgetCaptionFontScale(WidgetInstance &widget, double scale) {
 }
 
 bool setWidgetNumericValueFontScale(WidgetInstance &widget, double scale) {
-    if (!isNumericWidget(widget)) {
+    if (!isNumericWidget(widget) && !numeric_instrument::isRange(numeric_instrument::kind(widget.assetRef))) {
         return false;
     }
 

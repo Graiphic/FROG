@@ -388,6 +388,168 @@
       }
     },
     {
+      "catalog_id": "error.simple_handler",
+      "definition_ref": "frog.studio.error.simple_handler",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.simple_handler.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "error_in",
+            "display_name": "error in",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "message",
+            "display_name": "message",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "cluster<status:bool,code:i32,source:string>"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Handles the qualified imported LabVIEW connector with the default one-button mode. Produces the complete message and waits for acknowledgement on an error."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 1
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Handles the qualified imported LabVIEW connector with the default one-button mode. Produces the complete message and waits for acknowledgement on an error."
+      },
+      "behavior_summary": "Handles the qualified imported LabVIEW connector with the default one-button mode. Produces the complete message and waits for acknowledgement on an error.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "frog.studio.error.simple_handler.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Only the qualified LabVIEW cluster input and message output with the dialog, standalone code and source inputs unwired are admitted by the importer.",
+        "An active error requires the real interactive error presentation host. The NI code-description database is not shipped."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/csh?context=lvcore_glang_simple_error_handler"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/csh?context=lvcore_glang_simple_error_handler",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
+      "catalog_id": "error.invalid_message",
+      "definition_ref": "frog.studio.error.invalid_message",
+      "contract_status": "partial",
+      "profile_id": "frog.studio.palette.error.invalid_message.v1",
+      "ports": {
+        "inputs": [
+          {
+            "id": "message",
+            "display_name": "message",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          },
+          {
+            "id": "call_chain",
+            "display_name": "call chain",
+            "type": "string",
+            "default_value_type": "string",
+            "requirement": "optional",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ],
+        "outputs": [
+          {
+            "id": "error_out",
+            "display_name": "error out",
+            "type": "cluster<status:bool,code:i32,source:string>",
+            "default_value_type": "cluster<status:bool,code:i32,source:string>",
+            "requirement": "required",
+            "cardinality": "single",
+            "connection_policy": "exact",
+            "legacy_aliases": []
+          }
+        ]
+      },
+      "overload_type_resolution": {
+        "policy": "fixed",
+        "accepted_operands": [
+          "string",
+          "string"
+        ],
+        "result": "declared_output_type",
+        "implicit_coercion": false,
+        "description": "Builds the qualified imported LabVIEW invalid-message error with code 1 and its complete caller chain."
+      },
+      "variadicity": {
+        "enabled": false,
+        "input_count": 2
+      },
+      "array_policy": {
+        "accepted": false,
+        "lifting": "none",
+        "description": "Builds the qualified imported LabVIEW invalid-message error with code 1 and its complete caller chain."
+      },
+      "behavior_summary": "Builds the qualified imported LabVIEW invalid-message error with code 1 and its complete caller chain.",
+      "runtime_availability": {
+        "available": false,
+        "implementation_kind": "none",
+        "implementation_id": "frog.studio.error.invalid_message.v1",
+        "availability_scope": "requires_explicit_target_capability",
+        "notes": "Authoring only; no error propagation, dialog, code lookup or execution provider is implemented here.",
+        "provider_requirement": ""
+      },
+      "blockers": [
+        "Only the qualified saved LabVIEW expansion is imported. The execution projection provides the call chain."
+      ],
+      "authority_refs": [
+        "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/error-llb/error-cluster-from-error-code-vi.html"
+      ],
+      "authority_scope": "studio_authoring_profile",
+      "binding_projection": {
+        "schema_version": 1,
+        "maturity": "reference_verified",
+        "documentation_url": "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/error-llb/error-cluster-from-error-code-vi.html",
+        "resolver_id": "",
+        "evaluation_order": "unspecified",
+        "reduction_policy": "unspecified",
+        "array_lifting_policy": "none"
+      }
+    },
+    {
       "catalog_id": "error.downgrade_to_warning",
       "definition_ref": "frog.studio.error.downgrade_to_warning",
       "contract_status": "partial",

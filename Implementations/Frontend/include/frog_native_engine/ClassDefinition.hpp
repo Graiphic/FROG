@@ -5,6 +5,7 @@
 #include "frog_native_engine/CanonicalObjectReferenceDescriptor.hpp"
 #include "frog_native_engine/DraftDependency.hpp"
 #include "frog_native_engine/FrogJson.hpp"
+#include "frog_native_engine/Geometry.hpp"
 #include <map>
 
 namespace frog::native_engine {
@@ -39,6 +40,9 @@ struct ClassField {
     std::string label;
     binding::TypeRef type;
     source::JsonValue defaultValue;
+    // Presentation relative to the private cluster. Field identity, logical
+    // order and value semantics are independent of this rectangle.
+    std::optional<Rect> layout;
 };
 
 struct ClassPort {

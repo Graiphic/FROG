@@ -7,7 +7,7 @@ from dataclasses import dataclass
 import hashlib
 import io
 import json
-from pathlib import Path, PureWindowsPath
+from pathlib import Path
 from types import MethodType
 from xml.etree import ElementTree
 
@@ -15,7 +15,7 @@ from pylabview import LVdatafill, LVdatatype, LVheap, LVlinkinfo, LVmisc
 
 from import_labview_profile import (
     ATTR_COUNT, ATTR_UID, ProfileRefusal, TYPES, Types, children, field, heap_root,
-    identity, items, kind, number, one_section, require,
+    identity, items, kind, number, one_section, require, valid_windows_component,
 )
 
 
@@ -350,11 +350,8 @@ def resolve_local_path(dependency: Dependency, caller: Path, project_root: Path,
     except (UnicodeError, LookupError) as error:
         raise ProfileRefusal("dependency_path", "Cannot decode the saved dependency path.", location) from error
     for part in parts:
-        windows = PureWindowsPath(part)
-        require(part and part[-1] not in " ." and not windows.drive and not windows.root and
-                len(windows.parts) == 1 and not windows.is_reserved() and
-                all(char not in '/\\:<>|?*"' and ord(char) >= 32 for char in part),
-                "dependency_path", "Invalid component in the saved relative dependency path.", location)
+        require(valid_windows_component(part), "dependency_path",
+                "Invalid component in the saved relative dependency path.", location)
     candidate = base.joinpath(*parts).resolve()
     require(candidate.is_relative_to(project_root.resolve()), "dependency_path",
             "The saved path points outside the selected project.", location)

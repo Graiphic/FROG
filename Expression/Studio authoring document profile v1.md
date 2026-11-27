@@ -1,6 +1,6 @@
 # Graiphic Studio authoring document profile, version 1
 
-Source compatibility updated 25 November 2026. This page describes
+Source compatibility updated 27 November 2026. This page describes
 the output and admission of specific Studio producers. The
 [coverage matrix](../docs/studio-source-compatibility.md) attributes the tested
 capabilities to their Studio and Frontend identities.
@@ -23,8 +23,8 @@ describes the captured producers and evidence from that date.
 
 The [structural schema](Schemas/frog.studio-document.schema.json) describes
 ordinary writer-shaped documents from revision 2 through the revision 9
-recovery envelope and the Type Definition and Cluster presentation extensions in revisions 12 and 13. The private class profile at revision 10 is outside this
-structural schema. Historical input 0/1 is handled by the reader and Studio
+recovery envelope and the ordinary document extensions in revisions 12 through
+14. Revision 10 uses a private class profile. Historical input 0/1 is handled by the reader and Studio
 migration. Full types, nested provider payloads, dependency resolution, repair
 and execution require the implementation validators.
 
@@ -44,7 +44,7 @@ select two source authorities. Changing a filename or replacing key spellings
 is not a migration. A public Source reader can preserve more constructs than
 the editing importer can materialize; reading and canvas editing are separate.
 
-The reader recognizes integers 0 through 13. The ordinary writer
+The reader recognizes integers 0 through 14. The ordinary writer
 currently emits at least revision 3 and always records `storage`, including
 when Readable is explicitly selected. The historical October writer emitted
 revision 2 without Storage. Features raise the minimum revision.
@@ -64,6 +64,7 @@ revision 2 without Storage. Features raise the minimum revision.
 | 11 | Picture Ring catalogue on a panel widget or diagram constant, including nested presentations. The numeric choice and embedded images travel together. |
 | 12 | Linked Tab members or a structured recovery baseline for a large Type Definition. |
 | 13 | Cluster elements can store unsigned 32-bit presentation fields `stack_order` and `visual_group`, including inside nested controls. `logical_order` still identifies the field order in the Cluster value. |
+| 14 | Extended graph presentation, explicit Native Call ABI settings and `To More Specific Class`. |
 
 Revision 11 has its own [ordinary envelope schema](Schemas/frog.studio-picture-ring.schema.json).
 The reader also accepts Picture Rings written before the feature acquired its
@@ -82,6 +83,33 @@ Feature requirements compose: the writer selects the required revision for
 the whole document, including nested values and node configurations. A future
 revision is refused rather than partially decoded. Revision admission alone
 does not prove that every configured operation can execute.
+
+### Revision 14 authoring options
+
+`props.xy_graph.design` and `props.waveform_graph` can retain `legend_width`
+in unzoomed canvas units and `kind_badge_visible` for the graph kind badge.
+`props.waveform_graph.plots` can additionally retain `presentation`,
+`line_style`, `interpolation` and `symbol` as defined by the graph codec. Plot
+defaults and the previously supported legend position and row count retain their
+existing revision requirements.
+
+On Native Call, `studio_native_call.return.type` and each
+`studio_native_call.arguments[*].type` can retain `type_from_wire`,
+`win32_boolean` and `array_field_contracts`. A field under
+`type.struct_layout.fields` with non-scalar storage can retain `storage`,
+`extent` and `valid_length_parameter_id`. These options describe the C ABI and
+must be kept when saving the call.
+
+The Application Control node **To More Specific Class** serializes as
+`frog.studio.application_control.to_more_specific_class`, with
+`studio_application_control.kind` set to `to_more_specific_class`. The target
+input is a type model; the reference output continues to identify the object
+fed to the separate reference input.
+
+Earlier Studio builds stored these fields under the older declared revision.
+The current common reader preserves these documents. The next save uses
+revision 14 if it retains at least one of the fields or a cast node. A reader
+whose maximum is 13 refuses that output at the envelope boundary.
 
 ## Top-level writer model
 
@@ -329,6 +357,22 @@ identity are different. New editor dimensions independently range from 8 to
 limit on all FROG icons or historical import. Reset restores the opening layout;
 Clear bindings starts from an empty layout. Perimeter handles and their hover
 animation are transient and never execution data.
+
+## Studio For count and imported integer operations
+
+Studio treats a signed For count below zero as zero after any admitted
+conversion at `N`. It uses the same output and state initialization rules as
+a count of zero. Both Studio draft adapters retain this rule in executable
+Source as `for_loop_count_profile: "frog.studio.for.count-zero-floor@1"`.
+The field is synthesized when preparing Studio drafts. A public Source For
+without this profile keeps the base v0.1 non-negative count contract.
+
+An imported Quotient & Remainder may carry `value_type: "i32"` or
+`value_type: "u32"` to retain the operation's verified scalar representation.
+When specified, both inputs and outputs use this type and any admitted input
+coercion converts at the receiving port. The authored wire still exposes the
+producer's representation. Instances without `value_type` keep their usual
+polymorphic promotion.
 
 ## Capability and compatibility claims
 

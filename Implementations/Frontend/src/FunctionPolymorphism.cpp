@@ -10,6 +10,7 @@
 #include "frog_native_engine/ComparisonBinding.hpp"
 #include "frog_native_engine/ErrorPaletteBinding.hpp"
 #include "frog_native_engine/ClusterFunctionBinding.hpp"
+#include "frog_native_engine/CanonicalNumericAggregate.hpp"
 #include <bit>
 #include <algorithm>
 #include <array>
@@ -99,6 +100,26 @@ static BindingResult resolvePolymorphicFunctionImpl(const DiagramNode &node,
             if (candidate.direction == FunctionPortDirection::Input) { declared = &candidate; break; }
     }
     if (!declared) return invalid("Unknown function port.");
+    if (isQuotientRemainderNodeType(id) && !node.valueType.empty()) {
+        if (!isQuotientRemainderRepresentation(node.valueType))
+            return invalid("The fixed Quotient & Remainder representation must be I32 or U32.");
+        const auto receiver=TypeRef::primitive(node.valueType);
+        auto value=known(receiver);
+        for (const auto name:{"x","y"}) {
+            if (!wired(name)) { value.complete=false; continue; }
+            const auto actual=input(name);
+            if (!actual.resolution.accepted()) return actual;
+            if (fullTypeEqual(actual.resolution.type,receiver)) {
+                value.complete=value.complete&&actual.complete;
+                continue;
+            }
+            if (!canonicalNumericScalarCoercionSupported(actual.resolution.type,receiver))
+                return invalid("Fixed Quotient & Remainder requires scalar numeric operands.");
+            if (port==name) value.resolution=connect(actual.resolution.type,receiver,ConnectionPolicy::NumericImplicit);
+            value.complete=value.complete&&actual.complete;
+        }
+        return value;
+    }
     if ((id.starts_with("numeric.") || id=="boolean.number_to_array" || id=="boolean.to_integer") &&
         wiredInputs.empty() && !isBooleanArrayToNumber(id)) {
         // Match the palette's declared authoring type across Numeric/Boolean

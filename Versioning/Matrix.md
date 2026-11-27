@@ -301,6 +301,27 @@ The widget layer is organized as a standard-facing surface rather than a collect
 The current implementation priority remains to keep the bounded Examples 01–15 executable corridor, reference checks, widget validation, and version-governance posture coherent. The separate 47-directory example inventory must not be used as a runtime coverage count.
 </p>
 
+## Corpus 0.1-draft.3 — syntax release of 27 November 2026
+
+| Retained feature | Minimum Studio Draft revision | Compatibility |
+| --- | --- | --- |
+| Explicit width or kind badge visibility for a Waveform or XY legend, or the extended Waveform plot styles | 14 | Default graph styling, legend position and row count keep the revision required by the other features. |
+| Native Call wire-driven type, Win32 Boolean representation, or explicit C array field contracts | 14 | A call with the previous ABI vocabulary continues to use revision 7. |
+| **To More Specific Class** | 14 | Other Application Control nodes keep their existing minimum. |
+
+The common reader accepts previously saved versions of these documents and
+retains their settings. A subsequent save emits revision 14. Readers capped at
+13 refuse revision 14 before projecting the document. The ordinary writer
+schema reflects the new minimum. Nested widget payloads carry it when required.
+See the [Studio writer profile](../Expression/Studio%20authoring%20document%20profile%20v1.md#revision-14-authoring-options)
+and the [revision round-trip test](../Implementations/Frontend/tests/frontend_draft_integration.cpp).
+
+FIR keeps version `0.1`. The optional `for_loop_count_profile` selects
+`frog.studio.for.count-zero-floor@1` on the Studio-derived For output and is
+absent from the strict base For profile. This is a declaration of count
+semantics for FIR consumers; ordinary `.frog` documents need no extra envelope
+revision for a For Loop. Portable Source retains `spec_version: "0.1"`.
+
 ## Corpus 0.1-draft.2 — syntax release of 25 November 2026
 
 | Retained feature | Minimum Studio draft revision | Compatible reader behavior |
@@ -311,7 +332,7 @@ The current implementation priority remains to keep the bounded Examples 01–15
 
 The shared reader admits revisions 0–13. Canonical Source and FIR retain their
 0.1 compatibility identifiers. See the [Studio writer profile](../Expression/Studio%20authoring%20document%20profile%20v1.md)
-and the [format conformance tests](../Implementations/Reference/Validator/tests/test_studio_source_versioning.py).
+and the [draft envelope and writer schema tests](../Implementations/Reference/Validator/tests/test_canonical_artifact_boundaries.py).
 
 ## Corpus 0.1-draft.1 — syntax release of 22 November 2026
 

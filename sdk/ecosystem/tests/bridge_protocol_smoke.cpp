@@ -6,6 +6,7 @@
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/FrogDraftData.hpp"
 #include "frog_native_engine/WidgetBindingType.hpp"
+#include "frog_native_engine/graph/WaveformGraph.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include <filesystem>
 #include <fstream>
@@ -187,22 +188,32 @@ void actualClusterPresentation() {
         document.widgets.addObject({id, widget.bounds, std::move(widget)}, true);
     }
     document.diagramEdges.push_back({"forward", {"grouped-input-terminal", "value"}, {"grouped-output-terminal", "value"}});
-    const auto bytes = serializeFrogDraftData(document);
-    need(parse(bytes).object.at("draft_revision").string == "13", "The fixture did not serialize actual Cluster presentation");
-    const auto actual = deriveBytes(bytes, "frog.document.draft", "13");
-    const auto context = parse(actual.provenance);
-    b::GraphRequirements requirements;
-    b::Error error;
-    const bool accepted = b::graphRequirements(actual.provenance, actual.fir, requirements, error);
-    need(accepted, "The bridge rejected derived FIR for a grouped Cluster: " + error.code + " " + error.message);
-    requirements.engineId = "graiphic.llvm.cpu"; requirements.targetId = "windows-x64"; requirements.profileId = "native-fast";
-    need(b::negotiate(requirements, descriptor(requirements), error), "The grouped Cluster failed target negotiation");
-    for (const auto version : {"12", "14"}) {
-        auto unqualified = context;
-        unqualified.object["source"].object["version"] = cj::string(version);
-        need(!b::graphRequirements(cj::encode(unqualified), actual.fir, requirements, error) && error.code == "bridge.version",
-            "The grouped Cluster admitted an unqualified source revision.");
-    }
+    const auto qualify = [&](std::string_view revision) {
+        const auto bytes = serializeFrogDraftData(document);
+        need(parse(bytes).object.at("draft_revision").string == revision, "The fixture did not serialize its presentation revision");
+        const auto actual = deriveBytes(bytes, "frog.document.draft", revision);
+        const auto context = parse(actual.provenance);
+        b::GraphRequirements requirements;
+        b::Error error;
+        const bool accepted = b::graphRequirements(actual.provenance, actual.fir, requirements, error);
+        need(accepted, "The bridge rejected derived presentation FIR: " + error.code + " " + error.message);
+        requirements.engineId = "graiphic.llvm.cpu"; requirements.targetId = "windows-x64"; requirements.profileId = "native-fast";
+        need(b::negotiate(requirements, descriptor(requirements), error), "The presentation draft failed target negotiation");
+        for (const auto unsupported : {"12", "15"}) {
+            auto unqualified = context;
+            unqualified.object["source"].object["version"] = cj::string(unsupported);
+            need(!b::graphRequirements(cj::encode(unqualified), actual.fir, requirements, error) && error.code == "bridge.version",
+                "The bridge admitted an unqualified source revision.");
+        }
+    };
+    qualify("13");
+    const auto *graphEntry = findWidgetCatalogEntryByClassId(graph::classId);
+    need(graphEntry != nullptr, "Missing Waveform Graph template");
+    auto display = makeWidgetData("waveform", *graphEntry, {20, 180, 260, 160});
+    need(bool(display.waveformGraph), "Missing Waveform Graph presentation");
+    display.waveformGraph->design.showKindBadge = false;
+    document.widgets.addObject({"waveform", display.bounds, std::move(display)}, true);
+    qualify("14");
 }
 
 b::Description descriptor(const b::GraphRequirements &requirements) {

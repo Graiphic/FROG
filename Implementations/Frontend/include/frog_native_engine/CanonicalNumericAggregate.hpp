@@ -4,6 +4,12 @@
 #include <span>
 
 namespace frog::native_engine {
+inline bool isQuotientRemainderNodeType(std::string_view type) noexcept {
+    return type=="frog.studio.numeric.quotient_remainder" || type=="numeric.quotient_remainder";
+}
+inline bool isQuotientRemainderRepresentation(std::string_view type) noexcept {
+    return type=="i32" || type=="u32";
+}
 inline constexpr std::string_view canonicalNumericAggregateProfile="frog.studio.numeric.aggregate-left-fold@1";
 inline constexpr std::string_view canonicalNumericAggregateAddId="frog.studio.numeric.add.owned-promote.v1";
 inline constexpr std::string_view canonicalNumericCoercionId="frog.studio.numeric.coerce.ieee-even-modulo.v1";

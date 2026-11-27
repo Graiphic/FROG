@@ -658,6 +658,7 @@ struct DiagramNode {
 
 inline constexpr char kUntranslatedLabViewNodeType[] = "frog.studio.import.labview.untranslated";
 inline constexpr char kUntranslatedLabViewNodeDiagnostic[] = "labview_import.untranslated_node";
+inline constexpr char kLabViewInvalidMessageNodeType[] = "frog.studio.error.invalid_message";
 
 [[nodiscard]] inline bool isUntranslatedLabViewNode(const DiagramNode &node) noexcept {
     return node.kind == "primitive" && node.type == kUntranslatedLabViewNodeType;

@@ -108,6 +108,57 @@ def test_studio_writer_and_recovery_schema():
     assert not validator.is_valid(archive)
 
 
+@pytest.mark.parametrize(("class_id", "props"), [
+    ("frog.widgets.xy_graph", {"xy_graph": {"design": {"legend_width": 208}}}),
+    ("frog.widgets.xy_graph", {"xy_graph": {"design": {"kind_badge_visible": False}}}),
+    ("frog.widgets.waveform_graph", {"waveform_graph": {"legend_width": 209}}),
+    ("frog.widgets.waveform_graph", {"waveform_graph": {"kind_badge_visible": False}}),
+] + [
+    ("frog.widgets.waveform_graph", {"waveform_graph": {"plots": [{field: 3}]}})
+    for field in ("presentation", "line_style", "interpolation", "symbol")
+])
+def test_graph_presentation_writer_revision(class_id, props):
+    validator = jsonschema.Draft202012Validator(read(STUDIO_SCHEMA))
+    widget = {"id": "graph", "classId": class_id,
+              "bounds": {"x": 0, "y": 0, "width": 320, "height": 200}, "props": props}
+    draft = {"format": "frog.document.draft", "draft_revision": 14, "language": "FROG",
+             "title": "Graph presentation", "metadata": {}, "frontPanel": {"widgets": [widget]},
+             "diagram": {"nodes": [], "edges": []}, "storage": {"version": 1, "array_mode": "readable"}}
+    assert validator.is_valid(draft)
+    assert not validator.is_valid(dict(draft, draft_revision=13))
+    assert not validator.is_valid(dict(draft, draft_revision=15))
+
+    nested = {"class_ref": class_id, "props": props}
+    widget.update(classId="frog.widgets.cluster_control", props={"cluster.elements": [{"widget": nested}]})
+    assert validator.is_valid(draft)
+    assert not validator.is_valid(dict(draft, draft_revision=13))
+
+
+@pytest.mark.parametrize("extended", [
+    {"type": "frog.studio.application_control.to_more_specific_class"},
+    {"studio_application_control": {
+        "profile": "frog.studio.application_control@1", "kind": "to_more_specific_class",
+        "expected_class": "frog.control",
+        "value_schema": {"canonical": "unknown", "choice_kind": "none", "field_names": [],
+                         "choices": [], "children": []},
+        "target": {"kind": "unbound", "owner_document": "", "widget_id": ""},
+        "properties": [], "method_id": "", "parameters": [],
+    }},
+    {"studio_native_call": {"return": {"type": {"win32_boolean": True}}}},
+    {"studio_native_call": {"arguments": [{"type": {"type_from_wire": True}}]}},
+    {"studio_native_call": {"arguments": [{"type": {"array_field_contracts": []}}]}},
+    {"studio_native_call": {"arguments": [{"type": {"struct_layout": {"fields": [{"storage": "inline_array"}]}}}]}},
+])
+def test_extended_node_writer_revision(extended):
+    validator = jsonschema.Draft202012Validator(read(STUDIO_SCHEMA))
+    node = {"id": "extended", "kind": "primitive", **extended}
+    draft = {"format": "frog.document.draft", "draft_revision": 14, "language": "FROG",
+             "title": "Extended operation", "metadata": {}, "frontPanel": {"widgets": []},
+             "diagram": {"nodes": [node], "edges": []}, "storage": {"version": 1, "array_mode": "readable"}}
+    assert validator.is_valid(draft)
+    assert not validator.is_valid(dict(draft, draft_revision=13))
+
+
 @pytest.mark.parametrize("path", sorted((ROOT / "Conformance/valid").glob("*/case.frog")), ids=lambda path: path.parent.name)
 def test_public_valid_fixtures_satisfy_the_conservative_root_schema(path):
     validator = jsonschema.Draft202012Validator(read(ROOT / "Expression/schema/frog.schema.json"))

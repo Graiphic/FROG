@@ -56,6 +56,15 @@ def native_bounds(raw):
     return bounds(left, top, max(1, right - left), max(1, bottom - top))
 
 
+def unbound_reference(source, encoding):
+    children = source.value_children()
+    return {"profile": "frog.studio.application_control@1", "kind": "reference",
+            "expected_class": source.reference_class(), "method_id": "", "properties": [], "parameters": [],
+            "target": {"kind": "unbound", "owner_document": "", "widget_id": ""},
+            "value_schema": resource_payload(children[0], encoding) if children else
+                {"canonical": "unknown", "choice_kind": "none", "choices": [], "field_names": [], "children": []}}
+
+
 def resource_payload(schema, encoding, definition=()):
     """The public ApplicationControl codec stores both the spelling and its child schemas."""
     if schema.family == "TypeDef":
@@ -241,12 +250,7 @@ def panel_widget(uid, body, descriptor, stored, role, types, encoding, depth=0):
                   "role": role, "label": name, "valueType": schema, "bounds": native_bounds(box),
                   "props": {"label.visible": True}}
         if ref:
-            children = source.value_children()
-            widget["studio_application_control"] = {"profile": "frog.studio.application_control@1", "kind": "reference",
-                "expected_class": source.reference_class(), "method_id": "", "properties": [], "parameters": [],
-                "target": {"kind": "unbound", "owner_document": "", "widget_id": ""},
-                "value_schema": resource_payload(children[0], encoding) if children else
-                    {"canonical": "unknown", "choice_kind": "none", "choices": [], "field_names": [], "children": []}}
+            widget["studio_application_control"] = unbound_reference(source, encoding)
         return widget
     if family != "Cluster":
         dtype = types.descriptor(descriptor, loc)

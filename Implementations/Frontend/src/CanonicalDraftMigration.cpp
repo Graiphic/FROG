@@ -1,5 +1,6 @@
 #include "frog_native_engine/ContextPathIdentity.hpp"
 #include "frog_native_engine/CanonicalDraftMigration.hpp"
+#include "frog_native_engine/CanonicalExecutionIr.hpp"
 #include "frog_native_engine/FrogDocumentFormat.hpp"
 #include "frog_native_engine/DraftInterfaceInspection.hpp"
 #include "FrogDocumentConditionalDisable.hpp"
@@ -402,8 +403,10 @@ struct AuthoredObjectReferences {
         std::optional<CanonicalObjectReferenceDescriptor> descriptor;
         if(authoredObjectNode(node)){
             auto wired=binding::TypeRef{};if(driver(id,"reference_in"))wired=input(id,"reference_in");
-            descriptor=canonicalObjectReferenceDescriptor(*node.member("studio_application_control"),at+"/studio_application_control",wired,&diagnostic);
-            if(descriptor){const auto actual=txt(node.member("type"),at);std::string_view expected=descriptor->kind==CanonicalObjectReferenceKind::Resolve?"application_control.reference":descriptor->kind==CanonicalObjectReferenceKind::Property?"application_control.property_node":descriptor->kind==CanonicalObjectReferenceKind::Close?"application_control.close_reference":"application_control.invoke_node";
+            const auto model=driver(id,"target_class")?input(id,"target_class"):binding::TypeRef{};
+            descriptor=canonicalObjectReferenceDescriptor(*node.member("studio_application_control"),at+"/studio_application_control",wired,&diagnostic,model);
+            if(descriptor){const auto actual=txt(node.member("type"),at);std::string_view expected=descriptor->kind==CanonicalObjectReferenceKind::ToMoreSpecificClass?
+                "application_control.to_more_specific_class":descriptor->kind==CanonicalObjectReferenceKind::Resolve?"application_control.reference":descriptor->kind==CanonicalObjectReferenceKind::Property?"application_control.property_node":descriptor->kind==CanonicalObjectReferenceKind::Close?"application_control.close_reference":"application_control.invoke_node";
                 std::string_view normalized=actual;if(normalized.starts_with("frog.studio."))normalized.remove_prefix(12);
                 if(normalized!=expected)refuse(at,"The full configuration kind contradicts its real authored operation.","migration.object_reference.configuration_invalid", Domain::Semantics);}
         }else if(const auto literal=records.literals.find(id);literal!=records.literals.end()){
@@ -1068,6 +1071,11 @@ struct Migration {
                     if(structureType=="case"&&n.member("case_profile"))item.object["case_profile"]=*n.member("case_profile");
                     if(structureType=="case"&&caseType!="bool"&&defaultCount!=1)refuse(at+"/regions","The exact integer Case profile requires one explicit default arm.","migration.case_default_required", Domain::Semantics);
                     item.object["structure_type"]=string(structureType);item.object["boundary"]=boundary;item.object["structure_terminals"]=terminals;item.object["regions"]=std::move(convertedRegions);
+                    if(structureType=="for_loop") {
+                        item.object.emplace("for_loop_count_profile",string(std::string(canonicalStudioForCountProfile)));
+                        out.identities.push_back({"structure_terminal",id+":count",at+"/structure_terminals/count",
+                            target+"/for_loop_count_profile",true});
+                    }
                     for(const auto &[key,value]:n.object)if(key.starts_with("for_loop_")||key.starts_with("case_structure_"))item.object[key]=value;
                     nodeList.array.push_back(std::move(item));continue;
                 }
@@ -1153,7 +1161,7 @@ struct Migration {
 }
 static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::string_view bytes,std::string_view uri,const CanonicalDraftResolvedTypes *resolved){
     CanonicalDraftMigrationResult result;result.originalUri=uri;
-    if(bytes.size()>8U*1024U*1024U){result.diagnostics.push_back({"migration.resource_limit","/","Draft exceeds the bounded migration source budget.",true,Domain::Control});return result;}
+    if(bytes.size()>kMaximumFrogDocumentBytes){result.diagnostics.push_back({"migration.resource_limit","/","Draft exceeds the bounded migration source budget.",true,Domain::Control});return result;}
     result.originalSource=std::make_shared<const std::string>(bytes);result.originalSha256=hashing::sha256Hex(bytes);
     try{
         if(resolved) {
@@ -1167,7 +1175,8 @@ static CanonicalDraftMigrationResult prepareCanonicalDraftMigrationImpl(std::str
         const auto &raw=obj(&*parsed,"/");if(raw.member("spec_version")||txt(raw.member("format"),"/format")!="frog.document.draft"||
             !raw.member("draft_revision")||raw.member("draft_revision")->type!=Json::Type::Number||
             (raw.member("draft_revision")->string!="2"&&raw.member("draft_revision")->string!="3"&&raw.member("draft_revision")->string!="4"&&raw.member("draft_revision")->string!="5"&&raw.member("draft_revision")->string!="6"&&raw.member("draft_revision")->string!="7"&&raw.member("draft_revision")->string!="11"&&
-             raw.member("draft_revision")->string!=std::to_string(kFrogClusterPresentationDraftRevision)))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
+             raw.member("draft_revision")->string!=std::to_string(kFrogClusterPresentationDraftRevision)&&
+             raw.member("draft_revision")->string!=std::to_string(kFrogExtendedAuthoringDraftRevision)))refuse("/","This Studio draft revision has no canonical migration contract.", "migration.unsupported", Domain::Compatibility);
         // Private drafts may omit metadata; their existing reader keeps the
         // normal document defaults. Only the derived public envelope needs an
         // explicit object. Never treat explicit null/wrong types as absence.

@@ -10,6 +10,7 @@
 #include "frog_native_engine/Sha256.hpp"
 #include "frog_native_engine/DraftFrontendPreparation.hpp"
 #include "frog_native_engine/FrogDocumentFormat.hpp"
+#include "frog_native_engine/FrogJson.hpp"
 #include "CanonicalJsonSupport.hpp"
 #include <algorithm>
 #include <array>
@@ -40,6 +41,7 @@ namespace ne=frog::native_engine;
 namespace cj=ne::canonical_json;
 using Json=ne::source::JsonValue;
 constexpr std::uint64_t mib=1024U*1024U;
+constexpr std::uint64_t defaultSourceBytes=8*mib;
 constexpr std::uint64_t maximumResolutionSteps=4096;
 constexpr std::string_view resolutionProfile="frog.frontend.resolution@1";
 constexpr std::string_view draftResolutionProfile="frog.frontend.resolution@2";
@@ -67,7 +69,7 @@ std::uint64_t ceiling(std::uint64_t requested,std::uint64_t hard) noexcept {
 frog_frontend_limits normalized(const frog_frontend_limits &v) noexcept {
     // Producer ceilings are deliberately stricter than some API defaults.
     const ne::CanonicalIrLimits producer;
-    return {ceiling(v.max_source_bytes,8*mib),ceiling(v.max_dependency_bytes,8*mib),
+    return {ceiling(v.max_source_bytes?v.max_source_bytes:defaultSourceBytes,ne::kMaximumFrogDocumentBytes),ceiling(v.max_dependency_bytes,8*mib),
         ceiling(v.max_total_dependency_bytes,64*mib),ceiling(v.max_result_bytes,32*mib),
         ceiling(v.max_nodes,producer.maximumNodes),ceiling(v.max_connections,producer.maximumEdges),
         ceiling(v.max_nesting_depth,64),ceiling(v.max_dependencies,256),ceiling(v.max_diagnostics,256)};
@@ -544,7 +546,7 @@ Json describe(const frog_frontend_limits &limits) {
     result.object={{"schema",cj::string("frog.frontend.capabilities")},{"schema_version",cj::string("0.2")},
         {"source_formats",std::move(sources)},{"fir_formats",std::move(firs)},{"frontend_apis",strings({"3"})},
         {"frontend",implementation()},{"api_operations",strings({"validate","derive","describe"})},
-        {"profiles",strings({"frog.canonical.widget-f64-add.v1","frog.canonical.typed-structures.v1","frog.studio.composed-program@1","frog.canonical.event-scalar.v1","frog.canonical.event-captured.v1",resolutionProfile,draftResolutionProfile})},
+        {"profiles",strings({"frog.canonical.widget-f64-add.v1","frog.canonical.public-f64-add.v1","frog.canonical.typed-structures.v1","frog.studio.composed-program@1","frog.canonical.event-scalar.v1","frog.canonical.event-captured.v1",resolutionProfile,draftResolutionProfile})},
         {"profiles_exhaustive",cj::boolean(false)},
         {"default_limits",limitsJson(normalized({}))},{"effective_limits",limitsJson(limits)},
         {"max_fir_bytes",number(ne::CanonicalIrLimits{}.maximumIrBytes)},
@@ -599,7 +601,7 @@ OperationResult runOperation(frog_frontend_operation operation,const frog_fronte
         ne::source::ScopedJsonReadCheckpoint readerCheckpoint{&work,[](void *p){static_cast<Request *>(p)->poll();}};
         work.poll();
         if(request->source_bytes.size>work.limits.max_source_bytes)work.limit("Source bytes exceed their effective ceiling.",work.uri());
-        if(request->semantic_context_json.size>work.limits.max_source_bytes)work.limit("Semantic-context bytes exceed their effective ceiling.",work.uri(),"/semantic_context");
+        if(request->semantic_context_json.size>std::min(work.limits.max_source_bytes,defaultSourceBytes))work.limit("Semantic-context bytes exceed their effective ceiling.",work.uri(),"/semantic_context");
         if(capturedSource) {
             const auto captured=capturedSource->originalUtf8(),requested=span(request->source_bytes);
             if(captured.size()!=requested.size()||(captured.data()!=requested.data()&&captured!=requested))
@@ -745,7 +747,8 @@ OperationResult runOperation(frog_frontend_operation operation,const frog_fronte
         else if(const auto *metadata=root.member("metadata")) {
             if(const auto *explicitProfile=metadata->member("profile");explicitProfile&&explicitProfile->type==Json::Type::String)profile=explicitProfile->string;
             else if(const auto *producer=metadata->member("producer")) {
-                if(producer->string=="frog.native.canonical-execution-ir")profile="frog.canonical.widget-f64-add.v1";
+                if(producer->string=="frog.native.canonical-execution-ir")
+                    profile=source->publicPorts().empty()?"frog.canonical.widget-f64-add.v1":"frog.canonical.public-f64-add.v1";
                 else if(producer->string=="frog.native.canonical-structured-ir")profile="frog.canonical.typed-structures.v1";
             }
         }

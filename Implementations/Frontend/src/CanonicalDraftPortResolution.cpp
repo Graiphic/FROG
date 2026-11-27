@@ -142,8 +142,11 @@ std::vector<CanonicalDraftMigrationDiagnostic> appendCanonicalDraftComposedPorts
         }
         if(node.applicationControl) {
             const auto effective=resolver.resolve({node.id,node.applicationControl->kind==ApplicationControlKind::Close?"reference_in":"reference_out"});
-            for(const auto &port:applicationControlPorts(*node.applicationControl,effective.resolution.type))
-                addEndpoint(node,port.id,port.direction==ApplicationControlPortDirection::Input,port.type);
+            for(const auto &port:applicationControlPorts(*node.applicationControl,effective.resolution.type)) {
+                const auto type=node.applicationControl->kind==ApplicationControlKind::ToMoreSpecificClass && port.id=="reference_in"
+                    ? resolver.resolve({node.id,port.id}).resolution.type : port.type;
+                addEndpoint(node,port.id,port.direction==ApplicationControlPortDirection::Input,type);
+            }
             continue;
         }
         if(isInPlaceStructure(node)) {

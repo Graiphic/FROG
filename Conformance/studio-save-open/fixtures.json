@@ -4,11 +4,11 @@
   ],
   "studio_reader_revisions": {
     "first": 0,
-    "last": 13
+    "last": 14
   },
   "studio_schema_revisions": {
     "first": 2,
-    "last": 13,
+    "last": 14,
     "excluded": [10, 11]
   },
   "fixtures": [

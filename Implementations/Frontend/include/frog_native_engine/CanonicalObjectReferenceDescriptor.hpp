@@ -5,7 +5,7 @@
 namespace frog::native_engine {
 inline constexpr std::string_view canonicalObjectReferenceProfile="frog.studio.object-reference.local@1";
 inline constexpr std::string_view canonicalObjectReferenceAttribute="frog_studio_object_reference";
-enum class CanonicalObjectReferenceKind { Resolve, Property, Invoke, Construct, Update, Select, Close };
+enum class CanonicalObjectReferenceKind { Resolve, Property, Invoke, Construct, Update, Select, Close, ToMoreSpecificClass };
 struct CanonicalObjectReferencePort {
     std::string id,type,fullTypeJson;
     bool input=false,required=true;
@@ -29,7 +29,7 @@ struct CanonicalObjectReferenceDiagnostic {
 std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescriptor(
     const source::JsonValue &configuration,std::string_view configurationSourcePointer,
     const binding::TypeRef &wiredReferenceType={},
-    CanonicalObjectReferenceDiagnostic *diagnostic=nullptr);
+    CanonicalObjectReferenceDiagnostic *diagnostic=nullptr,const binding::TypeRef &targetClass={});
 source::JsonValue canonicalObjectReferenceAttributes(const CanonicalObjectReferenceDescriptor &);
 std::optional<CanonicalObjectReferenceDescriptor> canonicalObjectReferenceDescriptorFromAttributes(
     const source::JsonValue &,std::string_view configurationSourcePointer,

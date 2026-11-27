@@ -238,7 +238,7 @@ def test_extended_studio_revision_boundaries(fixture, revision):
     assert sample["draft_revision"] == revision
     validator.validate(sample)
     assert not validator.is_valid({**sample, "draft_revision": 8 if revision == 12 else 12})
-    assert not validator.is_valid({**sample, "draft_revision": 14})
+    assert not validator.is_valid({**sample, "draft_revision": BASELINE["studio_schema_revisions"]["last"] + 1})
     if revision == 13:
         presentation = sample["frontPanel"]["widgets"][0]["props"]["cluster.elements"][0]
         for key in ("stack_order", "visual_group"):
@@ -264,7 +264,7 @@ def test_extended_frontend_derives_complete_fixture(cli, tmp_path, fixture, revi
     assert all(item["severity"] != "error" for item in diagnostics)
     assert read_json(result)["schema_version"] == "0.1"
     for version, exit_code, diagnostic in ((revision - 1, 2, previous_error),
-                                           (14, 3, "frontend.format_unsupported")):
+                                           (BASELINE["studio_reader_revisions"]["last"] + 1, 3, "frontend.format_unsupported")):
         altered = tmp_path / f"revision-{version}.frog"
         source = read_json(path)
         source["draft_revision"] = version

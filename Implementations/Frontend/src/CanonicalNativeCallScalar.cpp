@@ -37,9 +37,14 @@ std::optional<CanonicalNativeCallDescriptor> canonicalNativeCallScalarDescriptor
     CanonicalNativeCallDescriptor result;result.profile=kNativeCallScalarProfile;
     result.configurationJson=cj::encode(encoded);result.configurationSha256=hashing::sha256Hex(result.configurationJson);
     result.semanticKey=nativeCallSemanticKey(*decoded);result.configurationSourcePointer=pointer;
-    for(const auto &parameter:decoded->arguments)result.arguments.push_back({parameter.id,nativeCallTypeRef(parameter.type,64).canonical(),parameter.inputRequirement,parameter.defaultCanonicalValue});
+    const auto ports=nativeCallPorts(*decoded,64);
+    for(const auto &parameter:decoded->arguments) {
+        const auto input=std::find_if(ports.begin(),ports.end(),[&](const auto &port){return port.id=="param."+parameter.id+".in";});
+        if(input==ports.end())return refuse("native_call.signature_unavailable","The ABI argument has no corresponding input connector.",true);
+        result.arguments.push_back({parameter.id,input->valueType.canonical(),input->requirement,input->defaultCanonicalValue});
+    }
     if(decoded->returnDefinition.type.kind!=NativeCallKind::Void)result.returnType=nativeCallTypeRef(decoded->returnDefinition.type,64).canonical();
-    for(const auto &port:nativeCallPorts(*decoded,64)) {
+    for(const auto &port:ports) {
         if(!port.valueType.known())return refuse("native_call.signature_unavailable","A real NativeCall connector has no exact scalar5/error type.",true);
         result.ports.push_back({port.id,port.valueType.canonical(),!port.output,port.requirement,port.defaultCanonicalValue});
     }

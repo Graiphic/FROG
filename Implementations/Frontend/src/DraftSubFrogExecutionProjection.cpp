@@ -451,7 +451,17 @@ struct Projection {
             const bool propertyViaReference=control&&control->kind==ApplicationControlKind::Property&&
                 control->target.kind==ApplicationControlTargetKind::Unbound&&
                 control->target.ownerDocumentId.empty()&&control->target.widgetId.empty();
-            if((control&&!propertyViaReference)||t=="frog.studio.structures.event_structure"||
+            // A call shares the application instance. A child panel or widget still
+            // requires its own document identity when projected into its caller.
+            const bool sameApplication=control && control->expectedClass=="frog.application" &&
+                control->target.kind==ApplicationControlTargetKind::ThisApplication &&
+                control->target.ownerDocumentId.empty() && control->target.widgetId.empty() &&
+                ((control->kind==ApplicationControlKind::Invoke && control->methodId=="application.quit") ||
+                 (control->kind==ApplicationControlKind::Property && !control->properties.empty() &&
+                  std::all_of(control->properties.begin(),control->properties.end(),[](const auto &row){
+                      return row.memberId=="kind" && row.mode==ApplicationControlPropertyMode::Read;
+                  })));
+            if((control&&!propertyViaReference&&!sameApplication)||t=="frog.studio.structures.event_structure"||
                 t=="frog.studio.error.build_cluster"||t=="frog.studio.error.translate_code"||t=="frog.studio.error.write_current_call_chain"||
                 t=="frog.studio.path.current_frog_path"||t=="frog.studio.path.default_directory"||
                 t=="frog.studio.path.temporary_directory"||t=="frog.studio.path.application_directory"||
@@ -471,9 +481,11 @@ struct Projection {
         return nodes;
     }
 
-    Expanded expand(Frozen &source,const std::string &callPath,std::vector<std::string> ancestry,unsigned depth=0) {
+    Expanded expand(Frozen &source,const std::string &callPath,std::vector<std::string> ancestry,
+        std::vector<std::string_view> callers={},unsigned depth=0) {
         if(depth>maximumDepth)refuse("subfrog.dependency.limit",source.source.source.canonicalUri,"/diagram","Call nesting exceeds32.");
         ancestry.push_back(source.identity);Expanded result;result.document=source.active;
+        callers.push_back(source.active.title);
         for(const auto &node:result.document.diagramNodes) {
             const auto found=source.index.nodes.find(node.id);
             result.nodes.emplace(node.id,DraftSubFrogExecutionIdentity{node.id,source.source.source.canonicalUri,
@@ -483,6 +495,46 @@ struct Projection {
             const auto found=source.index.edges.find(edge.id);
             result.edges.emplace(edge.id,DraftSubFrogExecutionIdentity{edge.id,source.source.source.canonicalUri,
                 found==source.index.edges.end()?"/diagram":found->second,{},callPath,found==source.index.edges.end()});
+        }
+        for(const auto &node:source.active.diagramNodes) {
+            if(node.type!=kLabViewInvalidMessageNodeType)continue;
+            const auto authoredDriver=std::any_of(source.active.diagramEdges.begin(),source.active.diagramEdges.end(),[&](const auto &edge){
+                return edge.to.nodeId==node.id&&edge.to.portId=="call_chain";
+            });
+            if(authoredDriver)refuse("labview_import.invalid_message_call_chain",source.source.source.canonicalUri,at(source,node),
+                "The imported Error Ring obtains the call chain from the actual Run, not from an authored wire.");
+
+            // Expand owns the real caller nesting. The compatibility input is
+            // compiled into the same region, without appearing in the saved FROG.
+            DiagramNode chain;
+            chain.id=fresh(callPath,"labview_error_chain",node.id);
+            chain.type="frog.studio.string.constant";
+            chain.valueType="string";
+            chain.labelVisible=false;
+            chain.layout=node.layout;
+            chain.diagramOwnerStructureId=node.diagramOwnerStructureId;
+            chain.diagramOwnerRegionId=node.diagramOwnerRegionId;
+            for(auto caller=callers.rbegin();caller!=callers.rend();++caller) {
+                auto name=*caller;
+                if(name.ends_with(".frog"))name.remove_suffix(5);
+                if(name.empty()||name.find_first_of("\r\n")!=name.npos)
+                    refuse("labview_import.invalid_message_call_chain",source.source.source.canonicalUri,at(source,node),
+                        "The active call has no printable document name for the imported Error Ring.");
+                if(!chain.text.empty())chain.text+='\n';
+                chain.text+=name;
+                if(!name.ends_with(".vi"))chain.text+=".vi";
+            }
+            DiagramEdge wire;
+            wire.id=fresh(callPath,"labview_error_chain_wire",node.id);
+            wire.from={chain.id,"value"};wire.to={node.id,"call_chain"};
+            wire.diagramOwnerStructureId=node.diagramOwnerStructureId;
+            wire.diagramOwnerRegionId=node.diagramOwnerRegionId;
+            auto origin=result.nodes.at(node.id);origin.generated=true;
+            origin.projectedId=chain.id;result.nodes.emplace(chain.id,origin);
+            origin.projectedId=wire.id;result.edges.emplace(wire.id,std::move(origin));
+            result.document.diagramNodes.push_back(std::move(chain));
+            result.document.diagramEdges.push_back(std::move(wire));
+            out.changed=true;
         }
         std::vector<std::string> calls;
         const bool hasFamilies=std::any_of(result.document.diagramNodes.begin(),result.document.diagramNodes.end(),
@@ -636,7 +688,7 @@ struct Projection {
             // Validate the callee in its OWN identity/region namespace before
             // grafting it into the caller. An invalid local owner must never
             // accidentally resolve to a similarly named parent object.
-            try {body=expand(callee,site,ancestry,depth+1);}
+            try {body=expand(callee,site,ancestry,callers,depth+1);}
             catch(Refusal &failure) {
                 // Keep the callee URI/pointer in the diagnostic, but anchor
                 // nested failures at this caller until the visible root call.
@@ -867,7 +919,9 @@ DraftSubFrogExecutionProjection projectPreparedSubFrogExecution(const DraftSubFr
         out.document=*input.rootDocument;
         // An unchanged root without calls needs no disk reference, closure or
         // extra dialect admission. Ordinary preparation remains its owner.
-        if(!draftHasClasses(out.document)&&std::none_of(out.document.diagramNodes.begin(),out.document.diagramNodes.end(),[](const auto &n){return n.kind=="frog_call";}))return out;
+        if(!draftHasClasses(out.document)&&std::none_of(out.document.diagramNodes.begin(),out.document.diagramNodes.end(),[](const auto &n){
+            return n.kind=="frog_call"||n.type==kLabViewInvalidMessageNodeType;
+        }))return out;
         Projection projection{input,out,normalizedRoot};
         if(draftHasClasses(out.document)) {
             projection.classes=captureDraftClassProgram(out.document,input.sourceUri,input.resolver);

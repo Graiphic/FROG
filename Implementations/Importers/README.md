@@ -148,8 +148,11 @@ produce a diagnostic. Keep the project and its member directories together.
 In Studio use **File → Import → LabVIEW…**. Choose a `.vi`, `.ctl` or `.llb`
 to inspect its resources. **Import** is available when a VI has a supported
 source diagram and the common Frontend admits its editable FROG projection.
-The result contains `model.frog`, a resource report and a mapping of original
-object, terminal and wire UIDs. The selected file is read-only throughout.
+Studio publishes each standalone VI in a new import directory, using the VI's
+filename with a `.frog` extension. The `root_document` field in
+`import-analysis.json` identifies the published file. The directory also contains
+a resource report and a mapping of original object, terminal and wire UIDs.
+The selected file is read-only throughout.
 LabVIEW error clusters with the ordered fields `status` (Boolean), `code`
 (I32) and `source` (String) use the Studio palette's Error Cluster Control
 or Indicator according to their original role. Import preserves the source
@@ -159,7 +162,7 @@ The review window identifies the selected file, explains its import status
 in the current Studio language and lists the known reasons execution is blocked.
 Use **Save report…** to export the current result as UTF-8 text, including
 the reason for a refusal. **Show in folder** selects that report in Explorer.
-After a successful import, `import-report.txt` is available beside `model.frog`.
+After a successful import, `import-report.txt` is available beside the imported FROG.
 
 To use a VI as a subprogram, drop one `.vi` file from Explorer onto the
 parent Block Diagram. Studio converts the file on release and places the

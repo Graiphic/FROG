@@ -27,15 +27,15 @@
       "path": "src/ClassDefinition.cpp",
       "upstream": "FROG/Implementations/Frontend/src/ClassDefinition.cpp",
       "ownership": "created",
-      "sha256": "b2953cd7fca0dfa4830db064f195397b68bec54ad6d85f051f94bf80468d241a",
-      "bytes": 38331
+      "sha256": "ffeee5e7bafcc086069a684892fc5e8419df444330fce17b0d657c2043cc88e4",
+      "bytes": 40960
     },
     {
       "path": "include/frog_native_engine/ClassDefinition.hpp",
       "upstream": "FROG/Implementations/Frontend/include/frog_native_engine/ClassDefinition.hpp",
       "ownership": "created",
-      "sha256": "e877f43a858df3878d721ca9000a8fe323d7c9e426e3f65a5b4831f95a5135cf",
-      "bytes": 8093
+      "sha256": "2856104532254e72c2779f0539b3c913f16d153060dac210a5164f3ec4fcf4f3",
+      "bytes": 8313
     },
     {
       "path": "src/PolymorphicFrog.cpp",
@@ -180,15 +180,15 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/build-nmake-verify/generated/WidgetCatalog.generated.hpp",
       "path": "snapshot/generated/WidgetCatalog.generated.hpp",
-      "sha256": "26dc2f52d7e7d8cd89b1e9ce945ad9e93b227dc365d7ba0e8ee523f450a646b0",
+      "sha256": "3af6c5bc257b1ae1c563240c14401e1d769767c8bba8f196c91bb70c6d42ee61",
       "bytes": 50483,
       "ownership": "snapshot"
     },
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ApplicationControlMemberContract.hpp",
       "path": "include/frog_native_engine/ApplicationControlMemberContract.hpp",
-      "sha256": "e34a31d54290582dfab367c642bc8f8948253b17713c7ec6cd8140cbb8271683",
-      "bytes": 651,
+      "sha256": "b34184c988e4921c43ec38e5449c86311f1c54974afa7f9ffe0ec746c18850f6",
+      "bytes": 1498,
       "ownership": "move"
     },
     {
@@ -201,8 +201,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ApplicationControlTypes.hpp",
       "path": "include/frog_native_engine/ApplicationControlTypes.hpp",
-      "sha256": "de5ddd9424d3faf7f727640cc75c8133b86417e548304c4789b8b338e468cb73",
-      "bytes": 3449,
+      "sha256": "1aa2a3ff751ba1a985040a62cb6846d5780094a3b5bbb71532c9d5ffcae5a0fd",
+      "bytes": 3717,
       "ownership": "move"
     },
     {
@@ -285,8 +285,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/CanonicalExecutionIr.hpp",
       "path": "include/frog_native_engine/CanonicalExecutionIr.hpp",
-      "sha256": "01fa1d0ea8ac1416b0c0a26e07647ed01f04b99f56d42a61aa5f1fea2d14d399",
-      "bytes": 9464,
+      "sha256": "2e146db6051c41b6e875c26d4dc465c7aaef9b678b4dd6b659d7dfe64870f679",
+      "bytes": 9916,
       "ownership": "move"
     },
     {
@@ -313,8 +313,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/CanonicalNumericAggregate.hpp",
       "path": "include/frog_native_engine/CanonicalNumericAggregate.hpp",
-      "sha256": "1aeed66c81557043c344cfaa71fe6f3ecc4d19e116a948188a1f96783e7fc7ee",
-      "bytes": 2664,
+      "sha256": "1ffb11b5e469a1704235612778eca7ff0179ccceba8a3650c915504461e0f833",
+      "bytes": 2964,
       "ownership": "move"
     },
     {
@@ -397,8 +397,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/CanonicalObjectReferenceDescriptor.hpp",
       "path": "include/frog_native_engine/CanonicalObjectReferenceDescriptor.hpp",
-      "sha256": "05822d76ec5302a6098a8db1f19e90f6bd338eb59d190bce6fd4cad5c4337a97",
-      "bytes": 3133,
+      "sha256": "bb3664467f07448ae229f4d6a6a949f86bc78fb617e8271d1f8773235ddfa70e",
+      "bytes": 3193,
       "ownership": "move"
     },
     {
@@ -859,8 +859,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/manifests/function-bindings/studio.function-bindings.v2.inc",
       "path": "manifests/function-bindings/studio.function-bindings.v2.inc",
-      "sha256": "8b4cf4a55570822de72db41a519b5b021e8c35666fcc35679945f15500ec84ad",
-      "bytes": 6003484,
+      "sha256": "89849a71aef9ac186dbe8a7a9111c700a1fcc97e9c374ab7199374a165c84487",
+      "bytes": 6018045,
       "ownership": "snapshot"
     },
     {
@@ -873,15 +873,15 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/ApplicationControlMemberContract.cpp",
       "path": "src/ApplicationControlMemberContract.cpp",
-      "sha256": "7c0df6ecd2d8dd8383ba93a098ab0f8dc4de97962d72bc5def894bb2ab88b6ff",
-      "bytes": 1742,
+      "sha256": "85815b8aaa7da3fa1b2043c5087c46fd3a550c20b49ed568c04c9312419c311f",
+      "bytes": 4025,
       "ownership": "move"
     },
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/ApplicationControlSourceCodec.cpp",
       "path": "src/ApplicationControlSourceCodec.cpp",
-      "sha256": "d1c6d8bf8c0170a3a4eaa85859f25ac278e11ac4552d732aae6cf9e72d7b6490",
-      "bytes": 15698,
+      "sha256": "23da527332fc7ae8804ac7aa2cc3c38adf339ec519262a38ef9c7a2f9d34736f",
+      "bytes": 18821,
       "ownership": "move"
     },
     {
@@ -929,8 +929,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalComposedExecutionIr.cpp",
       "path": "src/CanonicalComposedExecutionIr.cpp",
-      "sha256": "d2519cdc13065932dd155533dd9c7e00b4675392292816dd068a22b30b8f1c07",
-      "bytes": 135277,
+      "sha256": "2fe5f5432cb776bf0c1c281395969481653e9af6e88996781f0c7e4c4bffbeba",
+      "bytes": 152068,
       "ownership": "move"
     },
     {
@@ -950,8 +950,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalErrorHandlingNative.cpp",
       "path": "src/CanonicalErrorHandlingNative.cpp",
-      "sha256": "bc64d72891eae6529c9563634e419a2ab763afc7c22a29129211da1d5942bfc5",
-      "bytes": 2300,
+      "sha256": "f1c5c307e038ed253a1d1a588f232d8793695b6636ca37f7571602a0415ce366",
+      "bytes": 2452,
       "ownership": "move"
     },
     {
@@ -971,8 +971,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalExecutionIr.cpp",
       "path": "src/CanonicalExecutionIr.cpp",
-      "sha256": "02e0cfa77b8661c4e693c57bfd1f3db83ccf59d62ccce1dbf8af41af77cfb7e3",
-      "bytes": 61057,
+      "sha256": "02eb11b0840bae9b70a260048424ffcd6d765ab4b684ea43fcee76b790a7585f",
+      "bytes": 61269,
       "ownership": "move"
     },
     {
@@ -1027,8 +1027,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalObjectReferenceDescriptor.cpp",
       "path": "src/CanonicalObjectReferenceDescriptor.cpp",
-      "sha256": "221ba3901446ce7d8403e9b778fc5fb1d0735c87877a9f55df6d33310a892692",
-      "bytes": 35643,
+      "sha256": "0103b7d1639e37ac8be8432c4688321e11cc7c851d8d247199733c793ff0e657",
+      "bytes": 40766,
       "ownership": "move"
     },
     {
@@ -1069,8 +1069,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalStructuredExecutionIr.cpp",
       "path": "src/CanonicalStructuredExecutionIr.cpp",
-      "sha256": "59fcdf56756c7e6b234f894173c1c66a12cae8ac74d4983f7ef79620a8a1d8de",
-      "bytes": 100358,
+      "sha256": "c87fdd41b727b5b78cb2b8594de948252d71e95b9fa2fdb38e9eb8d9c9eeb587",
+      "bytes": 101089,
       "ownership": "move"
     },
     {
@@ -1153,8 +1153,8 @@
     {
       "upstream": "FROG-STUDIO/native-portable-engine/src/FunctionCatalogEntries.inc",
       "path": "src/FunctionCatalogEntries.inc",
-      "sha256": "01da7308d4ba503b6b96b0b38e6f758de07a2b5331c43aa207886a5512f8b3fa",
-      "bytes": 82073,
+      "sha256": "5ac7b739dd5b6cc3838a9b200b49fcd72f7bb84ece33ac7d7117bbaa1b744840",
+      "bytes": 82646,
       "ownership": "snapshot"
     },
     {
@@ -1322,8 +1322,8 @@
       "path": "src/ApplicationControlSchema.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/ApplicationControl.cpp",
       "ownership": "split",
-      "sha256": "8cbfc407ec0c0675f53fbc44bf26c149a2043b93391735b24083e144d6dd4301",
-      "bytes": 78529,
+      "sha256": "ff6c5b028abc1f03812e8d0b3489f9c73f8d7212b99df82b0fa1a0e7cf46771f",
+      "bytes": 83222,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/ApplicationControl.cpp",
@@ -1354,8 +1354,8 @@
       "path": "src/CanonicalComposedDraftMigration.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalComposedDraftMigration.cpp",
       "ownership": "moved",
-      "sha256": "a7545a10a91648d5d5ff2b8863b99876943677eb5f49aede667455dfaefdedc0",
-      "bytes": 249407
+      "sha256": "cb545e9c7aed66eb16edf67acd22a2e67763a68eb3a833a18fd9ad15829c9547",
+      "bytes": 261360
     },
     {
       "path": "src/CanonicalComposedDraftMigration.hpp",
@@ -1368,15 +1368,15 @@
       "path": "src/CanonicalDraftMigration.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalDraftMigration.cpp",
       "ownership": "moved",
-      "sha256": "f9d908bb0366519eb85d5918f3a8314d796616e3dab8d6b01fa5890a53db02b2",
-      "bytes": 145272
+      "sha256": "d999a908fab39cb9e96e1d4fbe79c0c0635031a02e692c33dbbb6102201ae269",
+      "bytes": 154187
     },
     {
       "path": "src/CanonicalDraftPortResolution.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/CanonicalDraftPortResolution.cpp",
       "ownership": "moved",
-      "sha256": "712dc8bc6fccd79835bd0b8c8c2b01af5e0c9a42638da6cb2d225676593ae3d2",
-      "bytes": 20143
+      "sha256": "7a2090c976515f28faa8e23464391dd568d5b8b9df028d30f45145a878a4775d",
+      "bytes": 22046
     },
     {
       "path": "src/CanonicalDraftPresentation.hpp",
@@ -1516,8 +1516,8 @@
       "path": "src/DiagramBindingResolver.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
       "ownership": "split",
-      "sha256": "b39868c7c95837d1000a8a96e1839f355b38f344bb6b59e796b8a14c847db48a",
-      "bytes": 164815,
+      "sha256": "c4b0a0ff0b4deb5142ac1af623b2c0e36973f065fdf7ac636819d43c1360a14c",
+      "bytes": 179839,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/DiagramBindingResolver.cpp",
@@ -1597,8 +1597,8 @@
       "path": "src/DraftFrontendPreparation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftFrontendPreparation.cpp",
       "ownership": "created",
-      "sha256": "a4e75101aac801a87e37ae409ba1d114e8027d7704701ae07b208444c19ab336",
-      "bytes": 26021
+      "sha256": "6f7fdf73bd51dddc0e43cbe155ddb057a6c6655c19ce321b10c231a3ec8862f5",
+      "bytes": 33284
     },
     {
       "path": "src/DraftInterfaceInspection.cpp",
@@ -1629,15 +1629,15 @@
       "path": "src/DraftSemanticPreparation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftSemanticPreparation.cpp",
       "ownership": "created",
-      "sha256": "7d9949751ec0a2b41d477d24fcb793f3d10be7bf6b1584a8477ef8c15a841f09",
-      "bytes": 35642
+      "sha256": "045d48d5f9e3346a446aa5bd2212e402dab121ded48f58a1429be4e8cd566300",
+      "bytes": 42376
     },
     {
       "path": "src/DraftSubFrogExecutionProjection.cpp",
       "upstream": "FROG/Implementations/Frontend/src/DraftSubFrogExecutionProjection.cpp",
       "ownership": "created",
-      "sha256": "efb55539dbd5bd255762f2dcf3af51d037ec80f2defe4cfbd4bbdf271c1cb40f",
-      "bytes": 63562
+      "sha256": "d174bea6744609a2ce76667194bffe30c525ed1085ca565cc1bad035e8cbbefe",
+      "bytes": 77957
     },
     {
       "path": "src/DraftTypeDefinitionResolution.cpp",
@@ -1717,8 +1717,8 @@
       "path": "src/FrogDocumentApplicationControlSerialization.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentApplicationControlSerialization.cpp",
       "ownership": "moved",
-      "sha256": "05cee91e82a93970f7c3574652e0dc97c3f853a9c7077f6545fa57e31b58ef07",
-      "bytes": 1562
+      "sha256": "23830d6209e4c3d5dbe1ed3110df450d334753b247648d4e2a23211638396343",
+      "bytes": 1669
     },
     {
       "path": "src/FrogDocumentApplicationControlSerialization.hpp",
@@ -1976,8 +1976,8 @@
       "path": "src/FrogDocumentWaveformGraph.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentWaveformGraph.cpp",
       "ownership": "moved",
-      "sha256": "8a1e619341668bdf30cdedced463559e2a51873cf7654b74de73d423ac55f3a6",
-      "bytes": 17579
+      "sha256": "be0ae0d0c2901ca7ac993f7d6e0b8afc82921766050b45da467b78c2be2d43b7",
+      "bytes": 23423
     },
     {
       "path": "src/FrogDocumentWaveformGraph.hpp",
@@ -2004,8 +2004,8 @@
       "path": "src/FrogDocumentXYGraph.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentXYGraph.cpp",
       "ownership": "moved",
-      "sha256": "e21b0f13b653ac8a96e535c367550a625db96e0c89ef45249f653b9eb8cc5eb2",
-      "bytes": 20203
+      "sha256": "71d8fa123b6659eea3fb83908f6b862a62287149e251d540e3a52431fe3d9870",
+      "bytes": 21481
     },
     {
       "path": "src/FrogDocumentXYGraph.hpp",
@@ -2092,8 +2092,8 @@
       "path": "src/FrogDraftWriter.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
       "ownership": "split",
-      "sha256": "8ef30401d8c4198ca0ead41e3762fd5156093c9ec096139265a0c12bbad9034e",
-      "bytes": 176986,
+      "sha256": "c2396e600f020963c00d7ea5dc41a2c1879c6c892a4ba9eb62c586ae90ff5fc0",
+      "bytes": 179513,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/FrogDocumentSerialization.cpp",
@@ -2189,8 +2189,8 @@
       "path": "src/FrontendOperation.cpp",
       "upstream": "FROG/Implementations/Frontend/src/FrontendOperation.cpp",
       "ownership": "created",
-      "sha256": "2db5c9d2009d8a7fb4cc5ebe39244d78d6077713e5b8f41af018cea2e8482c16",
-      "bytes": 60667
+      "sha256": "f7ca675964e30429cea9e54a1c2d1684a6b4eec0c7ea29356868b98d011393e8",
+      "bytes": 60853
     },
     {
       "path": "src/InPlaceStructure.cpp",
@@ -3099,8 +3099,8 @@
       "path": "src/graph/WaveformGraphData.cpp",
       "upstream": "FROG-STUDIO/native-portable-engine/src/graph/WaveformGraph.cpp",
       "ownership": "split",
-      "sha256": "071b43b444673d01813f39520c920ab74aa809eb12cf543fc14b3c257b9080f1",
-      "bytes": 8204,
+      "sha256": "c652e8ade369f533c8551dcbce2116ed153c69ee7e5c920de11160bf309e59e9",
+      "bytes": 10614,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/src/graph/WaveformGraph.cpp",
@@ -3209,8 +3209,8 @@
       "path": "include/frog_native_engine/ApplicationControlSchema.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ApplicationControl.hpp",
       "ownership": "split",
-      "sha256": "02186c8f81814ee39f7218c13495084355ab2e3a277a82443a359968053eb504",
-      "bytes": 2655,
+      "sha256": "134b3b191282718c28b268d49f8ae7f11c1b3a521c825304eed5be561fa13ed8",
+      "bytes": 3112,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ApplicationControl.hpp",
@@ -3259,8 +3259,8 @@
       "path": "include/frog_native_engine/CanonicalDraftMigration.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/CanonicalDraftMigration.hpp",
       "ownership": "moved",
-      "sha256": "06454178abe5216d5f32d3df0d3adc1cd5b7ee463a1afac2e1c01a05e5b6eb8e",
-      "bytes": 4138
+      "sha256": "66f3e63a0b9ab95f161eafa09da3b438dfcf51cdfb774c24dfb1b09eb071e4a2",
+      "bytes": 4607
     },
     {
       "path": "include/frog_native_engine/CanonicalDraftPortResolution.hpp",
@@ -3611,8 +3611,8 @@
       "path": "include/frog_native_engine/ErrorPaletteBinding.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/ErrorPaletteBinding.hpp",
       "ownership": "moved",
-      "sha256": "a7722f966fe970008e02eaad799cd184b7d47a5f778d8e3b234b70b15e03bd52",
-      "bytes": 10818
+      "sha256": "3be69db8015b4e1f9fa8a69e2c5b62ca290b744b3baf50a7e8238d21fc3e86f7",
+      "bytes": 10964
     },
     {
       "path": "include/frog_native_engine/EventNotificationContract.hpp",
@@ -3668,8 +3668,8 @@
       "path": "include/frog_native_engine/FrogDraftData.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocument.hpp",
       "ownership": "split",
-      "sha256": "4dc4f443f78faab17df8fc5a0af91d43ad31f87c449447648274e2f562f21125",
-      "bytes": 52266,
+      "sha256": "c5f3b042344ccfe24332c6122803ef3372bda37c9d0ed9ff4f1219e2b11903bb",
+      "bytes": 52753,
       "origin_parts": [
         {
           "source": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/FrogDocument.hpp",
@@ -4038,15 +4038,15 @@
       "path": "include/frog_native_engine/graph/WaveformGraph.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/graph/WaveformGraph.hpp",
       "ownership": "moved",
-      "sha256": "6d49da4c45ff29fbf30d198d25756e62f08adc9381615ccb7b84e3a2d059dda1",
-      "bytes": 8906
+      "sha256": "b5c95e8923a42ec2b63e5d131c2d1c26e4d92ceffe50e4fd538473260ad56064",
+      "bytes": 12744
     },
     {
       "path": "include/frog_native_engine/graph/XYGraph.hpp",
       "upstream": "FROG-STUDIO/native-portable-engine/include/frog_native_engine/graph/XYGraph.hpp",
       "ownership": "moved",
-      "sha256": "3fbe7be3ad9158d973114526ab2cccdd319e43aafca90c670a73f5f546c3cdb7",
-      "bytes": 13218
+      "sha256": "dd3bd6744a601ffe3abd213f69b69df1a555d8f627cb6dc8b505ddac9df63a32",
+      "bytes": 13253
     },
     {
       "path": "include/frog_native_engine/graph/XYGraphDataHelpers.hpp",
@@ -4713,8 +4713,8 @@
       "path": "src/FunctionPolymorphism.cpp",
       "ownership": "moved",
       "upstream": "FROG-STUDIO/native-portable-engine/src/FunctionPolymorphism.cpp",
-      "sha256": "fd5fe41da3102c2e96022c872820133603afedb0e57d741e0f8266c6ce2c5435",
-      "bytes": 35718
+      "sha256": "8bc9b705097d86097cedc74549d1225f96cad0a444b15bbfd6a7a940bbf4831e",
+      "bytes": 38327
     },
     {
       "path": "src/FunctionPolymorphism.hpp",

@@ -73,6 +73,66 @@ void rejects(ClassDefinitions invalid, std::string_view code, std::string_view p
     }), "Missing located class diagnostic");
 }
 
+void fieldPresentationContract(ClassDefinitions definitions) {
+    auto &sensor = definitions.at("sensor");
+    auto &analog = definitions.at("analog");
+    const auto second = prepareClassField("online", "Online", "bool", "true");
+    check(second.has_value(), "Class editor refused a Boolean field");
+    sensor.fields.push_back(*second);
+
+    const auto legacyBytes = writeClassDefinition(sensor);
+    const auto legacy = readClassDefinition(legacyBytes);
+    check(legacy && !legacy->fields[0].layout && !legacy->fields[1].layout &&
+        writeClassDefinition(*legacy) == legacyBytes, "Reading a legacy class invented field layout");
+
+    std::vector<ClassIssue> issues;
+    const auto previousHierarchy = ClassHierarchy::validate(definitions, issues);
+    check(previousHierarchy && issues.empty(), "Class layout fixture has invalid semantics");
+    const auto previousRecord = previousHierarchy->recordLayout("analog");
+    check(previousRecord.has_value(), "Class layout fixture has no Record carrier");
+
+    sensor.fields[0].layout = Rect{36.25, 132.5, 90.25, 24.5};
+    sensor.fields[1].layout = Rect{216.5, 27.25, 36.5, 24.25};
+    analog.fields[0].layout = Rect{168.25, 62.5, 108.25, 24.5};
+    const auto movedBytes = writeClassDefinition(sensor);
+    auto moved = readClassDefinition(movedBytes);
+    check(moved && writeClassDefinition(*moved) == movedBytes, "Class layout did not round-trip exactly");
+    check(moved->fields[0].layout && moved->fields[1].layout &&
+        moved->fields[0].id == "offset" && moved->fields[0].layout->x == 36.25 &&
+        moved->fields[0].layout->y == 132.5 && moved->fields[0].layout->width == 90.25 &&
+        moved->fields[0].layout->height == 24.5 && moved->fields[1].id == "online" &&
+        moved->fields[1].layout->x == 216.5 && moved->fields[1].layout->y == 27.25 &&
+        moved->fields[1].layout->width == 36.5 && moved->fields[1].layout->height == 24.25,
+        "Class field rectangles did not stay associated with the expected identities");
+    for (auto &field : moved->fields) field.layout.reset();
+    check(writeClassDefinition(*moved) == legacyBytes,
+        "Moving fields changed their logical order, defaults, types or class revision");
+
+    const auto movedHierarchy = ClassHierarchy::validate(std::move(definitions), issues);
+    check(movedHierarchy && issues.empty(), "Field geometry changed the class hierarchy");
+    const auto movedRecord = movedHierarchy->recordLayout("analog");
+    const ClassCallTarget accessor{"sensor", "set-offset"};
+    const auto oldAccessor = previousHierarchy->lowerPrivateField(accessor, "analog", "offset", true, "");
+    const auto newAccessor = movedHierarchy->lowerPrivateField(accessor, "analog", "offset", true, "");
+    check(movedRecord && movedRecord->schema == previousRecord->schema &&
+        movedRecord->discriminants == previousRecord->discriminants &&
+        oldAccessor && newAccessor && *oldAccessor == *newAccessor,
+        "Changing presentation modified the existing accessor or Record carrier");
+
+    const auto malformed = [](std::string_view layout) {
+        return std::string{R"({"format":"frog.class","version":1,"id":"broken","name":"Broken","revision":1,"parent":null,"fields":[{"id":"field","label":"Field","type":"bool","default":false,"layout":)"}
+            + std::string(layout) + R"(}],"methods":[]})";
+    };
+    std::string error;
+    for (const auto layout : {R"({"x":4,"y":5,"width":0,"height":10})",
+        R"({"x":4,"y":5,"width":15,"height":-10})",
+        R"({"x":1e100,"y":5,"width":15,"height":10})",
+        R"({"x":4,"y":5,"width":15})", R"({"x":4,"y":5,"width":15,"height":10,"extra":2})", "null"}) {
+        check(!readClassDefinition(malformed(layout), &error) && error.starts_with("/fields/0/layout"),
+            "Class reader failed to locate malformed presentation in the field");
+    }
+}
+
 void run() {
     std::string fieldError;
     const auto preparedField = prepareClassField("offset", "Offset", "i64", "9007199254740993", &fieldError);
@@ -81,6 +141,7 @@ void run() {
     check(!prepareClassField("offset", "Offset", "i64", "1.5", &fieldError) && fieldError.starts_with("/default"),
         "Class editor accepted a nonintegral default");
     auto definitions = sensors();
+    fieldPresentationContract(definitions);
     const auto memberDraft=makeClassMemberDraft(definitions.at("sensor"),"set-offset",{"sensor","Capteur.fclass",1});
     if(!memberDraft.accepted())throw std::runtime_error(memberDraft.issues.front().message);
     const auto actualBindings=inspectFrogDraftInterfaceBindings(memberDraft.document->declaredInterface,
@@ -129,11 +190,19 @@ void run() {
     objectNodes[0].callPorts.push_back({"value","value",{},{},TypeRef::object("analog").canonical(),false});
     objectNodes[1].id="parent-target";objectNodes[1].kind="frog_call";
     objectNodes[1].callPorts.push_back({"object","object",{},{},TypeRef::object("sensor").canonical(),true});
+    objectNodes[1].callPorts.push_back({"unrelated", "unrelated", {}, {}, TypeRef::object("other").canonical(), true});
+    objectNodes[1].callPorts.push_back({"payload", "payload", {}, {}, "variant", true});
     DiagramEdge objectWire;objectWire.id="object-upcast";objectWire.from={"child-source","value"};objectWire.to={"parent-target","object"};
     std::vector<DiagramEdge> objectWires{objectWire};
     FrogWidgetDataView qualified(std::span<const SceneObject>{},{},8,{},nullptr,nullptr,{},&*hierarchy);
     binding::TypeResolver qualifiedResolver(objectNodes,objectWires,qualified);
     check(qualifiedResolver.connection(objectWire).accepted(),"Existing resolver consumers cannot use a borrowed common class context");
+    const auto unrelatedWire = qualifiedResolver.connection(objectWire.from, {"parent-target", "unrelated"});
+    check(!unrelatedWire.accepted() && unrelatedWire.code == "class.unrelated_types",
+        "An unrelated nominal receiver must report the captured hierarchy's rejection");
+    const auto boxedWire = qualifiedResolver.connection(objectWire.from, {"parent-target", "payload"});
+    check(boxedWire.status == binding::ResolutionStatus::Coercion && boxedWire.code == "binding.variant_box",
+        "A Variant receiver must box the nominal source value");
     binding::TypeResolver unqualifiedResolver(objectNodes,objectWires,{});
     check(!unqualifiedResolver.connection(objectWire).accepted(),"A canvas-free structural pass invented inheritance without a qualified context");
     check(!hierarchy->assignable("sensor", "analog") && !hierarchy->assignable("other", "sensor"), "Unsafe nominal conversion");

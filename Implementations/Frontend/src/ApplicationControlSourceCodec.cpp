@@ -41,6 +41,7 @@ std::string_view kindToken(ApplicationControlKind k) {
     case ApplicationControlKind::Property: return "property";
     case ApplicationControlKind::Invoke: return "invoke";
     case ApplicationControlKind::Close: return "close";
+    case ApplicationControlKind::ToMoreSpecificClass: return "to_more_specific_class";
     }
     return {};
 }
@@ -113,26 +114,91 @@ bool decodeType(const JsonValue &v,binding::TypeRef &t,std::string &why,ReadPoli
 }
 }
 
-bool preflight(const JsonValue &root,std::string *error){
-    const auto fail=[&](const char *why){if(error)*error=why;return false;};
-    struct Work{const JsonValue *value;unsigned depth;};std::vector<Work> work{{&root,0}};std::size_t count=0,bytes=0;
-    while(!work.empty()){
-        const auto [v,depth]=work.back();work.pop_back();
-        if(++count>4096||depth>96||v->string.size()>16'000'000-bytes)return fail("The complete object configuration exceeds its bounded schema or payload.");bytes+=v->string.size();
-        if(v->type==JsonValue::Type::Object)for(const auto &[key,value]:v->object){
-            if(key.size()>16'000'000-bytes||work.size()>=4096-count)return fail("Object configuration metadata exceeds its bounded size.");bytes+=key.size();
-            if(key=="canonical"){
-                if(value.type!=JsonValue::Type::String)return fail("A canonical type must be a string.");
-                std::size_t nesting=0;bool quote=false,escape=false;
-                for(char ch:value.string){if(quote){if(escape)escape=false;else if(ch=='\\')escape=true;else if(ch=='"')quote=false;continue;}
-                    if(ch=='"')quote=true;else if(ch=='<'){if(++nesting>32)return fail("The canonical type exceeds depth32.");}
-                    else if(ch=='>'){if(!nesting)return fail("Unbalanced canonical type.");--nesting;}}
-                if(nesting||quote||escape)return fail("Incomplete canonical type.");
-            }
-            work.push_back({&value,depth+1});
-        }else if(v->type==JsonValue::Type::Array)for(const auto &value:v->array){if(work.size()>=4096-count)return fail("Object configuration exceeds its node bound.");work.push_back({&value,depth+1});}
+namespace {
+enum class Part { Metadata, Type, ChildTypes, Choices, Choice, FieldNames, Scalar };
+
+Part objectMemberPart(Part parent,std::string_view key,const JsonValue &value) {
+    using Kind=JsonValue::Type;
+    if(parent==Part::Type) {
+        if(key=="children" && value.type==Kind::Array)return Part::ChildTypes;
+        if(key=="choices" && value.type==Kind::Array)return Part::Choices;
+        if(key=="field_names" && value.type==Kind::Array)return Part::FieldNames;
+        if((key=="canonical" || key=="choice_kind") && value.type==Kind::String)return Part::Scalar;
+    } else if(parent==Part::Choice) {
+        if((key=="id" || key=="label") && value.type==Kind::String)return Part::Scalar;
+        if(key=="value" && value.type==Kind::Number)return Part::Scalar;
+        if((key=="disabled" || key=="visible") && value.type==Kind::Boolean)return Part::Scalar;
     }
-    return true;
+    return Part::Metadata;
+}
+
+const char *canonicalDepthError(const JsonValue &value) {
+    if(value.type!=JsonValue::Type::String)return "A canonical type must be a string.";
+    unsigned depth=0;
+    bool quoted=false,escaped=false;
+    for(char ch:value.string) {
+        if(quoted) {
+            if(escaped)escaped=false;
+            else if(ch=='\\')escaped=true;
+            else if(ch=='"')quoted=false;
+        } else if(ch=='"')quoted=true;
+        else if(ch=='<') {if(++depth>32)return "The canonical type exceeds depth32.";}
+        else if(ch=='>') {if(!depth)return "Unbalanced canonical type.";--depth;}
+    }
+    return depth || quoted || escaped?"Incomplete canonical type.":nullptr;
+}
+
+struct ConfigurationBudget {
+    const JsonValue *schema;
+    std::string *error;
+    std::size_t metadata=0,typeEntries=0,physicalValues=0,bytes=0;
+    static constexpr std::size_t maxEntries=4096,maxBytes=16'000'000;
+    // A type object and its five members cost six JSON values, plus at most
+    // one field name per child type. A choice object and its five scalars cost six.
+    static constexpr std::size_t maxPhysicalValues=maxEntries+7*maxEntries;
+
+    bool fail(const char *message) const {if(error)*error=message;return false;}
+    bool addBytes(std::size_t count) {
+        if(count>maxBytes-bytes)return fail("Object configuration metadata exceeds its byte budget.");
+        bytes+=count;return true;
+    }
+    bool visit(const JsonValue &v,Part part,unsigned depth,unsigned typeDepth) {
+        if(&v==schema)part=Part::Type;
+        if(++physicalValues>maxPhysicalValues || depth>96)
+            return fail("The complete object configuration exceeds its bounded schema or payload.");
+        if(part==Part::Metadata && ++metadata>maxEntries)return fail("Object configuration exceeds its node bound.");
+        if((part==Part::Type || part==Part::Choice) && ++typeEntries>maxEntries)
+            return fail("Reference schema exceeds the combined type and choice entry budget.");
+        if(part==Part::Type && typeDepth>32)return fail("Reference schema children exceed depth32.");
+        if(!addBytes(v.string.size()))return false;
+        if(part==Part::Type) {
+            const auto *names=v.member("field_names"),*children=v.member("children");
+            if(names && names->type==JsonValue::Type::Array && !names->array.empty() &&
+                (!children || children->type!=JsonValue::Type::Array || names->array.size()>children->array.size()))
+                return fail("Reference schema field names exceed its field types.");
+        }
+        if(v.type==JsonValue::Type::Object)for(const auto &[key,value]:v.object) {
+            if(!addBytes(key.size()))return false;
+            if(key=="canonical") {
+                if(value.string.size()>maxBytes-bytes)return fail("Canonical spelling exceeds its byte budget.");
+                if(const auto *why=canonicalDepthError(value))return fail(why);
+            }
+            if(!visit(value,objectMemberPart(part,key,value),depth+1,typeDepth))return false;
+        }
+        if(v.type==JsonValue::Type::Array)for(const auto &value:v.array) {
+            Part item=Part::Metadata;
+            if(part==Part::ChildTypes)item=Part::Type;
+            else if(part==Part::Choices)item=Part::Choice;
+            else if(part==Part::FieldNames && value.type==JsonValue::Type::String)item=Part::Scalar;
+            if(!visit(value,item,depth+1,typeDepth+(item==Part::Type)))return false;
+        }
+        return true;
+    }
+};
+}
+
+bool preflight(const JsonValue &root,std::string *error) {
+    return ConfigurationBudget{root.member("value_schema"),error}.visit(root,Part::Metadata,0,0);
 }
 void appendConfiguration(std::ostringstream &out,const ApplicationControlNode &c,int n) {
     appendIndent(out,n);out << "\"studio_application_control\": {\n";
@@ -168,6 +234,7 @@ std::optional<ApplicationControlNode> readConfiguration(const JsonValue &value,s
     else if(kind=="property")c.kind=ApplicationControlKind::Property;
     else if(kind=="invoke")c.kind=ApplicationControlKind::Invoke;
     else if(kind=="close")c.kind=ApplicationControlKind::Close;
+    else if(kind=="to_more_specific_class")c.kind=ApplicationControlKind::ToMoreSpecificClass;
     else return fail("Unknown operation kind.");
     const auto cls=jsonStringField(*v,"expected_class");if(!cls || cls->empty())return fail("Missing expected class.");
     c.expectedClass=*cls;
@@ -210,7 +277,8 @@ source::JsonValue writeConfiguration(const ApplicationControlNode &cfg){
 }
 source::JsonValue writeType(const binding::TypeRef &type){ApplicationControlNode cfg;cfg.valueType=type;return *writeConfiguration(cfg).member("value_schema");}
 std::optional<binding::TypeRef> readType(const JsonValue &value,std::string *error,ReadPolicy policy){
-    if(policy==ReadPolicy::ExactLocalProfile&&!preflight(value,error))return {};binding::TypeRef type;std::string why;
+    if(policy==ReadPolicy::ExactLocalProfile && !ConfigurationBudget{&value,error}.visit(value,Part::Type,0,0))return {};
+    binding::TypeRef type;std::string why;
     if(!decodeType(value,type,why,policy)){if(error)*error=std::move(why);return {};}return type;
 }
 }

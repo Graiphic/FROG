@@ -46,10 +46,14 @@ struct NativeCallCapacity {
     bool operator==(const NativeCallCapacity &) const = default;
 };
 
+enum class NativeCallFieldStorage { Scalar, InlineArray, ArrayPointer };
 struct NativeCallStructField {
     std::string fieldId;
     NativeCallNumericType numericType = NativeCallNumericType::I32;
     std::uint64_t offset = 0;
+    NativeCallFieldStorage storage = NativeCallFieldStorage::Scalar;
+    NativeCallCapacity extent;
+    std::optional<std::string> validLengthParameterId;
     bool operator==(const NativeCallStructField &) const = default;
 };
 
@@ -66,6 +70,10 @@ struct NativeCallType {
     NativeCallKind kind = NativeCallKind::Numeric;
     NativeCallNumericType numericType = NativeCallNumericType::I32;
     NativeCallNumericType elementType = NativeCallNumericType::F64;
+    // Existing declarations keep their explicit layout. New adaptive arguments
+    // follow the incoming edge while retaining the selected C Boolean convention.
+    bool fromWire = false;
+    bool wideBoolean = false;
     std::size_t rank = 1;
     NativeCallArrayFormat arrayFormat = NativeCallArrayFormat::DataPointer;
     NativeCallStringFormat stringFormat = NativeCallStringFormat::CString;
@@ -75,6 +83,9 @@ struct NativeCallType {
     // Adapt/Cluster carry a real FROG type and an explicit native layout, never an any->pointer cast.
     binding::TypeRef adaptedType;
     NativeCallStructLayout structLayout;
+    // Per-field ABI choices survive an unwired interval. Offsets and element
+    // types always come from the currently connected logical field schema.
+    std::vector<NativeCallStructField> arrayFieldContracts;
     bool operator==(const NativeCallType &) const = default;
 };
 
@@ -213,6 +224,11 @@ struct NativeCallPrototype {
 
 [[nodiscard]] const NativeCallParameter *nativeCallParameter(const NativeCallConfiguration &, std::string_view id);
 [[nodiscard]] binding::TypeRef nativeCallTypeRef(const NativeCallType &, std::size_t pointerBits = 0);
+[[nodiscard]] bool nativeCallNumericDefaultValid(const source::JsonValue &,NativeCallNumericType,std::size_t pointerBits);
+[[nodiscard]] std::optional<NativeCallNumericType> nativeCallAdaptedNumeric(
+    const NativeCallType &, std::size_t pointerBits);
+void resolveNativeCallWiredType(NativeCallParameter &, const binding::TypeRef &, std::size_t pointerBits);
+[[nodiscard]] std::string nativeCallStructDeclaration(const NativeCallType &);
 [[nodiscard]] std::vector<NativeCallPort> nativeCallPorts(const NativeCallConfiguration &, std::size_t pointerBits = 0);
 [[nodiscard]] NativeCallValidation nativeCallValidate(const NativeCallConfiguration &,
     const NativeCallTargetCapabilities *target = nullptr);

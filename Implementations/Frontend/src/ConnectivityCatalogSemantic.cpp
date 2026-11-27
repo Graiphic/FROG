@@ -118,7 +118,12 @@ std::vector<ConnectivityConfiguredPort> connectivityNodePorts(
     if(!function)return {};
     if(node.nativeCall) {
         std::vector<ConnectivityConfiguredPort> result;
-        for(const auto &port:nativeCallPorts(*node.nativeCall,sizeof(void*)*8))
+        auto config=*node.nativeCall;
+        for(auto &parameter:config.arguments)if(parameter.type.fromWire) {
+            const auto *source=evidenceType(evidence,"param."+parameter.id+".in");
+            if(source)resolveNativeCallWiredType(parameter,*source,sizeof(void*)*8);
+        }
+        for(const auto &port:nativeCallPorts(config,sizeof(void*)*8))
             result.push_back({port.id,port.name,port.output,port.valueType,port.description,port.unresolvedReason});
         return result;
     }

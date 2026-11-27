@@ -8560,6 +8560,55 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedErrorBindings(std::vecto
     }
     {
         FunctionBindingDefinition definition;
+        definition.catalogId = "error.simple_handler";
+        definition.definitionId = "frog.studio.error.simple_handler";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.error.simple_handler.v1";
+        definition.providerRequirement = "frog.studio.composed-program@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/csh?context=lvcore_glang_simple_error_handler";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::ReferenceVerified;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::Unspecified;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "error_in", "error in", FunctionPortDirection::Input, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "message", "message", FunctionPortDirection::Output, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "error.invalid_message";
+        definition.definitionId = "frog.studio.error.invalid_message";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "";
+        definition.implementationId = "frog.studio.error.invalid_message.v1";
+        definition.providerRequirement = "frog.studio.composed-program@1";
+        definition.documentationUrl = "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/error-llb/error-cluster-from-error-code-vi.html";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::ReferenceVerified;
+        definition.typeResolution = FunctionTypeResolutionPolicy::Fixed;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::Unspecified;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "message", "message", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "call_chain", "call chain", FunctionPortDirection::Input, "string", "string", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<status:bool,code:i32,source:string>", "cluster<status:bool,code:i32,source:string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
         definition.catalogId = "error.downgrade_to_warning";
         definition.definitionId = "frog.studio.error.downgrade_to_warning";
         definition.schemaVersion = 1U;
@@ -9350,6 +9399,33 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedApplicationControlBindin
             FunctionPortBinding{ "reference_in", "reference_in", FunctionPortDirection::Input, "ref<\"frog.object\">", "ref<\"frog.object\">", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "error_in", "error_in", FunctionPortDirection::Input, "cluster<\"status\":bool,\"code\":i32,\"source\":string>", "cluster<\"status\":bool,\"code\":i32,\"source\":string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
             FunctionPortBinding{ "error_out", "error_out", FunctionPortDirection::Output, "cluster<\"status\":bool,\"code\":i32,\"source\":string>", "cluster<\"status\":bool,\"code\":i32,\"source\":string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+        };
+        definitions.push_back(std::move(definition));
+    }
+    {
+        FunctionBindingDefinition definition;
+        definition.catalogId = "application_control.to_more_specific_class";
+        definition.definitionId = "frog.studio.application_control.to_more_specific_class";
+        definition.schemaVersion = 1U;
+        definition.resolverId = "frog.studio.application_control.type-resolution@1";
+        definition.implementationId = "frog.studio.object_reference.to_more_specific_class.v1";
+        definition.providerRequirement = "frog.studio.object-reference.local@1";
+        definition.documentationUrl = "docs/functions/application_control/to_more_specific_class.md";
+        definition.variadicInputPrefix = "";
+        definition.minimumInputCount = 0U;
+        definition.maximumInputCount = 0U;
+        definition.maturity = FunctionBindingMaturity::EditorManaged;
+        definition.typeResolution = FunctionTypeResolutionPolicy::CustomResolver;
+        definition.implementationKind = FunctionImplementationKind::BuiltInProvider;
+        definition.evaluationOrder = FunctionEvaluationOrder::CanonicalPortOrder;
+        definition.reductionPolicy = FunctionReductionPolicy::Unspecified;
+        definition.arrayLiftingPolicy = FunctionArrayLiftingPolicy::None;
+        definition.ports = {
+            FunctionPortBinding{ "reference_in", "reference", FunctionPortDirection::Input, "ref<\"frog.object\">", "ref<\"frog.object\">", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "target_class", "target class", FunctionPortDirection::Input, "ref<\"frog.object\">", "ref<\"frog.object\">", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_in", "error in", FunctionPortDirection::Input, "cluster<\"status\":bool,\"code\":i32,\"source\":string>", "cluster<\"status\":bool,\"code\":i32,\"source\":string>", FunctionPortRequirement::Optional, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "reference_out", "specific class reference", FunctionPortDirection::Output, "ref<\"frog.object\">", "ref<\"frog.object\">", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
+            FunctionPortBinding{ "error_out", "error out", FunctionPortDirection::Output, "cluster<\"status\":bool,\"code\":i32,\"source\":string>", "cluster<\"status\":bool,\"code\":i32,\"source\":string>", FunctionPortRequirement::Required, FunctionPortCardinality::Single, FunctionPortConnectionPolicy::Exact },
         };
         definitions.push_back(std::move(definition));
     }
@@ -24541,7 +24617,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedCollectionBindings(std::
 }
 std::vector<FunctionBindingDefinition> generatedFunctionBindingDefinitions() {
     std::vector<FunctionBindingDefinition> definitions;
-    definitions.reserve(911U);
+    definitions.reserve(914U);
     appendGeneratedStructuresBindings(definitions);
     appendGeneratedNumericBindings(definitions);
     appendGeneratedBooleanBindings(definitions);
@@ -36272,6 +36348,73 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedErrorContracts(std::vect
     }
     {
         FunctionBindingContract contract;
+        contract.catalogId = "error.simple_handler";
+        contract.profileId = "frog.studio.palette.error.simple_handler.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Handles the qualified imported LabVIEW connector with the default one-button mode. Produces the complete message and waits for acknowledgement on an error.";
+        contract.blockers = std::vector<std::string>{ "Only the qualified LabVIEW cluster input and message output with the dialog, standalone code and source inputs unwired are admitted by the importer.", "An active error requires the real interactive error presentation host. The NI code-description database is not shipped." };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/csh?context=lvcore_glang_simple_error_handler" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "cluster<status:bool,code:i32,source:string>" };
+        contract.overload.result = "declared_output_type";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Handles the qualified imported LabVIEW connector with the default one-button mode. Produces the complete message and waits for acknowledgement on an error.";
+        contract.variadicity.enabled = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Handles the qualified imported LabVIEW connector with the default one-button mode. Produces the complete message and waits for acknowledgement on an error.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 1U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = false;
+        contract.runtimeAvailability.available = false;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.error.simple_handler.v1";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.composed-program@1";
+        contract.runtimeAvailability.notes = "Local compiled Error value/service realization on complete immutable SDK carriers. The selected Source/FIR/native target must explicitly admit this exact operation and full typed signature; this metadata neither enables every backend nor claims that partial variants have been qualified.";
+        contract.portAliases = {
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "message", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "error.invalid_message";
+        contract.profileId = "frog.studio.palette.error.invalid_message.v1";
+        contract.contractStatus = "partial";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Builds the qualified imported LabVIEW invalid-message error with code 1 and its complete caller chain.";
+        contract.blockers = std::vector<std::string>{ "Only the qualified saved LabVIEW expansion is imported. The execution projection provides the call chain." };
+        contract.authorityRefs = std::vector<std::string>{ "https://www.ni.com/docs/en-US/bundle/labview-api-ref/page/vi-lib/utility/error-llb/error-cluster-from-error-code-vi.html" };
+        contract.overload.policy = "fixed";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "string", "string" };
+        contract.overload.result = "declared_output_type";
+        contract.overload.implicitCoercion = false;
+        contract.overload.description = "Builds the qualified imported LabVIEW invalid-message error with code 1 and its complete caller chain.";
+        contract.variadicity.enabled = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Builds the qualified imported LabVIEW invalid-message error with code 1 and its complete caller chain.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 2U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = false;
+        contract.runtimeAvailability.available = false;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.error.invalid_message.v1";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.composed-program@1";
+        contract.runtimeAvailability.notes = "Local compiled Error value/service realization on complete immutable SDK carriers. The selected Source/FIR/native target must explicitly admit this exact operation and full typed signature; this metadata neither enables every backend nor claims that partial variants have been qualified.";
+        contract.portAliases = {
+            FunctionPortAliases{ "message", std::vector<std::string>{  } },
+            FunctionPortAliases{ "call_chain", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
         contract.catalogId = "error.downgrade_to_warning";
         contract.profileId = "frog.studio.palette.error.downgrade_to_warning.v1";
         contract.contractStatus = "partial";
@@ -37349,6 +37492,41 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedApplicationControlContra
         contract.portAliases = {
             FunctionPortAliases{ "reference_in", std::vector<std::string>{  } },
             FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
+        };
+        contracts.push_back(std::move(contract));
+    }
+    {
+        FunctionBindingContract contract;
+        contract.catalogId = "application_control.to_more_specific_class";
+        contract.profileId = "frog.studio.application_control.to_more_specific_class.v1";
+        contract.contractStatus = "defined";
+        contract.authorityScope = "studio_authoring_profile";
+        contract.behaviorSummary = "Returns a view of the source object using the class and optional strict value schema of the target-class wire. A null model is valid. A class or strict-schema mismatch returns an invalid reference and an error.";
+        contract.blockers = std::vector<std::string>{  };
+        contract.authorityRefs = std::vector<std::string>{  };
+        contract.overload.policy = "custom_resolver";
+        contract.overload.acceptedOperands = std::vector<std::string>{ "ref<\"frog.object\">", "cluster<\"status\":bool,\"code\":i32,\"source\":string>" };
+        contract.overload.result = "resolve:frog.studio.application_control.type-resolution@1";
+        contract.overload.implicitCoercion = false;
+        contract.variadicity.enabled = false;
+        contract.arrayPolicy.lifting = "none";
+        contract.arrayPolicy.description = "Operates on a single borrowed object reference.";
+        contract.variadicity.inputCount.declared = true;
+        contract.variadicity.inputCount.value = 3U;
+        contract.arrayPolicy.accepted.declared = true;
+        contract.arrayPolicy.accepted.value = false;
+        contract.runtimeAvailability.available = true;
+        contract.runtimeAvailability.implementationKind = "built_in_provider";
+        contract.runtimeAvailability.implementationId = "frog.studio.object_reference.to_more_specific_class.v1";
+        contract.runtimeAvailability.availabilityScope = "requires_explicit_target_capability";
+        contract.runtimeAvailability.providerRequirement = "frog.studio.object-reference.local@1";
+        contract.runtimeAvailability.notes = "Requires the current document's object-reference authority.";
+        contract.portAliases = {
+            FunctionPortAliases{ "reference_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "target_class", std::vector<std::string>{  } },
+            FunctionPortAliases{ "error_in", std::vector<std::string>{  } },
+            FunctionPortAliases{ "reference_out", std::vector<std::string>{  } },
             FunctionPortAliases{ "error_out", std::vector<std::string>{  } },
         };
         contracts.push_back(std::move(contract));
@@ -59430,7 +59608,7 @@ FROG_FUNCTION_BINDING_INIT_NOINLINE void appendGeneratedCollectionContracts(std:
 }
 std::vector<FunctionBindingContract> generatedFunctionBindingContracts() {
     std::vector<FunctionBindingContract> contracts;
-    contracts.reserve(911U);
+    contracts.reserve(914U);
     appendGeneratedStructuresContracts(contracts);
     appendGeneratedNumericContracts(contracts);
     appendGeneratedBooleanContracts(contracts);

@@ -4,4 +4,6 @@
 namespace frog::native_engine::document_internal {
 void deserializeWaveformGraph(const JsonValue &value, graph::State &state);
 [[nodiscard]] std::string serializeWaveformGraph(const graph::State &state);
+[[nodiscard]] bool usesExtendedGraphPresentation(const graph::State &state);
+[[nodiscard]] bool usesExtendedWaveformGraphSourcePresentation(const JsonValue &);
 }

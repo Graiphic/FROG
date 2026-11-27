@@ -21,15 +21,23 @@ void scalarProfileDiagnostics(const NativeCallConfiguration &config,NativeCallVa
     };
     // Ui is a valid scalar signature. Its real dispatcher is a host admission
     // requirement, not a structural restriction of the portable configuration.
-    unavailable(!config.library.specifyPathOnDiagram,"scalar_dynamic_path_unavailable","Dynamic path input/output ports are outside the exact scalar service.");
     unavailable(config.callbacks.reserve.empty()&&config.callbacks.unreserve.empty()&&config.callbacks.abort.empty(),
         "scalar_callbacks_unavailable","The exact scalar service does not admit lifecycle callback configurations.");
     unavailable(config.returnDefinition.type.kind==K::Void ||
         (config.returnDefinition.type.kind==K::Numeric&&scalarType(config.returnDefinition.type.numericType)),
         "scalar_return_unavailable","Return must be void or exact i32/u32/i64/u64/f64.","return");
-    for(const auto &p:config.arguments)unavailable(p.type.kind==K::Numeric&&scalarType(p.type.numericType)&&
-        p.pass==NativeCallPass::Value&&p.access==NativeCallAccess::ReadOnly,
-        "scalar_argument_unavailable","Arguments must be exact i32/u32/i64/u64/f64 passed by value and ReadOnly.",p.id);
+    for(const auto &p:config.arguments) {
+        const auto numeric=p.type.kind==K::Numeric?std::optional{p.type.numericType}:nativeCallAdaptedNumeric(p.type,64);
+        const bool scalar=numeric && scalarType(*numeric);
+        const bool record=(p.type.kind==K::Cluster || p.type.kind==K::AdaptToType) &&
+            p.type.adaptedType.kind==binding::TypeKind::Cluster && !p.type.structLayout.fields.empty();
+        const bool array=p.type.kind==K::Array && p.type.arrayFormat==NativeCallArrayFormat::DataPointer && p.type.rank==1 &&
+            p.pass==NativeCallPass::Pointer;
+        unavailable((scalar || record || array) && (p.pass==NativeCallPass::Pointer || p.access==NativeCallAccess::ReadOnly),
+            "scalar_argument_unavailable","Argument "+p.id+" ("+nativeCallTypeRef(p.type,64).canonical()+", "+
+            (p.pass==NativeCallPass::Value?"by value":"pointer")+
+            ") requires a supported numeric representation, flat C structure, or bounded 1D array pointer.",p.id);
+    }
     // The count itself is not an arbitrary profile cap. The actual ABI count
     // representation and existing 64MiB native packing budget bound allocation.
     constexpr auto perArgument=sizeof(std::array<std::byte,16>)+2*sizeof(void*);
@@ -42,7 +50,31 @@ std::optional<NativeCallScalarValue> scalarCanonicalDefault(const NativeCallPara
     std::string error;
     const auto json=source::parseJson(*parameter.defaultCanonicalValue,&error,source::JsonNumberPolicy::PreserveLexeme);
     if(!json)throw Fault(7607,"Invalid canonical default: "+error);
-    const auto type=parameter.type.numericType;
+    if(parameter.type.kind==K::Array) {
+        if(parameter.type.rank!=1 || parameter.type.arrayFormat!=NativeCallArrayFormat::DataPointer ||
+            json->type!=source::JsonValue::Type::Array || json->array.size()>UINT32_MAX ||
+            json->array.size()>allocationBudget/sizeof(NativeCallElement))
+            throw Fault(7607,"A native array default requires a bounded one-dimensional array of the declared element type.");
+        const auto element=parameter.type.elementType;
+        const auto schema=nativeCallTypeRef(parameter.type,64);
+        if(schema.children.size()!=1)throw Fault(7607,"The native array element has no exact representation.");
+        const auto &logical=schema.children.front();
+        NativeCallArray result{{static_cast<std::uint32_t>(json->array.size())},{}};
+        result.second.reserve(json->array.size());
+        for(const auto &item:json->array) {
+            if(!nativeCallNumericDefaultValid(item,element,64))
+                throw Fault(7607,"A native array default element is outside its declared "+logical.canonical()+" representation.");
+            if(logical.name=="bool")result.second.emplace_back(item.boolean);
+            else {
+                const auto number=decodeCanonicalNumber(item,logical.name.starts_with('u'),logical.integer());
+                result.second.push_back(std::visit([](auto value)->NativeCallElement{return value;},number));
+            }
+        }
+        return result;
+    }
+    const auto type=parameter.type.kind==K::Numeric ? parameter.type.numericType :
+        nativeCallAdaptedNumeric(parameter.type,64).value_or(N::CBool);
+    if(!scalarType(type))throw Fault(7606,"This argument default has no exact scalar representation.");
     const auto number=native_call_detail::decodeCanonicalNumber(*json,type==N::U32||type==N::U64,type!=N::F64);
     switch(type) {
     case N::I32:{const auto n=std::get<std::int64_t>(number);if(n<INT32_MIN||n>INT32_MAX)throw Fault(7607,"Integer input is outside native representation.");return static_cast<std::int32_t>(n);}

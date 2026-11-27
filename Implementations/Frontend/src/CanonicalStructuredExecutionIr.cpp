@@ -465,6 +465,9 @@ struct Builder {
                 for(const auto &[key,_]:n.object)if(key!="id"&&key!="kind"&&key!="structure_type"&&key!="boundary"&&key!="structure_terminals"&&key!="regions"&&key!="layout"&&key!="doc"&&key!="tags"&&
                     key!="structure_tunnels"&&key!="case_profile"&&!key.starts_with("while_loop_")&&!key.starts_with("for_loop_")&&!key.starts_with("case_structure_"))fail("IR_UNSUPPORTED_FIELD","Unsupported structure field: "+key,path,true);
                 node.kind=text(n.member("structure_type"),path);if(node.kind!="while_loop"&&node.kind!="for_loop"&&node.kind!="case")fail("IR_STRUCTURE_UNSUPPORTED","Only public While, For and exact bool/i64/u64 Case are admitted in this corridor.",path,true);
+                if(const auto *profile=n.member("for_loop_count_profile");profile&&
+                    (node.kind!="for_loop"||text(profile,path)!=canonicalStudioForCountProfile))
+                    fail("IR_FOR_COUNT_PROFILE","Unknown or misplaced Studio For count profile.",path+"/for_loop_count_profile",true);
                 if(const auto *profile=n.member("case_profile");profile&&(node.kind!="case"||text(profile,path)!="frog.case-editing@1"))fail("IR_CASE_PROFILE_UNSUPPORTED","Unknown or misplaced Case editing profile.",path+"/case_profile",true);
                 if(n.member("while_loop_stop_if_true"))fail("IR_WHILE_PRIVATE_SEMANTICS","Public While must not retain a private stop-if-true semantic flag; migrate through Boolean Not.",path);
                 const auto &terminals=obj(n.member("structure_terminals"),path);
@@ -502,7 +505,10 @@ struct Builder {
                 structure.shiftRegisters=registers(n,path,out.nodes[nodeIndex.at(sid)]);
                 if(!caseKind)structure.iterationPortId="iteration";
                 if(kind=="while_loop")structure.conditionPortId="condition";
-                if(kind=="for_loop"){structure.countPortId="count";structure.countValuePortId="count_value";}
+                if(kind=="for_loop") {
+                    structure.countPortId="count";structure.countValuePortId="count_value";
+                    structure.clampNegativeCount=n.member("for_loop_count_profile")!=nullptr;
+                }
                 if(caseKind){structure.selectorPortId="selector";structure.selectedCasePortId="selected_case";}
                 std::set<std::string> regionIds,integerMatches;std::set<bool> matches;std::size_t defaultCount=0;
                 for(std::size_t r=0;r<regions.size();++r){
@@ -585,11 +591,14 @@ struct Builder {
     }
     void nativeCallCorridor() {
         if(std::none_of(out.nodes.begin(),out.nodes.end(),[](const auto &n){return n.nativeCall.has_value();}))return;
+        std::set<std::string> declaredTypes{std::string(kNativeCallScalarErrorType)};
+        for(const auto &n:out.nodes)if(n.nativeCall)
+            for(const auto &p:n.nativeCall->ports)declaredTypes.insert(p.type);
         for(const auto &n:out.nodes) {
             if(canonicalArrayNativeContract(n.kind)||canonicalStringNativeContract(n.kind))fail("IR_NATIVE_CALL_COMPOSITION_UNAVAILABLE","Scalar5 does not acquire the Array3/String2 execution profiles.",n.sourceNodeId,true);
-            for(const auto &p:n.ports)if(p.typeRef.starts_with("array<")||p.typeRef.starts_with("ref<")||
-                (p.typeRef.starts_with("cluster<")&&p.typeRef!=kNativeCallScalarErrorType))
-                fail("IR_NATIVE_CALL_COMPOSITION_UNAVAILABLE","Only the exact status/code/source error Record accompanies scalar5 calls.",n.sourceNodeId,true);
+            for(const auto &p:n.ports)if((p.typeRef.starts_with("array<")||p.typeRef.starts_with("ref<")||
+                p.typeRef.starts_with("cluster<")) && !declaredTypes.contains(p.typeRef))
+                fail("IR_NATIVE_CALL_COMPOSITION_UNAVAILABLE","This aggregate or reference is outside the declared native call signature.",n.sourceNodeId,true);
         }
     }
     bool nativeCallOptional(const CanonicalIrNode &node,std::string_view id)const {
@@ -753,6 +762,8 @@ struct Builder {
                 attributes.object["scalar_execution_policy"]=string(std::string(scalar->semanticVersion));
             if(n.family=="structure"){
                 const auto s=std::find_if(out.structures.begin(),out.structures.end(),[&](const auto &s){return s.nodeId==n.id;});
+                if(s->clampNegativeCount)
+                    attributes.object["for_loop_count_profile"]=string(std::string(canonicalStudioForCountProfile));
                 if(!s->shiftRegisters.empty()){
                     auto groups=array();
                     for(const auto &group:s->shiftRegisters){
@@ -767,6 +778,7 @@ struct Builder {
                 }
             }
             std::vector<std::string> refs{ref(src.pointer)};std::vector<std::string> correspondenceRefs;
+            if(src.raw->member("for_loop_count_profile"))refs.push_back(ref(src.pointer+"/for_loop_count_profile"));
             if(n.family=="widget_value"){const auto &w=widgets.at(n.widgetId);attributes.object["widget_id"]=string(n.widgetId);attributes.object["widget_class"]=string(n.widgetClass);attributes.object["value_type"]=string(n.valueType);
                 if(n.defaultValueJson)attributes.object["default_value"]=*source::parseJson(*n.defaultValueJson,nullptr,source::JsonNumberPolicy::PreserveLexeme);refs.push_back(ref(w.pointer));correspondenceRefs.push_back(encodedId("declaration",n.widgetId));}
             if(n.family=="constant"){

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://graiphic.github.io/FROG/Expression/Schemas/frog.studio-document.schema.json",
   "title": "Graiphic Studio authoring writer profile v1",
-  "description": "Structural compatibility for historical ordinary drafts from revision 2, writer revisions 3 through 8, Studio recovery revision 9, and ordinary documents using revisions 12 and 13. Semantic validation and execution admission are separate operations.",
+  "description": "Structural compatibility for historical ordinary drafts from revision 2, writer revisions 3 through 8, Studio recovery revision 9, and ordinary documents using revisions 12 through 14. Semantic validation and execution admission are separate operations.",
   "$comment": "Evidence owners: common Frontend FrogDocumentFormat/FrogDraftWriter/FrogDraftReader and Studio FrogDocumentCompatibility. Opaque properties require their actual implementation validators. This schema covers writer-shaped artifacts and the explicit recovery envelope.",
   "type": "object",
   "required": [
@@ -18,7 +18,7 @@
     "draft_revision": {
       "type": "integer",
       "minimum": 2,
-      "maximum": 13,
+      "maximum": 14,
       "not": {"enum": [10, 11]}
     },
     "language": {
@@ -97,6 +97,10 @@
   },
   "allOf": [
     {
+      "if": {"properties": {"draft_revision": {"maximum": 13}}},
+      "then": {"$ref": "#/$defs/noExtendedAuthoring"}
+    },
+    {
       "if": {"properties": {"draft_revision": {"maximum": 12}}},
       "then": {"$ref": "#/$defs/noClusterPresentation"},
       "else": {"$ref": "#/$defs/clusterPresentation"}
@@ -149,6 +153,79 @@
   ],
   "additionalProperties": true,
   "$defs": {
+    "noExtendedAuthoring": {
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "anyOf": [
+              {"required": ["classId"], "properties": {"classId": {"enum": ["frog.widgets.xy_graph", "frog.widgets.waveform_graph"]}}},
+              {"required": ["class_ref"], "properties": {"class_ref": {"enum": ["frog.widgets.xy_graph", "frog.widgets.waveform_graph"]}}}
+            ]
+          },
+          "then": {
+            "properties": {
+              "props": {
+                "properties": {
+                  "xy_graph": {
+                    "properties": {"design": {"properties": {"legend_width": false, "kind_badge_visible": false}}}
+                  },
+                  "waveform_graph": {
+                    "properties": {
+                      "legend_width": false,
+                      "kind_badge_visible": false,
+                      "plots": {
+                        "items": {"properties": {"presentation": false, "line_style": false, "interpolation": false, "symbol": false}}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {"type": "object", "required": ["kind"], "properties": {"kind": {"const": "primitive"}}},
+          "then": {
+            "properties": {
+              "type": {
+                "not": {"enum": ["frog.studio.application_control.to_more_specific_class", "application_control.to_more_specific_class"]}
+              },
+              "studio_application_control": {
+                "properties": {"kind": {"not": {"const": "to_more_specific_class"}}}
+              },
+              "studio_native_call": {
+                "properties": {
+                  "return": {"$ref": "#/$defs/legacyNativeArgument"},
+                  "arguments": {"items": {"$ref": "#/$defs/legacyNativeArgument"}}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {"type": "object"},
+          "then": {"additionalProperties": {"$ref": "#/$defs/noExtendedAuthoring"}},
+          "else": {"items": {"$ref": "#/$defs/noExtendedAuthoring"}}
+        }
+      ]
+    },
+    "legacyNativeArgument": {
+      "properties": {
+        "type": {
+          "properties": {
+            "type_from_wire": false,
+            "win32_boolean": false,
+            "array_field_contracts": false,
+            "struct_layout": {
+              "properties": {
+                "fields": {"items": {"properties": {"storage": false, "extent": false, "valid_length_parameter_id": false}}}
+              }
+            }
+          }
+        }
+      }
+    },
     "noClusterPresentation": {
       "allOf": [
         {
@@ -505,7 +582,8 @@
             "reference",
             "property",
             "invoke",
-            "close"
+            "close",
+            "to_more_specific_class"
           ]
         },
         "expected_class": {

@@ -51,6 +51,10 @@ struct CanonicalDraftResolvedTypes {
     // Exact private codec records from the same current model. Defaults use
     // the existing identity-based compatibility policy on a detached value.
     std::vector<CanonicalDraftWidgetResolution> widgets;
+    // The simple typed Source corridor has an exact I64 For terminal. An
+    // authored receiver retaining another supported integer width needs its
+    // complete connector evidence in the composed profile.
+    bool requiresExactStudioForCountPorts=false;
 };
 // Finite historical widget contracts, shared by ordinary/composed migration
 // and the pre-projection guard. The existing model codec supplies exact facts;

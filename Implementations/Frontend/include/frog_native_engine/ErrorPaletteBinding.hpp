@@ -64,14 +64,16 @@ inline std::vector<ErrorPalettePort> errorPaletteUnalignedPorts(const DiagramNod
     }
     const auto *definition=findFunctionBindingDefinition(errorPaletteId(node.type));
     if(!definition) return ports;
+    const bool importedInvalidMessage=node.type==kLabViewInvalidMessageNodeType;
     for(const auto direction:{FunctionPortDirection::Input,FunctionPortDirection::Output}) {
         unsigned row=0;
         for(const auto &p:definition->ports) if(p.direction==direction) {
+            if(importedInvalidMessage && p.portId=="call_chain") continue;
             if(p.portId=="codes_cleared" && !multipleCodes) continue;
             ports.push_back({p.portId,direction==FunctionPortDirection::Output,18.0*++row});
         }
     }
-    if(definition->ports.size()<=2) for(auto &p:ports) p.y=24;
+    if(importedInvalidMessage || definition->ports.size()<=2) for(auto &p:ports) p.y=24;
     alignFunctionErrorPortRows(ports,[](const auto &p)->const auto&{return p.id;},
         [](const auto &p){return p.output;},[](auto &p)->double&{return p.y;});
     return ports;

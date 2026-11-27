@@ -248,7 +248,7 @@ def presentation(cli, path):
         document, mapping = project(vi, path, digest)
     except ProfileRefusal:
         documents, mapping = project_editable(path, vi)
-        document = documents[Path("model.frog")]
+        document = documents[Path(path.stem + ".frog")]
 
     evidence = mapping["presentation"]
     source_icon = evidence["icon"]
